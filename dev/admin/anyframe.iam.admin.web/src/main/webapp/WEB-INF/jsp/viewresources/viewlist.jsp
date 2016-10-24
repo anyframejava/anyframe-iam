@@ -14,16 +14,16 @@
 <script type="text/javascript">
 <!--
 	$(function () {
-		var	parentNode	= "";
-		var jqSearchForm = document.f1;
-		var roleId = jqSearchForm.roleId;
-		$("#role").tree({
+		var parentNode = "";
+		var viewResourceId = document.f1.viewResourceId;
+		var tabInfo = document.f1.tabInfo;
+		$("#view").tree({
 			data	: {
 				type	: "json",
 				async	: true,
 				opts	: {
 					method	: "POST",
-					url		: "<c:url value='/roles/listData.do?' />"
+					url		: "<c:url value='/viewresources/listTreeData.do?' />"
 				}
 			},
 			ui	: {
@@ -41,60 +41,66 @@
 				beforedata	: function(NODE, TREE_OBJ) {
 					return {
 						id : $(NODE).attr("id") || "0",
-						roleName : document.getElementById("roleName").value,
+						viewName : document.getElementById("viewName").value,
 						searchClickYn : document.getElementById("searchClickYn").value
 					};
 				},
 				onselect	: function(NODE, TREE_OBJ) {
-					var selectedRoleId = document.f1.roleId;
-					selectedRoleId.value = NODE.id; 
-					roleId.value = NODE.id;
-					if(jqSearchForm.tabInfo.value == "resource"){
-						frame01.location.href = "<c:url value='/securedresourcesroles/addView.do?&roleId=' />" + NODE.id;
+					var selectedViewId = document.f1.viewResourceId;
+					selectedViewId.value = NODE.id; 
+					viewResourceId.value = NODE.id;
+					if(tabInfo.value == "viewResourceDetail"){
+						frame01.location.href = "<c:url value='/viewresources/get.do?&viewResourceId=' />" + NODE.id;
 					}
-					else if(jqSearchForm.tabInfo.value == "userGroup"){
-						frame01.location.href = "<c:url value='/rolegroupmapping/addView.do?&roleId=' />" + NODE.id;
+					else if(tabInfo.value == "viewList"){
+						frame01.location.href = "<c:url value='/viewresources/list.do?&parentViewResourceId=' />" + NODE.id;
 					}
-					else if(jqSearchForm.tabInfo.value == "roleInfoTab"){
-						frame01.location.href = "<c:url value='/roleinformation/get.do?&roleId=' />" + NODE.id;
-					}
-					else {
-						frame01.location.href = "<c:url value='/roleusermapping/addView.do?&roleId=' />" + NODE.id;
+					else if(tabInfo.value == "viewMapping"){
+						frame01.location.href = "<c:url value='/viewresourcesmapping/list.do?&parentViewResourceId=' />" + NODE.id;
 					}
 				},
 				onrename	: function(NODE,LANG,TREE_OBJ,RB) {
-					var roleName = $.tree.focused().get_text(NODE);
+					var viewName = $.tree.focused().get_text(NODE);
 					if( parentNode == "" ) {
 						$.post(
-							"<c:url value='/roles/update.do?' />",
+							"<c:url value='/viewresources/update.do?' />",
 							{
-								roleId : NODE.id, 
-								roleName : roleName,
-								description : document.getElementById("description").value
+								viewResourceId : NODE.id, 
+								viewName : viewName,
+								category : document.getElementById("category").value,
+								viewInfo : document.getElementById("viewInfo").value,
+								description : document.getElementById("description").value,
+								viewType : document.getElementById("viewType").value,
+								visible : document.getElementById("visible").value
 							},function(data){
-								frame01.location.href = "<c:url value='/roleinformation/get.do?&roleId=' />" + NODE.id;
+								frame01.location.href = "<c:url value='/viewresources/get.do?&viewResourceId=' />" + NODE.id;
 							}
 						);
 					} else {
 						$('td').removeClass('selectedTab');
-						$('#roleInfoTab').addClass('selectedTab');
+						$('#viewResourceDetail').addClass('selectedTab');
 						
 						var tabInfo = document.f1.tabInfo;
-						tabInfo.value = "roleInfoTab";
+						tabInfo.value = "viewResourceDetail";
 						
 						$.post(
-							"<c:url value='/roles/add.do?' />",
+							"<c:url value='/viewresources/add.do?' />",
 							{
-								roleId : roleId,
-								roleName : roleName,
-								childRole : parentNode
+								viewResourceId : viewResourceId,
+								viewName : viewName,
+								childView : parentNode,
+								category : viewResourceId + " category here",
+								viewInfo : viewResourceId + " information here",
+								description : viewResourceId + " description here",
+								viewType : "button",
+								visible : "Y"
 							},function(data){
-								NODE.id = roleId;
-								frame01.location.href = "<c:url value='/roleinformation/get.do?&roleId=' />" + roleId;
+								NODE.id = viewResourceId;
+								frame01.location.href = "<c:url value='/viewresources/get.do?&viewResourceId=' />" + viewResourceId;
 							}
 						);
-						var documentRoleId = document.f1.roleId;
-						documentRoleId.value = roleId;
+						var documentViewResourceId = document.f1.viewResourceId;
+						documentViewResourceId.value = viewResourceId;
 						parentNode	= "";
 					}
 				},
@@ -102,18 +108,18 @@
 					parentNode = $(NODE).parents("li:eq(0)").attr("id");
 
 					$.getJSON(
-							"<c:url value='/roles/getRoleId.do'/>", function(data) {
-								roleId = data.roleId;
+							"<c:url value='/viewresources/getViewResourceId.do'/>", function(data) {
+								viewResourceId = data.viewResourceId;
 						});
 				},
 				beforedelete : function (NODE) {
 					return confirm("<anyframe:message code='role.ui.tree.alert.confirm' />");
 				},
 				ondelete	: function(NODE, TREE_OBJ,RB) {
-					$.post("<c:url value='/roles/delete.do?' />",{roleId:NODE.id},function(){});
+					$.post("<c:url value='/viewresources/remove.do?' />",{viewResourceId:NODE.id},function(){});
 
-					var deletedRoleId = document.f1.roleId;
-					deletedRoleId.value = "";
+					var deletedViewResourceId = document.f1.viewResourceId;
+					deletedViewResourceId.value = "";
 				},
 				error 		: function(TEXT){
 					if(TEXT.match('parsererror') != null){
@@ -124,32 +130,27 @@
 				}
 			}
 		});
-		$('#roleInfoTab').addClass('selectedTab');
-		
-		$('#resourceListTab').bind('click', function(){
-			$('td').removeClass('selectedTab');
-			$('#resourceListTab').addClass('selectedTab');
-			moveToResource();
-		});
-		
-		$('#userGroupTab').bind('click', function(){
-			$('td').removeClass('selectedTab');
-			$('#userGroupTab').addClass('selectedTab');
-			moveToUserGroup();
-		});
-		
-		$('#usersTab').bind('click', function(){
-			$('td').removeClass('selectedTab');
-			$('#usersTab').addClass('selectedTab');
-			moveToUsers();
-		});
-		
-		$('#roleInfoTab').bind('click', function(){
-			$('td').removeClass('selectedTab');
-			$('#roleInfoTab').addClass('selectedTab');
-			moveToRoleInfo();
-		});
 
+		$('#viewDetailTab').addClass('selectedTab');
+		
+		$('#viewListTab').bind('click', function(){
+			$('td').removeClass('selectedTab');
+			$('#viewListTab').addClass('selectedTab');
+			moveToViewList();
+		});
+		
+		$('#viewMappingTab').bind('click', function(){
+			$('td').removeClass('selectedTab');
+			$('#viewMappingTab').addClass('selectedTab');
+			moveToViewMapping();
+		});
+		
+		$('#viewDetailTab').bind('click', function(){
+			$('td').removeClass('selectedTab');
+			$('#viewDetailTab').addClass('selectedTab');
+			moveToViewResourceDetail();
+		});
+		
 		$("[name=searchUsers]").click( function() {
 			document.getElementById("searchClickYn").value = "Y";
 			$.tree.focused().refresh();
@@ -157,66 +158,50 @@
 		});
 	});
 
-	function moveToResource() {
-		var roleId = document.f1.roleId;
-		var isChangedForm = window.frames.frame01;
-		if(document.f1.tabInfo.value=="userGroup" && roleId.value!="" && isChangedForm.document.usersForm.isChanged.value == "changed") {
-			if(confirm("<anyframe:message code='role.ui.alert.save' />")) {
-				frame01.saveRole();
-			}
-		}
-		
+	function moveToViewResourceDetail() {
 		var tabInfo = document.f1.tabInfo;
-		tabInfo.value = "resource";
-		
-		frame01.location.href = "<c:url value='/securedresourcesroles/addView.do?&roleId=' />" + roleId.value;
+		var viewResourceId = document.f1.viewResourceId;
+		tabInfo.value = "viewResourceDetail";
+		frame01.location.href = "<c:url value='/viewresources/get.do?&viewResourceId=' />" + viewResourceId.value;
+	}
+	
+	function moveToViewList() {
+		var viewResourceId = document.f1.viewResourceId;
+		var tabInfo = document.f1.tabInfo;
+		tabInfo.value = "viewList";
+		frame01.location.href = "<c:url value='/viewresources/list.do?&viewResourceId=' />" + viewResourceId.value;
+	}
+	
+	function moveToViewMapping() {
+		var viewResourceId = document.f1.viewResourceId;
+		var tabInfo = document.f1.tabInfo;
+		tabInfo.value = "viewMapping";
+		frame01.location.href = "<c:url value='/viewresourcesmapping/list.do?&viewResourceId=' />" + viewResourceId.value;
 	}
 
-	function moveToUserGroup() {
-		var tabInfo = document.f1.tabInfo;
-		var roleId = document.f1.roleId;
-		tabInfo.value = "userGroup";
-		frame01.location.href = "<c:url value='/rolegroupmapping/addView.do?&roleId=' />" + roleId.value;
-	}
-
-	function moveToUsers() {
-		var roleId = document.f1.roleId;
-		var isChangedForm = window.frames.frame01;
-		if(document.f1.tabInfo.value=="userGroup" && roleId.value!="" && isChangedForm.document.usersForm.isChanged.value == "changed") {
-			if(confirm("<anyframe:message code='role.ui.alert.save' />")) {
-				frame01.saveRole();
-			}
-		}
-
-		var tabInfo = document.f1.tabInfo;
-		tabInfo.value = "users";
-		frame01.location.href = "<c:url value='/roleusermapping/addView.do?&roleId=' />" + roleId.value;
-	}
-
-	function moveToRoleInfo() {
-		var roleId = document.f1.roleId;
-		var isChangedForm = window.frames.frame01;
-		
-		if(document.f1.tabInfo.value=="userGroup" && roleId.value!="" && isChangedForm.document.usersForm.isChanged.value == "changed") {
-			if(confirm("<anyframe:message code='role.ui.alert.save' />")) {
-				frame01.saveRole();
-			}
-		}
-
-		var tabInfo = document.f1.tabInfo;
-		tabInfo.value = "roleInfoTab";
-		frame01.location.href = "<c:url value='/roleinformation/get.do?&roleId=' />" + roleId.value;
-	}
-
-	function updateRole(roleId, roleName, description) {
+	function updateView(viewResourceId, viewName, category, description, viewInfo, viewType, visible){
+		document.getElementById("category").value = category;
 		document.getElementById("description").value = description;
-		$.tree.focused().rename("#" + roleId, roleName);
+		document.getElementById("viewInfo").value = viewInfo;
+		document.getElementById("viewType").value = viewType;
+		document.getElementById("visible").value = visible;
+		$.tree.focused().rename("#" + viewResourceId, viewName);
+		document.getElementById("category").value = "";
 		document.getElementById("description").value = "";
+		document.getElementById("viewInfo").value = "";
+		document.getElementById("viewType").value = "";
+		document.getElementById("visible").value = "";
 	}
 
-	function deleteRole(roleId) {
-		$.tree.focused().remove("#" + roleId);
+	function deleteView(viewResourceId){
+		$.tree.focused().remove("#" + viewResourceId);
 	}
+
+	function refreshTree(){
+		$.tree.focused().refresh();
+	}
+
+
 //-->
 </script>
 
@@ -241,12 +226,16 @@ body {
 	       			<td width="26" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>" ><div id="menuclose"><a class="closeBtn" title="Close Branch" href="javascript:$.tree.focused().close_all();"><anyframe:message code="role.ui.tree.closebranch" />Close</a></div></td>
 	       			<td width="100" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>" >
 						<div id="inputArea">
-							<input id="roleName" size="20" class='ct_input_g'>
+							<input id="viewName" size="20" class='ct_input_g'>
 							<input id="searchClickYn" type="hidden" value="N">
 							<input id="description" type="hidden" value="">
+							<input id="category" type="hidden" value="">
+							<input id="viewInfo" type="hidden" value="">
+							<input id="viewType" type="hidden" value="">
+							<input id="visible" type="hidden" value="">
 							<script type="text/javascript">
-							$("#roleName").autocomplete(
-								"<c:url value='/roles/getRoleNameList.do' />", {
+							$("#viewName").autocomplete(
+								"<c:url value='/viewresources/getViewNameList.do' />", {
 									width : 200,
 									selectFirst:true,
 									mustMatch:true,
@@ -262,7 +251,7 @@ body {
 	      		<tr height="400">
 	        		<td height="100%" colspan="4" valign="top" style="margin-top:10px">
 	        			<div id="documentation">
-	          				<div id="role" class="demo" style="overflow:auto; height:410px;width:218px;border:1px solid #C9CFDD;">
+	          				<div id="view" class="demo" style="overflow:auto; height:410px;width:218px;border:1px solid #C9CFDD;">
 	          					<span><anyframe:message code="role.ui.tree.span" /></span>
 							</div>
 						</div>
@@ -272,28 +261,26 @@ body {
 		</td>
 		<td align="left" style="padding-top:6px;">
 		<form name="f1">
-			<input type="hidden" name="roleId">
-			<input type="hidden" name="tabInfo" value="roleInfoTab">
+			<input type="hidden" name="viewResourceId">
+			<input type="hidden" name="tabInfo" value="viewResourceDetail">
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" >
 				<tr height="30">
 					<td height="30" valign="bottom" background="<c:url value='/images/content/bg_tab.gif'/>" style="padding-left:10px">
 						<table height="24" border="0" cellpadding="0" cellspacing="0">
 							<tr height="21">
 								<td width="134" height="27" align="center" valign="bottom" background="<c:url value='/images/content/bg_tab_menu2.gif'/>" bgcolor="#EDEDED" 
-									id="roleInfoTab" ><a href="javascript:moveToRoleInfo();"><anyframe:message code='role.ui.link.role' /></a></td>
+									id="viewDetailTab" ><a href="javascript:moveToViewResourceDetail();">View Detail</a></td>
 								<td width="134" height="27" align="center" valign="bottom" background="<c:url value='/images/content/bg_tab_menu3.gif'/>" bgcolor="#EDEDED" 
-									id="resourceListTab" ><a href="javascript:moveToResource();"><anyframe:message code='role.ui.link.resource' /></a></td>
+									id="viewListTab" ><a href="javascript:moveToViewList();">View List</a></td>
 								<td width="134" height="27" align="center" valign="bottom" background="<c:url value='/images/content/bg_tab_menu3.gif'/>" bgcolor="#EDEDED" 
-									id="userGroupTab" ><a href="javascript:moveToUserGroup();"><anyframe:message code='role.ui.link.usergroup' /></a></td>
-								<td width="145" height="21" align="center" valign="bottom" background="<c:url value='/images/content/bg_tab_menu3.gif'/>"  
-									id="usersTab" ><a href="javascript:moveToUsers();"><anyframe:message code='role.ui.link.users' /></a></td>
+									id="viewMappingTab" ><a href="javascript:moveToViewMapping();">View Mapping</a></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
 				<tr>
 					<td style="padding-left:10px">
-						<iframe src="<c:url value='/roleinformation/get.do?' />" width="630" height="415" frameborder="0" scrolling="no" name="frame01" id="frame01"></iframe>
+						<iframe src="<c:url value='/viewresources/get.do?' />" width="630" height="415" frameborder="0" scrolling="no" name="frame01" id="frame01"></iframe>
 					</td>
 				</tr>
 			</table>

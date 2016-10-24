@@ -105,5 +105,7 @@ public interface ISecuredObjectService {
 	 * 				fail to make list
 	 */
 	public List getViewResourceMapping(Map paramMap) throws BaseException;
+	
+	public String getViewHierarchy(String viewResourceId) throws BaseException;
 
 }

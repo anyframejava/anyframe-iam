@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
@@ -104,12 +103,11 @@ public class AnnotationViewMappingController {
 	 * @return move to "/viewresourcesmapping/listData.do"
 	 * @throws Exception fail to delete data
 	 */
-	@JsonError
 	@RequestMapping("/viewresourcesmapping/delete.do")
-	public String delete(@RequestParam("viewResourceId") String[] viewResourceId,
-			@RequestParam("refId") String[] refId, SessionStatus status) throws Exception {
+	public String delete(@RequestParam(value = "viewResourceId", required = false) String[] viewResourceId,
+			@RequestParam(value = "refId", required = false) String[] refId, SessionStatus status) throws Exception {
 		List<ViewResourcesMappingPK> idList = new ArrayList<ViewResourcesMappingPK>();
-
+		
 		for (int i = 0; i < viewResourceId.length; i++) {
 			ViewResourcesMappingPK vsPK = new ViewResourcesMappingPK();
 			vsPK.setRefId(refId[i]);
@@ -121,33 +119,11 @@ public class AnnotationViewMappingController {
 	}
 
 	/**
-	 * move to view resources mapping detail page
-	 * @param searchVO an object that contains search conditions
-	 * @param model Model object to add attributes
-	 * @return move to "/viewresources/viewmappingdetail"
-	 * @throws Exception fail to move to the page
-	 */
-	@RequestMapping("/viewresourcesmapping/addView.do")
-	public String addView(@ModelAttribute("searchVO") ViewResourceSearchVO searchVO, Model model) throws Exception {
-
-		List<Groups> grouplist = groupsService.getList();
-		List<Roles> rolelist = rolesService.getList();
-		@SuppressWarnings("unchecked")
-		List permissionlist = viewResourceAccessService.getRegisteredPermissionList();
-
-		model.addAttribute("grouplist", grouplist);
-		model.addAttribute("rolelist", rolelist);
-		model.addAttribute("permissionlist", permissionlist);
-
-		return "/viewresources/viewmappingdetail";
-	}
-
-	/**
 	 * get a ViewResources Mapping data that matches the given ID
 	 * @param viewResourceId View Resources ID
 	 * @param model Model object to add attributes
 	 * @return move to "/viewresources/viewmappingdetail"
-	 * @throws Exception faii to get data
+	 * @throws Exception fail to get data
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/viewresourcesmapping/get.do")

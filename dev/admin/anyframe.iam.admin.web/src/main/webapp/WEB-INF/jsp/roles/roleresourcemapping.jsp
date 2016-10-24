@@ -65,7 +65,7 @@
 				width : 60
 			} ],
 			width : 615,
-			height : 312,
+			height : 315,
 			multiselect : true,
 			pager : jQuery('#pager2'),
 			sortname : 'resourceId',
@@ -81,7 +81,6 @@
 				alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
 			}
 		});
-//		jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
 		jQuery("#grid2").jqGrid('gridResize',{minWidth:350,maxWidth:800,minHeight:80, maxHeight:350});
 
 		/* Button Function Start (Resource CRUD) */
@@ -110,6 +109,7 @@
 						rowArray[i] = rowData.resourceId;
 						jQuery("#grid2").delRowData(rowData.resourceId);
 					}
+					jQuery.ajaxSettings.traditional = true;
 					jQuery("#grid2").setPostData({resourceIds:rowArray, roleId:roleId});
 					jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/delete.do?' />"}).trigger("reloadGrid");
 					jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/listData.do?&roleId=' />" + roleId}).trigger("reloadGrid");
@@ -146,6 +146,7 @@
 		var rowDataArray = new Array();
 		for(i = 0 ; i < tempArray.length ; i++)
 			rowDataArray[i] = tempArray[i];
+		jQuery.ajaxSettings.traditional = true;
 		jQuery("#grid2").setPostData({roleId:roleId, resourceId:rowDataArray});
 	    jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/add.do?' />"}).trigger("reloadGrid");
 		alert("<anyframe:message code='roleresource.ui.alert.allocationsuccess' />");

@@ -4,9 +4,24 @@
 <dynamic-hibernate>
 	<query name="findViewResourceList">
 		<![CDATA[
-		FROM ViewResource viewResource 
+		SELECT new Map( 
+			viewResource.viewResourceId as viewResourceId, 
+			viewResource.viewName as viewName, 
+			viewResource.category as category, 
+			viewResource.viewInfo as viewInfo, 
+			viewResource.description as description, 
+			viewResource.viewType as viewType, 
+			viewResource.visible as visible
+		)
+		FROM ViewResource viewResource, ViewHierarchy viewHierarchy
+		WHERE
+			viewHierarchy.id.parentView = viewResource.viewResourceId
+		#if($parentViewResourceId != "")
+			AND 
+				viewHierarchy.id.childView = :parentViewResourceId
+		#end
 		#if($keywordNum != "")
-			WHERE
+			AND 
 			#if($condition == "viewResourceId")
 				viewResource.viewResourceId like :keywordStr 
 			#elseif($condition == "category")
@@ -38,9 +53,15 @@
 	<query name="countViewResourceList">
 		<![CDATA[
 		SELECT count(*) 
-		FROM ViewResource viewResource 
+		FROM ViewResource viewResource, ViewHierarchy viewHierarchy
+		WHERE
+			viewHierarchy.id.parentView = viewResource.viewResourceId
+		#if($parentViewResourceId != "")
+			AND 
+				viewHierarchy.id.childView = :parentViewResourceId
+		#end
 		#if($keywordNum != "")
-			WHERE
+			AND 
 			#if($condition == "viewResourceId")
 				viewResource.viewResourceId like :keywordStr 
 			#elseif($condition == "category")
@@ -50,7 +71,7 @@
 			#elseif($condition == "viewInfo")
 				viewResource.viewInfo like :keyworkStr
 			#end		
-		#end		
+		#end
 		]]>
 	</query>	
 	
@@ -61,12 +82,17 @@
 			viewResource.viewResourceId as viewResourceId, 
 			viewResource.viewName as viewName, 
 			viewResource.category as category, 
+			viewResource.viewType as viewType, 
+			viewResource.visible as visible,
 			viewResourcesMapping.id.refId as refId, 
 			viewResourcesMapping.permissions as permissions, 
 			viewResourcesMapping.refType as refType)
 		FROM ViewResource viewResource, ViewResourcesMapping viewResourcesMapping
 		WHERE
-			viewResource.viewResourceId = viewResourcesMapping.id.viewResourceId
+			viewResource.viewResourceId = viewResourcesMapping.id.viewResourceId 
+		#if($parentViewResourceId != "")
+			AND	viewResourcesMapping.id.viewResourceId = :parentViewResourceId
+		#end 
 		#if($keywordNum != "")
 			#if($condition == "viewResourceId")
 				AND viewResource.viewResourceId like :keywordStr
@@ -109,7 +135,10 @@
 		SELECT count(*)
 				FROM ViewResource viewResource, ViewResourcesMapping viewResourcesMapping
 		WHERE
-			viewResource.viewResourceId = viewResourcesMapping.id.viewResourceId
+			viewResource.viewResourceId = viewResourcesMapping.id.viewResourceId 
+		#if($parentViewResourceId != "")
+			AND	viewResourcesMapping.id.viewResourceId = :parentViewResourceId
+		#end 
 		#if($keywordNum != "")
 			#if($condition == "viewResourceId")
 				AND viewResource.viewResourceId like :keywordStr
@@ -124,6 +153,22 @@
 		#if($type == "USER" || $type == "ROLE")
 			AND viewResourcesMapping.refType like :type
 		#end
+		]]>
+	</query>
+	
+	<query name="findViewNameList">
+		<![CDATA[
+			SELECT distinct new Map(viewResource.viewName as viewName)
+			FROM ViewResource viewResource
+			WHERE LOWER(viewResource.viewName) like :keyword
+			ORDER BY viewResource.viewName
+		]]>
+	</query>
+	
+	<query name="findViewIdByViewName">
+		<![CDATA[
+			FROM ViewResource viewResource
+			WHERE LOWER(viewResource.viewName) = :viewName
 		]]>
 	</query>
 </dynamic-hibernate>

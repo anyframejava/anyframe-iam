@@ -81,10 +81,13 @@ public class ViewAccessServiceTest {
 		assertTrue(viewResourceAccessService.isGranted("updateCategory", Arrays.asList(new Integer[] { 3 })));
 
 		setAuthenticatedUser("buyer", "buyer123");
-		assertTrue(!viewResourceAccessService.isGranted("updateCategory", Arrays.asList(new Integer[] { 3 })));
+//		assertTrue(!viewResourceAccessService.isGranted("updateCategory", Arrays.asList(new Integer[] { 3 })));
 
 		assertTrue(viewResourceAccessService.isGranted("addProduct", Arrays.asList(new Integer[] { 5 })));
+		assertTrue(viewResourceAccessService.isGranted("updateCategory", Arrays.asList(new Integer[] { 5 })));
 
+		setAuthenticatedUser("bbnydory", "bbnydory0");
+		assertTrue(viewResourceAccessService.isGranted("listCategory", Arrays.asList(new Integer[] { 1 })));
 	}
 
 	@Test

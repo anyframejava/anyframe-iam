@@ -73,7 +73,6 @@ jQuery(document).ready( function() {
 			alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
 		}
 	});
-//	jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
 	
 	/* Button Function Start (Resource CRUD) */
 	

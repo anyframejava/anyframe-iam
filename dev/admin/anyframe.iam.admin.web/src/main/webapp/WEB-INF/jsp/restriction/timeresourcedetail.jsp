@@ -94,7 +94,6 @@
 				alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
 			}
 		});
-//		jQuery("#grid_timeresource").jqGrid('navGrid','#pager_timeresource',{edit:false,add:false,del:false,search:false});
 
 		/* Button Function Start (Resource CRUD) */
 		

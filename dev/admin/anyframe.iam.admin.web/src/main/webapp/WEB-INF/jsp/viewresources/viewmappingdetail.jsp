@@ -221,7 +221,7 @@ function goSubmit() {
 }
 
 function deleteRow() {
-	deletedRow ++;
+	deletedRow++;
 	jQuery("#[name=idx]:checked").closest('tr').next().remove();
 	jQuery("#[name=idx]:checked").closest('tr').remove();
 }
@@ -249,53 +249,20 @@ function mask() {
 -->
 </script>
 
-<style type="text/css">
-body {
-	background-color: #E9ECF1;
-	margin-left: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-}
-</style>
 </head>
 <body text="#000000" onLoad="javascript:mask();">
 <form name="viewmapping" id="viewmapping">
 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
 	<tr>
-		<td width="10" rowspan="3">&nbsp;</td>
-		<td height="6"></td>
-	</tr>
-	<tr>
-		<td height="30" valign="bottom" background="<c:url value='/images/content/bg_tab.gif'/>" style="padding-left:10px">
-			<table height="24" border="0" cellpadding="0" cellspacing="0">
-				<tr height="21">
-					<td width="145" height="27" align="center" valign="bottom"  background="<c:url value='/images/content/tab_menu1.gif'/>" bgcolor="#EDEDED" class="blkbold">Resource Mapping </td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-	<tr>
 		<td>
 			<!--  Begin of Contents -->
 			<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 13px; margin-left:10px">
-			<!-- begin of title -->
-				<tr>
-					<td valign="top">
-						<table width="796" border="0" cellspacing="0" cellpadding="0">
-							<tr>	
-								<td class="title" style="padding-left:21px"><anyframe:message code="viewmapping.ui.title" /></td>
-							</tr>
-						</table>
-					</td>	
-				</tr>
-			<!-- end of Title -->
 	
 			<!-- Begin View Resource ID field -->
 				<c:if test="${not empty viewResourceId}">
 				<tr>
 					<td style="padding-top: 5px;">
-						<table width="796" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" >
+						<table width="600" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" >
 							<tr><td height="2" colspan="3" bgcolor="#A2BACE"></td></tr>
 							<tr>
 								<td width="198" class="tdHead"><anyframe:message code="viewmapping.ui.label.viewresourceid" /></td>
@@ -310,7 +277,7 @@ body {
 				<c:if test="${empty viewResourceId}">
 				<tr>
 					<td style="padding-top: 5px;">
-						<table width="796" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" >
+						<table width="600" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" >
 							<tr><td height="2" colspan="4" bgcolor="#A2BACE"></td></tr>
 							<tr>
 								<td width="201" class="tdHead"><anyframe:message code="viewmapping.ui.label.viewresourceid" /></td>
@@ -340,10 +307,10 @@ body {
 	<tr>
 		<td>
 			<!--  Begin of Contents -->
-			<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 13px; margin-left:10px">
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 13px;">
 				<tr>
 					<td style="padding-top: 5px;">
-						<table width="796" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" id="rolemappinglist">
+						<table width="600" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" id="rolemappinglist">
 							<tr><td height="2" colspan="${fn:length(permissionlist)*2+4}" bgcolor="#A2BACE"></td></tr>
 							<tr>
 								<td class="tdHead"><input type="checkbox" name="checkall" id="checkall"></td>
@@ -385,7 +352,7 @@ body {
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="margin-top:10px;">
 				<tr>
 					<td style="padding-top: 5px;">
-						<table width="796" height="22" border="0" cellpadding="0" cellspacing="0" style="margin-left:10px">
+						<table width="590" height="22" border="0" cellpadding="0" cellspacing="0" style="margin-left:10px">
 							<tr>
 								<td align="right"  class="tdBtnRight">
 									<table height="22" border="0" cellpadding="0" cellspacing="0">
@@ -450,23 +417,6 @@ body {
 	</tr>
 </table>
 
-<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
-	<tr>
-		<td><!--  Begin of Contents -->
-			<table width="100%" border="0" cellspacing="0" cellpadding="0">
-				<tr>
-					<td colspan="2">
-						<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#E9ECF1">
-							<tr><td height="10" bgcolor="#ffffff"></td></tr>
-							<tr><td height="1" bgcolor="#C9CFDD"></td></tr>
-							<tr><td valign="top" bgcolor="#E9ECF1"><div id="footSub"></div></td></tr>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
 </form>
 </body>
 </html>	

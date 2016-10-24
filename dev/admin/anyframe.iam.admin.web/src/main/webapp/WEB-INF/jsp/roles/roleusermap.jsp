@@ -32,7 +32,7 @@ jQuery(document).ready( function() {
 		           {name: 'groupName', index: 'groupName', sorttype : 'text', width: 80}
 		           ],
 		width:240,
-		height:285,
+		height:295,
 		multiselect: true,
 		loadComplete:function(){
 			jQuery("#grid3").jqGrid({
@@ -50,7 +50,7 @@ jQuery(document).ready( function() {
 				           {name: 'groupName', index: 'groupName', width: 80, sorttype : 'text'}
 				           ],
 				width:240,
-				height:285,
+				height:295,
 				multiselect : true,
 				loadComplete:function(){
 					if(callbackvar.value=="toRight"){
@@ -113,6 +113,7 @@ jQuery(document).ready( function() {
 				rowData = jQuery("#grid3").getRowData(rowNumList[i]);
 				rowDataArray[i] = rowData.userId;
 			}
+			jQuery.ajaxSettings.traditional = true;
 			jQuery("#grid2").setPostData({roleId:roleId, userId:rowDataArray});
 			jQuery("#grid2").setGridParam({url:"<c:url value='/authorities/delete.do?' />"}).trigger("reloadGrid");
 			jQuery("#grid2").setGridParam({url:"<c:url value='/authorities/listData.do?&roleId=' />" + roleId});
@@ -139,6 +140,7 @@ jQuery(document).ready( function() {
 				rowData = jQuery("#grid2").getRowData(rowNumList[i]);
 				rowDataArray[i] = rowData.userId;
 			}
+			jQuery.ajaxSettings.traditional = true;
 			jQuery("#grid3").setPostData({roleId:roleId, userId:rowDataArray});
 			jQuery("#grid3").setGridParam({url:"<c:url value='/authorities/add.do?' />"}).trigger("reloadGrid");
 			jQuery("#grid3").setGridParam({url:"<c:url value='/authorities/existListData.do?'/> "});

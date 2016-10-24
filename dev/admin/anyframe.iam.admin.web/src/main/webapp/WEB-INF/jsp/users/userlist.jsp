@@ -7,7 +7,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><anyframe:message code="user.ui.title.userlist" /></title>
 
-
 <jsp:include page="/common/jquery-include.jsp" />
 <jsp:include page="/common/jstree-include.jsp" />
 <jsp:include page="/common/jquery-autocomplete-include.jsp" />
@@ -52,25 +51,16 @@ body {
 					draggable : false
 				}
 			},
-
-//			jquery 1.4.2 hotkey 관련 plugin 문제로 기능을 잠시 막음 			
-//			plugins : {
-//				contextmenu	: { },
-//				hotkeys : {
-//					functions : {
-//						"f2"	: function () { if(this.selected) this.rename(); return false; },
-//						"del"	: function () { if(this.selected) alert("메롱"); return false; }
-//					}
-//				}
-//			},
-
+			plugins : {
+				contextmenu	: { }
+			},
 			callback : {
 				beforedata	: function(NODE, TREE_OBJ) {
 					return {
 							id : $(NODE).attr("id") || "0",
 							groupName : document.getElementById("groupName").value,
 							searchClickYn : document.getElementById("searchClickYn").value
-					}
+					};
 				},
 				onselect : function(NODE, TREE_OBJ) {
 					jqSearchForm.groupId.value = NODE.id;
@@ -186,6 +176,7 @@ function updateGroup(groupId, groupName) {
 function deleteGroup(groupId) {
 	$.tree.focused().remove("#" + groupId);
 }
+
 //-->
 </script>
 </head>

@@ -238,6 +238,8 @@ CREATE TABLE VIEW_RESOURCES  (
 	VIEW_NAME	VARCHAR(50) NOT NULL,	-- ex.) 미입고현황
 	DESCRIPTION	VARCHAR(255) NOT NULL,	-- ex.) 입고되지 않은 주문 리스트
 	VIEW_INFO	VARCHAR(255),		-- ex.) 화면에 대한 추가 정보
+	VIEW_TYPE	VARCHAR(10) NOT NULL,
+	VISIBLE		VARCHAR(1) NOT NULL,
 	CONSTRAINT PK_VIEW_RESOURCES  PRIMARY KEY(VIEW_RESOURCE_ID)
 );
 
@@ -251,13 +253,23 @@ CREATE TABLE VIEW_RESOURCES_MAPPING  (
 	CONSTRAINT FK_MAPPING_VIEW_RESOURCE_ID  FOREIGN KEY (VIEW_RESOURCE_ID) REFERENCES VIEW_RESOURCES (VIEW_RESOURCE_ID)
 );
 
-insert into view_resources(view_resource_id, category, view_name, description, view_info) values ('addProduct', 'Sales Mgmt.', 'Add Product', '상품 등록 화면', '');
-insert into view_resources(view_resource_id, category, view_name, description, view_info) values ('listProduct', 'Sales Mgmt.', 'Search List of Sales', '상품 목록조회 화면', '');
-insert into view_resources(view_resource_id, category, view_name, description, view_info) values ('listCategory', 'Sales Mgmt.', 'Search List of Category', '카테고리 목록조회 화면', '');
-insert into view_resources(view_resource_id, category, view_name, description, view_info) values ('updateCategory', 'Sales Mgmt.', 'Update Category Information', '카테고리 수정 화면', '');
-insert into view_resources(view_resource_id, category, view_name, description, view_info) values ('listTransaction', 'Purchase Mgmt.', 'Search List of Purchase', '거래 목록조회 화면', '');
-insert into view_resources(view_resource_id, category, view_name, description, view_info) values ('listUser', 'User Mgmt.', 'Search List of Users', '사용자 목록조회 화면', '');
-insert into view_resources(view_resource_id, category, view_name, description, view_info) values ('updateUser', 'User Mgmt.', 'Update Product', '사용자 수정 화면', '');
+CREATE TABLE VIEW_HIERARCHY	(
+	PARENT_VIEW VARCHAR(50) NOT NULL,
+	CHILD_VIEW VARCHAR(50) NOT NULL,
+	CREATE_DATE VARCHAR(8),
+	MODIFY_DATE VARCHAR(8),
+	CONSTRAINT PK_VIEW_HIERARCHY PRIMARY KEY(PARENT_VIEW,CHILD_VIEW),
+	CONSTRAINT FK_VIEW1 FOREIGN KEY(PARENT_VIEW) REFERENCES VIEW_RESOURCES(VIEW_RESOURCE_ID),
+	CONSTRAINT FK_VIEW2 FOREIGN KEY(CHILD_VIEW) REFERENCES VIEW_RESOURCES(VIEW_RESOURCE_ID)
+);
+
+insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('addProduct', 'Sales Mgmt.', 'Add Product', '상품 등록 화면', '', 'button', 'Y');
+insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('listProduct', 'Sales Mgmt.', 'Search List of Sales', '상품 목록조회 화면', '', 'button', 'Y');
+insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('listCategory', 'Sales Mgmt.', 'Search List of Category', '카테고리 목록조회 화면', '', 'button', 'N');
+insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('updateCategory', 'Sales Mgmt.', 'Update Category Information', '카테고리 수정 화면', '', 'button', 'Y');
+insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('listTransaction', 'Purchase Mgmt.', 'Search List of Purchase', '거래 목록조회 화면', '', 'button', 'Y');
+insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('listUser', 'User Mgmt.', 'Search List of Users', '사용자 목록조회 화면', '', 'button', 'Y');
+insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('updateUser', 'User Mgmt.', 'Update Product', '사용자 수정 화면', '', 'button', 'Y');
 
 insert into view_resources_mapping(view_resource_id, ref_id, mask, permissions, ref_type) values ('addProduct', 'ROLE_USER', 7, 'READ,WRITE,CREATE', 'ROLE');
 insert into view_resources_mapping(view_resource_id, ref_id, mask, permissions, ref_type) values ('addProduct', 'buyer', 5, 'READ,CREATE', 'USER');
@@ -265,5 +277,12 @@ insert into view_resources_mapping(view_resource_id, ref_id, mask, permissions, 
 insert into view_resources_mapping(view_resource_id, ref_id, mask, permissions, ref_type) values ('updateCategory', 'ROLE_USER', 1, 'READ', 'ROLE');
 insert into view_resources_mapping(view_resource_id, ref_id, mask, permissions, ref_type) values ('updateCategory', 'ROLE_ADMIN', 31, 'READ,WRITE,CREATE,DELETE,ADMINISTRATION', 'ROLE');
 insert into view_resources_mapping(view_resource_id, ref_id, mask, permissions, ref_type) values ('updateCategory', 'taeyoung.kim', 3, 'READ,WRITE', 'USER');
+
+insert into view_hierarchy(parent_view, child_view, create_date, modify_date) values ('listProduct', 'addProduct', '20100418', null);
+insert into view_hierarchy(parent_view, child_view, create_date, modify_date) values ('listCategory', 'addProduct', '20100418', null);
+insert into view_hierarchy(parent_view, child_view, create_date, modify_date) values ('updateCategory', 'addProduct', '20100418', null);
+insert into view_hierarchy(parent_view, child_view, create_date, modify_date) values ('listTransaction', 'updateCategory', '20100418', null);
+insert into view_hierarchy(parent_view, child_view, create_date, modify_date) values ('listUser', 'updateCategory', '20100418', null);
+insert into view_hierarchy(parent_view, child_view, create_date, modify_date) values ('updateUser', 'updateCategory', '20100418', null);
 
 commit;

@@ -23,10 +23,20 @@ package anyframe.iam.admin.vo;
  */
 public class ViewResourceSearchVO extends CommonSearchVO {
 	private static final long serialVersionUID = 1L;
+	
+	private String parentViewResourceId;
 
 	private String refId;
 
 	private String type;
+	
+	public String getParentViewResourceId(){
+		return parentViewResourceId;
+	}
+	
+	public void setParentViewResourceId(String parentViewResourceId){
+		this.parentViewResourceId = parentViewResourceId;
+	}
 
 	public String getType() {
 		return type;

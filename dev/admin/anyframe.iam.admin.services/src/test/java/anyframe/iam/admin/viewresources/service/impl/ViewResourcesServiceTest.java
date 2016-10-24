@@ -21,7 +21,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -31,19 +35,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import anyframe.common.Page;
 import anyframe.common.exception.BaseException;
+import anyframe.iam.admin.domain.IamTree;
+import anyframe.iam.admin.domain.ViewHierarchy;
+import anyframe.iam.admin.domain.ViewHierarchyId;
 import anyframe.iam.admin.domain.ViewResource;
 import anyframe.iam.admin.viewresources.service.ViewResourcesService;
 import anyframe.iam.admin.vo.ViewResourceSearchVO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath*:spring/context-test-all-*" })
-@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
-@Transactional
+//@TransactionConfiguration(transactionManager = "txManager", defaultRollback = true)
+//@Transactional
 public class ViewResourcesServiceTest {
 
 	@Autowired
@@ -62,8 +67,36 @@ public class ViewResourcesServiceTest {
 		domain.setCategory("User Mgmt.");
 		domain.setDescription("사용자 추가");
 		domain.setViewInfo("사용자 추가");
+		domain.setViewType("Button");
+		domain.setVisible("Y");
+		
+		ViewHierarchyId viewHierarchyId = new ViewHierarchyId();
+		ViewHierarchy viewHierarchy = new ViewHierarchy();
+		
+		viewHierarchyId.setChildView("listTransaction");
+		viewHierarchyId.setParentView(domain.getViewResourceId());
+		viewHierarchy.setId(viewHierarchyId);
+		
+		Set<ViewHierarchy> parentView = new HashSet<ViewHierarchy>();
+		
+		parentView.add(viewHierarchy);
+		
+		domain.setViewHierarchiesForParentView(parentView);
 
 		return domain;
+	}
+	
+	@Test
+	public void testSave() throws Exception{
+		ViewResource domain = makeDomain();
+		
+		viewResourcesService.save(domain);
+		
+		ViewResource resultDomain = viewResourcesService.get(domain.getViewResourceId());
+		
+		assertNotNull(resultDomain);
+		assertEquals(domain.getViewResourceId(), resultDomain.getViewResourceId());
+		assertEquals("addUser", resultDomain.getViewResourceId());
 	}
 
 	@Test
@@ -87,8 +120,8 @@ public class ViewResourcesServiceTest {
 		assertEquals(1, resultPage.getSize());
 
 		Iterator iter = resultPage.getList().iterator();
-		ViewResource resultDomain = (ViewResource) iter.next();
-		assertEquals(domain.getViewResourceId(), resultDomain.getViewResourceId());
+		HashMap resultDomain = (HashMap) iter.next();
+		assertEquals(domain.getViewResourceId(), resultDomain.get("viewResourceId"));
 	}
 
 	@Test
@@ -139,4 +172,31 @@ public class ViewResourcesServiceTest {
 		assertEquals(resultDomain.getCategory(), updatedDomain.getCategory());
 
 	}
+	
+	@Test
+	public void testGetRootNodeOfViews() throws Exception{
+		List<IamTree> rootNode = viewResourcesService.getRootNodeOfViews();
+		assertNotNull(rootNode);
+		assertEquals("addProduct", rootNode.get(0).getId());
+	}
+	
+	@Test
+	public void testGetViewTree() throws Exception{
+		
+		// make domain
+		ViewResource domain = makeDomain();
+		
+		// save
+		ViewResource savedViewResource = viewResourcesService.save(domain);
+		
+		// get view tree
+		List<IamTree> resultList = viewResourcesService.getViewTree("listTransaction");
+		
+		System.out.println(resultList.size());
+		assertNotNull(resultList);
+		assertTrue(resultList.size() > 0);
+		assertEquals("addUser", resultList.get(0).getId());
+		
+	}
+	
 }

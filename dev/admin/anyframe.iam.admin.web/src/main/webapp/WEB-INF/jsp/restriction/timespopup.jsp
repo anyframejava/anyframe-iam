@@ -90,7 +90,6 @@ jQuery(document).ready( function() {
 			window.close();
 	    }
 	});
-//	jQuery("#grid").jqGrid('navGrid','#pager',{edit:false,add:false,del:false,search:false});
 	
 	/* Button Function Start (Resource CRUD) */
 

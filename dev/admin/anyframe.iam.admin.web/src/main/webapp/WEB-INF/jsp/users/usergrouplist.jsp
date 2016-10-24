@@ -5,7 +5,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><anyframe:message code="user.ui.title.userlist" /></title>
 
 <jsp:include page="/common/jquery-include.jsp" />
@@ -18,15 +17,17 @@ jQuery(document).ready(
 		var url = "<c:url value='/users.do'/>";
 		var jqSearchForm = document.searchForm;
 		var groupId = parent.document.searchForm.groupId.value;
-		// Grid Component
+
 		jQuery("#grid_user").jqGrid(
 		{
 			sortable: true,
 			url : "<c:url value='/users/listData.do?&groupId='/>" + groupId,
 			mtype : 'POST',
 			datatype : "json",
-			colNames : [ '<anyframe:message code="user.ui.grid.userid" />', '<anyframe:message code="user.ui.grid.username" />',
-					'<anyframe:message code="user.ui.grid.group" />', '<anyframe:message code="user.ui.grid.enable" />' ],
+			colNames : [ '<anyframe:message code="user.ui.grid.userid" />', 
+			 			'<anyframe:message code="user.ui.grid.username" />',
+						'<anyframe:message code="user.ui.grid.group" />', 
+						'<anyframe:message code="user.ui.grid.enable" />' ],
 			jsonReader: {
 		        repeatitems: false
 		    },
@@ -34,31 +35,36 @@ jQuery(document).ready(
 				key : true,
 				name : 'userId',
 				index : 'userId',
+				sorttype : 'text',
 				width : 100
 			}, {
 				name : 'userName',
 				index : 'userName',
+				sorttype : 'text',
 				width : 100
 			}, {
 				name : 'groupName',
 				index : 'groupName',
+				sorttype : 'text',
 				width : 100
 			}, {
 				name : 'enabled',
 				index : 'enabled',
+				sorttype : 'text',
 				width : 70
 			} ],
 			width : 572,
-			height : 315,
+			height : 335,			
 			multiselect : true,
+			forceFit : true,
 			sortname : 'userId',
 			sortorder : 'asc',
 			pager : jQuery('#pager_user'),
 			rowNum : 20,
 			rowList : [ 10, 20, 30, 40 ],
 			viewrecords : true,
+			
 			loadError: function(xhr,st,err) {
-				alert(xhr, st, err);
 				if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									
 					location.href = "<c:url value='/login/relogin.do?inputPage=/userdetail/list.do?&groupId='/>" + groupId;
 					return;
@@ -70,7 +76,6 @@ jQuery(document).ready(
 						+ rowid;
 			}
 		});
-//		jQuery("#grid_user").jqGrid('navGrid','#pager_user',{edit:false,add:false,del:false,search:false});
 
 		/* Button Function Start (User CRUD) */
 		/* Delete User */
@@ -92,6 +97,7 @@ jQuery(document).ready(
 							rowArray[i] = rowData.userId;
 //							jQuery("#grid_user").delRowData(rowData.userId);
 						}
+						jQuery.ajaxSettings.traditional = true;
 						jQuery("#grid_user").setPostData({userId : rowArray});
 						jQuery("#grid_user").setGridParam({	url : "<c:url value='/users/delete.do?groupId='/>" + groupId}).trigger("reloadGrid");
 						jQuery("#grid_user").setGridParam({ url : "<c:url value='/users/listData.do?'/>"});
@@ -144,7 +150,6 @@ body {
 </style></head>
 
 <body>
-<div id="grid" class="demo" style="overflow: auto; height:100%; width: 624px;margin-top: 13px;" >
 <form name="searchForm" onSubmit="return false"><input type="hidden" name="groupId">
 <table width="572" border="0" cellpadding="0" cellspacing="0" >
 	<tr height="30">
@@ -183,12 +188,11 @@ body {
 <table width="572" height="100%" border="0" cellpadding="0" cellspacing="0" >
 	<tr>
 		<td valign="top">
-			<table id="grid_user" class="scroll" cellpadding="0" cellspacing="0" style="margin-top: 10px;"></table>
+			<table id="grid_user" class="scroll" cellpadding="0" cellspacing="0"></table>
 			<div id="pager_user" class="scroll" style="text-align: center;"></div>
 		</td>
 	</tr>
 </table>
 </form>
-</div>
 </body>
 </html>

@@ -5,6 +5,7 @@
 <head>
 <title>IAM Admin Web Menu</title>
 <link href="<c:url value='/css/left.css'/>" rel="stylesheet" type="text/css">
+
 <jsp:include page="/common/jquery-include.jsp" />
 
 <script ID="clientEventHandlersJS" LANGUAGE="javascript">
@@ -63,13 +64,7 @@ body {
     <td height="1" width="250" background="<c:url value='/images/left/bg_line.gif'/>"></td>
   </tr>
   <tr id="sub3-3" style="display:">
-    <td height="24" width="141" background="<c:url value='/images/left/bg_mainnav.gif'/>" class="mainNav" style="padding:7px 2px 4px 20px"><a href="<c:url value='/viewresources/list.do'/>" target="rightFrame">View List.</a></td>
-  </tr>
-  <tr id="sub3-4" style="display:">
-    <td height="1" width="250" background="<c:url value='/images/left/bg_line.gif'/>"></td>
-  </tr>
-  <tr id="sub3-5" style="display:">
-    <td height="24" width="141" background="<c:url value='/images/left/bg_mainnav.gif'/>" class="mainNav" style="padding:7px 2px 4px 20px"><a href="<c:url value='/viewresourcesmapping/list.do'/>" target="rightFrame">View Mapping.</a></td>
+    <td height="24" width="141" background="<c:url value='/images/left/bg_mainnav.gif'/>" class="mainNav" style="padding:7px 2px 4px 20px"><a href="<c:url value='/viewresources/viewlist.do'/>" target="rightFrame">View List</a></td>
   </tr>
   <tr id=Main4>
     <td height="29" id="mainMenu" background="<c:url value='/images/left/bg_menu.gif'/>" class="mainMenu" style="padding:9px 2px 4px 20px">Restriction Management</td>

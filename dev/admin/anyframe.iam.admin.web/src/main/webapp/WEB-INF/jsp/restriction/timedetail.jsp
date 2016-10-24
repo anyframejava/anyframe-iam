@@ -9,6 +9,7 @@
 <title><anyframe:message code="restrictedtimes.ui.title.restrictedtimesdetail" /></title>
 
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
+
 <jsp:include page="/common/jquery-include.jsp" />
 
 <script type="text/javascript" src="<c:url value='/validator.do'/>"></script>

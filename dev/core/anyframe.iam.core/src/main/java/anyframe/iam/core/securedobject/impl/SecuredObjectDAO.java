@@ -106,16 +106,25 @@ public class SecuredObjectDAO {
 	/**
 	 * default query to find mapping information of view resource.
 	 */
-	public static final String DEF_VIEW_RESOURCE_MAPPING_QUERY = "SELECT view_resource_id, ref_type, ref_id, mask, permissions  "
-			+ "FROM view_resources_mapping "
-			+ "WHERE view_resource_id = :viewResourceId "
+	public static final String DEF_VIEW_RESOURCE_MAPPING_QUERY = "SELECT b.view_resource_id, b.ref_type, b.ref_id, b.mask, b.permissions  "
+			+ "FROM view_resources_mapping b, "
+			+ " view_resources a "
+			+ "WHERE b.view_resource_id = :viewResourceId "
+			+ "AND a.view_resource_id = b.view_resource_id "
+			+ "AND a.visible = 'Y' "
 			+ "AND ( "
-			+ "		   ( ref_id IN ( {{userRoleList}} ) AND ref_type = 'ROLE' ) "
-			+ "		OR ( ref_id = :userId AND ref_type = 'USER' ) "
-			+ "		OR ( ref_id = :groupId AND ref_type = 'GROUP' ) "
+			+ "		   ( b.ref_id IN ( {{userRoleList}} ) AND b.ref_type = 'ROLE' ) "
+			+ "		OR ( b.ref_id = :userId AND b.ref_type = 'USER' ) "
+			+ "		OR ( b.ref_id = :groupId AND b.ref_type = 'GROUP' ) "
 			+ "	) "
-			+ "ORDER BY CASE ref_type WHEN 'USER' THEN 1 WHEN 'GROUP' THEN 2 WHEN 'ROLE' THEN 3 ELSE 10 END, ref_id ";
+			+ "ORDER BY CASE b.ref_type WHEN 'USER' THEN 1 WHEN 'GROUP' THEN 2 WHEN 'ROLE' THEN 3 ELSE 10 END, b.ref_id ";
 
+	public static final String DEF_HIERARCHYCAL_VIEW_QUERY = 
+			  "SELECT a.child_view child "
+			+ "FROM view_hierarchy a "
+			+ "WHERE a.parent_view = :viewResourceId ";
+		
+	
 	private String sqlRolesAndUrl;
 
 	private String sqlRolesAndMethod;
@@ -131,6 +140,8 @@ public class SecuredObjectDAO {
 	private String sqlRestrictedTimesResources;
 
 	private String sqlViewResourceMapping;
+	
+	private String sqlViewHierarchy;
 
 	public SecuredObjectDAO() {
 		this.sqlRolesAndUrl = DEF_ROLES_AND_URL_QUERY;
@@ -141,6 +152,15 @@ public class SecuredObjectDAO {
 		this.sqlRestrictedTimesRoles = DEF_RESTRICTED_TIMES_ROLES_QUERY;
 		this.sqlRestrictedTimesResources = DEF_RESTRICTED_TIMES_RESOURCES_QUERY;
 		this.sqlViewResourceMapping = DEF_VIEW_RESOURCE_MAPPING_QUERY;
+		this.sqlViewHierarchy = DEF_HIERARCHYCAL_VIEW_QUERY;
+	}
+
+	public String getSqlViewHierarchy() {
+		return sqlViewHierarchy;
+	}
+
+	public void setSqlViewHierarchy(String sqlViewHierarchy) {
+		this.sqlViewHierarchy = sqlViewHierarchy;
 	}
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -376,5 +396,19 @@ public class SecuredObjectDAO {
 
 		return this.namedParameterJdbcTemplate.queryForList(sql, paramMap);
 	}
-
+	
+	public String getViewHierarchy(String viewResourceId) throws Exception{
+		
+		Map paramMap = new HashMap();
+		paramMap.put("viewResourceId", viewResourceId);
+		
+		List viewResourceIds = this.namedParameterJdbcTemplate.queryForList(getSqlViewHierarchy(), paramMap);
+		Iterator iter = viewResourceIds.iterator();
+		if(iter.hasNext()){
+			Map tempMap = (Map) iter.next();
+			return ((String) tempMap.get("child"));
+		} else{
+			return "";
+		}
+	}
 }

@@ -220,5 +220,23 @@ public class SecuredObjectServiceImpl implements ISecuredObjectService, Applicat
 			}
 		}
 	}
+	
+	public String getViewHierarchy(String viewResourceId) throws BaseException{
+		try {
+			return securedObjectDAO.getViewHierarchy(viewResourceId);
+		}
+		catch (Exception e) {
+			ISecuredObjectService.LOGGER.error(getMessageSource().getMessage("error.security.runtime.error",
+					new Object[] { "View Hierarchy : " + viewResourceId }, Locale.getDefault()), e);
+			if (e instanceof BaseException) {
+				throw (BaseException) e;
+			}
+			else {
+				throw new BaseException(getMessageSource(), "error.security.runtime.error", new Object[] { e
+						.getMessage() }, e);
+			}
+		}
+		
+	}
 
 }

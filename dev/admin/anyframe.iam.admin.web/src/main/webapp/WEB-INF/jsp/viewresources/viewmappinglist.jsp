@@ -11,13 +11,14 @@
 <jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript">
+<!--
 jQuery(document).ready(
 	function() {
-
+	var viewResourceId = parent.document.f1.viewResourceId.value;
 		jQuery("#grid2").jqGrid( 
 		{
 			sortable: true,
-			url: "<c:url value='/viewresourcesmapping/listData.do?' />",
+			url: "<c:url value='/viewresourcesmapping/listData.do?&parentViewResourceId=' />" + viewResourceId,
 			mtype:'GET',
 			datatype : "json",
 			colNames : [ '<anyframe:message code="restrictedtimes.ui.grid.compkey" />', "<anyframe:message code='viewresource.ui.label.viewresourceid' />", "<anyframe:message code='viewresource.ui.label.reftype' />", "<anyframe:message code='viewresource.ui.label.viewname' />", "<anyframe:message code='viewresource.ui.label.category' />", "<anyframe:message code='viewresource.ui.label.refid' />", "<anyframe:message code='viewresource.ui.label.permissions' />"],
@@ -41,17 +42,17 @@ jQuery(document).ready(
 				name : 'refType',
 				index : 'refType',
 				sorttype : 'text',
-				width : 100
+				width : 40
 			}, {
 				name : 'viewName',
 				index : 'viewName',
 				sorttype : 'text',
-				width : 80
+				width : 100
 			}, {
 				name : 'category',
 				index : 'category',
 				sorttype : 'text',
-				width : 80
+				width : 100
 			}, {
 				key : true,
 				name : 'refId',
@@ -62,10 +63,10 @@ jQuery(document).ready(
 				name : 'permissions',
 				index : 'permissions',
 				sorttype : 'text',
-				width : 200
+				width : 180
 			} ],
-			width : 790,
-			height : 350,
+			width : 615,
+			height : 322,
 			forceFit:true,
 			multiselect : true,
 			pager : jQuery('#pager2'),
@@ -88,7 +89,6 @@ jQuery(document).ready(
 				location.href = "<c:url value='/viewresourcesmapping/get.do?&viewResourceId=' />" + rowData.viewResourceId;
 		    }
 		});
-//		jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
 		
 		/* Button Function Start (Resource CRUD) */
 		
@@ -97,8 +97,8 @@ jQuery(document).ready(
 
 			var rowNum;
 			var rowData;
-			var viewID = new Array();
-			var refId = new Array();
+			var viewID = [];
+			var refId = [];
 			rowNum = new String(jQuery("#grid2").getGridParam('selarrrow'));
 			rowNumList = rowNum.split(",");
 
@@ -107,22 +107,23 @@ jQuery(document).ready(
 				return false;
 			} else {
 				if(confirm("<anyframe:message code='viewresource.ui.alert.confirmtodelete' />")){
-				for(var i = 0 ; i < rowNumList.length ; i++){
-					rowData = jQuery("#grid2").getRowData(rowNumList[i]);
-					viewID[i] = rowData.viewResourceId;
-					refId[i] = rowData.refId;
-					jQuery("#grid2").delRowData(rowData.compKey);
+					for(var i = 0 ; i < rowNumList.length ; i++){
+						rowData = jQuery("#grid2").getRowData(rowNumList[i]);
+						viewID.push(rowData.viewResourceId);
+						refId.push(rowData.refId);
+						jQuery("#grid2").delRowData(rowData.compKey);
+					}
+					jQuery.ajaxSettings.traditional = true;
+					jQuery("#grid2").setPostData({viewResourceId:viewID, refId:refId});
+					jQuery("#grid2").setGridParam({url:"<c:url value='/viewresourcesmapping/delete.do?' />"}).trigger("reloadGrid");
+					jQuery("#grid2").setGridParam({url:"<c:url value='/viewresourcesmapping/listData.do?' />"});
 				}
-				jQuery("#grid2").setPostData({viewResourceId:viewID, refId:refId});
-				jQuery("#grid2").setGridParam({url:"<c:url value='/viewresourcesmapping/delete.do?' />"}).trigger("reloadGrid");
-				jQuery("#grid2").setGridParam({url:"<c:url value='/viewresourcesmapping/listData.do?' />"});
-								}
-							}
-						});
+			}
+		});
 
 		/* Add Mapping */
 		$("[name=addMapping]").click( function() {
-			location.href = "<c:url value='/viewresourcesmapping/addView.do?' />";
+			location.href = "<c:url value='/viewresourcesmapping/get.do?&viewResourceId=' />" + viewResourceId;
 		});
 
 		/* Search Mapping */
@@ -131,40 +132,33 @@ jQuery(document).ready(
 			jQuery("#grid2").setGridParam({url:"<c:url value='/viewresourcesmapping/listData.do?' />"}).trigger("reloadGrid");
 			});
 	});
+//-->
 </script>
+</head>
 <style type="text/css">
 <!--
 body {
-	background-color: #E9ECF1;
 	margin-left: 0px;
 	margin-top: 0px;
 	margin-right: 0px;
 	margin-bottom: 0px;
+	height:100%;
+	background-color: #FFFFFF;
 }
 -->
-</style></head>
+</style>
 <body>
+<form name="resourceGrid">
 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
   <tr>
     <td width="10" rowspan="3">&nbsp;</td>
     <td height="6"></td>
   </tr>
-  <!--- START : Tab menu ------>
   <tr>
-    <td height="30" valign="bottom" background="<c:url value='/images/content/bg_tab.gif'/>" style="padding-left:10px">
-      <table height="24" border="0" cellpadding="0" cellspacing="0">
-              <tr height="21">
-                <td width="145" height="27" align="center" valign="bottom"  background="<c:url value='/images/content/tab_menu1.gif'/>" bgcolor="#EDEDED" class="blkbold">
-                <anyframe:message code='viewresource.ui.tab.viewmapping' /></td>
-              </tr>
-    </table></td>
-  </tr>
-  <!--- END : Tab menu ------>
-  <tr>
-    <td style="padding-left:10px">
-<form name="resourceGrid">
+    <td>
+
   <div id="documentation" class="demo" style="overflow:auto; height:460px;width:800px;">
-    <table width="800" border="0" cellpadding="0" cellspacing="0"  style="margin-top: 10px;" >
+    <table width="620" border="0" cellpadding="0" cellspacing="0">
 	<tr height="30">
 		<td width="41">
 			<select id="searchCondition" class="selbox">
@@ -175,7 +169,7 @@ body {
 				<option value="permissions"><anyframe:message code='viewresource.ui.selbox.permissions' /></option>
 			</select>
 		</td>
-		<td width="120" class="tdpadding">
+		<td width="67" class="tdpadding">
 			<input type="text" id="searchKeyword" size="20" class="ct_input_g">
 		</td>
 		<td width="41" class="tdpadding">
@@ -185,10 +179,10 @@ body {
 				<option value="ROLE"><anyframe:message code='viewresource.ui.selbox.role' /></option>
 			</select> 
 		</td>
-		<td width="108" class="tdpadding">
+		<td width="38" class="tdpadding">
 			<a href="#" name="searchMapping" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a>		
 		</td>
-		<td width="490" align="right">
+		<td width="330" align="right">
 			<table>
 				<tr>
 					<td>
@@ -214,7 +208,7 @@ body {
 		</td>
 	</tr>
 </table>
-<table width="800" border="0" cellpadding="0" cellspacing="0">
+<table width="572" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td>
 		<table id="grid2" class="scroll" cellpadding="0" cellspacing="0"></table>
@@ -223,20 +217,9 @@ body {
 	</tr>
 </table>
 </div>
-</form>	</td>
-  </tr>
- <tr>
-    <td colspan="2" valign="top">
-      <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#E9ECF1">
-        
-        <tr>
-          <td height="1" bgcolor="#C9CFDD"></td>
-      </tr>
-        <tr>
-          <td valign="top" bgcolor="#E9ECF1"><div id="footSub"></div></td>
-      </tr>
-      </table></td>
+</td>
   </tr>
 </table>
+</form>	
 </body>
 </html>

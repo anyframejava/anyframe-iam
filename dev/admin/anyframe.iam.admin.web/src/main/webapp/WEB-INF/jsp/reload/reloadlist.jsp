@@ -9,7 +9,6 @@
 <title><anyframe:message code="resourcereload.ui.title.resourcereload" /></title>
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
-
 <jsp:include page="/common/jquery-include.jsp" />
 
 <script language="javascript">

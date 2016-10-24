@@ -11,7 +11,7 @@
 		<!-- <property name="serviceUrl"
 			value="https://localhost:8443/anyframe.iam.sample/assist/resourceGatherAssist.do" /> -->
 		<property name="serviceUrl"
-			value="http://localhost:8080/anyframe.iam.sample-1.0.2/assist/resourceGatherAssist.do" />
+			value="http://localhost:8080/anyframe.iam.sample-1.0.3.RC1/assist/resourceGatherAssist.do" />
 		<property name="serviceInterface"
 			value="anyframe.iam.core.assist.IResourceGatherAssistService" />
 		<property name="httpInvokerRequestExecutor">		
@@ -26,7 +26,7 @@
 		<property name="serviceUrl"
 			value="https://localhost:8443/anyframe.iam.sample/reload/resourceReload.do" /> -->
 		<property name="serviceUrl"
-			value="http://localhost:8080/anyframe.iam.sample-1.0.2/reload/resourceReload.do" />			
+			value="http://localhost:8080/anyframe.iam.sample-1.0.3.RC1/reload/resourceReload.do" />			
 		<property name="serviceInterface"
 			value="anyframe.iam.core.reload.IResourceReloadService" />
 		<property name="httpInvokerRequestExecutor">

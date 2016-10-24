@@ -7,10 +7,8 @@
 <head>
 <title><anyframe:message code="roleresource.ui.title.resourcelist" /></title>
 
-
 <jsp:include page="/common/jquery-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
-
 
 <script type="text/javascript">
 <!--
@@ -72,7 +70,6 @@
 				alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
 			}
 		});
-//		jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
 		
 		/* Button Function Start (Resource CRUD) */
 		

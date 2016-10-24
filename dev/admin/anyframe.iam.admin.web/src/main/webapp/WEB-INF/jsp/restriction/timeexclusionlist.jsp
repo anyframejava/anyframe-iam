@@ -7,7 +7,6 @@
 <head>
 <title><anyframe:message code="restrictedtimes.ui.title.timeexclusionlist" /></title>
 
-
 <jsp:include page="/common/jquery-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
 
@@ -99,7 +98,6 @@ jQuery(document).ready( function() {
 		    location.href = "<c:url value='/restriction/timeexclusion/get.do?&timeId=' />" + rowid.substr(0,10) + "&resourceId=" + rowid.substr(10,10);
 	    }
 	});
-//	jQuery("#grid").jqGrid('navGrid','#pager',{edit:false,add:false,del:false,search:false});
 	
 	/* Button Function Start (Resource CRUD) */
 	
@@ -125,6 +123,7 @@ jQuery(document).ready( function() {
 					roleIdArray[i] = rowData.roleId;
 					jQuery("#grid").delRowData(rowData.compKey);
 				}
+				jQuery.ajaxSettings.traditional = true;
 				jQuery("#grid").setPostData({timeId:timeIdArray, resourceId:resourceIdArray, roleId:roleIdArray});
 				jQuery("#grid").setGridParam({url:"<c:url value='/restriction/timeexclusion/delete.do?' />"}).trigger("reloadGrid");
 				jQuery("#grid").setGridParam({url:"<c:url value='/restriction/timeexclusion/listData.do?' />"});

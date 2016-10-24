@@ -17,6 +17,7 @@
 package anyframe.iam.admin.domain;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -27,13 +28,15 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import anyframe.core.generic.model.BaseObject;
+
 /**
  * The persistent class for the VIEW_RESOURCES database table.
  * 
  */
 @Entity
 @Table(name = "VIEW_RESOURCES")
-public class ViewResource implements Serializable {
+public class ViewResource extends BaseObject implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -51,11 +54,23 @@ public class ViewResource implements Serializable {
 
 	@Column(name = "VIEW_NAME", nullable = false, length = 50)
 	private String viewName;
+	
+	@Column(name = "VIEW_TYPE", nullable = false, length = 10)
+	private String viewType;
+	
+	@Column(name = "VISIBLE", nullable = false, length = 1)
+	private String visible;
 
 	// bi-directional many-to-one association to ViewResourcesMapping
 	@OneToMany(mappedBy = "viewResource", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Set<ViewResourcesMapping> viewResourcesMappings;
-
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "viewByParentView")
+	private Set<ViewHierarchy> viewHierarchiesForParentView = new HashSet<ViewHierarchy>(0);
+	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "viewByChildView")
+	private Set<ViewHierarchy> viewHierarchiesForChildView = new HashSet<ViewHierarchy>(0);
+	
 	public ViewResource() {
 	}
 
@@ -106,5 +121,93 @@ public class ViewResource implements Serializable {
 	public void setViewResourcesMappings(Set<ViewResourcesMapping> viewResourcesMappings) {
 		this.viewResourcesMappings = viewResourcesMappings;
 	}
+	
+	public Set<ViewHierarchy> getViewHierarchiesForParentView() {
+		return this.viewHierarchiesForParentView;
+	}
 
+	public void setViewHierarchiesForParentView(Set<ViewHierarchy> viewHierarchiesForParentView) {
+		this.viewHierarchiesForParentView = viewHierarchiesForParentView;
+	}
+	
+	public Set<ViewHierarchy> getViewHierarchiesForChildView() {
+		return this.viewHierarchiesForChildView;
+	}
+	
+	public void setViewHierarchiesForChildView(Set<ViewHierarchy> viewHierarchiesForChildView) {
+		this.viewHierarchiesForChildView = viewHierarchiesForChildView;
+	}
+	
+	public String getViewType() {
+		return viewType;
+	}
+
+	public void setViewType(String viewType) {
+		this.viewType = viewType;
+	}
+
+	public String getVisible() {
+		return visible;
+	}
+
+	public void setVisible(String visible) {
+		this.visible = visible;
+	}
+
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+
+		if ((o == null) || (getClass() != o.getClass())) {
+			return false;
+		}
+
+		ViewResource pojo = (ViewResource) o;
+
+		if ((viewName != null) ? (!viewName.equals(pojo.viewName)) : (pojo.viewName != null)) {
+			return false;
+		}
+
+		if ((description != null) ? (!description.equals(pojo.description)) : (pojo.description != null)) {
+			return false;
+		}
+
+		if ((viewResourceId != null) ? (!viewResourceId.equals(pojo.viewResourceId)) : (pojo.viewResourceId != null)) {
+			return false;
+		}
+
+		if ((category != null) ? (!category.equals(pojo.category)) : (pojo.category != null)) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public int hashCode() {
+		int result = 0;
+		result = ((viewResourceId != null) ? viewResourceId.hashCode() : 0);
+		result = (31 * result) + ((description != null) ? description.hashCode() : 0);
+		result = (31 * result) + ((viewName != null) ? viewName.hashCode() : 0);
+		result = (31 * result) + ((category != null) ? category.hashCode() : 0);
+
+		return result;
+	}
+
+	public String toString() {
+		StringBuffer sb = new StringBuffer(getClass().getSimpleName());
+
+		sb.append(" [");
+		sb.append("viewResourceId").append("='").append(getViewResourceId()).append("', ");
+		sb.append("viewName").append("='").append(getViewName()).append("', ");
+		sb.append("description").append("='").append(getDescription()).append("', ");
+		sb.append("category").append("='").append(getCategory()).append("', ");
+		sb.append("viewInfo").append("='").append(getViewInfo()).append("', ");
+		sb.append("viewType").append("='").append(getViewType()).append("', ");
+		sb.append("visible").append("='").append(getVisible());
+
+		sb.append("]");
+
+		return sb.toString();
+	}
 }

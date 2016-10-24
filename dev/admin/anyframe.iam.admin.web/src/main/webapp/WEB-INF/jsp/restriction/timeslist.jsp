@@ -82,7 +82,6 @@ jQuery(document).ready( function() {
 		    location.href = "<c:url value='/restriction/get.do?&timeId=' />" + rowid;
 	    }
 	});
-//	jQuery("#grid").jqGrid('navGrid','#pager',{edit:false,add:false,del:false,search:false});
 	
 	/* Button Function Start (Resource CRUD) */
 	
@@ -105,6 +104,7 @@ jQuery(document).ready( function() {
 					rowArray[i] = rowData.timeId;
 					jQuery("#grid").delRowData(rowData.timeId);
 				}
+				jQuery.ajaxSettings.traditional = true;
 				jQuery("#grid").setPostData({timeId:rowArray});
 				jQuery("#grid").setGridParam({url:"<c:url value='/restriction/delete.do?' />"}).trigger("reloadGrid");
 				jQuery("#grid").setGridParam({url:"<c:url value='/restriction/listData.do?' />"});

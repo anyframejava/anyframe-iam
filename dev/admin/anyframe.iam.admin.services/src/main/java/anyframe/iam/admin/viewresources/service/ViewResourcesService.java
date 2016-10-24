@@ -16,8 +16,11 @@
 
 package anyframe.iam.admin.viewresources.service;
 
+import java.util.List;
+
 import anyframe.common.Page;
 import anyframe.core.generic.service.GenericService;
+import anyframe.iam.admin.domain.IamTree;
 import anyframe.iam.admin.domain.ViewResource;
 import anyframe.iam.admin.vo.ViewResourceSearchVO;
 
@@ -58,4 +61,17 @@ public interface ViewResourcesService extends GenericService<ViewResource, Strin
 	 * @throws Exception fail to delete rows
 	 */
 	ViewResource save(ViewResource viewResource) throws Exception;
+	
+	List<IamTree> getViewTree(String parentNode) throws Exception;
+	
+	List<IamTree> getRootNodeOfViews() throws Exception;
+	
+	void remove(String viewResourceId) throws Exception;
+	
+	String getViewNameList(String keyword) throws Exception;
+	
+	String getViewResourceIdByViewName(String viewName) throws Exception;
+	
+	List<String> getParentsViewIds(String viewResourceId) throws Exception;
+	
 }

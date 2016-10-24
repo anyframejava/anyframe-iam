@@ -45,6 +45,7 @@
 				<value>anyframe.iam.admin.domain.Authorities</value>
 				<value>anyframe.iam.admin.domain.ViewResource</value>
 				<value>anyframe.iam.admin.domain.ViewResourcesMapping</value>
+				<value>anyframe.iam.admin.domain.ViewHierarchy</value>
 				<value>anyframe.iam.admin.domain.IamResourceResult</value>
 				<value>anyframe.iam.admin.domain.CandidateSecuredResources</value>
 				<value>anyframe.iam.admin.domain.RestrictedTimes</value>
@@ -70,6 +71,7 @@
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-restrictedTimes.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-candidateSecuredResources.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-viewMapping.xml</value>
+				<value>classpath:hibernate/namedquery/namedquery-hibernate-viewHierarchy.xml</value>
 			</list>
 		</property>
 	</bean>

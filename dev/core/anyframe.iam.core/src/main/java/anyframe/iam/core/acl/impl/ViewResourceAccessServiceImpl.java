@@ -81,11 +81,13 @@ public class ViewResourceAccessServiceImpl implements IViewResourceAccessService
 			// mapping 만 고려토록 함. 마찬가지로 group 에 대해 맵핑해 놓은 경우 그 다음으로 고려함.
 			if ("USER".equals(tempMap.get("ref_type"))) {
 				result = ViewResourceHelper.isGranted(mask, requiredPermissionList);
-				return result ? true : false;
+				if(result)
+					return true;
 			}
 			else if ("GROUP".equals(tempMap.get("ref_type"))) {
 				result = ViewResourceHelper.isGranted(mask, requiredPermissionList);
-				return result ? true : false;
+				if(result)
+					return true;
 			}
 			else {
 				result = ViewResourceHelper.isGranted(mask, requiredPermissionList);
@@ -94,6 +96,15 @@ public class ViewResourceAccessServiceImpl implements IViewResourceAccessService
 				}
 			}
 		}
+		
+		// Permission이 없을 경우 상위의 view Resource를 검색,
+		// 상위 view Resource에 대한 isGranted를 수행 함으로써
+		// 상속 구조에서 권한 소유 여부를 체크한다.
+		// edited by youngmin.jo
+		
+		String childView = securedObjectService.getViewHierarchy(viewResourceId);
+		if(!"".equals(childView))
+			return isGranted(childView, requiredPermissionList);
 
 		return false;
 	}

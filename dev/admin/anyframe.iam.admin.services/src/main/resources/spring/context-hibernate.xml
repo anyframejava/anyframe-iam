@@ -33,6 +33,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.sprin
                 <value>anyframe.iam.admin.domain.GroupsHierarchy</value>
                 <value>anyframe.iam.admin.domain.Groups</value>
                 <value>anyframe.iam.admin.domain.ViewResource</value>
+                <value>anyframe.iam.admin.domain.ViewHierarchy</value>
                 <value>anyframe.iam.admin.domain.ViewResourcesMapping</value>
                 <value>anyframe.iam.admin.domain.Authorities</value>
                 <value>anyframe.iam.admin.domain.IamResourceResult</value>
@@ -60,6 +61,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.sprin
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-restrictedTimes.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-candidateSecuredResources.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-viewMapping.xml</value>
+				<value>classpath:hibernate/namedquery/namedquery-hibernate-viewHierarchy.xml</value>
 			</list>
 		</property>
     </bean>

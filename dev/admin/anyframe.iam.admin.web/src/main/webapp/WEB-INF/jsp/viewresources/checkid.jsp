@@ -8,7 +8,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Check View ID</title>
 
-
 <jsp:include page="/common/jquery-include.jsp" />
 
 <script type="text/javascript">

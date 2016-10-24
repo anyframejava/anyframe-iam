@@ -53,15 +53,7 @@ jQuery(document).ready(
 			rowNum : 20,
 			rowList : [ 10, 20, 30 ],
 			viewrecords : true,
-			/*
-			loadError: function(xhr,st,err) {
-				if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									
-					location.href = "<c:url value='/login/relogin.do?inputPage=/userdetail/list.do?&groupId='/>" + groupId;
-					return;
-				}
-				alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
-			},
-			*/
+
 			ondblClickRow : function(rowid) {
 				var index = "${index}";				
 				var rowData = jQuery("#grid").getRowData(rowid);
@@ -100,7 +92,7 @@ body {
 }
 -->
 </style></head>
-<body height="100%">
+<body>
 <div id="grid2" class="demo" style="overflow: auto; height:100%; width: 624px;margin-top: 13px;" >
 <form name="searchForm" onSubmit="return false"><input type="hidden" name="groupId">
 <table width="572" border="0" cellpadding="0" cellspacing="0" >

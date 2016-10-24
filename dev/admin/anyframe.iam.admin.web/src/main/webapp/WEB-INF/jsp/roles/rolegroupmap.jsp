@@ -90,7 +90,8 @@
 				groupId[i] = document.usersForm.groupId.options[i].value; 
 			}
 		}
-		
+
+		jQuery.ajaxSettings.traditional = true;
 		$.post("<c:url value='/rolegroupmapping/add.do?' />", {roleId:roleId, groupId:groupId}, function(data){
 			if(data.match('<title>Login</title>') != null){
 				location.href = "<c:url value='/login/relogin.do?inputPage=/rolegroupmapping/addView.do?&roleId='/>" + roleId;
@@ -263,8 +264,8 @@ body {
 			</table>
 		</td>
 		<td valign="top">
-			<div id="roles" class="demo" style="overflow:auto; height:372px; width:304px;">
-				<select id="groupId" name="groupId" class="selbox" multiple="multiple" style="overflow:auto; height:372px; width:304px;border:1px solid #D6D6D6;">
+			<div id="roles" class="demo" style="overflow:auto; height:377px; width:304px;">
+				<select id="groupId" name="groupId" class="selbox" multiple="multiple" style="overflow:auto; height:374px; width:304px;border:1px solid #D6D6D6;">
 				<c:forEach var="group" items="${groups}">
 					<option value="${group.groupId}">${group.groupName}</option>
 				</c:forEach>

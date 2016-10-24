@@ -16,7 +16,7 @@ jQuery(document).ready( function() {
 	jQuery("#grid2").jqGrid( {
 		sortable: true,
 		url: "<c:url value='/resources/listData.do?' />",
-		mtype:'POST',
+		mtype:'GET',
 		datatype : "json",
 		colNames : [ '<anyframe:message code="resource.ui.grid.sortorder" />', '<anyframe:message code="resource.ui.grid.resourceid" />', '<anyframe:message code="resource.ui.grid.resourcename" />', '<anyframe:message code="resource.ui.grid.resourcepattern" />', '<anyframe:message code="resource.ui.grid.resourcetype" />' ],
 		jsonReader: {
@@ -76,7 +76,6 @@ jQuery(document).ready( function() {
 		    location.href = "<c:url value='/resources/get.do?&resourceId=' />" + rowid;
 	    }
 	});
-//	jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
 		
 	/* Button Function Start (Resource CRUD) */
 	
@@ -98,6 +97,7 @@ jQuery(document).ready( function() {
 					rowArray[i] = rowData.resourceId;
 					jQuery("#grid2").delRowData(rowData.resourceId);
 				}
+				jQuery.ajaxSettings.traditional = true;
 				jQuery("#grid2").setPostData({resourceId:rowArray});
 				jQuery("#grid2").setGridParam({url:"<c:url value='/resources/delete.do?' />"}).trigger("reloadGrid");
 				jQuery("#grid2").setGridParam({url:"<c:url value='/resources/listData.do?' />"});

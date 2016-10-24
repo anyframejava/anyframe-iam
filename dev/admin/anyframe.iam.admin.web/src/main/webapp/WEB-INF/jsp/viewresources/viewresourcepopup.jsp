@@ -62,14 +62,6 @@ jQuery(document).ready(
 			rowList : [ 10, 20, 30 ],
 			viewrecords : true,
 
-			/*loadError: function(xhr,st,err) {
-				if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									
-					location.href = "<c:url value='/login/relogin.do?inputPage=/resources/list.do'/>";
-					return;
-				}
-				alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
-			},*/
-
 		    ondblClickRow: function(rowid) {
 				var rowData = jQuery("#grid").getRowData(rowid);
 				opener.document.viewmapping.viewResourceId.value = rowData.viewResourceId;

@@ -48,14 +48,16 @@ public class ViewMappingDaoHibernateImpl extends IamGenericDaoHibernate<ViewReso
 		String searchCondition = StringUtil.null2str(viewResourceSearchVO.getSearchCondition());
 		String searchKeyword = StringUtil.null2str(viewResourceSearchVO.getSearchKeyword());
 		String type = StringUtil.null2str(viewResourceSearchVO.getType());
+		String parentViewResourceId = StringUtil.null2str(viewResourceSearchVO.getParentViewResourceId());
 
-		Object[] args = new Object[6];
+		Object[] args = new Object[7];
 		args[0] = "condition=" + searchCondition;
 		args[1] = "keywordStr=%" + searchKeyword + "%";
 		args[2] = "keywordNum=" + searchKeyword + "";
 		args[3] = "sidx=" + sidx;
 		args[4] = "sord=" + sord;
 		args[5] = "type=" + type;
+		args[6] = "parentViewResourceId=" + parentViewResourceId;
 
 		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findViewMappingList", args, pageIndex, pageSize);

@@ -16,8 +16,11 @@
 
 package anyframe.iam.admin.viewresources.dao;
 
+import java.util.List;
+
 import anyframe.common.Page;
 import anyframe.iam.admin.common.IamGenericDao;
+import anyframe.iam.admin.domain.IamTree;
 import anyframe.iam.admin.domain.ViewResource;
 import anyframe.iam.admin.vo.ViewResourceSearchVO;
 
@@ -36,4 +39,17 @@ public interface ViewResourcesDao extends IamGenericDao<ViewResource, String> {
 	 * @throws Exception fail to find list
 	 */
 	Page getList(ViewResourceSearchVO viewResourceSearchVO) throws Exception;
+	
+	List<IamTree> getViewTree(String parentNode) throws Exception;
+	
+	List<IamTree> getRootNodeOfViews() throws Exception;
+	
+//	List<ViewResource> findViewResource(String viewId) throws Exception;
+	
+	List<String> getViewHierarchy(String parentNode) throws Exception;
+	
+	String getViewNameList(String keyword) throws Exception;
+	
+	String getViewResourceIdByViewName(String ViewName) throws Exception;
+	
 }
