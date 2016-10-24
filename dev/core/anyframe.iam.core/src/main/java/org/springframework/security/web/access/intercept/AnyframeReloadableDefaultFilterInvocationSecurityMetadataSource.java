@@ -40,14 +40,14 @@ import anyframe.common.exception.BaseException;
 import anyframe.iam.core.securedobject.ISecuredObjectService;
 
 /**
- * Current secured resources based on DB with URL type - Extension class of 
- * DefaultFilterInvocationDefinitionSource of Spring Security to reflect directly 
+ * Current secured resources based on DB with URL type - Extension class of
+ * DefaultFilterInvocationDefinitionSource of Spring Security to reflect directly
  * authority mapping information in runtime.
  * It follows Spring Security package for extension of method situated default modifier.
- * 
+ *
  * @author ByungHun Woo
  */
-public class AnyframeReloadableDefaultFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource, 
+public class AnyframeReloadableDefaultFilterInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource,
 		ApplicationContextAware {
 
     private static final Set<String> HTTP_METHODS = new HashSet<String>(Arrays.asList("DELETE", "GET", "HEAD", "OPTIONS", "POST", "PUT", "TRACE"));
@@ -223,14 +223,14 @@ public class AnyframeReloadableDefaultFilterInvocationSecurityMetadataSource imp
     public void setStripQueryStringFromUrls(boolean stripQueryStringFromUrls) {
         this.stripQueryStringFromUrls = stripQueryStringFromUrls;
     }
-	
+
 	/*********************************************************************************/
-	
+
 	private MessageSource messageSource;
 
 	/**
 	 * set ApplicationContext.
-	 * 
+	 *
 	 * @param applicationContext to be set by container
 	 */
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -252,7 +252,7 @@ public class AnyframeReloadableDefaultFilterInvocationSecurityMetadataSource imp
 
 	/**
 	 * Reloading authority mapping information of secured resources
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	public void reloadRequestMap() throws Exception {
@@ -263,7 +263,7 @@ public class AnyframeReloadableDefaultFilterInvocationSecurityMetadataSource imp
 			Iterator iterator = reloadedMap.entrySet().iterator();
 
 			// 이전 데이터 삭제
-			Map mapToUse = getRequestMapForHttpMethod("GET");
+			Map mapToUse = getRequestMapForHttpMethod(null);
 			mapToUse.clear();
 
 			while (iterator.hasNext()) {
@@ -291,7 +291,7 @@ public class AnyframeReloadableDefaultFilterInvocationSecurityMetadataSource imp
 	}
 
 	void addSecureUrl(String pattern, String method, List<ConfigAttribute> attr) {
-		Map mapToUse = getRequestMapForHttpMethod("GET");
+		Map mapToUse = getRequestMapForHttpMethod(null);
 
 		mapToUse.put(getUrlMatcher().compile(pattern), attr);
 
@@ -300,8 +300,8 @@ public class AnyframeReloadableDefaultFilterInvocationSecurityMetadataSource imp
 					+ (method == null ? "" : " for HTTP method '" + method + "'"));
 		}
 	}
-	
-	
-	
+
+
+
 
 }
