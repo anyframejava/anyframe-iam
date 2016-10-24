@@ -7,9 +7,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><anyframe:message code="restrictedtimes.ui.title.timesmapping" /></title>
 
-<jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jquery-include.jsp" />
+
 <script type="text/javascript">
 <!--
 	function moveToTimeRole(){

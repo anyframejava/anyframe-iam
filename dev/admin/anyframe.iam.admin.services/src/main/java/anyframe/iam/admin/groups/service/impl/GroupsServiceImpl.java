@@ -105,8 +105,7 @@ public class GroupsServiceImpl extends GenericServiceImpl<Groups, String> implem
 			if (childNodeCount > 0) {
 				for (int i = 0; i < childNodeCount; i++) {
 					String child = childNode.get(i).toString();
-					groupsUsersDao.remove(child);
-					groupsDao.remove(child);
+					remove(child);
 				}
 			}
 			

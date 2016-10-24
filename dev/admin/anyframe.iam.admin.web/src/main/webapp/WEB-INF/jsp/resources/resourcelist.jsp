@@ -7,8 +7,7 @@
 <head>
 <title><anyframe:message code="resource.ui.title.resourcelist" /></title>
 
-<jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jquery-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript">
@@ -17,7 +16,7 @@ jQuery(document).ready( function() {
 	jQuery("#grid2").jqGrid( {
 		sortable: true,
 		url: "<c:url value='/resources/listData.do?' />",
-		mtype:'GET',
+		mtype:'POST',
 		datatype : "json",
 		colNames : [ '<anyframe:message code="resource.ui.grid.sortorder" />', '<anyframe:message code="resource.ui.grid.resourceid" />', '<anyframe:message code="resource.ui.grid.resourcename" />', '<anyframe:message code="resource.ui.grid.resourcepattern" />', '<anyframe:message code="resource.ui.grid.resourcetype" />' ],
 		jsonReader: {
@@ -77,7 +76,7 @@ jQuery(document).ready( function() {
 		    location.href = "<c:url value='/resources/get.do?&resourceId=' />" + rowid;
 	    }
 	});
-	jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
+//	jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
 		
 	/* Button Function Start (Resource CRUD) */
 	

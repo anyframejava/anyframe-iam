@@ -9,8 +9,7 @@
 
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
-<jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jquery-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript" src="<c:url value='/validator.do'/>"></script>
@@ -95,7 +94,7 @@
 				alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
 			}
 		});
-		jQuery("#grid_timeresource").jqGrid('navGrid','#pager_timeresource',{edit:false,add:false,del:false,search:false});
+//		jQuery("#grid_timeresource").jqGrid('navGrid','#pager_timeresource',{edit:false,add:false,del:false,search:false});
 
 		/* Button Function Start (Resource CRUD) */
 		
@@ -135,7 +134,10 @@
 		});
 	});
 
-	function reloadGrid(timeId, rowDataArray){
+	function reloadGrid(timeId, tempArray){
+		var rowDataArray = new Array();
+		for(i = 0 ; i < tempArray.length ; i++)
+			rowDataArray[i] = tempArray[i];
 		jQuery("#grid_timeresource").setPostData({timeId:timeId, resourceId:rowDataArray, searchKeyword:timeId});
 	    jQuery("#grid_timeresource").setGridParam({url:"<c:url value='/restriction/timeresource/add.do?' />"}).trigger("reloadGrid");
 		alert("<anyframe:message code='roleresource.ui.alert.allocationsuccess' />");

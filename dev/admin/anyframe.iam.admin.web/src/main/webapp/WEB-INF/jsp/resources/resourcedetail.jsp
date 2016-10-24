@@ -10,9 +10,7 @@
 
 <script type="text/javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
-<jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jquery-include.jsp" />
 <jsp:include page="/common/jquery-autocomplete-include.jsp" />
 
 <script type="text/javascript" src="<c:url value='/validator.do'/>"></script>

@@ -6,9 +6,9 @@
 <html>
 <head>
 <title><anyframe:message code="roleresource.ui.title.resourcelist" /></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">	
 
-<jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jquery-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript">
@@ -81,7 +81,7 @@
 				alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
 			}
 		});
-		jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
+//		jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
 		jQuery("#grid2").jqGrid('gridResize',{minWidth:350,maxWidth:800,minHeight:80, maxHeight:350});
 
 		/* Button Function Start (Resource CRUD) */
@@ -141,12 +141,14 @@
 		});
 	});
 
-	function reloadGrid(roleId, rowDataArray){
+	// Has Error in IE
+	function reloadGrid(roleId, tempArray){
+		var rowDataArray = new Array();
+		for(i = 0 ; i < tempArray.length ; i++)
+			rowDataArray[i] = tempArray[i];
 		jQuery("#grid2").setPostData({roleId:roleId, resourceId:rowDataArray});
 	    jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/add.do?' />"}).trigger("reloadGrid");
 		alert("<anyframe:message code='roleresource.ui.alert.allocationsuccess' />");
-//		jQuery("#grid2").setPostData({roleId:roleId});
-//		jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/listData.do? '/>"}).trigger("reloadGrid");
 	}
 
 	function changeRole(obj){

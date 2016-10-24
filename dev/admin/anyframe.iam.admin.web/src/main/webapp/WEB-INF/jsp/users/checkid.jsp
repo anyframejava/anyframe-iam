@@ -8,9 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Check User Id</title>
 
-<jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jquery-include.jsp" />
 
 <script type="text/javascript">
 <!--
@@ -31,6 +29,11 @@ function checkId(){
 	url = "<c:url value='/userdetail/duplicationconfirm.do?'/>";
 	document.checkIdForm.action = url;
 	document.checkIdForm.submit();
+}
+
+function idChanged(){
+	var isAvailable = document.checkIdForm.isAvailable;
+	isAvailable.value = "false";
 }
 //-->
 </script>
@@ -69,7 +72,7 @@ body {
 				<tr height="30">
 					<td width="104"class="tdHead"><anyframe:message code='user.ui.label.userid' /></td>
 					<td width="1" height="45" bgcolor="#D6D6D6"></td>
-					<td height="45" class="tdin"><input style="width:90%;height:15px;padding-top:5px" class="ct_input_g" type="text" name="userId" value="<c:out value='${userId }' />" maxlength="20" ></td>
+					<td height="45" class="tdin"><input style="width:90%;height:15px;padding-top:5px" class="ct_input_g" type="text" name="userId" value="<c:out value='${userId }' />" maxlength="20" onchange="javascript:idChanged();"></td>
 				</tr>
 				<tr><td height="1" colspan="3" bgcolor="#B6CDE4"></td></tr>
 			</table>

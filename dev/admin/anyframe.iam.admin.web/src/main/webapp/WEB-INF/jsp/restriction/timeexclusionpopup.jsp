@@ -7,8 +7,8 @@
 <head>
 <title><anyframe:message code="restrictedtimes.ui.title.timeexclusionlist" /></title>
 
-<jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
+
+<jsp:include page="/common/jquery-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript">
@@ -104,7 +104,7 @@ jQuery(document).ready( function() {
 				window.close();
 		    }
 		});
-		jQuery("#grid").jqGrid('navGrid','#pager',{edit:false,add:false,del:false,search:false});
+//		jQuery("#grid").jqGrid('navGrid','#pager',{edit:false,add:false,del:false,search:false});
 		
 		/* Button Function Start (Resource CRUD) */
 

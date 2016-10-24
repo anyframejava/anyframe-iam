@@ -7,8 +7,7 @@
 <head>
 <title><anyframe:message code="restrictedtimes.ui.title.timerolelist" /></title>
 
-<jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jquery-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript">
@@ -94,7 +93,7 @@ jQuery(document).ready( function() {
 		    location.href = "<c:url value='/restriction/timerole/get.do?&timeId=' />" + rowid.substr(0,10);
 	    }
 	});
-	jQuery("#grid").jqGrid('navGrid','#pager',{edit:false,add:false,del:false,search:false});
+//	jQuery("#grid").jqGrid('navGrid','#pager',{edit:false,add:false,del:false,search:false});
 	
 	/* Button Function Start (Resource CRUD) */
 	

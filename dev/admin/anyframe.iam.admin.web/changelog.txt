@@ -4,6 +4,38 @@ http://www.anyframejava.org
 
 Changes in version 1.0.1 (2010-02)
 -----------------------------------------
+* 수정된 버그
+  - Role Tree에서 Role 생성 후, hidden field인 roleId값이 설정되지 않아서 탭 이동 간에 
+  	정보 전달이 되지 않던 문제를 해결
+  - Group Tree에서 Group 생성 후, hidden field인 groupId값이 설정 되지 않아서 탭 이동 간에
+  	정보 전달이 되지 않던 문제를 해결
+  - Tree component에서 특정 Node를 삭제 했을 때, 해당 node와 한 단계 아래의 자식 node 까지는 삭제 되지만
+  	그 이하의 자식 node들(손자 node 이하)은 삭제 되지 않고 데이터가 남아있어서 Tree component 상에서 
+  	display 되지는 않지만, View Mapping 화면에서 Group, Role Name으로 검색 되어 해당 Name으로의 
+  	View Mapping 정보가 입력 되는 논리적 문제가 존재했다. 이 문제를 '해당 node와 그 이하의 모든 node를
+  	삭제' 하는 로직으로 수정.
+  - ID 중복 검사 시(User ID, View ID) 팝업 창에서 존재 하지 않는 ID로 먼저 check 한 후,ID를 임의로 변경 한 후
+  	SAVE 버튼을 클릭하면 ID에 대한 중복 검사 로직을 통과하지 않고 그대로 저장 되는 문제가 있었다.
+  	이 경우 기존에 존재하는 ID를 입력하면 해당 ID값에 update가 실행 되어 정보가 덮어 씌워지는 문제를 해결.
+  - User List에서 User를 삭제하면 좌측의 Tree 메뉴에 선택 된 Group 내에 속한 User list가 표시 되어야 하지만
+  	모든 User가 나타나는 문제를 해결.
+  - View Resource Mapping 화면에서 Role, Group ROW 추가 시, 기존에 있는 Role, Group Name을 추가하면 
+  	아무 제한 없이 그대로 입력이 수행되지만, roleId값이 중복되기 때문에 정보가 덮어 씌워지는 문제가 존재.
+  	이를 수정해여 ID 추가시 해당 ID가 이미 추가 되어 있는 경우 경고창으로 이를 알린 후, 해당 ID값을 제외시킴.
+  - Internet Explorer를 이용할 때, pop up 창에서 Resource를 할당하는 메뉴에서 2개 이상의 자원을 한번에 
+  	할당 할 경우 opener 함수에서 Array parameter를 제대로 인식 하지 못하는 문제가 존재해서 이를 수정.
+  	
+* 해결된 이슈 목록
+  [IAM-110] - Role Tree 탭 이동 관련 버그 수정
+  [IAM-111] - Group Tree 탭 이동 관련 버그 수정
+  [IAM-112] - Tree component 상에서 특정 NODE를 삭제 오류
+  [IAM-113] - ID 중복 검사 오류
+  [IAM-114] - User List에서 User를 삭제 시 오류
+  [IAM-115] - View Resource Mapping 화면 오류
+  [IAM-116] - IE환경, pop up 창에서 opener 함수를 사용시 오류
+  
+Changes in version 1.0.1 (2010-02)
+-----------------------------------------
 * 소스 코드 및 테스트 코드 변경
   - Anyframe 4.1.0 적용
     . anyframe.iam.core, anyframe.iam.admin.services, anyframe.iam.admin.web 프로젝트 변경

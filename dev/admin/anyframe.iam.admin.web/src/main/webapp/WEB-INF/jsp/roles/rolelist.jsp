@@ -7,14 +7,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><anyframe:message code="role.ui.title.rolemapping" /></title>
 
+<jsp:include page="/common/jquery-include.jsp" />
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
 <jsp:include page="/common/jquery-autocomplete-include.jsp" />
 
 <script type="text/javascript">
 <!--
 	$(function () {
-		var roleId = "";
 		var	parentNode	= "";
 		var jqSearchForm = document.f1;
 		var roleId = jqSearchForm.roleId;
@@ -35,15 +34,18 @@
 					draggable : false
 				}
 			},
-			plugins : {
-				contextmenu : { },
-				hotkeys : {
-					functions : {
-						"f2"	: function () { if(this.selected) this.rename(); return false; },
-						"del"	: function () { if(this.selected) this.remove(); return false; }
-					}
-				}
-			},
+
+//				jquery 1.4.2 hotkey 관련 plugin 문제로 기능을 잠시 막음 						
+//				plugins : {
+//				contextmenu : { },
+//				hotkeys : {
+//					functions : {
+//						"f2"	: function () { if(this.selected) this.rename(); return false; },
+//						"del"	: function () { if(this.selected) this.remove(); return false; }
+//					}
+//				}
+//			},
+
 			callback	: {
 				beforedata	: function(NODE, TREE_OBJ) {
 					return {
@@ -53,6 +55,8 @@
 					}
 				},
 				onselect	: function(NODE, TREE_OBJ) {
+					var selectedRoleId = document.f1.roleId;
+					selectedRoleId.value = NODE.id; 
 					roleId.value = NODE.id;
 					if(jqSearchForm.tabInfo.value == "resource"){
 						frame01.location.href = "<c:url value='/securedresourcesroles/addView.do?&roleId=' />" + NODE.id;
@@ -81,6 +85,12 @@
 							}
 						);
 					} else {
+						$('td').removeClass('selectedTab');
+						$('#roleInfoTab').addClass('selectedTab');
+						
+						var tabInfo = document.f1.tabInfo;
+						tabInfo.value = "roleInfoTab";
+						
 						$.post(
 							"<c:url value='/roles/add.do?' />",
 							{
@@ -92,7 +102,8 @@
 								frame01.location.href = "<c:url value='/roleinformation/get.do?&roleId=' />" + roleId;
 							}
 						);
-						
+						var documentRoleId = document.f1.roleId;
+						documentRoleId.value = roleId;
 						parentNode	= "";
 					}
 				},
@@ -109,6 +120,9 @@
 				},
 				ondelete	: function(NODE, TREE_OBJ,RB) {
 					$.post("<c:url value='/roles/delete.do?' />",{roleId:NODE.id},function(){});
+
+					var deletedRoleId = document.f1.roleId;
+					deletedRoleId.value = "";
 				},
 				error 		: function(TEXT){
 					if(TEXT.match('parsererror') != null){

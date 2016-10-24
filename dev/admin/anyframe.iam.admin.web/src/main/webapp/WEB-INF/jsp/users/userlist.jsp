@@ -7,8 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><anyframe:message code="user.ui.title.userlist" /></title>
 
+
+<jsp:include page="/common/jquery-include.jsp" />
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
 <jsp:include page="/common/jquery-autocomplete-include.jsp" />
 
 <style type="text/css">
@@ -51,15 +52,18 @@ body {
 					draggable : false
 				}
 			},
-			plugins : {
-				contextmenu	: { },
-				hotkeys : {
-					functions : {
-						"f2"	: function () { if(this.selected) this.rename(); return false; },
-						"del"	: function () { if(this.selected) this.remove(); return false; }
-					}
-				}
-			},
+
+//			jquery 1.4.2 hotkey 관련 plugin 문제로 기능을 잠시 막음 			
+//			plugins : {
+//				contextmenu	: { },
+//				hotkeys : {
+//					functions : {
+//						"f2"	: function () { if(this.selected) this.rename(); return false; },
+//						"del"	: function () { if(this.selected) alert("메롱"); return false; }
+//					}
+//				}
+//			},
+
 			callback : {
 				beforedata	: function(NODE, TREE_OBJ) {
 					return {
@@ -71,10 +75,10 @@ body {
 				onselect : function(NODE, TREE_OBJ) {
 					jqSearchForm.groupId.value = NODE.id;
 
-					if(jqSearchForm.tabInfo.value == "groupTab") {
-						frame01.location.href = "<c:url value='/groups/get.do?&groupId=' />" + NODE.id;
-					} else {
+					if(jqSearchForm.tabInfo.value != "groupTab") {
 						frame01.location.href = "<c:url value='/userdetail/list.do?' />";
+					} else {
+						frame01.location.href = "<c:url value='/groups/get.do?&groupId=' />" + NODE.id;
 					}
 				},
 				onrename : function(NODE, LANG, TREE_OBJ, RB) {
@@ -90,6 +94,8 @@ body {
 								frame01.location.href = "<c:url value='/groups/get.do?&groupId=' />" + NODE.id;
 						});
 					} else {
+						$('td').removeClass('selectedTab');
+						$('#groupTab').addClass('selectedTab');
 						$.post(
 							"<c:url value='/groups/add.do?'/>",
 							{
@@ -100,11 +106,13 @@ body {
 								NODE.id = groupId;
 								frame01.location.href = "<c:url value='/groups/get.do?&groupId=' />" + groupId;
 						});
-						
+						var documentGroupId = document.searchForm.groupId;
+						documentGroupId.value = groupId;
 						parentNode	= "";
 					}
 				},
 				oncreate : function(NODE, REF_NODE, TYPE, TREE_OBJ, RB) {
+					
 					parentNode = $(NODE).parents("li:eq(0)").attr("id");
 
 					$.getJSON(

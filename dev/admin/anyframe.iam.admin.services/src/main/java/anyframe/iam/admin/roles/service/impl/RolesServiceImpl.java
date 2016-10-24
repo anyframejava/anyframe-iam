@@ -100,7 +100,7 @@ public class RolesServiceImpl extends GenericServiceImpl<Roles, String> implemen
 
 			if (childNodeCount > 0) {
 				for (int i = 0; i < childNodeCount; i++) {
-					rolesDao.remove(childNode.get(i).toString());
+					remove(childNode.get(i).toString());
 				}
 			}
 

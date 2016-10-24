@@ -8,8 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><anyframe:message code="user.ui.title.userlist" /></title>
 
-<jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jquery-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript">

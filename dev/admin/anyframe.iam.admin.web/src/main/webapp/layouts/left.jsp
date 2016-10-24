@@ -5,7 +5,7 @@
 <head>
 <title>IAM Admin Web Menu</title>
 <link href="<c:url value='/css/left.css'/>" rel="stylesheet" type="text/css">
-<jsp:include page="/common/jstree-include.jsp" />
+<jsp:include page="/common/jquery-include.jsp" />
 
 <script ID="clientEventHandlersJS" LANGUAGE="javascript">
 <!--

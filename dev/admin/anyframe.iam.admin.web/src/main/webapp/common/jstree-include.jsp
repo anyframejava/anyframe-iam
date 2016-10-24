@@ -10,12 +10,8 @@
 -->
 
 <!-- jquery:jstree-0.9.9 -->
-<script type="text/javascript" src="<c:url value='/jquery/jstree/lib/jquery.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/jquery/jstree/lib/jquery.cookie.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/jquery/jstree/lib/jquery.hotkeys.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/jquery/jstree/lib/jquery.metadata.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/jquery/jstree/lib/sarissa.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/jquery/jstree/jquery.tree.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/jquery/jstree/lib/jquery.cookie.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/jquery/jstree/lib/jquery.metadata.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/jquery/jstree/plugins/jquery.tree.contextmenu.js'/>"></script>
 <script type="text/javascript" src="<c:url value='/jquery/jstree/plugins/jquery.tree.cookie.js'/>"></script>
-<script type="text/javascript" src="<c:url value='/jquery/jstree/plugins/jquery.tree.hotkeys.js'/>"></script>

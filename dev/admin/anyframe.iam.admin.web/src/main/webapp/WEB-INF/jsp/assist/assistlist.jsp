@@ -9,9 +9,7 @@
 <title><anyframe:message code="resourcereload.ui.title.resourcegather" /></title>
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
-<jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jquery-include.jsp" />
 
 <script language="javascript">
 <!--

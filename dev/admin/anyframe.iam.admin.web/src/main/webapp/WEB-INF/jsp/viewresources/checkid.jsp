@@ -8,9 +8,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Check View ID</title>
 
-<jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
+
+<jsp:include page="/common/jquery-include.jsp" />
 
 <script type="text/javascript">
 	function closeWindow() {
@@ -29,6 +28,11 @@
 		url = "<c:url value='/viewresources/duplicationconfirm.do?'/>";
 		document.checkIdForm.action = url;
 		document.checkIdForm.submit();
+	}
+
+	function idChanged(){
+		var isAvailable = document.checkIdForm.isAvailable;
+		isAvailable.value = "false";
 	}
 </script>
 <style type="text/css">
@@ -76,7 +80,7 @@ body {
 		<td height="45" class="tdin"><input
 			style="width: 90%; height: 15px; padding-top: 5px" class="ct_input_g"
 			type="text" name="viewResourceId" value="<c:out value='${viewResourceId }' />"
-			maxlength="20"></td>
+			maxlength="20" onchange="javascript:idChanged();"></td>
 	</tr>
 	<tr>
 		<td height="1" colspan="3" bgcolor="#B6CDE4"></td>

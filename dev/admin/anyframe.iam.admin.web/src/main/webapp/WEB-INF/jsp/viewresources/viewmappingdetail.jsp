@@ -10,13 +10,12 @@
 <title><anyframe:message code="viewmapping.ui.title" /></title>
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
-<jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jquery-include.jsp" />
 
 <script language="javascript">
 <!--
 var index = 0;
+var deletedRow = 0;
 
 jQuery(document).ready( function(){	
 	$("#checkall").click(function() {
@@ -31,6 +30,7 @@ jQuery(document).ready( function(){
 	index = all.length;
 });
 
+
 function movetoBack(){
 	location.href="<c:url value='/viewresourcesmapping/list.do?' />";
 }
@@ -39,14 +39,16 @@ function insertRow(flag) {
 	var rows = jQuery("#rolemappinglist tr[ID^=role]");	
 		
 	// jQuery append 구문 안쪽에서는 적용 안됨 
-	var roleselectbox	= '	<select class="selbox" name="roleid" id="roleid">' +
+	var roleselectbox	= '	<select class="selbox" name="roleid" id="roleid" onchange="javascript:roleChanged(this, ' + index + ')">' +
+						'		<option value=""><anyframe:message code="viewresource.ui.selbox.selectrole" /></option>' + 
 						'		<c:forEach var="list" items="${rolelist}">' +			
 						'			<option value="${list.roleId}">${list.roleName}</option>' +
 						'		</c:forEach>' +
 						'	</select>' +
 						'	<input type=\"hidden\" name=\"userName\" id=\"userName\">';
 
-	var groupselectbox	= '	<select class="selbox" name="roleid" id="roleid">' +
+	var groupselectbox	= '	<select class="selbox" name="roleid" id="roleid" onchange="javascript:groupChanged(this, ' + index + ')">' +
+						'		<option value=""><anyframe:message code="viewresource.ui.selbox.selectgroup" /></option>' +
 						'		<c:forEach var="list" items="${grouplist}">' +			
 						'			<option value="${list.groupId}">${list.groupName}</option>' +
 						'		</c:forEach>' +
@@ -57,7 +59,7 @@ function insertRow(flag) {
 						'	<td bgcolor="#B6CDE4" width="1"></td>' +
 						'	<td class="tdin"><input type="checkbox" name="${fn:toLowerCase(list.permissionName)}" value="0"></td>' +
 						'</c:forEach>';
-						
+							
 	if(flag == "ROLE") {
 		jQuery("#rolemappinglist").append(			
 			"<tr id=\"role" + index + "\">"
@@ -115,9 +117,45 @@ function findUserByName(index) {
 function setUserInfo(userId, userName, index) {
 	var roleid = $("[name=roleid]");
 	var username = $("[name=userName]");
-	
+
+	for(i = 0 ; i < index ; i++){
+		if(roleid[i].value == userId){
+			alert("<anyframe:message code='viewresource.ui.alert.useridalreadyselected' />");
+			return;
+		}
+	}
 	roleid[index].value = userId;
 	username[index].value = userName;
+}
+
+function roleChanged(frm, num){
+	var roleid = $("[name=roleid]");
+	var username = $("[name=userName]");
+
+	for(i = 0 ; i < index - deletedRow ; i++){
+		if(roleid[i] != frm){
+			if(roleid[i].value == frm.value && frm.value != ""){
+				alert("<anyframe:message code='viewresource.ui.alert.roleidalreadyselected' />");
+				frm.value = "";
+				return;
+			}
+		}
+	}
+}
+
+function groupChanged(frm, num){
+	var roleid = $("[name=roleid]");
+	var username = $("[name=userName]");
+	
+	for(i = 0 ; i < index - deletedRow ; i++){
+		if(roleid[i] != frm){
+			if(frm.value != "" && (frm.value == roleid[i].value)){
+				alert("<anyframe:message code='viewresource.ui.alert.groupidalreadyselected' />");
+				frm.value = "";
+				return;
+			}
+		}
+	}
 }
 
 function selectviewmapping() {
@@ -132,7 +170,7 @@ function goSubmit() {
 	var viewResourceId = document.viewmapping.viewResourceId;
 
 	if(viewResourceId.value == "" || viewResourceId.value == null){
-		alert("View Resource ID is required.");
+		alert("<anyframe:message code='viewresource.ui.alert.requiredviewid' />");
 		return;
 	}
 
@@ -144,7 +182,7 @@ function goSubmit() {
 	
 	for(var i = 0 ; i < roleid.length ; i++){
 		if(roleid[i].value == "" || roleid[i].value == null){
-			alert("Reference ID can not be null. Please fill the blank");
+			alert("<anyframe:message code='viewresource.ui.alert.refernotnull' />");
 			return;
 		}
 	}
@@ -154,7 +192,7 @@ function goSubmit() {
 		permission[index] = $("[name=${fn:toLowerCase(list.permissionName)}]");
 		perLength = permission[index].length;
 		if(perLength == 0){
-			alert("At least one row is required");
+			alert("<anyframe:message code='viewresource.ui.alert.atleastonerow' />");
 			return;
 		}
 		
@@ -173,7 +211,7 @@ function goSubmit() {
 		if(validPer[i] == true){
 			
 		} else {
-			alert("At least one permission a row is required");
+			alert("<anyframe:message code='viewresource.ui.alert.atleastonepermission' />");
 			return;
 		}
 	}
@@ -183,6 +221,7 @@ function goSubmit() {
 }
 
 function deleteRow() {
+	deletedRow ++;
 	jQuery("#[name=idx]:checked").closest('tr').next().remove();
 	jQuery("#[name=idx]:checked").closest('tr').remove();
 }
