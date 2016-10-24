@@ -154,6 +154,14 @@
      	<property name="dynamicHibernateService" ref="dynamicHibernateService" />
      </bean>
      <!-- ViewHierarchyDao-END -->
+	
+     <!-- IdsDao-START -->
+     <bean id="idsDao" class="anyframe.iam.admin.ids.dao.impl.IdsDaoHibernateImpl">
+     	<property name="sessionFactory" ref="sessionFactory"/>
+     	<property name="propertiesService" ref="propertiesService" />
+     	<property name="dynamicHibernateService" ref="dynamicHibernateService" />
+     </bean>
+     <!-- IdsDao-END -->
 
 
 
@@ -290,6 +298,7 @@
      	<property name="securedResourcesService" ref="securedResourcesService"/>
      	<property name="restrictedTimesService" ref="restrictedTimesService"/>
      	<property name="viewResourcesService" ref="viewResourcesService"/>
+     	<property name="idsService" ref="idsService"/>
      </bean>
      <!-- DataUploadService-END -->
      
@@ -310,6 +319,12 @@
      	<constructor-arg ref="viewHierarchyDao"></constructor-arg>
      </bean>
      <!-- ViewHierarchyService-END -->
+     
+     <!-- IdsService-START -->
+     <bean id="idsService" class="anyframe.iam.admin.ids.service.impl.IdsServiceImpl">
+     	<constructor-arg ref="idsDao"></constructor-arg>
+     </bean>
+     <!-- IdsService-END -->
      
     <!-- Add new Services here -->
 

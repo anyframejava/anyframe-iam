@@ -12,7 +12,7 @@
 	<groupId>anyframe</groupId>
 	<artifactId>anyframe.iam.admin.web</artifactId>
 	<packaging>war</packaging>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 	<name>anyframe.iam.admin.web</name>
 	<url>http://maven.apache.org</url>
 
@@ -67,12 +67,12 @@
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.iam.core</artifactId>
-			<version>1.1.0</version>
+			<version>1.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.iam.admin.services</artifactId>
-			<version>1.1.0</version>
+			<version>1.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-dbcp</groupId>
@@ -88,7 +88,7 @@
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.springmvc.ext</artifactId>
-			<version>4.5.1</version>
+			<version>4.5.2</version>
 		</dependency>
 		<!-- Spring-Json -->
 		<dependency>

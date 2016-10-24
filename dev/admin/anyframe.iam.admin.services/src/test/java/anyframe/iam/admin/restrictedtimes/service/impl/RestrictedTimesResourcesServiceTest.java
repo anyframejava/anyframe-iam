@@ -68,13 +68,13 @@ public class RestrictedTimesResourcesServiceTest {
 		// make domain
 		RestrictedTimesResources domain1 = new RestrictedTimesResources();
 		RestrictedTimesResourcesId id1 = new RestrictedTimesResourcesId();
-		id1.setResourceId("mtd_000006");
-		id1.setTimeId("time-00005");
+		id1.setResourceId("MTD-000006");
+		id1.setTimeId("TIME-00005");
 		domain1.setId(id1);
 		RestrictedTimesResources domain2 = new RestrictedTimesResources();
 		RestrictedTimesResourcesId id2 = new RestrictedTimesResourcesId();
-		id2.setResourceId("mtd_000007");
-		id2.setTimeId("time-00004");
+		id2.setResourceId("MTD-000007");
+		id2.setTimeId("TIME-00004");
 		domain2.setId(id2);
 		List<RestrictedTimesResources> lst = new ArrayList();
 		lst.add(domain1);
@@ -89,13 +89,13 @@ public class RestrictedTimesResourcesServiceTest {
 		// make domain
 		RestrictedTimesResources domain1 = new RestrictedTimesResources();
 		RestrictedTimesResourcesId id1 = new RestrictedTimesResourcesId();
-		id1.setResourceId("mtd_000006");
-		id1.setTimeId("time-00005");
+		id1.setResourceId("MTD-000006");
+		id1.setTimeId("TIME-00005");
 		domain1.setId(id1);
 		RestrictedTimesResources domain2 = new RestrictedTimesResources();
 		RestrictedTimesResourcesId id2 = new RestrictedTimesResourcesId();
-		id2.setResourceId("mtd_000007");
-		id2.setTimeId("time-00004");
+		id2.setResourceId("MTD-000007");
+		id2.setTimeId("TIME-00004");
 		domain2.setId(id2);
 		List<RestrictedTimesResources> lst = new ArrayList();
 		lst.add(domain1);
@@ -122,13 +122,13 @@ public class RestrictedTimesResourcesServiceTest {
 		// make domain
 		RestrictedTimesResources domain1 = new RestrictedTimesResources();
 		RestrictedTimesResourcesId id1 = new RestrictedTimesResourcesId();
-		id1.setResourceId("mtd_000006");
-		id1.setTimeId("time-00005");
+		id1.setResourceId("MTD-000006");
+		id1.setTimeId("TIME-00005");
 		domain1.setId(id1);
 		RestrictedTimesResources domain2 = new RestrictedTimesResources();
 		RestrictedTimesResourcesId id2 = new RestrictedTimesResourcesId();
-		id2.setResourceId("mtd_000007");
-		id2.setTimeId("time-00004");
+		id2.setResourceId("MTD-000007");
+		id2.setTimeId("TIME-00004");
 		domain2.setId(id2);
 		List<RestrictedTimesResources> lst = new ArrayList();
 		lst.add(domain1);
@@ -178,13 +178,13 @@ public class RestrictedTimesResourcesServiceTest {
 		// make domain
 		RestrictedTimesResources domain1 = new RestrictedTimesResources();
 		RestrictedTimesResourcesId id1 = new RestrictedTimesResourcesId();
-		id1.setResourceId("mtd_000006");
-		id1.setTimeId("time-00005");
+		id1.setResourceId("MTD-000006");
+		id1.setTimeId("TIME-00005");
 		domain1.setId(id1);
 		RestrictedTimesResources domain2 = new RestrictedTimesResources();
 		RestrictedTimesResourcesId id2 = new RestrictedTimesResourcesId();
-		id2.setResourceId("mtd_000007");
-		id2.setTimeId("time-00005");
+		id2.setResourceId("MTD-000007");
+		id2.setTimeId("TIME-00005");
 		domain2.setId(id2);
 		List<RestrictedTimesResources> lst = new ArrayList();
 		lst.add(domain1);
@@ -197,7 +197,7 @@ public class RestrictedTimesResourcesServiceTest {
 		// save
 		restrictedTimesResourcesService.addTimeResources(lst);
 		RestrictedTimesSearchVO restrictedTimesSearchVO = new RestrictedTimesSearchVO();
-		restrictedTimesSearchVO.setSearchKeyword("time-00005");
+		restrictedTimesSearchVO.setSearchKeyword("TIME-00005");
 		restrictedTimesSearchVO.setSearchCondition("timeId");
 		Page resultPage = restrictedTimesResourcesService.getTimeResourceList(restrictedTimesSearchVO);
 
@@ -210,8 +210,8 @@ public class RestrictedTimesResourcesServiceTest {
 		Map resultMap = (Map) iter.next();
 		String resultTimeId = (String) (resultMap).get("timeId");
 		String resultResourceId = (String) (resultMap).get("resourceId");
-		assertEquals("time-00005", resultTimeId);
-		assertEquals("mtd_000006", resultResourceId);
+		assertEquals("TIME-00005", resultTimeId);
+		assertEquals("MTD-000006", resultResourceId);
 	}
 
 	@Test
@@ -221,13 +221,13 @@ public class RestrictedTimesResourcesServiceTest {
 		RestrictedTimesRoles domain1 = new RestrictedTimesRoles();
 		RestrictedTimesRolesId id1 = new RestrictedTimesRolesId();
 		id1.setRoleId("ROLE_A");
-		id1.setTimeId("time-00004");
+		id1.setTimeId("TIME-00004");
 		domain1.setId(id1);
 
 		RestrictedTimesRoles domain2 = new RestrictedTimesRoles();
 		RestrictedTimesRolesId id2 = new RestrictedTimesRolesId();
 		id2.setRoleId("ROLE_B");
-		id2.setTimeId("time-00004");
+		id2.setTimeId("TIME-00004");
 		domain2.setId(id2);
 
 		List<RestrictedTimesRoles> list = new ArrayList();
@@ -238,7 +238,7 @@ public class RestrictedTimesResourcesServiceTest {
 		restrictedTimesRolesService.saveTimeRoles(list);
 
 		// find list
-		List resultList = restrictedTimesResourcesService.findRoleListByTime("time-00004");
+		List resultList = restrictedTimesResourcesService.findRoleListByTime("TIME-00004");
 		assertNotNull(resultList);
 		assertTrue(resultList.size() > 0);
 		assertEquals(2, resultList.size());
@@ -259,7 +259,7 @@ public class RestrictedTimesResourcesServiceTest {
 
 		// find list
 		RestrictedTimesSearchVO searchVO = new RestrictedTimesSearchVO();
-		searchVO.setSearchKeyword("time-00004");
+		searchVO.setSearchKeyword("TIME-00004");
 		Page resultPage = restrictedTimesResourcesService.findResourceListByTime(searchVO);
 
 		// check
@@ -269,7 +269,7 @@ public class RestrictedTimesResourcesServiceTest {
 		Iterator iter = resultPage.getList().iterator();
 
 		String resultResourceId = (String) ((Map) iter.next()).get("resourceId");
-		assertEquals("mtd_000007", resultResourceId);
+		assertEquals("MTD-000007", resultResourceId);
 	}
 
 	@Test
@@ -281,7 +281,7 @@ public class RestrictedTimesResourcesServiceTest {
 
 		// set search condition
 		RestrictedTimesSearchVO searchVO = new RestrictedTimesSearchVO();
-		searchVO.setTimeId("time-00004");
+		searchVO.setTimeId("TIME-00004");
 		searchVO.setSearchKeyword("000007");
 		searchVO.setSearchCondition("resourceId");
 
@@ -295,6 +295,6 @@ public class RestrictedTimesResourcesServiceTest {
 		Iterator iter = resultPage.getList().iterator();
 
 		String resultResourceId = (String) ((Map) iter.next()).get("resourceId");
-		assertEquals("web-000007", resultResourceId);
+		assertEquals("WEB-000007", resultResourceId);
 	}
 }

@@ -12,7 +12,7 @@
 	<groupId>anyframe</groupId>
 	<artifactId>anyframe.iam.admin.services</artifactId>
 	<packaging>jar</packaging>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 	<name>anyframe.iam.admin.services</name>
 	<url>http://maven.apache.org</url>
 
@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.iam.core</artifactId>
-			<version>1.1.0</version>
+			<version>1.1.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -87,17 +87,17 @@
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.generic</artifactId>
-			<version>4.5.1</version>
+			<version>4.5.2</version>
 		</dependency>
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.hibernate</artifactId>
-			<version>4.5.1</version>
+			<version>4.5.2</version>
 		</dependency>
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.idgen</artifactId>
-			<version>4.5.1</version>
+			<version>4.5.2</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.transaction</groupId>

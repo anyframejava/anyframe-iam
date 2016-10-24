@@ -15,7 +15,9 @@
  */
 package anyframe.iam.core.userdetails.jdbc;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -45,7 +47,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import anyframe.iam.core.intercept.web.RestrictedResourceHolder;
 import anyframe.iam.core.userdetails.ExtUser;
 
 /**
@@ -87,7 +88,7 @@ public class RoleHierarchyVoterTest {
 			list.add(new SecurityConfig("ROLE_USER"));
 			
 			assertEquals(RoleHierarchyVoter.ACCESS_GRANTED, ((AccessDecisionVoter) accessDecisionManager
-					.getDecisionVoters().get(0)).vote(auth, new Object(), list));//new ConfigAttributeDefinition("ROLE_USER")));
+					.getDecisionVoters().get(0)).vote(auth, new Object(), list));
 		}
 		catch (Exception e) {
 			fail("RoleHierarchyVoter test failed!");

@@ -345,19 +345,19 @@ public class ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource imp
 	}
 
 	/**
-	 * Reset data into ConfigAttributeDefinition of Spring security
+	 * Reset data into ConfigAttribute of Spring security
 	 * 
 	 * @param timeCheckList List of Map includes information of always time
 	 * Check
 	 * @param configKey Map key about role that will be changed
-	 * ConfigAttributeDefinition
+	 * ConfigAttribute
 	 */
 	public void listToConfig(List timeCheckList, String configKey) {
 		Iterator iter = timeCheckList.iterator();
 		while (iter.hasNext()) {
 			Map tempMap = (Map) iter.next();
 			// 동일한 Map 이 betweendays 의 각 day key 에 대해 참조되고 있음. 이미
-			// ConfigAttributeDefinition 로 처리된 경우는 skip 함
+			// ConfigAttribute 로 처리된 경우는 skip 함
 			if (!(tempMap.get(configKey) instanceof List<?>)) {
 				tempMap.put(configKey, (List<ConfigAttribute>) tempMap.get(configKey));
 			}
@@ -365,12 +365,12 @@ public class ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource imp
 	}
 
 	/**
-	 * Reset data into ConfigAttributeDefinition of Spring security
+	 * Reset data into ConfigAttribute of Spring security
 	 * 
 	 * @param dailyFilteredMap Map object that contains information of daily
 	 * filtered time Check
 	 * @param configKey Map key about role that will be changed
-	 * ConfigAttributeDefinition
+	 * ConfigAttribute
 	 */
 	public void listToConfig(Map dailyFilteredMap, String configKey) {
 		Iterator iter = dailyFilteredMap.entrySet().iterator();
@@ -396,7 +396,7 @@ public class ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource imp
 			alwaysTimeResourceCheck = (List) restrictedTimesResources[0];
 			dailyFilteredTimeResourceCheck = (Map) restrictedTimesResources[1];
 
-			// ConfigAttributeDefinition 으로 변환 - Collections.unmodifiableList
+			// ConfigAttribute 으로 변환 - Collections.unmodifiableList
 			// (변경 불가) 로 처리되기 때문에 마지막에 한번에 변환토록 함.
 			listToConfig(alwaysTimeRoleCheck, "restrictedRoleIds");
 			listToConfig(dailyFilteredTimeRoleCheck, "restrictedRoleIds");
@@ -435,7 +435,7 @@ public class ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource imp
 	 * @param map Map object that contains mapping information of restricted
 	 * times resource
 	 * @param url current request URL
-	 * @return null if url does not matches, ConfigAttributeDefinition about
+	 * @return null if url does not matches, List<ConfigAttribute> about
 	 * exclusion Role if URL matches
 	 */
 	private List<ConfigAttribute> checkUrlMatching(Map map, String url) {
@@ -454,7 +454,7 @@ public class ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource imp
 	}
 
 	/**
-	 * Get ConfigAttributeDefinition about Restricted/Allowed role list that
+	 * Get ConfigAttribute about Restricted/Allowed role list that
 	 * matches current date/time from Role/Resource mapping information of
 	 * restricted times
 	 * 
@@ -466,7 +466,7 @@ public class ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource imp
 	 * @param currentTime current time
 	 * @param isTimeOnlyCheck true if only time checking
 	 * @param isRoleCheck (role or resource) true if role checking
-	 * @return ConfigAttributeDefinition ConfigAttributeDefinition object
+	 * @return List<ConfigAttribute> ConfigAttribute List
 	 */
 	public List<ConfigAttribute> lookupRoleOrUrlInCandidateListCheck(List compareCandidateList, String url,
 			DateTime currentDateTime, DateTime currentTime, boolean isTimeOnlyCheck, boolean isRoleCheck) {
@@ -586,7 +586,7 @@ public class ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource imp
 
 		if (logger.isDebugEnabled())
 			logger.debug((isRoleCheck ? "Time Role Check" : "Time Resource Check")
-					+ " found ConfigAttributeDefinition : " + foundCad);
+					+ " found ConfigAttribute : " + foundCad);
 
 		return foundCad;
 
@@ -600,7 +600,7 @@ public class ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource imp
 	 * @param isRoleCheck true if roleCheck
 	 * @param candidateFoundCadList list of candidate permissions that matches
 	 * the given time
-	 * @return ConfigAttributeDefinition ConfigAttributeDefinition object
+	 * @return List<ConfigAttribute> ConfigAttribute List
 	 */
 	private List<ConfigAttribute> recalculateCandidate(boolean isRoleCheck, List candidateFoundCadList) {
 		List<ConfigAttribute> foundCad = new ArrayList<ConfigAttribute>();
@@ -718,7 +718,7 @@ public class ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource imp
 	/**
 	 * validateConfigAttributes not supported
 	 */
-	public Collection getConfigAttributeDefinitions() {
+	public Collection<ConfigAttribute> getAllConfigAttributes() {
 		// validateConfigAttributes 지원 않음
 		return null;
 	}
@@ -728,10 +728,5 @@ public class ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource imp
 	 */
 	public boolean supports(Class clazz) {
 		return FilterInvocation.class.isAssignableFrom(clazz);
-	}
-
-	public Collection<ConfigAttribute> getAllConfigAttributes() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

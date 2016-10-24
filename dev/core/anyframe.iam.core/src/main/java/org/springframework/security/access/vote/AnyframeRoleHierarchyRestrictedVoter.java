@@ -104,7 +104,7 @@ public class AnyframeRoleHierarchyRestrictedVoter extends RoleVoter {
 					Object[] configAttributes = (Object[]) attributes.toArray();
 
 					// RoleHierarchy 는 GrantedAuthority 형태로만 처리 가능 - 임시로
-					// ConfigAttributeDefinition --> GrantedAuthority[] 변경
+					// ConfigAttribute --> GrantedAuthority[] 변경
 					Collection<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>(configAttributes.length);
 					for (int i = 0; i < configAttributes.length; i++) {
 						grantedAuthorities.add(new GrantedAuthorityImpl(((ConfigAttribute) configAttributes[i])
@@ -114,7 +114,7 @@ public class AnyframeRoleHierarchyRestrictedVoter extends RoleVoter {
 					Collection<GrantedAuthority> reachableGrantedAuthorities = roleHierarchy
 							.getReachableGrantedAuthorities(grantedAuthorities);
 
-					// 다시 GrantedAuthority[] 를 ConfigAttributeDefinition 으로 변경
+					// 다시 GrantedAuthority[] 를 ConfigAttribute 으로 변경
 					Iterator reachableGrantedAuthoritiesIterator = reachableGrantedAuthorities.iterator();
 					while(reachableGrantedAuthoritiesIterator.hasNext()) {
 						GrantedAuthority grantedAuthority = (GrantedAuthority)reachableGrantedAuthoritiesIterator.next();

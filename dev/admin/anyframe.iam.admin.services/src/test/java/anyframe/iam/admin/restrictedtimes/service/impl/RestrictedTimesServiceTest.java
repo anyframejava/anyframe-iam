@@ -262,7 +262,7 @@ public class RestrictedTimesServiceTest {
 		tempTime1.setStartTime("000000");
 		tempTime1.setEndTime("235959");
 		tempTime1.setSystemName("sample");
-		tempTime1.setResourceId("web-000001");
+		tempTime1.setResourceId("WEB-000001");
 		tempTime1.setRoleId("ROLE_USER");
 		tempTime1.setTimesExclusionRoles("ROLE_ADMIN");
 
@@ -273,7 +273,7 @@ public class RestrictedTimesServiceTest {
 		tempTime2.setStartTime("000000");
 		tempTime2.setEndTime("235959");
 		tempTime2.setSystemName("sample");
-		tempTime2.setResourceId("web-000002");
+		tempTime2.setResourceId("WEB-000002");
 		tempTime2.setRoleId("IS_AUTHENTICATED_FULLY");
 		tempTime2.setTimesExclusionRoles("ROLE_USER");
 		

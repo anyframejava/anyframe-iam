@@ -57,16 +57,16 @@ public class TimesResourcesExclusionServiceTest {
 	public List<TimesResourcesExclusion> makeDomain() {
 		TimesResourcesExclusion domain1 = new TimesResourcesExclusion();
 		TimesResourcesExclusionId id1 = new TimesResourcesExclusionId();
-		id1.setResourceId("mtd_000020");
+		id1.setResourceId("MTD-000020");
 		id1.setRoleId("ROLE_B");
-		id1.setTimeId("time-00004");
+		id1.setTimeId("TIME-00004");
 		domain1.setId(id1);
 
 		TimesResourcesExclusion domain2 = new TimesResourcesExclusion();
 		TimesResourcesExclusionId id2 = new TimesResourcesExclusionId();
-		id2.setResourceId("mtd_000020");
+		id2.setResourceId("MTD-000020");
 		id2.setRoleId("ROLE_A");
-		id2.setTimeId("time-00004");
+		id2.setTimeId("TIME-00004");
 		domain2.setId(id2);
 
 		List<TimesResourcesExclusion> list = new ArrayList();
@@ -79,9 +79,9 @@ public class TimesResourcesExclusionServiceTest {
 	// make ID data
 	public List<TimesResourcesExclusionId> makeDomainId() {
 		TimesResourcesExclusionId id1 = new TimesResourcesExclusionId();
-		id1.setResourceId("mtd_000020");
+		id1.setResourceId("MTD-000020");
 		id1.setRoleId("ROLE_B");
-		id1.setTimeId("time-00004");
+		id1.setTimeId("TIME-00004");
 
 		List<TimesResourcesExclusionId> list = new ArrayList();
 		list.add(id1);
@@ -95,9 +95,9 @@ public class TimesResourcesExclusionServiceTest {
 		// make data
 		TimesResourcesExclusion domain1 = new TimesResourcesExclusion();
 		TimesResourcesExclusionId id1 = new TimesResourcesExclusionId();
-		id1.setResourceId("mtd_000020");
+		id1.setResourceId("MTD-000020");
 		id1.setRoleId("ROLE_B");
-		id1.setTimeId("time-00004");
+		id1.setTimeId("TIME-00004");
 		domain1.setId(id1);
 
 		List<TimesResourcesExclusion> list = new ArrayList();
@@ -177,8 +177,8 @@ public class TimesResourcesExclusionServiceTest {
 		timesResourcesExclusionService.saveTimeExclusion(domainList);
 
 		// find list
-		String timeId = "time-00004";
-		String resourceId = "mtd_000020";
+		String timeId = "TIME-00004";
+		String resourceId = "MTD-000020";
 		List roleList = timesResourcesExclusionService.findRoleListByTimeResource(timeId, resourceId);
 
 		String roleId1 = (String) ((Map) roleList.get(0)).get("roleId");
@@ -199,7 +199,7 @@ public class TimesResourcesExclusionServiceTest {
 		// find list
 		RestrictedTimesSearchVO restrictedTimesSearchVO = new RestrictedTimesSearchVO();
 		restrictedTimesSearchVO.setSearchCondition("resourceId");
-		restrictedTimesSearchVO.setSearchKeyword("mtd_000020");
+		restrictedTimesSearchVO.setSearchKeyword("MTD-000020");
 		Page resultPage = timesResourcesExclusionService.getTimeExclusionList(restrictedTimesSearchVO);
 
 		// check
@@ -212,8 +212,8 @@ public class TimesResourcesExclusionServiceTest {
 		String resultroleId = (String) (resultMap).get("roleId");
 		String resultresourceId = (String) (resultMap).get("resourceId");
 
-		assertEquals("time-00004", resultTimeId);
+		assertEquals("TIME-00004", resultTimeId);
 		assertEquals("ROLE_A", resultroleId);
-		assertEquals("mtd_000020", resultresourceId);
+		assertEquals("MTD-000020", resultresourceId);
 	}
 }

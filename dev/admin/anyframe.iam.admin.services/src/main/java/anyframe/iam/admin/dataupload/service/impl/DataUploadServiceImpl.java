@@ -1,6 +1,7 @@
 package anyframe.iam.admin.dataupload.service.impl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import jxl.Sheet;
@@ -23,6 +24,7 @@ import anyframe.iam.admin.domain.TempSecuredResources;
 import anyframe.iam.admin.domain.TempUsers;
 import anyframe.iam.admin.domain.TempViewResources;
 import anyframe.iam.admin.groups.service.GroupsService;
+import anyframe.iam.admin.ids.service.IdsService;
 import anyframe.iam.admin.restrictedtimes.service.RestrictedTimesService;
 import anyframe.iam.admin.roles.service.RolesService;
 import anyframe.iam.admin.securedresources.service.SecuredResourcesService;
@@ -50,6 +52,12 @@ public class DataUploadServiceImpl extends GenericServiceImpl<DataUpload, String
 	
 	private ViewResourcesService viewResourcesService;
 	
+	private IdsService idsService;
+	
+	public void setIdsService(IdsService idsService) {
+		this.idsService = idsService;
+	}
+
 	public DataUploadServiceImpl(DataUploadDao dataUploadDao){
 		super(dataUploadDao);
 		this.dataUploadDao = dataUploadDao;
@@ -218,28 +226,33 @@ public class DataUploadServiceImpl extends GenericServiceImpl<DataUpload, String
 			String sheetNames[] = workbook.getSheetNames();
 			Sheet sheets[] = workbook.getSheets();
 			
-
 			for (int i = 0; i < sheetNames.length; i++) {
 				List objectList = IAMDataBinder.bindSheet(sheets[i]);
+				List resultList = new ArrayList();
 				
 				if(sheetNames[i].equals("Groups")){
 					groupsService.removeAllGroups();
-					groupsService.save(objectList);
+					resultList = groupsService.save(objectList);
+					idsService.updateNextId(resultList, "GROUPS");
 				} else if(sheetNames[i].equals("Roles")){
 					rolesService.removeAllRoles();
-					rolesService.save(objectList);
+					resultList = rolesService.save(objectList);
+					idsService.updateNextId(resultList, "ROLES");
 				} else if(sheetNames[i].equals("Users")){
 					usersService.removeAllUsers();
 					usersService.save(objectList);
 				} else if(sheetNames[i].equals("SecuredResources")){
 					securedResourcesService.removeAllSecuredResources();
-					securedResourcesService.save(objectList);
+					resultList = securedResourcesService.save(objectList);
+					idsService.updateNextId(resultList, "RESOURCE_METHOD");
 				} else if(sheetNames[i].equals("ViewResources")){
 					viewResourcesService.removeAllViewResources();
-					viewResourcesService.save(objectList);
+					resultList = viewResourcesService.save(objectList);
+					idsService.updateNextId(resultList, "VIEW_RESOURCE");
 				} else if(sheetNames[i].equals("RestrictedTimes")){
 					restrictedTimesService.removeAllRestrictedTimes();
-					restrictedTimesService.save(objectList);
+					resultList = restrictedTimesService.save(objectList);
+					idsService.updateNextId(resultList, "TIMES");
 				}
 			}
 
@@ -247,6 +260,12 @@ public class DataUploadServiceImpl extends GenericServiceImpl<DataUpload, String
 		String workDate = anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd");
 		dataUpload.setWorkDate(workDate);
 		save(dataUpload);
+		
+		updateIdsTable();
+	}
+	
+	private void updateIdsTable() throws Exception{
+		
 	}
 	
 	private WritableSheet makeGroupsSheet(WritableSheet sheet, List<TempGroups> groupsList) throws Exception{

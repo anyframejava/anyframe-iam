@@ -57,13 +57,13 @@ public class RestrictedTimesRolesServiceTest {
 		RestrictedTimesRoles domain1 = new RestrictedTimesRoles();
 		RestrictedTimesRolesId id1 = new RestrictedTimesRolesId();
 		id1.setRoleId("ROLE_A");
-		id1.setTimeId("time-00004");
+		id1.setTimeId("TIME-00004");
 		domain1.setId(id1);
 
 		RestrictedTimesRoles domain2 = new RestrictedTimesRoles();
 		RestrictedTimesRolesId id2 = new RestrictedTimesRolesId();
 		id2.setRoleId("ROLE_B");
-		id2.setTimeId("time-00004");
+		id2.setTimeId("TIME-00004");
 		domain2.setId(id2);
 
 		List<RestrictedTimesRoles> list = new ArrayList<RestrictedTimesRoles>();
@@ -77,11 +77,11 @@ public class RestrictedTimesRolesServiceTest {
 	public List<RestrictedTimesRolesId> makeDomainId() {
 		RestrictedTimesRolesId id1 = new RestrictedTimesRolesId();
 		id1.setRoleId("ROLE_A");
-		id1.setTimeId("time-00004");
+		id1.setTimeId("TIME-00004");
 
 		RestrictedTimesRolesId id2 = new RestrictedTimesRolesId();
 		id2.setRoleId("ROLE_B");
-		id2.setTimeId("time-00004");
+		id2.setTimeId("TIME-00004");
 
 		List<RestrictedTimesRolesId> list = new ArrayList();
 		list.add(id1);
@@ -97,13 +97,13 @@ public class RestrictedTimesRolesServiceTest {
 		RestrictedTimesRoles domain1 = new RestrictedTimesRoles();
 		RestrictedTimesRolesId id1 = new RestrictedTimesRolesId();
 		id1.setRoleId("ROLE_A");
-		id1.setTimeId("time-00004");
+		id1.setTimeId("TIME-00004");
 		domain1.setId(id1);
 
 		RestrictedTimesRoles domain2 = new RestrictedTimesRoles();
 		RestrictedTimesRolesId id2 = new RestrictedTimesRolesId();
 		id2.setRoleId("ROLE_B");
-		id2.setTimeId("time-00005");
+		id2.setTimeId("TIME-00005");
 		domain2.setId(id2);
 
 		List<RestrictedTimesRoles> list = new ArrayList<RestrictedTimesRoles>();
@@ -170,13 +170,13 @@ public class RestrictedTimesRolesServiceTest {
 		RestrictedTimesRoles domain1 = new RestrictedTimesRoles();
 		RestrictedTimesRolesId id1 = new RestrictedTimesRolesId();
 		id1.setRoleId("ROLE_A");
-		id1.setTimeId("time-00004");
+		id1.setTimeId("TIME-00004");
 		domain1.setId(id1);
 
 		RestrictedTimesRoles domain2 = new RestrictedTimesRoles();
 		RestrictedTimesRolesId id2 = new RestrictedTimesRolesId();
 		id2.setRoleId("ROLE_B");
-		id2.setTimeId("time-00005");
+		id2.setTimeId("TIME-00005");
 		domain2.setId(id2);
 
 		List<RestrictedTimesRoles> list = new ArrayList<RestrictedTimesRoles>();
@@ -188,7 +188,7 @@ public class RestrictedTimesRolesServiceTest {
 		restrictedTimesRolesService.saveTimeRoles(list);
 
 		// delete
-		restrictedTimesRolesService.removeTimesRolesByTime("time-00004");
+		restrictedTimesRolesService.removeTimesRolesByTime("TIME-00004");
 
 		// check
 		try {
@@ -215,7 +215,7 @@ public class RestrictedTimesRolesServiceTest {
 		// find list
 		RestrictedTimesSearchVO restrictedTimesSearchVO = new RestrictedTimesSearchVO();
 		restrictedTimesSearchVO.setSearchCondition("timeId");
-		restrictedTimesSearchVO.setSearchKeyword("time-00004");
+		restrictedTimesSearchVO.setSearchKeyword("TIME-00004");
 		Page resultPage = restrictedTimesRolesService.getTimeRoleList(restrictedTimesSearchVO);
 
 		Iterator iter = resultPage.getList().iterator();
@@ -224,13 +224,13 @@ public class RestrictedTimesRolesServiceTest {
 		String resultRoleId1 = (String) resultMap1.get("roleId");
 		String resultTimeId1 = (String) resultMap1.get("timeId");
 		assertEquals("ROLE_A", resultRoleId1);
-		assertEquals("time-00004", resultTimeId1);
+		assertEquals("TIME-00004", resultTimeId1);
 
 		Map resultMap2 = (Map) iter.next();
 		String resultRoleId2 = (String) resultMap2.get("roleId");
 		String resultTimeId2 = (String) resultMap2.get("timeId");
 		assertEquals("ROLE_B", resultRoleId2);
-		assertEquals("time-00004", resultTimeId2);
+		assertEquals("TIME-00004", resultTimeId2);
 	}
 
 	@Test
@@ -242,7 +242,7 @@ public class RestrictedTimesRolesServiceTest {
 		restrictedTimesRolesService.saveTimeRoles(list);
 
 		// find list
-		List resultList = restrictedTimesRolesService.findRoleListByTime("time-00004");
+		List resultList = restrictedTimesRolesService.findRoleListByTime("TIME-00004");
 		assertNotNull(resultList);
 		assertTrue(resultList.size() > 0);
 		assertEquals(2, resultList.size());
