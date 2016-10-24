@@ -16,22 +16,20 @@
 package anyframe.iam.core.intercept.web;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -45,12 +43,12 @@ import org.springframework.security.util.AntUrlPathMatcher;
 import org.springframework.security.util.UrlMatcher;
 
 import anyframe.common.exception.BaseException;
-import anyframe.common.util.DateUtil;
 import anyframe.iam.core.securedobject.ISecuredObjectService;
 
 /**
- * Spring Security 의objectDefinitionSource 를 확장하였으며, 등록된 restricted times 관련
- * 리소스의 권한 맵핑 처리를 제공한다.
+ * This class extends objectDefinitionSource of Spring Security. It offers a
+ * function to treat role mapping of resources related with registered
+ * Restricted Times
  * 
  * @author Byunghun Woo
  * 
@@ -122,20 +120,21 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 	}
 
 	/**
-	 * InitializingBean 이며 최초 기동 시에 수행된다. 여기서는 reloadRestrictedTimes 를 호출하는 것이
-	 * 전부이다.
+	 * This method is InitializingBean and executed as soon as this class runs.
+	 * This method only calls reloadRestrictedTimes.
 	 */
 	public void afterPropertiesSet() throws Exception {
 		reloadRestrictedTimes();
 	}
 
 	/**
-	 * 시간에 따른 Role 제한 정보를 얻어와 이를 돌려준다. crash/daily 유형의 경우 alwaysTimeRoleCheck 로,
-	 * 기타 유형의 경우 dailyFilteredTimeRoleCheck 로 설정한다.
+	 * Get restriction information of roles related time. crash/daily types will
+	 * be set alwaysTimeRoleCheck, other types will be
+	 * dailyFilteredTimeRoleCheck.
 	 * 
-	 * @return restricted time - role 맵핑정보 Object 배열 (alwaysTimeRoleCheck,
-	 * dailyFilteredTimeRoleCheck)
-	 * @throws Exception
+	 * @return Object[] Array of mapping information about restricted time and
+	 * role
+	 * @throws Exception fail to make list
 	 */
 	public Object[] getRestrictedTimesRoles() throws Exception {
 		List alwaysTimeRoleCheck = new ArrayList();
@@ -176,7 +175,7 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 			else {
 				String startDate = (String) tempMap.get("start_date");
 				String endDate = (String) tempMap.get("end_date");
-				String[] betweenDays = DateUtil.getDates(startDate, endDate, "yyyyMMdd");
+				String[] betweenDays = getBetweenDays(startDate, endDate);
 				// 성능상 time 비교를 현재 일자에 한정하여 처리하기 위해 각 일자별 filtered 데이터로 구분해
 				// 놓음
 				for (int i = 0; i < betweenDays.length; i++) {
@@ -219,13 +218,13 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 	}
 
 	/**
-	 * 시간에 따른 Resource 제한 정보를 얻어와 이를 돌려준다. crash/daily 유형의 경우
-	 * alwaysTimeResourceCheck 로, 기타 유형의 경우 dailyFilteredTimeResourceCheck 로
-	 * 설정한다.
+	 * Get restriction information of resources related with time. crash/daily
+	 * types will be set alwayTimeResourceCheck, other types will be set
+	 * dailyFilteredTimeResourceCheck
 	 * 
-	 * @return restricted time - resource 맵핑정보 Object 배열 (alwaysTimeRoleCheck,
-	 * dailyFilteredTimeRoleCheck)
-	 * @throws Exception
+	 * @return Object[] Array of mapping information about restricted time and
+	 * role
+	 * @throws Exception fail to make list
 	 */
 	public Object[] getRestrictedTimesResources() throws Exception {
 		List alwaysTimeResourceCheck = new ArrayList();
@@ -280,7 +279,7 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 			else {
 				String startDate = (String) tempMap.get("start_date");
 				String endDate = (String) tempMap.get("end_date");
-				String[] betweenDays = DateUtil.getDates(startDate, endDate, "yyyyMMdd");
+				String[] betweenDays = getBetweenDays(startDate, endDate);
 				// 성능상 time 비교를 현재 일자에 한정하여 처리하기 위해 각 일자별 filtered 데이터로 구분해
 				// 놓음
 				for (int i = 0; i < betweenDays.length; i++) {
@@ -346,10 +345,12 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 	}
 
 	/**
-	 * Spring Security 의 ConfigAttributeDefinition 형태로 데이터를 재설정한다.
+	 * Reset data into ConfigAttributeDefinition of Spring security
 	 * 
-	 * @param timeCheckList always time Check 정보를 포함하고 있는 Map 의 List
-	 * @param configKey ConfigAttributeDefinition 로 변환될 role 에 대한 Map key
+	 * @param timeCheckList List of Map includes information of always time
+	 * Check
+	 * @param configKey Map key about role that will be changed
+	 * ConfigAttributeDefinition
 	 */
 	public void listToConfig(List timeCheckList, String configKey) {
 		Iterator iter = timeCheckList.iterator();
@@ -364,10 +365,12 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 	}
 
 	/**
-	 * Spring Security 의 ConfigAttributeDefinition 형태로 데이터를 재설정한다.
+	 * Reset data into ConfigAttributeDefinition of Spring security
 	 * 
-	 * @param dailyFilteredMap daily filtered time Check 정보를 포함하고 있는 Map
-	 * @param configKey ConfigAttributeDefinition 로 변환될 role 에 대한 Map key
+	 * @param dailyFilteredMap Map object that contains information of daily
+	 * filtered time Check
+	 * @param configKey Map key about role that will be changed
+	 * ConfigAttributeDefinition
 	 */
 	public void listToConfig(Map dailyFilteredMap, String configKey) {
 		Iterator iter = dailyFilteredMap.entrySet().iterator();
@@ -380,9 +383,9 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 	}
 
 	/**
-	 * restricted times 맵핑 정보를 reload 한다.
+	 * Reload mapping information of restricted times
 	 * 
-	 * @throws BaseException
+	 * @throws BaseException fail to reload data
 	 */
 	public void reloadRestrictedTimes() throws BaseException {
 		try {
@@ -426,13 +429,14 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 	}
 
 	/**
-	 * restricted times resource 맵핑정보 중 현재 request url 과 매치(설정된 urlMatcher 에 따른
-	 * ) 된 경우 해당 맵핑 Role 을 돌려준다.
+	 * Return matched Role if current request URL matches mapping information of
+	 * restricted times resource
 	 * 
-	 * @param map restricted times resource 맵핑정보를 담고 있는 Map
-	 * @param url 현재 request url
-	 * @return 매치되지 않은 경우 null, 매치된 경우 해당 resource 에 대해 exclusion Role 에 대한
-	 * ConfigAttributeDefinition
+	 * @param map Map object that contains mapping information of restricted
+	 * times resource
+	 * @param url current request URL
+	 * @return null if url does not matches, ConfigAttributeDefinition about
+	 * exclusion Role if URL matches
 	 */
 	private ConfigAttributeDefinition checkUrlMatching(Map map, String url) {
 		Object p = map.get("compiledResourcePattern");
@@ -450,21 +454,22 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 	}
 
 	/**
-	 * restricted times 관련 Role/Resource 맵핑 정보에 대하여 현재 날짜/시각에 해당하는 제한/허용 role
-	 * 리스트에 따른 ConfigAttributeDefinition 를 구한다.
+	 * Get ConfigAttributeDefinition about Restricted/Allowed role list that
+	 * matches current date/time from Role/Resource mapping information of
+	 * restricted times
 	 * 
-	 * @param compareCandidateList restricted time 맵핑 정보 - always 체크인 경우 전체 리스트,
-	 * dailyfiltered 인 경우 오늘날짜에 해당하는 mapping List
+	 * @param compareCandidateList mapping information of restricted time - all
+	 * list if always checking mapping list about today date if dailyfiltered
+	 * checking
 	 * @param url request url
-	 * @param currentDateTime 현재 날짜시각
-	 * @param currentTime 현재 시각
-	 * @param isTimeOnlyCheck 시각 만 체크 여부 (always check 인 경우에 미리 정의된 최소/최대 날짜를
-	 * 더해서 현재시각과 비교토록함)
-	 * @param isRoleCheck role 체크 여부 (role or resource)
-	 * @return 제한/허용 role 리스트에 따른 ConfigAttributeDefinition
+	 * @param currentDateTime current date
+	 * @param currentTime current time
+	 * @param isTimeOnlyCheck true if only time checking
+	 * @param isRoleCheck (role or resource) true if role checking
+	 * @return ConfigAttributeDefinition ConfigAttributeDefinition object
 	 */
 	public ConfigAttributeDefinition lookupRoleOrUrlInCandidateListCheck(List compareCandidateList, String url,
-			Date currentDateTime, Date currentTime, boolean isTimeOnlyCheck, boolean isRoleCheck) {
+			DateTime currentDateTime, DateTime currentTime, boolean isTimeOnlyCheck, boolean isRoleCheck) {
 
 		List candidateFoundCadList = new ArrayList();
 
@@ -489,8 +494,11 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 			String startTime = (String) map.get("start_time");
 			String endTime = (String) map.get("end_time");
 
-			Date startDateTime = null;
-			Date endDateTime = null;
+			DateTime startJodaTime = DateTimeFormat.forPattern("HHmmss").parseDateTime(startTime);
+			DateTime endJodaTime = DateTimeFormat.forPattern("HHmmss").parseDateTime(endTime);
+
+			DateTime startDateTime = null;
+			DateTime endDateTime = null;
 
 			boolean dailyExceed = false;
 			boolean dailyExceedMatched = false;
@@ -498,60 +506,42 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 			if (isTimeOnlyCheck) {
 				if ("daily".equals((String) map.get("time_type"))) {
 					// daily 인 경우 익일로 넘어가는 경우
-					if (DateUtil.greaterThan(DateUtil.string2Date(startTime, "HHmmss"), DateUtil.string2Date(endTime,
-							"HHmmss"))) {
-						// // daily 인 경우 startTime > endTime 인 경우는 오늘 startTime
-						// ~ 익일 endTime 으로 계산함
-						// // 내일 구하기
-						// Calendar cal = new
-						// GregorianCalendar(TimeZone.getTimeZone("GMT+09:00"),
-						// Locale.KOREA);
-						// cal.setTime(new Date());
-						// cal.roll(Calendar.DATE, 1);
-						// Date date = cal.getTime();
-						// String tomorrow = DateUtil.date2String(date,
-						// "yyyyMMdd");
-						//
-						// startDateTime =
-						// DateUtil.string2Date(DateUtil.getCurrentTime("yyyyMMdd")
-						// + startTime,
-						// "yyyyMMddHHmmss");
-						// endDateTime = DateUtil.string2Date(tomorrow +
-						// endTime, "yyyyMMddHHmmss");
+					if (startJodaTime.isAfter(endJodaTime.getMillis())) {
 						dailyExceed = true;
 						// dailyExceed 인 경우 시간만 비교해서 종료 <= currentTime <= 시작 이
 						// 아닌 경우로 match 비교
-						if (!(DateUtil.string2Date(endTime, "HHmmss").getTime() <= currentTime.getTime() && currentTime
-								.getTime() <= DateUtil.string2Date(startTime, "HHmmss").getTime())) {
+						if (!((endJodaTime.isBefore(currentTime.getMillis()) || endJodaTime.isEqual(currentTime
+								.getMillis())) && (currentTime.isBefore(startJodaTime.getMillis()) || currentTime
+								.isEqual(startJodaTime.getMillis())))) {
 							dailyExceedMatched = true;
 						}
 					}
 					else {
-						startDateTime = DateUtil.string2Date(DateUtil.getCurrentTime("yyyyMMdd") + startTime,
-								"yyyyMMddHHmmss");
-						endDateTime = DateUtil.string2Date(DateUtil.getCurrentTime("yyyyMMdd") + endTime,
-								"yyyyMMddHHmmss");
+						startDateTime = DateTimeFormat.forPattern("yyyyMMddHHmmss").parseDateTime(
+								currentDateTime.toString("yyyyMMdd") + startTime);
+						endDateTime = DateTimeFormat.forPattern("yyyyMMddHHmmss").parseDateTime(
+								currentDateTime.toString("yyyyMMdd") + endTime);
 					}
 				}
 				else {
 					// 편의상 기타 always(crash) check 인 경우에 미리 정의된 최소/최대 날짜를 더해서
 					// 현재시각과 비교토록함.
-					startDateTime = DateUtil.string2Date(RestrictedResourceHolder.RESTRICTED_MIN_DATE + startTime,
-							"yyyyMMddHHmmss");
-					endDateTime = DateUtil.string2Date(RestrictedResourceHolder.RESTRICTED_MAX_DATE + endTime,
-							"yyyyMMddHHmmss");
+					startDateTime = DateTimeFormat.forPattern("yyyyMMddHHmmss").parseDateTime(
+							RestrictedResourceHolder.RESTRICTED_MIN_DATE + startTime);
+					endDateTime = DateTimeFormat.forPattern("yyyyMMddHHmmss").parseDateTime(
+							RestrictedResourceHolder.RESTRICTED_MAX_DATE + endTime);
 				}
 			}
 			else { // daily filtered check 인 경우는 해당 날짜+시각 으로 직접 비교함
-				startDateTime = DateUtil.string2Date(startDate + startTime, "yyyyMMddHHmmss");
-				endDateTime = DateUtil.string2Date(endDate + endTime, "yyyyMMddHHmmss");
+				startDateTime = DateTimeFormat.forPattern("yyyyMMddHHmmss").parseDateTime(startDate + startTime);
+				endDateTime = DateTimeFormat.forPattern("yyyyMMddHHmmss").parseDateTime(endDate + endTime);
 			}
 
 			// 현재 처리중인 time_id 에 해당하는 시각이면
 			// dailyExceed 인 경우 위에서 시간의 비교만으로 계산하였음.
 			if ((dailyExceed && dailyExceedMatched)
-					|| (!dailyExceed && DateUtil.greaterThan(currentDateTime, startDateTime) && DateUtil.greaterThan(
-							endDateTime, currentDateTime))) {
+					|| (!dailyExceed && currentDateTime.isAfter(startDateTime.getMillis()) && endDateTime
+							.isAfter(currentDateTime.getMillis()))) {
 
 				presentResourceId = (String) map.get("resource_id");
 				// 다른 resource 로 변경된 경우에는 기존에 찾은 resource 에 대한 foundCad 가 존재한다면
@@ -603,12 +593,14 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 	}
 
 	/**
-	 * roleCheck 인 경우 제한 Role 의 Sum, resourceCheck 인 경우 허용 Role 의 Intersection 에
-	 * 대한 재처리 결과를 돌려준다.
+	 * in case of roleCheck, return sum of restricted roles in case of
+	 * resourceCheck, return result of re-operation with Intersection of allowed
+	 * roles
 	 * 
-	 * @param isRoleCheck roleCheck 여부
-	 * @param candidateFoundCadList 현재까지 time 매칭이 된 상태에서 모아진 후보 맵핑 권한들
-	 * @return 재처리된 권한에 따른 ConfigAttributeDefinition
+	 * @param isRoleCheck true if roleCheck
+	 * @param candidateFoundCadList list of candidate permissions that matches
+	 * the given time
+	 * @return ConfigAttributeDefinition ConfigAttributeDefinition object
 	 */
 	private ConfigAttributeDefinition recalculateCandidate(boolean isRoleCheck, List candidateFoundCadList) {
 		ConfigAttributeDefinition foundCad;
@@ -640,12 +632,11 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 	}
 
 	/**
-	 * FilterInvocation 인 경우 처리 가능하며 stripQueryStringFromUrls 설정, urlMatcher 의
-	 * lowercase 설정에 따라 url 의 가공이 발생하며 현재시각을 구해 restricted times 관련 맵핑 정보와 비교하여
-	 * 접근 권한을 처리한다. RestrictedTimesFilterSecurityInterceptor 와 쌍으로 설정되어 하나의
-	 * filter 처리 내에서 alwaysTimeRoleCheck, dailyFilteredTimeRoleCheck,
-	 * alwaysTimeResourceCheck, dailyFilteredTimeResourceCheck 비교가 순서대로 호출된다.
-	 * (ThreadLocal 에 순번 저장)
+	 * In case of FilterInvocation, compare current time with mapping
+	 * information of restricted times. in pair of
+	 * RestrictedTimesFilterSecurityInterceptor, it calls alwaysTimeRoleCheck,
+	 * dailyFilteredTimeRoleCheck, alwaysTimeResourceCheck and
+	 * dailyFilteredTimeResourceCheck sequentially.
 	 * 
 	 * @see anyframe.iam.core.intercept.web.RestrictedTimesFilterSecurityInterceptor#invoke(FilterInvocation)
 	 * @see org.springframework.security.intercept.ObjectDefinitionSource#getAttributes(java.lang.Object)
@@ -672,8 +663,9 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 		}
 
 		// 현재 시각
-		Date currentDateTime = new Date();
-		Date currentTime = DateUtil.string2Date(DateUtil.date2String(currentDateTime, "HHmmss"), "HHmmss");
+		DateTime currentDateTime = new DateTime();
+		DateTime currentTime = DateTimeFormat.forPattern("HHmmss").parseDateTime(currentDateTime.toString("HHmmss"));
+		String currentDay = DateTimeFormat.forPattern("yyyyMMdd").print(currentDateTime);
 
 		// alwaysTimeRoleCheck
 		if (RestrictedResourceHolder.RESTRICTED_RESOURCE_TYPE[0].equals(RestrictedResourceHolder.getPresentResource())) {
@@ -683,7 +675,7 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 
 		// dailyFilteredTimeRoleCheck
 		if (RestrictedResourceHolder.RESTRICTED_RESOURCE_TYPE[1].equals(RestrictedResourceHolder.getPresentResource())) {
-			List todayRoleList = (List) dailyFilteredTimeRoleCheck.get(DateUtil.getCurrentTime("yyyyMMdd"));
+			List todayRoleList = (List) dailyFilteredTimeRoleCheck.get(currentDay);
 			return lookupRoleOrUrlInCandidateListCheck(todayRoleList, url, currentDateTime, currentTime, false, true);
 		}
 
@@ -695,7 +687,7 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 
 		// dailyFilteredTimeResourceCheck
 		if (RestrictedResourceHolder.RESTRICTED_RESOURCE_TYPE[3].equals(RestrictedResourceHolder.getPresentResource())) {
-			List todayUrlList = (List) dailyFilteredTimeResourceCheck.get(DateUtil.getCurrentTime("yyyyMMdd"));
+			List todayUrlList = (List) dailyFilteredTimeResourceCheck.get(currentDay);
 			return lookupRoleOrUrlInCandidateListCheck(todayUrlList, url, currentDateTime, currentTime, false, false);
 		}
 
@@ -703,7 +695,28 @@ public class ReloadableRestrictedTimesFilterInvocationDefinitionSource implement
 	}
 
 	/**
-	 * validateConfigAttributes 지원 않음
+	 * Get the String Array of Days between startDate and endDate.
+	 * @param startDate
+	 * @param endDate
+	 * @return String Array. The Days between startDate and endDate. 
+	 */
+	public String[] getBetweenDays(String startDate, String endDate) {
+		List betweenDays = new ArrayList();
+
+		DateTime tempDate = DateTimeFormat.forPattern("yyyyMMdd").parseDateTime(startDate);
+		DateTime endJodaDate = DateTimeFormat.forPattern("yyyyMMdd").parseDateTime(endDate);
+
+		betweenDays.add(DateTimeFormat.forPattern("yyyyMMdd").print(tempDate));
+		while (tempDate.isBefore(endJodaDate.getMillis())) {
+			tempDate = tempDate.plusDays(1);
+			betweenDays.add(DateTimeFormat.forPattern("yyyyMMdd").print(tempDate));
+		}
+
+		return (String[]) betweenDays.toArray(new String[0]);
+	}
+
+	/**
+	 * validateConfigAttributes not supported
 	 */
 	public Collection getConfigAttributeDefinitions() {
 		// validateConfigAttributes 지원 않음

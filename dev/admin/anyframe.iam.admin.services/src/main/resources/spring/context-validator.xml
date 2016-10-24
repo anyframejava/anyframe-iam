@@ -8,7 +8,7 @@
     <bean id="validatorFactory" class="org.springmodules.validation.commons.DefaultValidatorFactory">
 		<property name="validationConfigLocations">
 			<list>
-				<!-- validator-rules.xml, validator.xml 의 위치 -->
+				<!-- location of validator-rules.xml, validator.xml -->
 				<value>/WEB-INF/config/springmvc/validator-rules.xml</value>
 				<value>/WEB-INF/config/springmvc/validator.xml</value>
 			</list>

@@ -74,4 +74,28 @@ public interface GroupsService extends GenericService<Groups, String> {
 	 * @throws Exception fail to find list
 	 */
 	List<Groups> getList() throws Exception;
+	
+	/**
+	 * find list of group name that have the given keyword
+	 * @param keyword
+	 * @return list of group name
+	 * @throws Exception fail to find list
+	 */
+	String getGroupNameList(String keyword) throws Exception;
+	
+	/**
+	 * find group ID that matches the given group name
+	 * @param groupName
+	 * @return group ID
+	 * @throws Exception fail to find group ID
+	 */
+	String getGroupIdByGroupName(String groupName) throws Exception;
+	
+	/**
+	 * find all ancestor for the given group ID
+	 * @param groupId
+	 * @return List of group ID
+	 * @throws Exception
+	 */
+	List<String> getParentsGroupIds(String groupId) throws Exception;
 }

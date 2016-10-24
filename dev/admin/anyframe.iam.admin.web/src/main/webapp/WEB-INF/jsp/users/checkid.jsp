@@ -9,25 +9,20 @@
 <title>Check User Id</title>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript">
 <!--
 function closeWindow(){
 	var isAvailable = document.checkIdForm.isAvailable;
 	var userId = document.checkIdForm.userId;
-	if(isAvailable.value == "false"){
-		//if(confirm("<anyframe:message code='user.ui.alert.confirmclosewithoutconfirm' />")){
-			window.close();
-		//}
-	}
-	else
-	{
-		//if(confirm("<anyframe:message code='user.ui.alert.confirmclosewithconfirm' />")){
-			opener.setUserId(userId.value);
-			window.close();
-		//}
+	
+	if(isAvailable.value == "false") {
+		window.close();
+	} else {
+		opener.setUserId(userId.value);
+		window.close();
 	}
 }
 
@@ -54,67 +49,64 @@ body {
 
 <!-- begin of title -->
 <table width="300" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td align="center" valign="top">
-	<table width="285" height="44" border="0" align="center" cellpadding="0" cellspacing="0" >
-      <tr>
-        <td height="44" align="left" class="checkidtitle" style="padding-left:38px"><anyframe:message
-					code='user.ui.title.checkuserid' /></td>
-      </tr>
-    </table>	</td>
-  </tr>
-  
-  <tr>
-    <td align="center" valign="top" class="sky_h3"><!-- begin of title -->
-      <c:set var="userId" value="${userId}" />
-<!-- End of Title -->
-
-<form name="checkIdForm">
-<table width="285" border="0" align="center" cellpadding="0" cellspacing="0"
-	style="margin-top: 13px;">
 	<tr>
-		<td height="2" colspan="3" bgcolor="#A2BACE"></td>
-	</tr>
-	<tr height="30">
-		<td width="104"class="tdHead"><anyframe:message
-			code='user.ui.label.userid' /></td>
-		<td width="1" height="45" bgcolor="#D6D6D6"></td>
-		<td height="45" class="tdin"><input style="width:90%;height:15px;padding-top:5px" class="ct_input_g" type="text" name="userId" value="<c:out value='${userId }' />" maxlength="20" ></td>
-		</tr>
+		<td align="center" valign="top">
+			<table width="285" height="44" border="0" align="center" cellpadding="0" cellspacing="0" >
+				<tr>
+					<td height="44" align="left" class="checkidtitle" style="padding-left:38px"><anyframe:message code='user.ui.title.checkuserid' /></td>
+      			</tr>
+    		</table>
+    	</td>
+  	</tr>
 	<tr>
-		<td height="1" colspan="3" bgcolor="#B6CDE4"></td>
-	</tr>
-</table>
-<br>
-	 	<c:if test="${exist == true}">
-		 	<font color="#FF6E86"><anyframe:message code='user.ui.message.duplicationconfirm.false' /></font>
-		 	<input type="hidden" name="isAvailable" value="false">
-		</c:if>
-	 	<c:if test="${exist == false}">
-		 	<anyframe:message code='user.ui.message.duplicationconfirm.true' />
-		 	<input type="hidden" name="isAvailable" value="true">
-		</c:if>		
-        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0"
-	style="margin-top: 23px;">
-	<tr>
-		<td colspan="3" align="right">
-		<table height="22" border="0" cellpadding="0" cellspacing="0">
-              <tr>
-                <td width="18"><img src="<c:url value='/images/btn/btn_check.gif'/>" width="18" height="22"></td>
-                <td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="javascript:checkId();" name="selectGroup"><anyframe:message code='user.ui.link.checkid' /></a></td>
-                <td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
-              </tr>
-            </table></td>
-		<td colspan="3" align="left" style="padding-left:3px">
-		<table height="22" border="0" cellpadding="0" cellspacing="0">
-              <tr>
-                <td width="18"><img src="<c:url value='/images/btn/btn_save.gif'/>" width="18" height="22"></td>
-                <td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="javascript:closeWindow();" name="selectGroup"><anyframe:message code='user.ui.link.save' /></a></td>
-                <td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
-              </tr>
-            </table></td>
+		<td align="center" valign="top" class="sky_h3">
+			<c:set var="userId" value="${userId}" />
+			<form name="checkIdForm">
+			<table width="285" border="0" align="center" cellpadding="0" cellspacing="0" style="margin-top: 13px;">
+				<tr>
+					<td height="2" colspan="3" bgcolor="#A2BACE"></td>
+				</tr>
+				<tr height="30">
+					<td width="104"class="tdHead"><anyframe:message code='user.ui.label.userid' /></td>
+					<td width="1" height="45" bgcolor="#D6D6D6"></td>
+					<td height="45" class="tdin"><input style="width:90%;height:15px;padding-top:5px" class="ct_input_g" type="text" name="userId" value="<c:out value='${userId }' />" maxlength="20" ></td>
+				</tr>
+				<tr><td height="1" colspan="3" bgcolor="#B6CDE4"></td></tr>
+			</table>
+			<br>
+			<c:if test="${exist == true}">
+				<font color="#FF6E86"><anyframe:message code='user.ui.message.duplicationconfirm.false' /></font>
+				<input type="hidden" name="isAvailable" value="false">
+			</c:if>
+			<c:if test="${exist == false}">
+				<anyframe:message code='user.ui.message.duplicationconfirm.true' />
+				<input type="hidden" name="isAvailable" value="true">
+			</c:if>		
+			<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" style="margin-top: 23px;">
+				<tr>
+					<td colspan="3" align="right">
+						<table height="22" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="18"><img src="<c:url value='/images/btn/btn_check.gif'/>" width="18" height="22"></td>
+								<td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="javascript:checkId();" name="selectGroup"><anyframe:message code='user.ui.link.checkid' /></a></td>
+								<td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
+							</tr>
+						</table>
+					</td>
+					<td colspan="3" align="left" style="padding-left:3px">
+						<table height="22" border="0" cellpadding="0" cellspacing="0">
+							<tr>
+								<td width="18"><img src="<c:url value='/images/btn/btn_save.gif'/>" width="18" height="22"></td>
+								<td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="javascript:closeWindow();" name="selectGroup"><anyframe:message code='user.ui.link.save' /></a></td>
+								<td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			</form>
+		</td>
 	</tr>
 </table>
-</form>
 </body>
 </html>

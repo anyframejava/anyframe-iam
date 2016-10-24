@@ -16,18 +16,14 @@
 package anyframe.iam.core.intercept.web;
 
 /**
- * restricted times 관련 상수 및 현재 처리 RESTRICTED_RESOURCE_TYPE 을 설정하고 구하는 기능을 제공한다.
- * 
+ * This class offers some variables about restricted times 
+ * and function that get/set RESTRICTED_RESOURCE_TYPE
+ *  
  * @author Byunghun Woo
  * 
  */
 public class RestrictedResourceHolder {
 
-	/**
-	 * RESTRICTED_TIMES_RESERVED_ROLE_NAME - ROLE_RESTRICTED_TIMES restricted
-	 * times - resource 제한 시기본으로 존재하지 않는 해당 예약 Role 을 지정해버림 cf.) exclusion 으로
-	 * 등록된 Role
-	 */
 	public static final String RESTRICTED_TIMES_RESERVED_ROLE_NAME = "ROLE_RESTRICTED_TIMES";
 
 	/**
@@ -44,15 +40,16 @@ public class RestrictedResourceHolder {
 			"alwaysTimeResourceCheck", "dailyFilteredTimeResourceCheck" };
 
 	/**
-	 * 하나의 filter 처리 시 4가지 유형의 restricted times 체크를 시도하며 이때 ThreadLocal 에 현재 처리
-	 * 순서를 지정함
+	 * When one filter runs, check 4 types of restricted times 
+	 * and specify current order processing in ThreadLocal
 	 */
 	private static ThreadLocal resourceHolder = new ThreadLocal();
 
 	/**
-	 * 현재 처리 유형을 얻는다. null 인 경우는 alwaysTimeRoleCheck 를 돌려준다.
+	 * Get current type of processing.
+	 * Return alwasTimeRoleCheck if null
 	 * 
-	 * @return 현재 순번의 RESTRICTED_RESOURCE_TYPE
+	 * @return RESTRICTED_RESOURCE_TYPE of current order processing
 	 */
 	public static String getPresentResource() {
 		if (resourceHolder.get() == null) {
@@ -63,9 +60,10 @@ public class RestrictedResourceHolder {
 	}
 
 	/**
-	 * 현재 처리 유형을 설정한다.
+	 * Setting current type of processing.
 	 * 
-	 * @param resourceType - 처리 유형 -
+	 * @param resourceType
+	 * 				type of processing
 	 * RestrictedResourceHolder.RESTRICTED_RESOURCE_TYPE[0]~[3]
 	 */
 	public static void setPresentResource(String resourceType) {

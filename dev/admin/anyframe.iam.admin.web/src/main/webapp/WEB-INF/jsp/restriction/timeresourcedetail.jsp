@@ -10,8 +10,8 @@
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript" src="<c:url value='/validator.do'/>"></script>
 <validator:javascript formName="restrictedTimes" staticJavascript="false" xhtml="true" cdata="false"/>
@@ -93,9 +93,9 @@
 					return;
 				}
 				alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
-			},
-			imgpath : "<c:url value='/jquery/jqgrid/themes/steel/images' />"
+			}
 		});
+		jQuery("#grid_timeresource").jqGrid('navGrid','#pager_timeresource',{edit:false,add:false,del:false,search:false});
 
 		/* Button Function Start (Resource CRUD) */
 		
@@ -135,10 +135,10 @@
 		});
 	});
 
-	function reloadGrid(timeId){
+	function reloadGrid(timeId, rowDataArray){
+		jQuery("#grid_timeresource").setPostData({timeId:timeId, resourceId:rowDataArray, searchKeyword:timeId});
+	    jQuery("#grid_timeresource").setGridParam({url:"<c:url value='/restriction/timeresource/add.do?' />"}).trigger("reloadGrid");
 		alert("<anyframe:message code='roleresource.ui.alert.allocationsuccess' />");
-		jQuery("#grid_timeresource").setPostData({searchKeyword:timeId});
-		jQuery("#grid_timeresource").setGridParam({url:"<c:url value='/restriction/timeresource/listResourceData.do?' />"}).trigger("reloadGrid");
 	}
 //-->
 </script>
@@ -189,10 +189,10 @@ body {
 						<tr>
 							<td width="144" class="tdHead"><anyframe:message code="restrictedtimes.ui.label.timeid" /></td>
 							<td bgcolor="#D6D6D6" width="1"></td>			
-							<td width="136" class="tdin">
+							<td width="144" class="tdin">
 								<form:input path="timeId" id="timeId" readonly="true" cssClass="ct_input_g" cssErrorClass="text medium error" maxlength="10"/>&nbsp;<form:errors path="timeId" cssClass="error" />
 							</td>
-							<td width="494" align="left">
+							<td width="474" align="left">
 								<a href="#" name="selectTimeId" class="searchBtn"><anyframe:message code='user.ui.link.select' /></a>
 							</td>
 						</tr>		

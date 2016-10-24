@@ -25,8 +25,8 @@ import org.springframework.security.util.FieldUtils;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Spring Security 의 User 를 extends 하고 있으며 custom 사용자 정보 객체(별도의 VO 등으로 처리 가능,
- * default 는 Map) 를 포함하고 있다.
+ * This class extends User Class of Spring Security. Also class contains custom
+ * user information object.
  * 
  * @author Byunghun Woo
  * 
@@ -36,21 +36,20 @@ public class ExtUser extends User implements UserDetails {
 	private static final long serialVersionUID = -5348173960385039444L;
 
 	/**
-	 * USER_GROUP_PROPERTY_NAME 사용자에 대한 Group 을 나타내는 프로퍼티 명 - default 는
-	 * "userGroup" 임
+	 * Property name that represent group of user. default value is "userGroup"
 	 */
 	private static String USER_GROUP_PROPERTY_NAME = "userGroup";
 
 	/**
-	 * 확장 가능한 커스텀 사용자 정보 객체
+	 * Custom user information object that can be extended
 	 */
 	private Object customUser;
 
 	private String userGroup;
 
 	/**
-	 * ExtUser 생성자 - customUser 를 추가로 설정할 수 있다. userGroup 을 설정할 수 있는 경우 해당 정보를
-	 * 포함한다.
+	 * Constructor of ExtUser : It is able to set customUser additional. In case
+	 * of being able to set userGroup, Class contains that information.
 	 * 
 	 * @see org.springframework.security.userdetails.User#User(String, String,
 	 * boolean, boolean, boolean, boolean, GrantedAuthority[])
@@ -67,8 +66,8 @@ public class ExtUser extends User implements UserDetails {
 	}
 
 	/**
-	 * static 필드로 최초 한번 설정해 두면 해당 USER_GROUP_PROPERTY_NAME 값을 customUser 객체로 부터
-	 * 검사하여 존재하는 경우 userGroup 으로 설정한다.
+	 * Checking USER_GROUP_PROPERTY_NAME value. After then setting it to
+	 * userGroup if it exist.
 	 * 
 	 * @param customUser
 	 */
@@ -85,9 +84,9 @@ public class ExtUser extends User implements UserDetails {
 			Field field = ReflectionUtils.findField(customUser.getClass(), getUserGroupPropertyName());
 			if (field != null) {
 				try {
-					FieldUtils.getFieldValue(customUser, field.getName());
+					userGroup = (String) FieldUtils.getFieldValue(customUser, field.getName());
 				}
-				catch (IllegalAccessException e) {
+				catch (Exception e) {
 					// nothing
 				}
 			}
@@ -116,8 +115,10 @@ public class ExtUser extends User implements UserDetails {
 	}
 
 	/**
-	 * @see anyframe.iam.core.userdetails.jdbc.ExtJdbcUserDetailsManager 초기화 시
-	 * userGroupPropertyName property 가 설정되어 있는 경우 호출된다.
+	 * @see anyframe.iam.core.userdetails.jdbc.ExtJdbcUserDetailsManager When
+	 * initialize the class, this method will be called if userGroupPropertyName
+	 * is set.
+	 * 
 	 * @param userGroupPropertyName
 	 */
 	public static void setUserGroupPropertyName(String userGroupPropertyName) {

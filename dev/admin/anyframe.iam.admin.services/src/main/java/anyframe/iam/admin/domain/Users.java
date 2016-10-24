@@ -38,6 +38,8 @@ import anyframe.core.generic.model.BaseObject;
 @Entity
 @Table(name = "USERS")
 public class Users extends BaseObject implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private String userId;
 
 	private String userName;

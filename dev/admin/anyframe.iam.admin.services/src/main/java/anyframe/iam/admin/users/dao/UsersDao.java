@@ -46,5 +46,6 @@ public interface UsersDao extends IamGenericDao<Users, String> {
 	 * @return List List of Users domain objects
 	 * @throws Exception fail to find list
 	 */
+	@SuppressWarnings("unchecked")
 	List findUserByName(String userName) throws Exception;
 }

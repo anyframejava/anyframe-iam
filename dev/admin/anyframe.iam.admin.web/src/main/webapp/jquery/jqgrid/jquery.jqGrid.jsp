@@ -1,29 +1,33 @@
 function jqGridInclude()
 {
-    var pathtojsfiles = "${pageContext.request.contextPath}/jquery/jqgrid/js/"; // need to be ajusted
+    var pathtojsfiles = "${pageContext.request.contextPath}/jquery/jqgrid/src"; // need to be ajusted
     // set include to false if you do not want some modules to be included
     var combineIntoOne = false; 
     var combinedInclude = new Array();
-    //var combinedIncludeURL = "combine.php?type=javascript&files=";
     var combinedIncludeURL = "";
     var minver = true;
     var modules = [
-        { include: true, incfile:'grid.locale-en.js',minfile: 'min/grid.locale-en-min.js'}, // jqGrid translation
-        { include: true, incfile:'grid.base.js',minfile: 'min/grid.base-min.js'}, // jqGrid base
-        { include: true, incfile:'grid.common.js',minfile: 'min/grid.common-min.js' }, // jqGrid common for editing
-        { include: true, incfile:'grid.formedit.js',minfile: 'min/grid.formedit-min.js' }, // jqGrid Form editing
-        { include: true, incfile:'grid.inlinedit.js',minfile: 'min/grid.inlinedit-min.js' }, // jqGrid inline editing
-        { include: true, incfile:'grid.celledit.js',minfile: 'min/grid.celledit-min.js' }, // jqGrid cell editing
-        { include: true, incfile:'grid.subgrid.js',minfile: 'min/grid.subgrid-min.js'}, //jqGrid subgrid
-        { include: true, incfile:'grid.treegrid.js',minfile: 'min/grid.treegrid-min.js'}, //jqGrid treegrid
-        { include: true, incfile:'grid.custom.js',minfile: 'min/grid.custom-min.js'}, //jqGrid custom 
-        { include: true, incfile:'grid.postext.js',minfile: 'min/grid.postext-min.js'}, //jqGrid postext
-        { include: true, incfile:'grid.tbltogrid.js',minfile: 'min/grid.tbltogrid-min.js'}, //jqGrid table to grid 
-        { include: true, incfile:'grid.setcolumns.js',minfile: 'min/grid.setcolumns-min.js'}, //jqGrid setcolumns
-        { include: true, incfile:'grid.import.js',minfile: 'min/grid.import-min.js'}, //jqGrid import
-        { include: true, incfile:'jquery.fmatter.js',minfile: 'min/jquery.fmatter-min.js'}, //jqGrid formater
-        { include: true, incfile:'json2.js',minfile: 'min/json2-min.js'}, //json utils
-        { include: true, incfile:'JsonXml.js',minfile: 'min/JsonXml-min.js'} //xmljson utils
+        { include: true, incfile:'i18n/grid.locale-en.js'}, // jqGrid translation
+        { include: true, incfile:'grid.base.js'}, // jqGrid base
+        { include: true, incfile:'grid.common.js'}, // jqGrid common for editing
+        { include: true, incfile:'grid.formedit.js'}, // jqGrid Form editing
+        { include: true, incfile:'grid.inlinedit.js'}, //jqGrid import        
+        { include: true, incfile:'grid.celledit.js'}, // jqGrid cell editing
+        { include: true, incfile:'grid.subgrid.js'}, //jqGrid subgrid
+        { include: true, incfile:'grid.treegrid.js'}, //jqGrid treegrid
+        { include: true, incfile:'grid.custom.js'}, //jqGrid custom 
+        { include: true, incfile:'grid.postext.js'}, //jqGrid postext
+        { include: true, incfile:'grid.tbltogrid.js'}, //jqGrid table to grid 
+        { include: true, incfile:'grid.setcolumns.js'}, //jqGrid setcolumns
+        { include: true, incfile:'grid.import.js'}, //jqGrid import
+        { include: true, incfile:'jquery.fmatter.js'}, //jqGrid formater
+        { include: true, incfile:'JsonXml.js'}, //xmljson utils
+        { include: true, incfile:'jquery.searchFilter.js'}, //jqGrid formater        
+        { include: true, incfile:'grid.jqueryui.js'}, //jqGrid import
+        { include: true, incfile:'grid.loader.js'}, //jqGrid import
+        { include: true, incfile:'jqDnR.js'}, // jqGrid inline editing
+        { include: true, incfile:'jqModal.js'}, // jqGrid inline editing
+        { include: true, incfile:'ui.multiselect.js'} //json utils
     ];
     var filename;
     for(var i=0;i<modules.length; i++)

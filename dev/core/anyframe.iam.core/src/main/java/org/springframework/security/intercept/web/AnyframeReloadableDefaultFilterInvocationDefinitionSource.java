@@ -31,9 +31,10 @@ import anyframe.common.exception.BaseException;
 import anyframe.iam.core.securedobject.ISecuredObjectService;
 
 /**
- * DB 기반으로 현재 시점의 url 보호자원 - 권한 맵핑 정보를 Runtime 에 동적으로 변경 반영하기 위한 Spring Security
- * 의 DefaultFilterInvocationDefinitionSource 확장 클래스이다. default modifier 로 지정된
- * 메서드 확장을 위해 Spring Security package 를 따랐다.
+ * Current secured resources based on DB with URL type - Extension class of 
+ * DefaultFilterInvocationDefinitionSource of Spring Security to reflect directly 
+ * authority mapping information in runtime.
+ * It follows Spring Security package for extension of method situated default modifier.
  * 
  * @author ByungHun Woo
  */
@@ -72,7 +73,7 @@ public class AnyframeReloadableDefaultFilterInvocationDefinitionSource extends D
 	}
 
 	/**
-	 * 보호 자원 권한 맵핑 정보를 reload 한다.
+	 * Reloading authority mapping information of secured resources
 	 * 
 	 * @throws Exception
 	 */
@@ -111,9 +112,6 @@ public class AnyframeReloadableDefaultFilterInvocationDefinitionSource extends D
 		}
 	}
 
-	/**
-	 * requestMap 을 직접 참조토록 하였다. <br/>
-	 */
 	void addSecureUrl(String pattern, String method, ConfigAttributeDefinition attr) {
 		Map mapToUse = getRequestMap();
 

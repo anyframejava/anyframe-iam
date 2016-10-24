@@ -56,6 +56,7 @@ public class UsersDaoHibernateImpl extends IamGenericDaoHibernate<Users, String>
 		args[5] = "sidx=" + sidx;
 		args[6] = "sord=" + sord;
 
+		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findUsersList", args, pageIndex, pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countUsersList", args);
 
@@ -63,6 +64,7 @@ public class UsersDaoHibernateImpl extends IamGenericDaoHibernate<Users, String>
 		return resultPage;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List findUserByName(String userName) throws Exception {
 		Object[] arg = new Object[1];
 		arg[0] = "userName=%" + userName + "%";

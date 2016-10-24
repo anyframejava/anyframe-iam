@@ -59,36 +59,40 @@ function fncGoAfterErrorPage(){
 </table><!-- END : Title -->
 <form name="dummyForm">
 <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td valign="top" style="padding-top:15px">
-	<table width="517" border="0" align="center" cellpadding="0" cellspacing="0">
-  <tr>
-    <td id="message" style="padding-left:89px" class="blue_h2">Data Transporting </td>
-  </tr>
-  <tr>
-    <td height="15" background="<c:url value='/images/box_top.gif'/>">&nbsp;</td>
-  </tr>
-  <tr>
-    <td align="center" background="<c:url value='/images/box_bg.gif'/>" class="boxpadding"> <table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="78%" align="center" style="padding-left:10px">${exception.message}</td>
-    <td width="22%"><img src="<c:url value='/images/icon_complete.gif'/>" width="77" height="77"></td>
-  </tr>
+	<tr>
+		<td valign="top" style="padding-top:15px">
+			<table width="517" border="0" align="center" cellpadding="0" cellspacing="0">
+				<tr>
+					<td id="message" style="padding-left:89px" class="blue_h2">Data Transporting </td>
+				</tr>
+				<tr>
+					<td height="15" background="<c:url value='/images/box_top.gif'/>">&nbsp;</td>
+				</tr>
+				<tr>
+					<td align="center" background="<c:url value='/images/box_bg.gif'/>" class="boxpadding">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td width="78%" align="center" style="padding-left:10px">${exception.message}</td>
+								<td width="22%"><img src="<c:url value='/images/icon_complete.gif'/>" width="77" height="77"></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td height="31" background="<c:url value='/images/box_bttm.gif'/>">&nbsp;</td>
+				</tr>
+			</table>
+			<table height="19" border="0" align="center" cellpadding="0" cellspacing="0" style="margin:10px">
+				<tr>
+					<td width="18"><img src="<c:url value='/images/btn/btn_checkid.gif'/>" width="21" height="19"></td>
+					<td valign="bottom" background="<c:url value='/images/btn/bg_btnsmall.gif'/>" class="boldBtn"><a href="javascript:fncGoAfterErrorPage();" >Confirm</a></td>
+					<td width="9" align="right"><img src="<c:url value='/images/btn/btn_tail.gif'/>" width="9" height="19"></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
 </table>
-</td>
-  </tr>
-  <tr>
-    <td height="31" background="<c:url value='/images/box_bttm.gif'/>">&nbsp;</td>
-  </tr>
-</table>
-<table height="19" border="0" align="center" cellpadding="0" cellspacing="0" style="margin:10px">
-					                <tr>
-					                  <td width="18"><img src="<c:url value='/images/btn/btn_checkid.gif'/>" width="21" height="19"></td>
-					                  <td valign="bottom" background="<c:url value='/images/btn/bg_btnsmall.gif'/>" class="boldBtn"><a href="javascript:fncGoAfterErrorPage();" >확인</a></td>
-					                  <td width="9" align="right"><img src="<c:url value='/images/btn/btn_tail.gif'/>" width="9" height="19"></td>
-					                </tr>
-      </table>
-    </form> 
+</form> 
 </body>
 </html>
 

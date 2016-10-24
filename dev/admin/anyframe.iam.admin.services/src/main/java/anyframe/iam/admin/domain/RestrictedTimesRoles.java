@@ -39,6 +39,8 @@ import anyframe.core.generic.model.BaseObject;
 @Entity
 @Table(name = "RESTRICTED_TIMES_ROLES")
 public class RestrictedTimesRoles extends BaseObject implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private RestrictedTimesRolesId id;
 
 	private RestrictedTimes restrictedTimes;
@@ -87,12 +89,27 @@ public class RestrictedTimesRoles extends BaseObject implements Serializable {
 		}
 
 		RestrictedTimesRoles pojo = (RestrictedTimesRoles) o;
+		
+		if((id != null) ? (!id.equals(pojo.id)) : (pojo.id != null)) {
+			return false;
+		}
+		
+		if((restrictedTimes != null) ? (!restrictedTimes.equals(pojo.restrictedTimes)) : (pojo.restrictedTimes != null)) {
+			return false;
+		}
+		
+		if((roles != null) ? (!roles.equals(pojo.roles)) : (pojo.roles != null)) {
+			return false;
+		}
 
 		return true;
 	}
 
 	public int hashCode() {
 		int result = 0;
+		result = ((id != null) ? id.hashCode() : 0);
+		result = (31 * result) + ((restrictedTimes != null) ? restrictedTimes.hashCode() : 0);
+		result = (31 * result) + ((roles != null) ? roles.hashCode() : 0);
 
 		return result;
 	}
@@ -102,6 +119,8 @@ public class RestrictedTimesRoles extends BaseObject implements Serializable {
 
 		sb.append(" [");
 		sb.append("id").append("='").append(getId()).append("', ");
+		sb.append("restrictedTimes").append("='").append(getRestrictedTimes()).append("', ");
+		sb.append("roles").append("='").append(getRoles()).append("', ");
 
 		sb.append("]");
 

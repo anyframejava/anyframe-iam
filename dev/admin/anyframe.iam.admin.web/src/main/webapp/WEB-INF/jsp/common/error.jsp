@@ -53,10 +53,11 @@ function fncGoAfterErrorPage(){
 <h1>${command}</h1>
 <!-- START : Title -->
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 13px;">
-  <tr>
-    <td class="errortitle" style="padding-left:28px">Ocurred Error!!!</td>
-  </tr>
-</table><!-- END : Title -->
+	<tr>
+		<td class="errortitle" style="padding-left:28px">Ocurred Error!!!</td>
+	</tr>
+</table>
+<!-- END : Title -->
 <form name="dummyForm">
 <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
@@ -74,19 +75,19 @@ function fncGoAfterErrorPage(){
 				<tr>
 					<td height="31" background="<c:url value='/images/box_bttm.gif'/>">&nbsp;</td>
 				</tr>
-			</table>
-			
-      <div align="center"><table height="19" border="0" align="center" cellpadding="0" cellspacing="0" style="margin:10px">
+			</table>			
+      		<div align="center">
+      		<table height="19" border="0" align="center" cellpadding="0" cellspacing="0" style="margin:10px">
 				<tr>
 					<td width="18"><img src="<c:url value='/images/btn/btn_checkid.gif'/>" width="21" height="19"></td>
-					<td valign="bottom" background="<c:url value='/images/btn/bg_btnsmall.gif'/>" class="boldBtn"><a href="javascript:fncGoAfterErrorPage();" >확인</a></td>
+					<td valign="bottom" background="<c:url value='/images/btn/bg_btnsmall.gif'/>" class="boldBtn"><a href="javascript:fncGoAfterErrorPage();" >Confirm</a></td>
 					<td width="9" align="right"><img src="<c:url value='/images/btn/btn_tail.gif'/>" width="9" height="19"></td>
 				</tr>
-			</table></div>
+			</table>
+			</div>
 		</td>
 	</tr>
 </table>
 </form> 
 </body>
 </html>
-

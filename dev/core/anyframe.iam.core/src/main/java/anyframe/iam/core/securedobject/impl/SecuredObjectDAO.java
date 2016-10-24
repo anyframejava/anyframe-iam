@@ -32,29 +32,29 @@ import org.springframework.security.intercept.web.RequestKey;
 import anyframe.iam.core.securedobject.ISecuredObjectService;
 
 /**
- * DB 기반의 Secured Object 정보를 제공하기 위한 DAO 로 default 쿼리를 제공하며 사용자 DB 에 맞는 각 유형의 DB
- * 쿼리는 재설정 가능하다. namedParameterJdbcTemplate 를 사용하여 DB 조회를 처리한다.
+ * This class is DAO(Data access object) to offer information about Secured Object based on DB
+ * It offer some default query and user can re-set query.
  * 
  * @author ByungHun Woo
  */
 public class SecuredObjectDAO {
 
 	/**
-	 * url 형식인 보호자원 - Role 맵핑정보를 조회하는 default 쿼리이다.
+	 * default query to find mapping information about Role - secured resources with URL type
 	 */
 	public static final String DEF_ROLES_AND_URL_QUERY = "SELECT a.resource_pattern url, b.role_id authority "
 			+ "FROM secured_resources a, secured_resources_roles b " + "WHERE a.resource_id = b.resource_id "
 			+ "AND a.resource_type = 'url' " + "ORDER BY a.sort_order, a.resource_id ";
 
 	/**
-	 * method 형식인 보호자원 - Role 맵핑정보를 조회하는 default 쿼리이다.
+	 * default query to find mapping information about Role - secured resources with Method type
 	 */
 	public static final String DEF_ROLES_AND_METHOD_QUERY = "SELECT a.resource_pattern method, b.role_id authority "
 			+ "FROM secured_resources a, secured_resources_roles b " + "WHERE a.resource_id = b.resource_id "
 			+ "AND a.resource_type = 'method' " + "ORDER BY a.sort_order, a.resource_id ";
 
 	/**
-	 * pointcut 형식인 보호자원 - Role 맵핑정보를 조회하는 default 쿼리이다.
+	 * default query to find mapping information about Role - secured resources with PointCut type 
 	 */
 	public static final String DEF_ROLES_AND_POINTCUT_QUERY = "SELECT a.resource_pattern pointcut, b.role_id authority "
 			+ "FROM secured_resources a, secured_resources_roles b "
@@ -62,7 +62,8 @@ public class SecuredObjectDAO {
 			+ "AND a.resource_type = 'pointcut' " + "ORDER BY a.sort_order, a.resource_id ";
 
 	/**
-	 * 매 request 마다 best matching url 보호자원 - Role 맵핑정보를 얻기위한 default 쿼리이다.
+	 * default query to find mapping information about Role - best matching secured resources with URL type
+	 * in every request.
 	 * (Oracle 10g specific)
 	 */
 	public static final String DEF_REGEX_MATCHED_REQUEST_MAPPING_QUERY_ORACLE10G = "SELECT a.resource_pattern uri, b.role_id authority "
@@ -76,13 +77,13 @@ public class SecuredObjectDAO {
 			+ "      ORDER BY c.sort_order ) " + "   WHERE resource_order = 1 ) ";
 
 	/**
-	 * Role 의 계층(Hierarchy) 관계를 조회하는 default 쿼리이다.
+	 * default query to find hierarchy of Role
 	 */
 	public static final String DEF_HIERARCHICAL_ROLES_QUERY = "SELECT a.child_role child, a.parent_role parent "
 			+ "FROM roles_hierarchy a LEFT JOIN roles_hierarchy b on (a.child_role = b.parent_role) ";
 
 	/**
-	 * 실행시간 권한제어 restricted times roles 맵핑정보를 조회하는 default 쿼리이다.
+	 * default query to find mapping information about restricted times roles.
 	 */
 	public static final String DEF_RESTRICTED_TIMES_ROLES_QUERY = "SELECT time_type, a.time_id as time_id, start_date, start_time, end_date, end_time, role_id "
 			+ "FROM restricted_times a, restricted_times_roles b "
@@ -90,7 +91,7 @@ public class SecuredObjectDAO {
 			+ "ORDER BY time_type, start_date, start_time, end_date, end_time ";
 
 	/**
-	 * 실행시간 권한제어 restricted times resources 맵핑정보를 조회하는 default 쿼리이다.
+	 * default query to find mapping information about restricted times resources.
 	 */
 	public static final String DEF_RESTRICTED_TIMES_RESOURCES_QUERY = "SELECT time_type, a.time_id as time_id, start_date, start_time, end_date, end_time, b.resource_id as resource_id, resource_pattern, role_id as exclusion_role_id "
 			+ "FROM restricted_times a,  "
@@ -103,7 +104,7 @@ public class SecuredObjectDAO {
 			+ "ORDER BY d.sort_order, time_type, start_date, start_time, end_date, end_time ";
 
 	/**
-	 * 조회 조건(ROLE 리스트, 사용자 아이디)에 따른 view resource 맵핑정보를 조회하는 default 쿼리이다.
+	 * default query to find mapping information of view resource.
 	 */
 	public static final String DEF_VIEW_RESOURCE_MAPPING_QUERY = "SELECT view_resource_id, ref_type, ref_id, mask, permissions  "
 			+ "FROM view_resources_mapping "

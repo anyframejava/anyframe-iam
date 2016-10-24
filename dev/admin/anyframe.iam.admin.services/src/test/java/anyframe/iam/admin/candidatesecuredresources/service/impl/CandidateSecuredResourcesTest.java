@@ -154,4 +154,10 @@ public class CandidateSecuredResourcesTest {
 		assertEquals(false, isUnmatchedMethod);
 
 	}
+	
+	@Test
+	public void estFindMethodParam() throws Exception{
+		String beanid = candidateSecuredResourcesService.findMethodParam();
+		assertEquals("", beanid);
+	}
 }

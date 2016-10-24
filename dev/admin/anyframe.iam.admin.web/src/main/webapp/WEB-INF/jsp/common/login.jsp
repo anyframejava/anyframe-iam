@@ -9,7 +9,6 @@
 
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 <script language="JavaScript">
-<!--
 function fncLogin() {
 	if(FormValidation(document.loginForm) != false) {
 	    document.loginForm.action="<c:url value='/j_spring_security_check'/>";
@@ -17,7 +16,6 @@ function fncLogin() {
 	    document.loginForm.submit();
     }
 }
--->
 </script>
 <style type="text/css">
 <!--

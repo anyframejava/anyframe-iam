@@ -38,6 +38,8 @@ import anyframe.core.generic.model.BaseObject;
 @Entity
 @Table(name = "GROUPS_USERS")
 public class GroupsUsers extends BaseObject implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private GroupsUsersId id;
 
 	private Users users;

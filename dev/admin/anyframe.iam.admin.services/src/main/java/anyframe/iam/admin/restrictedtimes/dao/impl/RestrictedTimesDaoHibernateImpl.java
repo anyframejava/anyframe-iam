@@ -52,6 +52,7 @@ public class RestrictedTimesDaoHibernateImpl extends IamGenericDaoHibernate<Rest
 		args[4] = "sidx=" + sidx;
 		args[5] = "sord=" + sord;
 
+		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findRestrictedTimesList", args, pageIndex,
 				pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countRestrictedTimesList", args);

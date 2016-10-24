@@ -17,10 +17,12 @@
 package anyframe.iam.admin.groups.dao.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
+import anyframe.common.util.StringUtil;
 import anyframe.iam.admin.common.IamGenericDaoHibernate;
 import anyframe.iam.admin.domain.Groups;
 import anyframe.iam.admin.domain.IamTree;
@@ -88,11 +90,40 @@ public class GroupsDaoHibernateImpl extends IamGenericDaoHibernate<Groups, Strin
 		this.getHibernateTemplate().merge(groups);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Groups> getList() throws Exception {
 		Object[] arg = new Object[1];
 		arg[0] = "keywordStr=%";
 
 		List<Groups> resultList = (List<Groups>) this.getDynamicHibernateService().findList("findAllGroupsList", arg);
 		return resultList;
+	}
+
+	@SuppressWarnings("unchecked")
+	public String getGroupNameList(String keyword) throws Exception {
+		keyword = StringUtil.null2str(keyword);
+		keyword = keyword.toLowerCase();
+		Object[] args = new Object[1];
+		args[0] = "keyword=" + keyword + "%";
+		List list = this.getDynamicHibernateService().findList("findGroupNameList", args);
+
+		StringBuffer groupNameList = new StringBuffer();
+		for (int i = 0; i < list.size(); i++) {
+			groupNameList.append(((Map) list.get(i)).get("groupName") + "\n");
+		}
+		return groupNameList.toString();
+	}
+
+	@SuppressWarnings("unchecked")
+	public String getGroupIdByGroupName(String groupName) throws Exception {
+		Object[] args = new Object[1];
+		String changedGroupName = groupName.toLowerCase();
+		args[0] = "groupName=" + changedGroupName;
+		List<Groups> list = this.getDynamicHibernateService().findList("findGroupIdByGroupName", args);
+
+		if(list.size() == 0){
+			return "";
+		}
+		return list.get(0).getGroupId();
 	}
 }

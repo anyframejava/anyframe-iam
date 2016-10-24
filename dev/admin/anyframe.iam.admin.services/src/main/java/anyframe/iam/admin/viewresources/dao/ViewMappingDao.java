@@ -47,6 +47,7 @@ public interface ViewMappingDao extends IamGenericDao<ViewResourcesMapping, View
 	 * viewResource ID
 	 * @throws Exception fail to find list
 	 */
+	@SuppressWarnings("unchecked")
 	List get(String viewResourceId) throws Exception;
 
 	/**

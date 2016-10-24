@@ -82,4 +82,30 @@ public interface RolesService extends GenericService<Roles, String> {
 	 * @throws Exception fail to update the row
 	 */
 	Roles save(Roles roles) throws Exception;
+	
+	/**
+	 * find list of Role name that matches the given keyword
+	 * @param keyword
+	 * @return list of Role name
+	 * @throws Exception fail to find list
+	 */
+	String getRoleNameList(String keyword) throws Exception;
+	
+	/**
+	 * find Role ID that matches the given role name
+	 * @param roleName
+	 * @return Role ID
+	 * @throws Exception fail to find role ID
+	 */
+	String getRoleIdByRoleName(String roleName) throws Exception;
+	
+	/**
+	 * find all ancestor for the given role Id
+	 * @param roleId
+	 * @return List of role ID
+	 * @throws Exception fail to find list
+	 */
+	List<String> getParentsRoleIds(String roleId) throws Exception;
+	
+	
 }

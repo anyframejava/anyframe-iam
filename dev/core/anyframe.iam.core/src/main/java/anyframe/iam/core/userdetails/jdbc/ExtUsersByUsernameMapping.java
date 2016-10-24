@@ -33,11 +33,10 @@ import org.springframework.security.userdetails.UserDetails;
 import anyframe.iam.core.userdetails.ExtUser;
 
 /**
- * MappingSqlQuery 를 extends 하고 있으며 사용자가 설정한 쿼리에 따른 커스텀 사용자 정보를 기본 객체인 Map 으로
- * 처리한다.<br/>
+ * This class extends MappingSqlQuery. Class treat custom user information as Map.
  * 
- * 아래는 CustomUser 라는 JavaBeans 로 커스텀 사용자 객체를 처리하는 ExtUsersByUsernameMapping 의
- * 사이트 확장 예이다.
+ * Following is example of ExtUsersByUsernameMapping extension
+ * treating custom user object by JavaBeans called CustomeUser. 
  * 
  * <pre>
  * public class CustomUsersByUsernameMapping extends ExtUsersByUsernameMapping {
@@ -89,8 +88,9 @@ public class ExtUsersByUsernameMapping extends MappingSqlQuery {
 	}
 
 	/**
-	 * Spring Security 의 기본 처리를 따라 username, password, enabled 정보가 반드시 최초 3개 조회
-	 * 필드로 먼저 나타나야 한다. customUser 는 ExtUser 의 별도 멤버로 설정됨에 유의한다.<br/>
+	 * User name, password, enabled information must be at first field in selection SQL
+	 * as the basic processing of Spring Security.
+	 * Keep in mind that custom user will be set as separate member of ExtUser.
 	 */
 	protected Object mapRow(ResultSet rs, int rowNum) throws SQLException {
 		String username = rs.getString(1);
@@ -108,11 +108,13 @@ public class ExtUsersByUsernameMapping extends MappingSqlQuery {
 	}
 
 	/**
-	 * 사용자가 정의한 쿼리문에 따른 customUser 객체를 기본인 Map 형태로 작성한다.
+	 * make customUser object to Map object
 	 * 
 	 * @param rs
-	 * @return
+	 * 				ResultSet object
+	 * @return Object
 	 * @throws SQLException
+	 * 				fail to make Map object
 	 */
 	protected Object makeCustomUser(ResultSet rs) throws SQLException {
 		Map map = new ListOrderedMap();
@@ -127,10 +129,12 @@ public class ExtUsersByUsernameMapping extends MappingSqlQuery {
 	}
 
 	/**
-	 * ResultSetMetaData 는 최초 한번만 참고하여 칼럼명을 멤버로 미리 설정해 둔다.
+	 * Save column name in member variable from ResultSetMetaData. 
 	 * 
 	 * @param rs
+	 * 				ResultSet
 	 * @throws SQLException
+	 * 				fail to save column name
 	 */
 	protected void setColumnNames(ResultSet rs) throws SQLException {
 		ResultSetMetaData meta = rs.getMetaData();

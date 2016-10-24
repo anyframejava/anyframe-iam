@@ -43,10 +43,12 @@ public class AuthoritiesServiceImpl extends GenericServiceImpl<Authorities, Auth
 		return this.authoritiesDao.getExistList(authoritySearchVO);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List getGroupList(AuthoritySearchVO authoritySearchVO) throws Exception {
 		return this.authoritiesDao.getGroupList(authoritySearchVO);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List getGroupIdList(AuthoritySearchVO authoritySearchVO) throws Exception {
 		return this.authoritiesDao.getGroupIdList(authoritySearchVO);
 	}
@@ -57,6 +59,7 @@ public class AuthoritiesServiceImpl extends GenericServiceImpl<Authorities, Auth
 		AuthoritySearchVO authoritySearchVO = new AuthoritySearchVO();
 		authoritySearchVO.setType("G");
 		authoritySearchVO.setRoleId(roleId);
+		@SuppressWarnings("unchecked")
 		List gettedList = getGroupIdList(authoritySearchVO);
 
 		for (int j = 0; j < gettedList.size(); j++) {

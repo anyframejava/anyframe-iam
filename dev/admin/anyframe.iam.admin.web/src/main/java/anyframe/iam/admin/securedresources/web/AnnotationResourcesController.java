@@ -43,7 +43,6 @@ import anyframe.iam.admin.vo.ResourceSearchVO;
  * 
  */
 @Controller
-// @SessionAttributes(types = SecuredResources.class)
 @SessionAttributes("resources")
 public class AnnotationResourcesController {
 
@@ -89,7 +88,8 @@ public class AnnotationResourcesController {
 	 */
 	@RequestMapping("/resources/addView.do")
 	public String addView(@ModelAttribute("searchVO") ResourceSearchVO searchVO, Model model) throws Exception {
-
+		String beanid = candidateSecuredResourcesService.findMethodParam();
+		model.addAttribute("beanid", beanid);
 		model.addAttribute("resources", new SecuredResources());
 		return "/resources/resourcedetail";
 	}
@@ -152,6 +152,8 @@ public class AnnotationResourcesController {
 			SecuredResources sr = securedResourcesService.get(resourceId);
 			model.addAttribute("resources", sr);
 		}
+		String beanid = candidateSecuredResourcesService.findMethodParam();
+		model.addAttribute("beanid", beanid);
 		return "/resources/resourcedetail";
 	}
 

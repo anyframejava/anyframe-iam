@@ -8,11 +8,11 @@
 <head>
 <title><anyframe:message code="resource.ui.title.resourcedetail" /></title>
 
-<script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jquery-autocomplete-include.jsp" />
 
 <script type="text/javascript" src="<c:url value='/validator.do'/>"></script>
@@ -21,10 +21,7 @@
 <script type="text/javascript">
 <!--
 jQuery(document).ready( function(){
-	// TODO : session 종료 이후 검색 시도하면 input box 내부에서 
-	// login page 가 호출되는 것을 방지 하기 위해
-	// candidateSecuredResources.do url의 권한 설정 변경 필요
-	
+
 	// button click event
 	$('[name=addResource]').click( function(){
 		if(!validateSecuredResources(document.resources)){
@@ -150,6 +147,9 @@ function changeType(frm){
 		);
 		$("#pointCut").focus();
 	}
+
+	var resoucePattern = document.resources.resourcePattern;
+	resourcePattern.value = "";
 }
 
 //self input ckeck box를 이용한 resource pattern read only 제어
@@ -242,15 +242,42 @@ function  completePattern(frm){
 	// \A  URL_PATTERN  ?  PARAMETER  .*\Z 의 형태로 만들어준다.
 	else if(frm == document.getElementById('requestMapping')
 			&& document.getElementById('requestMapping').value != ""){
-		resourcePattern.value = "\\A" + frm.value;
+
+		var changedURL = "";
+		var url = frm.value;
+		for(i = 0 ; i < url.length ; i++){
+			if("." == url.charAt(i)){
+				changedURL += "\\.";
+			} else{
+				changedURL += url.charAt(i);
+			}
+		}
+		resourcePattern.value = "\\A" + changedURL;
+		
 		if(document.getElementById('urlPattern_param').value != ""){
-			resourcePattern.value += "?" + document.getElementById('urlPattern_param').value;
+
+			var beanid = document.resources.beanid.value;
+			var parameter = document.getElementById('urlPattern_param').value;
+			
+
+			resourcePattern.value += "\\?.*" + beanid + "=" + parameter;
 		}
 		resourcePattern.value += ".*\\Z";
 	} else if(frm == document.getElementById('urlPattern_param')
 			&& document.getElementById('urlPattern_param').value != ""){
-		resourcePattern.value = "\\A" + document.getElementById('requestMapping').value
-			+ "?" + frm.value + ".*\\Z";
+
+		var beanid = document.resources.beanid.value;
+		var url = document.getElementById('requestMapping').value;
+		var changedURL = "";
+		for(i = 0 ; i < url.length ; i++){
+			if("." == url.charAt(i)){
+				changedURL += "\\.";
+			} else{
+				changedURL += url.charAt(i);
+			}
+		}
+
+		resourcePattern.value = "\\A" + changedURL + "\\?.*" + beanid + "=" + frm.value + ".*\\Z";
 	}
 }
 //-->
@@ -349,7 +376,8 @@ body {
 						<anyframe:message code="resource.ui.label.resourcepattern" /></td>
 					<td bgcolor="#B6CDE4" width="1"></td>
 
-					<td class="tdin" id="patternArea">									        
+					<td class="tdin" id="patternArea">
+					<input type="hidden" value="<c:out value='${beanid }' />" name="beanid">								        
 					<!-- resource information 수정 시 resourceType 에 따른 UI 변경 -->
 					<c:if test="${resources.resourceType == 'url' || resources.resourceType == null || resources.resourceType == ''}">	
 						<div id="inputArea">

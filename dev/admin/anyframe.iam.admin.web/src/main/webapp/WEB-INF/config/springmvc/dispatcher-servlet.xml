@@ -47,7 +47,7 @@
 		<property name="exceptionMappings">
 			<props>
 				<prop key="anyframe.iam.admin.common.web.JsonIAMException">/common/jsonError</prop>
-				<prop key="org.springframework.security.AccessDeniedException">/common/error</prop>
+				<prop key="org.springframework.security.AccessDeniedException">/common/accessDenied</prop>
 			</props>
 		</property>
 	</bean>

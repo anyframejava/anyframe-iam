@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * custom 사용자 정보 객체를 포함하는 UserDetails 확장 기능을 제공한다.
+ * package that offer the function to extend UserDetails that contains custom user information object 
  * 
  * @since 1.0.0
  */

@@ -60,6 +60,7 @@ public interface AuthoritiesService extends GenericService<Authorities, Authorit
 	 * conditions
 	 * @throws Exception fail to get a list
 	 */
+	@SuppressWarnings("unchecked")
 	List getGroupList(AuthoritySearchVO authoritySearchVO) throws Exception;
 
 	/**
@@ -69,6 +70,7 @@ public interface AuthoritiesService extends GenericService<Authorities, Authorit
 	 * groups Table
 	 * @throws Exception fail to get a list
 	 */
+	@SuppressWarnings("unchecked")
 	List getGroupIdList(AuthoritySearchVO authoritySearchVO) throws Exception;
 
 	/**

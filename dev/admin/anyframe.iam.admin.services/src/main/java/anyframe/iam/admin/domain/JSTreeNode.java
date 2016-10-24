@@ -17,6 +17,7 @@
 package anyframe.iam.admin.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * An object that represent node of tree in JS Tree UI
@@ -31,7 +32,9 @@ public class JSTreeNode implements Serializable {
 	private Data data;
 
 	private String state;
-
+	
+	private ArrayList<JSTreeNode> children;
+	
 	public Attributes getAttributes() {
 		return attributes;
 	}
@@ -54,5 +57,13 @@ public class JSTreeNode implements Serializable {
 
 	public void setState(String state) {
 		this.state = state;
+	}
+
+	public ArrayList<JSTreeNode> getChildren() {
+		return children;
+	}
+
+	public void setChildren(ArrayList<JSTreeNode> children) {
+		this.children = children;
 	}
 }

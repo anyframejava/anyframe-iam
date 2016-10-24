@@ -23,9 +23,9 @@ import org.springframework.security.ConfigAttributeDefinition;
 import anyframe.iam.core.securedobject.ISecuredObjectService;
 
 /**
- * 매 request 마다 요청 url 에 대한 best matching 보호자원-권한 맵핑 정보를 DB 기반으로 찾기 위해
- * DefaultFilterInvocationDefinitionSource 의 lookupAttributes 메서드를 가로채어 수행하기 위한
- * MethodReplacer 이다.
+ * This class is a MethodReplacer to operate method that interrupted from lookupAttributes of 
+ * DefaultFilterInvocationDefinitionSource in order to find mapping information of secured resources-role 
+ * related with each request URL based on DB.
  * 
  * @author Byunghun Woo
  * 
@@ -38,12 +38,9 @@ public class LookupAttributesMethodReplacer implements MethodReplacer {
 		this.securedObjectService = securedObjectService;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seeorg.springframework.beans.factory.support.
-	 * MethodReplacer#reimplement(java.lang.Object, java.lang.reflect.Method,
-	 * java.lang.Object[])
+	/**
+	 * @see org.springframework.beans.factory.support.MethodReplacer
+	 * #reimplement(java.lang.Object, java.lang.reflect.Method,java.lang.Object[])
 	 */
 	public Object reimplement(Object target, Method method, Object[] args) throws Exception {
 		ConfigAttributeDefinition attributes = null;

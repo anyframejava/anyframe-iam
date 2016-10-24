@@ -53,10 +53,12 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.sprin
 			<list>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-authorities.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-groups.xml</value>
+				<value>classpath:hibernate/namedquery/namedquery-hibernate-groupsUsers.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-roles.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-securedResourcesRoles.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-securedResources.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-restrictedTimes.xml</value>
+				<value>classpath:hibernate/namedquery/namedquery-hibernate-candidateSecuredResources.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-viewMapping.xml</value>
 			</list>
 		</property>

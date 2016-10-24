@@ -4,7 +4,12 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans
       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-        
+	<!--AssistDao-START-->
+    <bean id="assistDao" class="anyframe.iam.admin.assist.dao.impl.AssistDaoHibernateImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="propertiesService" ref="propertiesService" />
+        <property name="dynamicHibernateService" ref="dynamicHibernateService" />              
+    </bean>
 
     <!--AuthoritiesDao-START-->
     <bean id="authoritiesDao" class="anyframe.iam.admin.authorities.dao.impl.AuthoritiesDaoHibernateImpl">
@@ -119,8 +124,12 @@
 	<!-- ViewMappingDao-END -->
 
     <!-- Add new DAOs here -->
-
     
+    <!--AssistService-START-->
+    <bean id="assistService" class="anyframe.iam.admin.assist.service.impl.AssistServiceImpl">
+        <constructor-arg ref="assistDao"/>
+    </bean>
+    <!--AssistService-END-->
 
     <!--AuthoritiesService-START-->
     <bean id="authoritiesService" class="anyframe.iam.admin.authorities.service.impl.AuthoritiesServiceImpl">
@@ -131,7 +140,7 @@
     <!--GroupsService-START-->
     <bean id="groupsService" class="anyframe.iam.admin.groups.service.impl.GroupsServiceImpl">
         <constructor-arg ref="groupsDao"/>
-        <property name="idGenerationServiceGroup" ref="idGenerationServiceGroup"/>
+        <property name="groupsUsersDao" ref="groupsUsersDao"/>
     </bean>
     <!--GroupsService-END-->
 
@@ -144,7 +153,6 @@
     <!--RolesService-START-->
     <bean id="rolesService" class="anyframe.iam.admin.roles.service.impl.RolesServiceImpl">
         <constructor-arg ref="rolesDao"/>
-        <property name="authoritiesDao" ref="authoritiesDao"/>
         <property name="securedResourcesRolesDao" ref="securedResourcesRolesDao"/>
     </bean>
     <!--RolesService-END-->

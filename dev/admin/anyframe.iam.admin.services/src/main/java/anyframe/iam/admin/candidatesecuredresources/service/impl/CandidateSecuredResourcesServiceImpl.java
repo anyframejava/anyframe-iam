@@ -98,6 +98,20 @@ public class CandidateSecuredResourcesServiceImpl extends GenericServiceImpl<Can
 					return true;
 				}
 			}
+
+			for (String presentUrl : allMappings) {
+				String beanid = this.candidateSecuredResourcesDao.findMethodParam();
+				String[] methodParam = this.candidateSecuredResourcesDao.getParameterList("", presentUrl).split("\n");
+
+				for (String parameter : methodParam) {
+					String checkPattern = presentUrl + "?" + beanid + "=" + parameter;
+
+					Object savePatternObj = (isRegex ? Pattern.compile(savePattern) : savePattern);
+					if (urlMatcher.pathMatchesUrl(savePatternObj, checkPattern)) {
+						return true;
+					}
+				}
+			}
 			return false;
 		}
 		else if ("method".equalsIgnoreCase(resourceType)) {
@@ -126,5 +140,9 @@ public class CandidateSecuredResourcesServiceImpl extends GenericServiceImpl<Can
 		}
 
 		return false;
+	}
+
+	public String findMethodParam() throws Exception {
+		return this.candidateSecuredResourcesDao.findMethodParam();
 	}
 }

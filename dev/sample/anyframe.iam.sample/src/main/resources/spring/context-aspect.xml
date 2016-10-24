@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+
+		<bean id="methodLoggingAspect" class="anyframe.iam.sample.common.aspect.LoggingAspect" />
+	<bean id="exceptionTransfer" class="anyframe.iam.sample.common.aspect.ExceptionTransfer">
+			<property name="messageSource" ref="messageSource"/>
+	</bean>
+	
+	<aop:config>
+		<aop:pointcut id="serviceMethod" expression="execution(* *..GenericService+.*(..))" />
+		<aop:aspect ref="methodLoggingAspect" >
+			<aop:before method="beforeLogging" pointcut-ref="serviceMethod"/>
+		</aop:aspect>
+		<aop:aspect ref="exceptionTransfer" order="1"> 
+			<aop:after-throwing throwing="exception" pointcut-ref="serviceMethod" method="transfer" />					
+		</aop:aspect>				
+	</aop:config>		
+		
+</beans>

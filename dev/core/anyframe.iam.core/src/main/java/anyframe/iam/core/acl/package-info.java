@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * view resource 에 대한 ACL (Access Control List) 을 적용하기 위한 기능을 제공한다.
+ * Package that provides some functions about ACL(Access Control List) with view resources
  * 
  * @since 1.0.0
  */

@@ -11,8 +11,8 @@
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 
 <script language="javascript">
 <!--
@@ -92,7 +92,7 @@ function insertRow(flag) {
 			+"	<td class=\"tdHeadGrey\"><input type=\"checkbox\" name=\"idx\" id=\"idx\" value=\"" + index + "\"><input type=\"hidden\" name=\"refType\" id=\"refType\" value=\"USER\"></td>"
 			+"	<td bgcolor=\"#B6CDE4\" width=\"1\"></td>"
 			+"	<td width=\"15\" class=\"tdHeadGrey\"><input type=\"text\" name=\"userName\" id=\"userName\" size=\"15\" class=\"ct_input_g\" readonly=\"readonly\"><input type=\"hidden\" name=\"roleid\" id=\"roleid\"></td>"
-			+"	<td style=\"padding-left: 0px\" class=\"tdHead\" align=\"left\"><a href=\"javascript\:findUserByName(" + rows.length + ");\" id=\"findUserId\" name=\"findUserId\" class=\"searchBtn\"><anyframe\:message code='user.ui.link.select' /></a></td>"
+			+"	<td style=\"padding-left: 0px\" class=\"tdHeadGrey\" align=\"left\"><a href=\"javascript\:findUserByName(" + rows.length + ");\" id=\"findUserId\" name=\"findUserId\" class=\"searchBtn\"><anyframe\:message code='user.ui.link.select' /></a></td>"
 
 			+ permissionlist
 
@@ -139,6 +139,15 @@ function goSubmit() {
 	var permission = new Array();
 	var validPer = new Array();
 	var perLength;
+	var roleid = $("[name=roleid]");
+	var username = $("[name=userName]");
+	
+	for(var i = 0 ; i < roleid.length ; i++){
+		if(roleid[i].value == "" || roleid[i].value == null){
+			alert("Reference ID can not be null. Please fill the blank");
+			return;
+		}
+	}
 	
 	<c:forEach var="list" items="${permissionlist}" varStatus="status">
 		var index = ${status.count} - 1;
@@ -157,9 +166,9 @@ function goSubmit() {
 				permission[index][i].value = "${list.permissionMask}";
 				validPer[i] = true;
 			}
-		}
-
+		}		
 	</c:forEach>
+	
 	for(var i = 0 ; i < perLength ; i++){
 		if(validPer[i] == true){
 			
@@ -168,6 +177,7 @@ function goSubmit() {
 			return;
 		}
 	}
+	
 	document.viewmapping.action = '<c:url value="/viewresourcesmapping/save.do"/>';
 	document.viewmapping.submit();
 }
@@ -185,19 +195,18 @@ function mask() {
 		<c:forEach var="plist" items="${permissionlist}" varStatus="pstatus">
 			var currentpermission = '${mlist}';
 			var	rowindex = ${mstatus.count} - 1;		
-									
+			
 			var index = ${pstatus.count} - 1;	
 			var bitOrder = 31 - ${plist.permissionBitOrder};
-
+			
 			permission[index] = $("[name=${fn:toLowerCase(plist.permissionName)}]");
 			
-			
 			if(currentpermission.substring(bitOrder,bitOrder+1) == "1") {
-				permission[index][rowindex].checked = true;				
+				permission[index][rowindex].checked = true;
 			}
 		</c:forEach>
 	</c:forEach>
-}	
+}
 -->
 </script>
 
@@ -403,27 +412,22 @@ body {
 </table>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF">
-  <tr>
-    <td><!--  Begin of Contents -->
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td colspan="2"><table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#E9ECF1">
-                <tr>
-                  <td height="10" bgcolor="#ffffff"></td>
-                </tr>
-                <tr>
-                  <td height="1" bgcolor="#C9CFDD"></td>
-                </tr>
-                <tr>
-                  <td valign="top" bgcolor="#E9ECF1"><div id="footSub"></div></td>
-                </tr>
-            </table></td>
-          </tr>
-      </table></td>
-  </tr>
+	<tr>
+		<td><!--  Begin of Contents -->
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tr>
+					<td colspan="2">
+						<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#E9ECF1">
+							<tr><td height="10" bgcolor="#ffffff"></td></tr>
+							<tr><td height="1" bgcolor="#C9CFDD"></td></tr>
+							<tr><td valign="top" bgcolor="#E9ECF1"><div id="footSub"></div></td></tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
 </table>
 </form>
-
 </body>
 </html>	
-	

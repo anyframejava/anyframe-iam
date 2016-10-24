@@ -8,13 +8,14 @@
 <title><anyframe:message code="restrictedtimes.ui.title.restrictedtimeslist" /></title>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript">
 <!--
 jQuery(document).ready( function() {
 	jQuery("#grid").jqGrid( {
+		sortable: true,
 		url: "<c:url value='/restriction/listData.do?' />",
 		mtype:'GET',
 		datatype : "json",
@@ -68,7 +69,6 @@ jQuery(document).ready( function() {
 		rowNum : 20,
 		rowList : [ 10, 20, 30 ],
 		viewrecords : true,
-		imgpath : "<c:url value='/jquery/jqgrid/themes/steel/images'/>",
 
 		loadError: function(xhr,st,err) {
 			if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									
@@ -91,6 +91,7 @@ jQuery(document).ready( function() {
 			window.close();
 	    }
 	});
+	jQuery("#grid").jqGrid('navGrid','#pager',{edit:false,add:false,del:false,search:false});
 	
 	/* Button Function Start (Resource CRUD) */
 

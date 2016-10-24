@@ -22,19 +22,19 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 
+import anyframe.core.idgen.IIdGenerationService;
+import anyframe.iam.admin.common.IAMException;
 import anyframe.iam.admin.common.web.JsonError;
 import anyframe.iam.admin.domain.Attributes;
 import anyframe.iam.admin.domain.Data;
@@ -47,7 +47,7 @@ import anyframe.iam.admin.groups.service.GroupsService;
 
 /**
  * Annotation Groups Controller
- * @author jongpil.park
+ * @author Jongpil Park
  * 
  */
 
@@ -58,8 +58,46 @@ public class AnnotationGroupsController {
 	@Resource(name = "groupsService")
 	private GroupsService groupsService;
 
-	@Autowired
-	private org.springmodules.validation.commons.DefaultBeanValidator beanValidator;
+	@Resource(name = "idGenerationServiceGroup")
+	private IIdGenerationService idGenerationServiceGroup;
+
+	/**
+	 * find root node of Groups hierarchy
+	 * @return ArrayList<JSTreeNode> Root node
+	 * @throws Exception
+	 * 				fail to find root node
+	 */
+	private ArrayList<JSTreeNode> makeRootNode() throws Exception {
+
+		List<IamTree> list = null;
+		ArrayList<JSTreeNode> listNode = new ArrayList<JSTreeNode>();
+		JSTreeNode node = null;
+		Attributes attribute = null;
+		Data data = null;
+
+		list = groupsService.getRootNodeOfGroups();
+		if (list.size() > 0) {
+			IamTree rootNode = list.get(0);
+
+			node = new JSTreeNode();
+			data = new Data();
+			attribute = new Attributes();
+
+			data.setTitle(rootNode.getTitle());
+			attribute.setId(rootNode.getId());
+
+			node.setAttributes(attribute);
+			node.setData(data);
+			node.setState(rootNode.getState());
+
+			listNode.add(node);
+
+			return listNode;
+		}
+		else {
+			throw new IAMException("Root node is not exist");
+		}
+	}
 
 	/**
 	 * move to 'add groups' form
@@ -85,7 +123,6 @@ public class AnnotationGroupsController {
 	 */
 	@JsonError
 	@RequestMapping("/groups/add.do")
-	// success 시 view 처리 추가 필요
 	public String add(HttpSession session, Groups groups, GroupsHierarchyId groupsHierarchyId) throws Exception {
 
 		GroupsHierarchy groupsHierarchy = new GroupsHierarchy();
@@ -97,8 +134,7 @@ public class AnnotationGroupsController {
 
 		groups.setGroupsHierarchiesForChildGroup(childGroup);
 
-		Groups group = groupsService.save(groups);
-		session.setAttribute("GROUPID", group.getGroupId());
+		groupsService.save(groups);
 
 		return "forward:/userdetail/list.do";
 	}
@@ -134,43 +170,11 @@ public class AnnotationGroupsController {
 	 */
 	@JsonError
 	@RequestMapping("/groups/update.do")
-	// success 시 view 처리 추가 필요
-	public String update(HttpSession session, Groups groups) throws Exception {
-
-		groups.setModifyDate(anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd"));
-
-		if ("".equals(groups.getGroupId())) {
-			String groupId = (String) session.getAttribute("GROUPID");
-			groups.setGroupId(groupId);
-			session.removeAttribute("GROUPID");
-		}
+	public String update(Groups groups) throws Exception {
 
 		groupsService.update(groups);
 
 		return "forward:/userdetail/list.do";
-	}
-
-	/**
-	 * update a row of group that matches the given group id from Groups Tab UI
-	 * @param groups domain Groups object that want to be updated
-	 * @param bindingResult an object to check input data with validation rules
-	 * @param status SessionStatus object to block double submit
-	 * @return move to "/groups/get.do?"
-	 * @throws Exception fail to update
-	 */
-	@RequestMapping("/groups/updateFromTab.do")
-	public String updateFromTab(@ModelAttribute("groups") Groups groups, BindingResult bindingResult,
-			SessionStatus status) throws Exception {
-		beanValidator.validate(groups, bindingResult);
-		if (bindingResult.hasErrors()) {
-			return "/users/groupdetail";
-		}
-		groups.setModifyDate(anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd"));
-
-		groupsService.update(groups);
-		status.setComplete();
-
-		return "forward:/groups/get.do?";
 	}
 
 	/**
@@ -181,7 +185,6 @@ public class AnnotationGroupsController {
 	 */
 	@RequestMapping("/groups/list.do")
 	public String list(Model model) throws Exception {
-
 		return "/groups/grouplist";
 	}
 
@@ -193,24 +196,12 @@ public class AnnotationGroupsController {
 	 * 
 	 */
 	@JsonError
-	@RequestMapping("/groups/delete")
+	@RequestMapping("/groups/delete.do")
 	public String delete(Groups groups) throws Exception {
+
 		groupsService.remove(groups.getGroupId());
 
 		return "jsonView";
-	}
-
-	/**
-	 * delete groups in tab UI
-	 * @param groups an object that want to be deleted
-	 * @return move to "/users/groupdetail"
-	 * @throws Exception fail to delete
-	 */
-	@RequestMapping("/groups/deleteinTabUI")
-	public String deleteinTabUI(Groups groups) throws Exception {
-		groupsService.remove(groups.getGroupId());
-
-		return "/users/groupdetail";
 	}
 
 	/**
@@ -222,61 +213,134 @@ public class AnnotationGroupsController {
 	 */
 	@JsonError
 	@RequestMapping("/groups/listData.do")
-	public String listData(@RequestParam("id") String id, Model model) throws Exception {
-
+	public String listData(@RequestParam("id") String id,
+			@RequestParam(value = "groupName", required = false) String groupName,
+			@RequestParam(value = "searchClickYn") String searchClickYn, Model model) throws Exception {
 		List<IamTree> list = null;
-
 		ArrayList<JSTreeNode> listNode = new ArrayList<JSTreeNode>();
 		JSTreeNode node = null;
 		Attributes attribute = null;
 		Data data = null;
 
-		if (id.equals("0")) {
-			list = groupsService.getRootNodeOfGroups();
-			if (list.size() > 0) {
-				IamTree rootNode = list.get(0);
-
-				node = new JSTreeNode();
-				data = new Data();
-				attribute = new Attributes();
-
-				data.setTitle(rootNode.getTitle());
-				attribute.setId(rootNode.getId());
-
-				node.setAttributes(attribute);
-				node.setData(data);
-				node.setState(rootNode.getState());
-
-				listNode.add(node);
+		if ("N".equals(searchClickYn)) {
+			if (id.equals("0")) { // root node
+				listNode = makeRootNode();
 			}
-			else {
-				throw new Exception();
+			else { // open branch
+				list = groupsService.getGroupTree(id);
+
+				for (int i = 0; i < list.size(); i++) {
+					IamTree tree = list.get(i);
+
+					node = new JSTreeNode();
+					data = new Data();
+					attribute = new Attributes();
+
+					data.setTitle(tree.getTitle());
+					attribute.setId(tree.getId());
+
+					node.setAttributes(attribute);
+					node.setData(data);
+					node.setState(tree.getState());
+
+					listNode.add(node);
+				}
 			}
 		}
-		else {
-			list = groupsService.getGroupTree(id);
+		else if ("Y".equals(searchClickYn)) { // search
+			String groupId = groupsService.getGroupIdByGroupName(groupName);
 
-			for (int i = 0; i < list.size(); i++) {
-				IamTree tree = list.get(i);
+			if (!"".equals(groupId)) {	// when the given group name exist
+				List<String> ids = groupsService.getParentsGroupIds(groupId);
 
-				node = new JSTreeNode();
-				data = new Data();
-				attribute = new Attributes();
+				int size = ids.size();
 
-				data.setTitle(tree.getTitle());
-				attribute.setId(tree.getId());
+				if (size == 0) {
+					listNode = makeRootNode();
+				}
+				else {
+					@SuppressWarnings("unchecked")
+					ArrayList<JSTreeNode>[] childNode = new ArrayList[size];
 
-				node.setAttributes(attribute);
-				node.setData(data);
-				node.setState(tree.getState());
+					for (int i = 0; i < size; i++) {
+						list = groupsService.getGroupTree(ids.get(i));
+						childNode[i] = new ArrayList<JSTreeNode>();
 
-				listNode.add(node);
+						for (int j = 0; j < list.size(); j++) {
+							IamTree tree = list.get(j);
+
+							node = new JSTreeNode();
+							data = new Data();
+							attribute = new Attributes();
+
+							data.setTitle(tree.getTitle());
+							attribute.setId(tree.getId());
+
+							node.setAttributes(attribute);
+							node.setData(data);
+							node.setState(tree.getState());
+
+							if (i != 0) {
+								if (tree.getId().equals(ids.get(i - 1))) {
+									node.setState("open");
+									node.setChildren(childNode[i - 1]);
+								}
+							}
+							childNode[i].add(node);
+						}
+					}
+
+					Groups rootNode = groupsService.get(ids.get(size - 1));
+
+					node = new JSTreeNode();
+					data = new Data();
+					attribute = new Attributes();
+
+					data.setTitle(rootNode.getGroupName());
+					attribute.setId(rootNode.getGroupId());
+
+					node.setAttributes(attribute);
+					node.setData(data);
+					node.setState("open");
+					node.setChildren(childNode[size - 1]);
+
+					listNode.add(node);
+				}
+			}
+			else {
+				listNode = makeRootNode();
 			}
 		}
 
 		model.addAttribute(listNode);
 
 		return "jsonView";
+	}
 
+	/**
+	 * find list of group name that matches the given keyword
+	 * @param keyword keyword of group name that want to be find
+	 * @param request HttpServletRequest object
+	 * @param response HttpServletResponse object
+	 * @param model Model object to contain attributes
+	 * @throws Exception
+	 * 				fail to find list of group name
+	 */
+	@RequestMapping("/groups/getGroupNameList.do")
+	public void getGroupNameList(@RequestParam(value = "q", required = false) String keyword,
+			HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+
+		keyword = new String(keyword.getBytes("8859_1"), "utf-8");
+		String resultList = groupsService.getGroupNameList(keyword);
+		response.getOutputStream().print(new String(resultList.getBytes("utf-8"), "8859_1"));
+	}
+
+	@RequestMapping("/groups/getGroupId.do")
+	public String getGroupId(Model model) throws Exception {
+		String groupId = idGenerationServiceGroup.getNextStringId();
+
+		model.addAttribute("groupId", groupId);
+
+		return "jsonView";
 	}
 }

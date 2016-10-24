@@ -61,7 +61,7 @@ public class AnnotationSecuredResourcesRolesController {
 
 		securedResourcesRolesService.addSecuredResourcesRoles(resourceIds, roleId);
 
-		return "jsonView";
+		return "forward:/resources/list.do";
 	}
 
 	/**

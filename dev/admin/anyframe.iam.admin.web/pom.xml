@@ -5,14 +5,14 @@
 		<groupId>anyframe</groupId>
 		<!--  modified. 2009.07.28 -->
 		<artifactId>anyframe.common.maven.root</artifactId>
-		<version>4.0.0</version>
+		<version>4.1.0</version>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>anyframe</groupId>
 	<artifactId>anyframe.iam.admin.web</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.0.RC1</version>
+	<version>1.0.1</version>
 	<name>anyframe.iam.admin.web</name>
 	<url>http://maven.apache.org</url>
 
@@ -38,6 +38,12 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.15</version>
 		</dependency>
 
 		<dependency>
@@ -98,12 +104,12 @@
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.iam.core</artifactId>
-			<version>1.0.0.RC1</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.iam.admin.services</artifactId>
-			<version>1.0.0.RC1</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -148,12 +154,12 @@
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.generic</artifactId>
-			<version>4.0.0</version>
+			<version>4.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.hibernate</artifactId>
-			<version>4.0.0</version>
+			<version>4.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.persistence</groupId>
@@ -163,12 +169,12 @@
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.idgen</artifactId>
-			<version>4.0.0</version>
+			<version>4.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.springmvc.ext</artifactId>
-			<version>4.0.0</version>
+			<version>4.1.0</version>
 		</dependency>
 
 		<!-- Spring-Json -->

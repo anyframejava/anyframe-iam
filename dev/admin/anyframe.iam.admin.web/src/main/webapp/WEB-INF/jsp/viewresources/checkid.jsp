@@ -9,8 +9,8 @@
 <title>Check View ID</title>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript">
 	function closeWindow() {

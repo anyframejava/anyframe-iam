@@ -83,4 +83,11 @@ public interface CandidateSecuredResourcesDao extends IamGenericDao<CandidateSec
 	 * @throws Exception fail to find list
 	 */
 	String getPointCutList(String keyword) throws Exception;
+	
+	/**
+	 * find bean id that contains "param" field at candidate_resource_type 
+	 * @return String bean id
+	 * @throws Exception fail to find bean id
+	 */
+	String findMethodParam() throws Exception;
 }

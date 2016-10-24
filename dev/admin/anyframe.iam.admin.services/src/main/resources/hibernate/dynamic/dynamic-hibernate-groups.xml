@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
 <dynamic-hibernate>
 	<query name="findGroupsList">
 		<![CDATA[
@@ -41,6 +43,22 @@
 		WHERE groups.groupId like :keywordStr
 		order by							
 				groups.groupId
+		]]>
+	</query>
+	
+	<query name="findGroupNameList">
+		<![CDATA[
+			SELECT distinct new Map(groups.groupName as groupName)
+			FROM Groups groups
+			WHERE LOWER(groups.groupName) like :keyword			
+			ORDER BY groups.groupName
+		]]>
+	</query>
+	
+	<query name="findGroupIdByGroupName">
+		<![CDATA[
+			FROM Groups groups
+			WHERE LOWER(groups.groupName) = :groupName
 		]]>
 	</query>
 </dynamic-hibernate>

@@ -57,6 +57,7 @@ public class ViewMappingDaoHibernateImpl extends IamGenericDaoHibernate<ViewReso
 		args[4] = "sord=" + sord;
 		args[5] = "type=" + type;
 
+		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findViewMappingList", args, pageIndex, pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countViewMappingList", args);
 
@@ -64,6 +65,7 @@ public class ViewMappingDaoHibernateImpl extends IamGenericDaoHibernate<ViewReso
 		return resultPage;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List get(String viewResourceId) throws Exception {
 		Object[] args = new Object[1];
 		args[0] = "viewResourceId=" + viewResourceId;

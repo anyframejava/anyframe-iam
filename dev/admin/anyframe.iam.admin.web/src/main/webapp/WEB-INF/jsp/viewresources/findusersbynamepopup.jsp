@@ -9,8 +9,8 @@
 <title><anyframe:message code="user.ui.title.userlist" /></title>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript">
 
@@ -19,6 +19,7 @@ jQuery(document).ready(
 		// Grid Component
 		jQuery("#grid").jqGrid(
 		{
+			sortable: true,
 			url : "<c:url value='/users/listData.do?'/>",
 			mtype : 'POST',
 			datatype : "json",
@@ -53,7 +54,6 @@ jQuery(document).ready(
 			rowNum : 20,
 			rowList : [ 10, 20, 30 ],
 			viewrecords : true,
-			imgpath : "<c:url value='/jquery/jqgrid/themes/steel/images'/>",
 			/*
 			loadError: function(xhr,st,err) {
 				if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									

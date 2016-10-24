@@ -16,30 +16,32 @@
 
 package anyframe.iam.admin.roles.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import anyframe.core.generic.service.impl.GenericServiceImpl;
-import anyframe.iam.admin.authorities.dao.AuthoritiesDao;
+import anyframe.iam.admin.common.IAMException;
 import anyframe.iam.admin.domain.IamTree;
 import anyframe.iam.admin.domain.Roles;
+import anyframe.iam.admin.domain.RolesHierarchy;
+import anyframe.iam.admin.domain.RolesHierarchyId;
 import anyframe.iam.admin.roles.dao.RolesDao;
 import anyframe.iam.admin.roles.service.RolesService;
 import anyframe.iam.admin.securedresourcesroles.dao.SecuredResourcesRolesDao;
 
 public class RolesServiceImpl extends GenericServiceImpl<Roles, String> implements RolesService {
-	RolesDao rolesDao;
+	private RolesDao rolesDao;
 
-	AuthoritiesDao authoritiesDao;
-
-	SecuredResourcesRolesDao securedResourcesRolesDao;
+	private SecuredResourcesRolesDao securedResourcesRolesDao;
+	
+	private static List<String> roleIds = new ArrayList<String>();
 
 	public RolesServiceImpl(RolesDao rolesDao) {
 		super(rolesDao);
 		this.rolesDao = rolesDao;
-	}
-
-	public void setAuthoritiesDao(AuthoritiesDao authoritiesDao) {
-		this.authoritiesDao = authoritiesDao;
 	}
 
 	public void setSecuredResourcesRolesDao(SecuredResourcesRolesDao securedResourcesRolesDao) {
@@ -59,7 +61,36 @@ public class RolesServiceImpl extends GenericServiceImpl<Roles, String> implemen
 	}
 
 	public void update(Roles roles) throws Exception {
+		roles.setModifyDate(anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd"));
+		
 		rolesDao.update(roles);
+	}
+	
+	public Roles save(Roles roles) throws Exception {
+		String createDate = anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd");
+		
+		Iterator<RolesHierarchy> it = roles.getRolesHierarchiesForParentRole().iterator();
+		
+		RolesHierarchy hierarchy = (RolesHierarchy)it.next();
+		
+		RolesHierarchy rolesHierarchy = new RolesHierarchy();
+		RolesHierarchyId rolesHierarchyId = new RolesHierarchyId();
+		
+		rolesHierarchyId.setParentRole(roles.getRoleId());
+		rolesHierarchyId.setChildRole(hierarchy.getId().getChildRole());
+		
+		rolesHierarchy.setId(rolesHierarchyId);
+		rolesHierarchy.setCreateDate(createDate);
+		
+		Set<RolesHierarchy> parentRole = new HashSet<RolesHierarchy>();
+		
+		parentRole.add(rolesHierarchy);
+		
+		roles.setDescription(roles.getRoleName() + " description");
+		roles.setCreateDate(createDate);
+		roles.setRolesHierarchiesForParentRole(parentRole);
+		
+		return rolesDao.save(roles);
 	}
 
 	public void remove(String currentNode) throws Exception {
@@ -78,15 +109,40 @@ public class RolesServiceImpl extends GenericServiceImpl<Roles, String> implemen
 			rolesDao.remove(currentNode);
 		}
 		else {
-			throw new Exception();
+			throw new IAMException("No selected node");
 		}
 	}
 
 	public List<Roles> getList() throws Exception {
 		return rolesDao.getList();
 	}
-
-	public Roles save(Roles roles) throws Exception {
-		return rolesDao.save(roles);
+	
+	public String getRoleNameList(String keyword) throws Exception {
+		return rolesDao.getRoleNameList(keyword);
 	}
+		
+	public String getRoleIdByRoleName(String roleName) throws Exception {
+		return rolesDao.getRoleIdByRoleName(roleName);
+	}
+	
+	public List<String> getParentsRoleIds(String roleId) throws Exception {
+		Roles roles = this.rolesDao.get(roleId);
+		
+		List<String> rolesIds = findRepeatParentRole(roles);
+
+		return rolesIds;
+	}
+	
+	private List<String> findRepeatParentRole(Roles foundRole) {
+		Set<RolesHierarchy> childSet = foundRole.getRolesHierarchiesForParentRole();
+		
+		for(RolesHierarchy rolesHierarchy : childSet) {
+			Roles parentRole = rolesHierarchy.getRolesByChildRole();
+			roleIds.add(parentRole.getRoleId());
+			findRepeatParentRole(parentRole);
+		}
+
+		return roleIds;
+	}	
+	
 }

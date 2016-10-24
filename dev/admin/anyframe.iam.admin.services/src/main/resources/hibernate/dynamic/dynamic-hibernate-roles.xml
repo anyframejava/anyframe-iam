@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
 <dynamic-hibernate>
 	<query name="findRolesList">
 		<![CDATA[
@@ -53,7 +55,22 @@
 				roles.roleId
 		]]>
 	</query>
-		
+
+	<query name="findRoleNameList">
+		<![CDATA[
+			SELECT distinct new Map(roles.roleName as roleName)
+			FROM Roles roles
+			WHERE LOWER(roles.roleName) like :keyword			
+			ORDER BY roles.roleName
+		]]>
+	</query>
+	
+	<query name="findRoleIdByRoleName">
+		<![CDATA[
+			FROM Roles roles
+			WHERE LOWER(roles.roleName) = :roleName
+		]]>
+	</query>
 </dynamic-hibernate>
 
 

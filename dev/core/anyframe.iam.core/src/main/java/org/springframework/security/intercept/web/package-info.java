@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 /**
- * DB 기반의 보호자원-권한 맵핑 정보에 의한 권한 처리 기능을 제공한다. 
- * Spring Security 의 제한된 모듈을 확장키 위해 패키지를 동일하게 작성하였음에 유의한다.
+ * Package that offers the function to treat authority about 
+ * secured resource - role mapping information based on DB.
+ * Keep in mind that this package is written equally with Spring Security
+ * to extend restricted modules.
+ * 
  * 
  * @since 1.0.0
  */

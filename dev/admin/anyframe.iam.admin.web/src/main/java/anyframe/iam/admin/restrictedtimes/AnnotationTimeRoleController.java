@@ -102,6 +102,7 @@ public class AnnotationTimeRoleController {
 	 * @return return "/restriction/timeroledetail" page
 	 * @throws Exception fail to move to the page
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/restriction/timerole/addView.do")
 	public String addView(@ModelAttribute("searchVO") RestrictedTimesSearchVO searchVO, Model model) throws Exception {
 		model.addAttribute("restrictedtimes", new RestrictedTimes());
@@ -159,6 +160,7 @@ public class AnnotationTimeRoleController {
 	@RequestMapping("/restriction/timerole/findrolebytime.do")
 	public String findRoleListByTime(@RequestParam("timeId") String timeId, Model model) throws Exception {
 
+		@SuppressWarnings("unchecked")
 		List resultList = restrictedTimesRolesService.findRoleListByTime(timeId);
 
 		model.addAttribute("roles", resultList);
@@ -177,6 +179,7 @@ public class AnnotationTimeRoleController {
 	public String get(@RequestParam(value = "timeId", required = false) String timeId, Model model) throws Exception {
 		if (!StringUtils.isBlank(timeId)) {
 			RestrictedTimes rt = restrictedTimesService.get(timeId);
+			@SuppressWarnings("unchecked")
 			List roleList = restrictedTimesRolesService.findRoleListByTime(timeId);
 
 			model.addAttribute("restrictedtimes", rt);

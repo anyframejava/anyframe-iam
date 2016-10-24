@@ -31,11 +31,10 @@ import org.springframework.security.userdetails.hierarchicalroles.UserDetailsWra
 import anyframe.iam.core.intercept.web.FilterInvocationWrapper;
 
 /**
- * Spring Security 의 RoleVoter 를 extends 하고 있으며 restricted times 관련 권한 처리를 위한
- * Voter 이다. roleHierarchy 를 설정한 경우 RoleHierarchyVoter 와 마찬가지로 설정된 제한 Role 의 하위
- * Role 을 찾아 함께 고려하고 있다. Restricted Role 체크인 경우 RoleHierarchy 를 고려한 Denied 위주 접근
- * 권한 제어로 처리되고 Restricted Resource 체크인 경우 RoleVoter 의 기본 ACCESS_GRANTED 접근 권한
- * 제어로 처리됨에 유의한다.
+ * This class extends RoleVotes of Spring Security for dealing authority of restricted times.
+ * If RoleHierarchy is set, as RoleHierarchyVoter this class also find a Role that is a low rank than 
+ * set restricted Role. In case of restricted Role checking, this class check for Denied in RoleHierarchy first.
+ * In case of restricted Resource checking, this class check for ACCESS_GRANTED first.
  * 
  * @author Byunghun Woo
  * 
@@ -53,9 +52,9 @@ public class AnyframeRoleHierarchyRestrictedVoter extends RoleVoter {
 	}
 
 	/**
-	 * rolesHierarchy reload 시에 이전 cache 데이터를 잘 지워줄것 - Voter 는 일반적으로 inner bean
-	 * 으로 등록되므로 해당 accessDecisionManager 를 얻어 getDecisionVoters() 로 현재 Voter 를
-	 * 찾아야 할 것임
+	 * when rolesHiearchy reloading, previous cache data should be deleted 
+	 * - Voter is usually registered inner bean, so get accessDecisionManager first and then
+	 * find Voter by using getDecisionVoters()
 	 */
 	public void clearHierarchyAddedCadCache() {
 		hierarchyAddedCadCache.clear();
@@ -72,9 +71,9 @@ public class AnyframeRoleHierarchyRestrictedVoter extends RoleVoter {
 	}
 
 	/**
-	 * restricted times 제한에 대한 접근 권한 판단을 담당한다. Restricted Role
-	 * (FilterInvocationWrapper 로 가공하였음) 과 Restricted Resource 에 대한 처리가 함께 존재한다.
-	 * (하나의 Filter 에 대한 accessDecisionManager 로 등록하나 서로 다른 voter 로직을 사용하기 위함)
+	 * This method judges access permission about restricted times.
+	 * There exist both management of Restricted Role(wrapped to FilterInvocationWrapper) 
+	 * and the one of Restricted Resource.
 	 * 
 	 * @see anyframe.iam.core.intercept.web.RestrictedTimesFilterSecurityInterceptor
 	 * @see anyframe.iam.core.intercept.web.ReloadableRestrictedTimesFilterInvocationDefinitionSource
@@ -161,8 +160,8 @@ public class AnyframeRoleHierarchyRestrictedVoter extends RoleVoter {
 	}
 
 	/**
-	 * UserDetailsWrapper 로 처리되는 경우 하위권한은 제외한 해당 사용자에 기본으로 맵핑된 권한만을 되돌려준다. <br/>
-	 * 
+	 * In case of treating UserDetailsWrapper, this method return mapped authority to 
+	 * user except the lower rank authority
 	 */
 	GrantedAuthority[] extractAuthorities(Authentication authentication) {
 		if (authentication.getPrincipal() instanceof UserDetailsWrapper) {

@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 /**
- * DB 기반의 보호자원 맵핑 정보를 참조하기 위한 기능을 제공한다.
+ * Package that offers some function to refer mapping information of secured resources 
+ * based on DB
  * 
  * @since 1.0.0
  */

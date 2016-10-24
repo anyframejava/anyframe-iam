@@ -58,6 +58,7 @@ public class TimesResourcesExclusionDaoHibernateImpl extends
 		args[5] = "sidx=" + sidx;
 		args[6] = "sord=" + sord;
 
+		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService()
 				.findList("findTimeExclusionList", args, pageIndex, pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countTimeExclusionList", args);
@@ -66,6 +67,7 @@ public class TimesResourcesExclusionDaoHibernateImpl extends
 		return resultPage;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List findRoleListByTimeResource(String timeId, String resourceId) throws Exception {
 		Object[] args = new Object[2];
 		args[0] = "timeId=" + timeId;

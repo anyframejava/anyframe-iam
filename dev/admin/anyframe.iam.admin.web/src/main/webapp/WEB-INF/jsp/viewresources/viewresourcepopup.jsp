@@ -8,8 +8,8 @@
 <title><anyframe:message code="viewresource.ui.title.viewresources" /></title>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript">
 jQuery(document).ready(
@@ -17,6 +17,7 @@ jQuery(document).ready(
 
 		jQuery("#grid").jqGrid( 
 		{
+			sortable: true,
 			url: "<c:url value='/viewresources/listData.do?' />",
 			mtype:'GET',
 			datatype : "json",
@@ -61,7 +62,6 @@ jQuery(document).ready(
 			rowNum : 20,
 			rowList : [ 10, 20, 30 ],
 			viewrecords : true,
-			imgpath : "<c:url value='/jquery/jqgrid/themes/steel/images'/>",
 
 			/*loadError: function(xhr,st,err) {
 				if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									

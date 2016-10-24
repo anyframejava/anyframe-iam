@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Anyframe IAM 에서 제공하는 태그 라이브러리 영역이다.
+ * Tag library area that Anyframe IAM offer.
  * 
  * @since 1.0.0
  */

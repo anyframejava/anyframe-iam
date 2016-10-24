@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
 <dynamic-hibernate>
 	<query name="findPackagesNameList">
 		<![CDATA[
@@ -44,11 +46,11 @@
 	
 	<query name="findParameterNameList">
 		<![CDATA[
-			SELECT distinct new Map(candidateSecuredResources.parameter as parameter)
+			SELECT distinct new Map(candidateSecuredResources.method as method)
 			FROM CandidateSecuredResources candidateSecuredResources
-			WHERE 	LOWER(candidateSecuredResources.parameter) like :keyword
+			WHERE 	LOWER(candidateSecuredResources.method) like :keyword
 			AND 	LOWER(candidateSecuredResources.requestMapping) like :requestMapping
-			ORDER BY candidateSecuredResources.parameter
+			ORDER BY candidateSecuredResources.method
 		]]>
 	</query>
 	
@@ -58,6 +60,22 @@
 			FROM CandidateSecuredResources candidateSecuredResources
 			WHERE 	LOWER(candidateSecuredResources.pointCut) like :keyword
 			ORDER BY candidateSecuredResources.pointCut
+		]]>
+	</query>
+	
+	<query name="findMethodParam">
+		<![CDATA[
+			SELECT 	distinct new Map(candidateSecuredResources.beanid as beanid)
+			FROM 	CandidateSecuredResources candidateSecuredResources
+			WHERE 	LOWER(candidateSecuredResources.candidateResourceType) = 'param'
+		]]>
+	</query>
+	
+	<query name="countMethodParam">
+		<![CDATA[
+			SELECT 	count(*)
+			FROM 	CandidateSecuredResources candidateSecuredResources
+			WHERE 	LOWER(candidateSecuredResources.candidateResourceType) = 'param'
 		]]>
 	</query>
 </dynamic-hibernate>

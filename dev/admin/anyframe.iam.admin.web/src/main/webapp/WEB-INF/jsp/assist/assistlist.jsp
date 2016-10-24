@@ -10,13 +10,13 @@
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 
 <script language="javascript">
 <!--
 function reload() {
-	if(confirm('<anyframe:message code="resourcereload.ui.alert.confirmtoreload" />')) {
+	if(confirm('<anyframe:message code="resourcereload.ui.alert.confirmtogather" />')) {
 		document.getElementById("transfer").style.visibility = "visible";
 
 		$.ajax({
@@ -32,21 +32,6 @@ function reload() {
 				document.write(msg.responseText);
 			}
 		});
-
-/*
-		$.getJSON("<c:url value='/admin/assist/resourceAssist.do'/>",
-				function(data) {
-					alert(data.msg);
-					if (data.msg)
-					{
-						document.location.href = "<c:url value='/common/complete.jsp'/>";
-					}
-					else
-					{
-						alert("resource gathering has failed.");
-					}		
-		});
-*/
 	}
 }
 //-->
@@ -124,7 +109,7 @@ body {
 												<table height="22" border="0" cellpadding="0" cellspacing="0">
 													<tr>
 														<td width="18"><img src="<c:url value='/images/btn/update.gif'/>" width="18" height="22"></td>
-														<td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="javascript:reload();" name="movetoback"><anyframe:message code="resourcereload.ui.btn.reload" /></a></td>
+														<td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="javascript:reload();" name="movetoback"><anyframe:message code="resourcereload.ui.btn.gather" /></a></td>
 														<td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
 													</tr>
 												</table>
@@ -140,7 +125,6 @@ body {
 			</form>
 		</td>
 	</tr>
-	
 	<tr>
 		<td width="10">&nbsp;</td>
 	    <td colspan="1" valign="top">
@@ -174,22 +158,15 @@ body {
 			</div>
 		</td>
   	</tr>
- 
-	 <tr valign="top">
-	   <td height="50%" colspan="2" valign="top" >
-	   	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#E9ECF1">
-		  <tr>
-		    <td height="10" bgcolor="#ffffff"></td>
-		  </tr>
-		  <tr>
-		    <td height="1" bgcolor="#C9CFDD"></td>
-		  </tr>
-		  <tr>
-		    <td valign="top" bgcolor="#E9ECF1"><div id="footSub"></div></td>
-		  </tr>
-		</table>
-	  </td>
-	 </tr>
+ 	<tr valign="top">
+		<td height="50%" colspan="2" valign="top" >
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#E9ECF1">
+				<tr><td height="10" bgcolor="#ffffff"></td></tr>
+				<tr><td height="1" bgcolor="#C9CFDD"></td></tr>
+				<tr><td valign="top" bgcolor="#E9ECF1"><div id="footSub"></div></td></tr>
+			</table>
+		</td>
+	</tr>
 </table>
 </body>
 </html>

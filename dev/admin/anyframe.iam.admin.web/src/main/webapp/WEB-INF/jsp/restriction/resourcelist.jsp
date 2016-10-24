@@ -8,13 +8,14 @@
 <title><anyframe:message code="roleresource.ui.title.resourcelist" /></title>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jqueryui-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 
 <script type="text/javascript">
 <!--
 	jQuery(document).ready(	function() {
 		jQuery("#grid2").jqGrid( {
+			sortable: true,
 			url: "<c:url value='/restriction/timeresource/listUnmappedResourceData.do?timeId=' />" + opener.document.restrictedtimes.timeId.value,
 			mtype:'GET',
 			datatype : "json",
@@ -68,10 +69,10 @@
 					return;
 				}
 				alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
-			},
-			imgpath : "<c:url value='/jquery/jqgrid/themes/steel/images' />"
+			}
 		});
-
+		jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
+		
 		/* Button Function Start (Resource CRUD) */
 		
 		/* Close the window */
@@ -100,10 +101,8 @@
 					rowData = jQuery("#grid2").getRowData(rowNumList[i]);
 					rowDataArray[i] = rowData.resourceId;
 					jQuery("#grid2").delRowData(rowData.resourceId);
-				}							
-				jQuery("#grid2").setPostData({timeId:timeId, resourceId:rowDataArray});
-			    jQuery("#grid2").setGridParam({url:"<c:url value='/restriction/timeresource/add.do?' />"}).trigger("reloadGrid");
-			    opener.reloadGrid(timeId);
+				}
+			    window.opener.reloadGrid(timeId, rowDataArray);
 				window.close();
 			}
 		});

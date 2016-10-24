@@ -39,6 +39,7 @@ public class RestrictedTimesRolesServiceImpl extends GenericServiceImpl<Restrict
 		return this.restrictedTimesRolesDao.getTimeRoleList(restrictedTimesSearchVO);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List findRoleListByTime(String timeId) throws Exception {
 		return restrictedTimesRolesDao.findRoleListByTime(timeId);
 	}

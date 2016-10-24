@@ -31,13 +31,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-import anyframe.iam.core.assist.IResourceCreationAssistService;
+import anyframe.iam.admin.assist.service.AssistService;
 import anyframe.iam.core.assist.IResourceGatherAssistService;
 
 /**
  * Annotation Assist Controller
  * 
- * @author jongpil.park
+ * @author Jongpil Park
  * 
  */
 @Controller
@@ -45,9 +45,10 @@ public class AnnotationAssistController {
 
 	@Resource(name = "gatherServiceClient")
 	private IResourceGatherAssistService gatherServiceClient;
+	
+	@Resource(name = "assistService")
+	private AssistService assistService;
 
-	@Resource(name = "creationServiceClient")
-	private IResourceCreationAssistService creationServiceClient;
 
 	/**
 	 * collect information of target application
@@ -55,17 +56,17 @@ public class AnnotationAssistController {
 	 * @return information of target application
 	 * @throws Exception fail to collect data
 	 */
+	
 	@RequestMapping("/admin/assist/resourceAssist.do")
 	public String reloadResources(Model model) throws Exception {
 		boolean result = false;
+		@SuppressWarnings("unchecked")
 		List<Map<String, Object>> resourceMapList = gatherServiceClient.getTargetApplicationResourceInformation();
-		result = creationServiceClient.createTargetApplicationResourceInformation(resourceMapList);
+		result = assistService.save(resourceMapList);
 
 		model.addAttribute("msg", result);
 
 		return "jsonView";
-
-		// return result ? "common/complete" : "common/error";
 	}
 
 	/**

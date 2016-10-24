@@ -93,4 +93,11 @@ public interface CandidateSecuredResourcesService extends GenericService<Candida
 	 * @throws Exception fail to check pattern
 	 */
 	boolean checkMatched(String savePattern, String resourceType) throws Exception;
+	
+	/**
+	 * find bean id that contains "param" field at candidate_resource_type 
+	 * @return String bean id
+	 * @throws Exception fail to find bean id
+	 */
+	String findMethodParam() throws Exception;
 }

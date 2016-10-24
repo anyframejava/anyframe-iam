@@ -75,4 +75,20 @@ public interface RolesDao extends IamGenericDao<Roles, String> {
 	 * @throws Exception fail to find list
 	 */
 	List<Roles> getList() throws Exception;
+	
+	/**
+	 * find list of Role name that matches the given keyword
+	 * @param keyword
+	 * @return list of Role name
+	 * @throws Exception fail to find list
+	 */
+	String getRoleNameList(String keyword) throws Exception;
+	
+	/**
+	 * find Role ID that matches the given role name
+	 * @param roleName
+	 * @return Role ID
+	 * @throws Exception fail to find role ID
+	 */
+	String getRoleIdByRoleName(String roleName) throws Exception;
 }

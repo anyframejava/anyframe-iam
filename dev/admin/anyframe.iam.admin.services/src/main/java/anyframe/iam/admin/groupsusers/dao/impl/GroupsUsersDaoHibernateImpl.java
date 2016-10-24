@@ -16,6 +16,7 @@
 
 package anyframe.iam.admin.groupsusers.dao.impl;
 
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import anyframe.iam.admin.common.IamGenericDaoHibernate;
@@ -29,5 +30,11 @@ public class GroupsUsersDaoHibernateImpl extends IamGenericDaoHibernate<GroupsUs
 
 	public GroupsUsersDaoHibernateImpl() {
 		super(GroupsUsers.class);
+	}
+	
+	public void remove(String groupId) throws Exception {
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeGroupsUsersByGroupId");
+		query.setParameter("groupId", groupId);
+		query.executeUpdate();
 	}
 }

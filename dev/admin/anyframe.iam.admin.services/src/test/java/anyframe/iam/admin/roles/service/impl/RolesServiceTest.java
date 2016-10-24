@@ -45,6 +45,9 @@ import anyframe.iam.admin.roles.service.RolesService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath*:spring/context-test-all-*" })
+// @TransactionConfiguration(transactionManager = "txManager", defaultRollback =
+// true)
+// @Transactional
 public class RolesServiceTest {
 
 	@Autowired
@@ -67,28 +70,36 @@ public class RolesServiceTest {
 	public Roles makeDomain() throws Exception {
 
 		Roles domain = new Roles();
-		domain.setRoleName("ROLE_TEST");
+		RolesHierarchyId rolesHierarchyId = new RolesHierarchyId();
 
 		RolesHierarchy rolesHierarchy = new RolesHierarchy();
 
-		String parentRole = idGenerationServiceRole.getNextStringId();
+		domain.setRoleName("ROLE_TEST");
+		domain.setRoleId("ROLE_36");
 
-		RolesHierarchyId rolesHierarchyId = new RolesHierarchyId();
 		rolesHierarchyId.setChildRole("ROLE-00002");
-		rolesHierarchyId.setParentRole(parentRole);
-
 		rolesHierarchy.setId(rolesHierarchyId);
 
-		Set<RolesHierarchy> childRole = new HashSet<RolesHierarchy>();
+		Set<RolesHierarchy> parentRole = new HashSet<RolesHierarchy>();
 
-		childRole.add(rolesHierarchy);
+		parentRole.add(rolesHierarchy);
 
-		domain.setRolesHierarchiesForChildRole(childRole);
-
-		domain.setRoleId(parentRole);
-		domain.setDescription(parentRole + " DESC");
+		domain.setRolesHierarchiesForParentRole(parentRole);
 
 		return domain;
+	}
+
+	@Test
+	public void testSave() throws Exception {
+		Roles domain = makeDomain();
+
+		rolesService.save(domain);
+
+		Roles resultDomain = rolesService.get(domain.getRoleId());
+
+		assertNotNull(resultDomain);
+		assertEquals(domain.getRoleId(), resultDomain.getRoleId());
+		assertEquals("ROLE_TEST", resultDomain.getRoleName());
 	}
 
 	@Test
@@ -124,9 +135,11 @@ public class RolesServiceTest {
 		List<IamTree> resultList = rolesService.getRoleTree("ROLE-00002");
 
 		// check
+		System.out.println(resultList.size());
+		System.out.println(resultList.get(0).getId());
 		assertNotNull(resultList);
 		assertTrue(resultList.size() > 0);
-		assertEquals("ROLE-00003", resultList.get(0).getId());
+		assertEquals("ROLE_36", resultList.get(0).getId());
 	}
 
 	@Test
@@ -166,6 +179,52 @@ public class RolesServiceTest {
 
 		assertEquals("IS_AUTHENTICATED_FULLY", resultList.get(0).getRoleId());
 	}
+	
+	@Test
+	public void testGetRoleNameList() throws Exception {
+
+		Roles domain = makeDomain();
+
+		rolesService.save(domain);
+
+		String keyword = "ROLE_TEST";
+
+		String resultList = rolesService.getRoleNameList(keyword);
+		assertNotNull(resultList);
+		assertEquals(resultList, "ROLE_TEST\n");
+	}
+
+	@Test
+	public void testGetRoleIdByRoleName() throws Exception {
+
+		Roles domain = makeDomain();
+
+		rolesService.save(domain);
+
+		String roleName = domain.getRoleName();
+
+		String roleId = rolesService.getRoleIdByRoleName(roleName);
+
+		assertNotNull(roleId);
+		assertEquals(domain.getRoleId(), roleId);
+	}
+
+	@Test
+	public void testGetParentsRolesIds() throws Exception {
+
+		Roles domain = makeDomain();
+
+		rolesService.save(domain);
+		
+		String roleId = domain.getRoleId();
+		
+		List resultParentIds = rolesService.getParentsRoleIds(roleId);
+		System.out.println(resultParentIds);
+		
+		assertNotNull(resultParentIds);
+		assertEquals(resultParentIds.get(0), "ROLE-00002");
+	}
+	
 
 	@Test
 	public void testRemove() throws Exception {
@@ -196,27 +255,8 @@ public class RolesServiceTest {
 	@Test
 	public void testRemoveRoles() throws Exception {
 
-		Roles domain1 = new Roles();
-		domain1.setRoleName("ROLE_TEST");
-
-		RolesHierarchy rolesHierarchy1 = new RolesHierarchy();
-
-		String parentRole1 = idGenerationServiceRole.getNextStringId();
-
-		RolesHierarchyId rolesHierarchyId1 = new RolesHierarchyId();
-		rolesHierarchyId1.setChildRole("ROLE-00002");
-		rolesHierarchyId1.setParentRole(parentRole1);
-
-		rolesHierarchy1.setId(rolesHierarchyId1);
-
-		Set<RolesHierarchy> childRole1 = new HashSet<RolesHierarchy>();
-
-		childRole1.add(rolesHierarchy1);
-
-		domain1.setRolesHierarchiesForChildRole(childRole1);
-
-		domain1.setRoleId(parentRole1);
-		domain1.setDescription(parentRole1 + " DESC");
+		// make domain
+		Roles domain1 = makeDomain();
 
 		// save
 		Roles savedDomain1 = rolesService.save(domain1);

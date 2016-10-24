@@ -20,7 +20,7 @@
     </appender -->  
     
 	<logger name="anyframe.iam.admin.common.web" additivity="false">
-        <level value="DEBUG"/>
+        <level value="ERROR"/>
         <!-- appender-ref ref="zeroconf"/-->
         <appender-ref ref="console"/>
     </logger>
@@ -32,18 +32,18 @@
     </logger>
     
 	<logger name="org.springframework.web" additivity="false">
-        <level value="DEBUG"/>
+        <level value="ERROR"/>
         <!-- appender-ref ref="zeroconf"/-->
         <appender-ref ref="console"/>
     </logger>
 
 	<logger name="org.springframework.security" additivity="false">
-        <level value="DEBUG"/>
+        <level value="ERROR"/>
         <appender-ref ref="console"/>
     </logger>
 
     <logger name="anyframe.iam.admin" additivity="false">
-		<level value="DEBUG" />   
+		<level value="ERROR" />   
 		<appender-ref ref="console" />
 	</logger>
      <logger name="anyframe">
@@ -66,7 +66,7 @@
 
 	<!-- log SQL with timing information, post execution -->
 	<logger name="jdbc.sqltiming" additivity="false">
-		<level value="INFO" />
+		<level value="ERROR" />
 		<appender-ref ref="console" />
 	</logger>
 
@@ -92,7 +92,7 @@
 	</logger>  	
 	
 	<logger name="org.hibernate.SQL" additivity="false">
-		<level value="DEBUG" />
+		<level value="ERROR" />
 		<appender-ref ref="console" />
 	</logger>
 	

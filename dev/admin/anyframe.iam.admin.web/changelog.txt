@@ -1,0 +1,62 @@
+﻿Anyframe IAM CHANGELOG
+==========================
+http://www.anyframejava.org
+
+Changes in version 1.0.1 (2010-02)
+-----------------------------------------
+* 소스 코드 및 테스트 코드 변경
+  - Anyframe 4.1.0 적용
+    . anyframe.iam.core, anyframe.iam.admin.services, anyframe.iam.admin.web 프로젝트 변경
+
+* 참조 라이브러리 변경
+  - 기존의 anyframe.xxx-4.0.0.jar 파일을 anyframe.xxx-4.1.0.jar 파일로 버전 업그레이드
+
+* 추가된 기능
+  - Anyframe 4.1.0 릴리즈 버전 적용
+  - Resource Gathering 시 paramResolver 값을 읽어오는 기능 추가
+  - paramResolver를 사용하는 경우 url 패턴 등록 시 paramResolver 값을 자동으로 세팅 해주는 기능 추가
+  - nested 객체에 대한 서버측 validation 체크 기능 추가
+
+* 해결된 이슈 목록
+  [IAM-103] - Resource Gathering 시 paramResolver 값을 읽어오는 기능 추가
+  [IAM-104] - Anyframe 4.1.0 릴리즈 버전 적용
+  [IAM-105] - nested 객체에 대한 서버측 validation 적용 추가
+  [IAM-106] - url 패턴 등록 기능 개선
+
+Changes in version 1.0.0 (2010-01)
+-----------------------------------------
+* IAM 1.0.0은 Java EE 기반의 엔터프라이즈 어플리케이션을 위한 보안 솔루션(사용자 인증 및 권한관리)을 제공하는 Identify & Access Management Framework 이다.
+* jQuery Plugin(jqGrid, jsTree) 버전이 업그레이드 되었다.
+* Anyframe IAM 프로젝의 모든 소스 코드는 Maven Project 기반으로 패키징되었다.
+* 배포 구조가 Maven 기반으로 단순화 되었다.
+* [참고] 더이상 Anyframe IAM RC Version(RC1)에 대해서 관리하지 않는다.
+
+* 소스 코드 및 테스트 코드 변경
+  - joda-time-1.1.jar 적용
+    . anyframe.iam.core 프로젝트 변경
+  - jqGrid 3.6.1 적용
+    . anyframe.iam.admin.web : jqGrid 변경에 따른 library 참조 구조 변경
+  - jsTree 0.9.9 적용
+    . anyframe.iam.admin.services : IAM Tree Domain 객체 변경, Domain 객체 변경에 따른 Service, Dao 변경
+    . anyframe.iam.admin.web      : jsTree 버전 업그레이드에 따른 Syntax 변경
+   
+* 참조 라이브러리 변경
+  - 기존의 jqGrid 3.5 버전을 jqGrid 3.6.1 버전으로 업그레이드
+  - 기존의 jsTree 0.9.8 버전을 jsTree 0.9.9 버전으로 업그레이드
+  - 기존의 java.text.SimpleDateFormat 에서 joda-time-1.1.jar 파일로 변경
+  
+* 추가된 기능
+  - Tree UI 상태 유지 및 Refresh, 상세화면 동기화
+  - Tree 검색 기능 추가
+  - Tree HotKey 기능 추가(F2, Delete)
+  
+* 해결된 이슈 목록
+  [IAM-96] - Resouce Gathering 기능 개선
+  [IAM-94] - Maven 기반 WAR 배포(services + web)
+  [IAM-92] - jsTree 버전 업그레이드
+  [IAM-91] - jqGrid 버전 업그레이드
+  [IAM-83] - Profiling 및 결과 리뷰 / 개선
+  [IAM-82] - Tree 검색 기능 추가
+  [IAM-80] - IAM Core Javadoc 영문화
+  [IAM-79] - 매뉴얼 보완
+  [IAM-37] - Tree UI 상태 유지 및 Refresh, 상세화면 동기화

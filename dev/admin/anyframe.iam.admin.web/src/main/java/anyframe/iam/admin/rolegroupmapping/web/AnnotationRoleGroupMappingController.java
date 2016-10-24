@@ -49,6 +49,7 @@ public class AnnotationRoleGroupMappingController {
 	 * @return move to "/roles/rolegroupmap/"
 	 * @throws Exception fail to move
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/rolegroupmapping/addView.do")
 	public String addView(@RequestParam(value = "roleId", required = false) String roleId, Model model)
 			throws Exception {

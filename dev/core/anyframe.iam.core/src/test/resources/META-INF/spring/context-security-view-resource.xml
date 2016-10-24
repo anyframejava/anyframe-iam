@@ -129,7 +129,8 @@
 	<b:bean id="jdbcUserService"
 		class="anyframe.iam.core.userdetails.jdbc.ExtJdbcUserDetailsManager">
 		<!-- usersByUsernameQuery 에서 사용자에 대한 group 을 함께 조회할 때 해당 property 명을 설정 -->
-		<b:property name="userGroupPropertyName" value="GROUP_ID"/>
+		<!-- <b:property name="userGroupPropertyName" value="GROUP_ID"/> -->
+		<b:property name="userGroupPropertyName" value="groupId"/>
 		<!-- USER_ID, PASSWORD, ENABLED 는 항상 1,2,3 번째 순서로 나타나야 함! -->
 		<b:property name="usersByUsernameQuery"
 			value="SELECT A.USER_ID AS USER_ID, PASSWORD, ENABLED, B.GROUP_ID AS GROUP_ID, USER_NAME, SSN, SL_YN, BIRTH_DAY, AGE, CELL_PHONE, ADDR, EMAIL, EMAIL_YN, IMAGE_FILE, REG_DATE FROM USERS A LEFT OUTER JOIN GROUPS_USERS B ON ( A.USER_ID = B.USER_ID ) WHERE A.USER_ID = ?" />
@@ -140,10 +141,8 @@
 			아래 mapClass를 지정하지 않으면 ExtUsersByUsernameMapping 에 의해 default 로 위 쿼리에
 			의한 사용자 정보는 Map 으로 처리됨
 		-->
-		<!--
-			<b:property name="mapClass"
-			value="anyframe.iam.core.userdetails.jdbc.CustomUsersByUsernameMapping"/>
-		-->
+		<b:property name="mapClass"	value="anyframe.iam.core.acl.GroupAddedCustomUserMapping"/>
+
 	</b:bean>
 
 

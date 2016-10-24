@@ -29,6 +29,8 @@ import anyframe.core.generic.model.BaseObject;
  */
 @Embeddable
 public class GroupsUsersId extends BaseObject implements Serializable {
+	private static final long serialVersionUID = 1L;
+	
 	private String groupId;
 
 	private String userId;

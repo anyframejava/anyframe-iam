@@ -22,7 +22,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import anyframe.common.Page;
 import anyframe.iam.admin.common.web.JsonError;
@@ -55,9 +53,6 @@ public class AnnotationTimeResourceController {
 
 	@Resource(name = "restrictedTimesResourcesService")
 	private RestrictedTimesResourcesService restrictedTimesResourcesService;
-
-	@Autowired
-	private DefaultBeanValidator beanValidator;
 
 	/**
 	 * move to time-resource mapping list page
@@ -97,6 +92,7 @@ public class AnnotationTimeResourceController {
 	 * @return return "/restriction/timeresourcedetail" page
 	 * @throws Exception fail to move to the page
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/restriction/timeresource/addView.do")
 	public String addView(@ModelAttribute("searchVO") RestrictedTimesSearchVO searchVO, Model model) throws Exception {
 		model.addAttribute("restrictedtimes", new RestrictedTimes());
@@ -116,6 +112,7 @@ public class AnnotationTimeResourceController {
 	public String get(@RequestParam(value = "timeId", required = false) String timeId, Model model) throws Exception {
 		if (!StringUtils.isBlank(timeId)) {
 			RestrictedTimes rt = restrictedTimesService.get(timeId);
+			@SuppressWarnings("unchecked")
 			List roleList = restrictedTimesResourcesService.findRoleListByTime(timeId);
 
 			model.addAttribute("restrictedtimes", rt);
@@ -185,18 +182,19 @@ public class AnnotationTimeResourceController {
 
 		return "jsonView";
 	}
-
+	
 	/**
 	 * add Time-Resources mapping data
 	 * @param timeId Time Id
 	 * @param resourceIds array of resource Ids
+     * @param searchKeyword searchKeyword
 	 * @param status SessionStatus object to block double submit
 	 * @return return "/restriction/timeresource/listResourceData.do" page
 	 * @throws Exception fail to add data
 	 */
 	@RequestMapping("/restriction/timeresource/add.do")
 	public String addTimeResources(@RequestParam("timeId") String timeId,
-			@RequestParam("resourceId") String[] resourceIds, SessionStatus status) throws Exception {
+			@RequestParam("resourceId") String[] resourceIds, @RequestParam("searchKeyword") String searchKeyword, SessionStatus status) throws Exception {
 
 		ArrayList<RestrictedTimesResources> list = new ArrayList<RestrictedTimesResources>();
 		for (int i = 0; i < resourceIds.length; i++) {

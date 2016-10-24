@@ -1,4 +1,4 @@
-
+﻿
 IAM ADMIN web 프로젝트 내에 사용된 외부 오픈 소스의 경우 원 오픈 소스의 라이센스 정책을 따른다. 아래는 각 외부 오픈 소스의 정보(라이센스, 소스 코드 및 라이브러리 다운로드 등)를 얻을 수 있는 사이트 URL이므로 참고하도록 한다.
 
 1) emma-2.0.5312 : http://repository.jboss.com/maven2/emma/emma/2.0.5312/, Common Public License - v 1.0
@@ -8,7 +8,7 @@ IAM ADMIN web 프로젝트 내에 사용된 외부 오픈 소스의 경우 원 �
 5) AOP Alliance 1.0 : http://aopalliance.sourceforge.net, Public Domain License
 6) AspectJ 1.6.4 : http://www.eclipse.org/aspectj, Mozilla Public License 1.1
 7) aspectjweaver-1.6.5 : http://www.jarvana.com/jarvana/browse/org/aspectj/aspectjweaver/1.6.5/, Eclipse Public License - v 1.0
-8) OJDBC 14 : http://www.okjsp.pe.kr/bbs?act=DOWN&maskname=1082435201436&fileName=ojdbc14.jar, OTN License
+
 9) HSQLDB 1.8.0.10 : http://www.hsqldb.org/, Hsqldb License
 10) SLF4J 1.5.3 : http://www.slf4j.org/, SLF4J Licence
 11) commons-codec 1.3 : http://mirrors.ibiblio.org/pub/mirrors/maven2/commons-codec/commons-codec/1.3/, Apache License Version 2.0
@@ -18,34 +18,35 @@ IAM ADMIN web 프로젝트 내에 사용된 외부 오픈 소스의 경우 원 �
 15) commons-beanutils-1.8.0 : http://repository.jboss.com/maven2/commons-beanutils/commons-beanutils/1.8.0/, Apache License 2.0
 16) commons-logging-1.1.1.jar : http://repository.jboss.org/maven2/commons-logging/commons-logging/1.1.1/, Apache License 2.0
 17) Infrared 2.4.1 : http://infrared.sourceforge.net/versions/latest, Apache License 2.0
-18) cglib 2.2 : http://cglib.sourceforge.net, Apache License 2.0
-19) Joda Time 1.1 : http://joda-time.sourceforge.net/, Apache License 2.0
-20) Log4j 1.2.15 : http://logging.apache.org/log4j, Apache License 2.0
-21) EasyMock 2.2.2 : http://www.easymock.org, MIT License
-22) Xerces Java Parser 2.6.2 : http://xerces.apache.org/xerces-j/, Apache License 1.1
-23) commons-pool-1.5.3 : http://www.jarvana.com/jarvana/browse/commons-pool/commons-pool/1.5.3/, Apache License 2.0
-24) commons-collections-3.2.1 : http://repo.exist.com/maven2/commons-collections/commons-collections/3.2.1/, Apache License 2.0
-25) Spring Security core 2.0.4 : http://www.jarvana.com/jarvana/browse/org/springframework/security/spring-security-core/2.0.4/, Apache License 2.0
-26) log4jdbc3 1.2alpha2 : http://log4jdbc.sourceforge.net, Apache License 2.0
-27) Velocity 1.6.2 : http://velocity.apache.org/, http://repo1.maven.org/maven/velocity/, Apache License 2.0
-28) Hibernate 3.3.1.GA : http://www.hibernate.org/, LGPL
-29) Antlr 2.7.6 : http://www.antlr2.org/, ANTLR 3 License
-30) dom4j 1.6.1 : http://www.dom4j.org, BSD Style License
-31) JavaAssist : http://www.csg.is.titech.ac.jp/~chiba/javassist/, MPL and the LGPL. 
-32) JPA 1.0 : http://www.jarvana.com/jarvana/browse?path=/org/domdrides/domdrides-jpa/1.0/&by=numJava&order=des, Apache License Version 2.0
-33) Java Transaction API (JTA) 1.1 : http://java.sun.com/javaee/technologies/jta/index.jsp, JTA 1.0.1
-34) ehcache 1.6.2 : http://ehcache.sourceforge.net, Apache License 2.0
-35) Jasper Reports 3.1.0 : http://jasperforge.org/website/jasperreportswebsite/trunk/index.html?group_id=252, LGPL
-36) Spring Json 1.2 : http://www.jarvana.com/jarvana/browse?path=/net/sf/spring-json/spring-json/1.2/, Apache License 2.0
-37) SOJO 1.0.0 : http://svn.freemedsoftware.org/remitt/trunk/war/WEB-INF/lib/ , Apache License 2.0
-38) Json lib 2.2.3 jdk 15: http://sourceforge.net/projects/json-lib/files/json-lib/json-lib-2.2.3/,  Apache License 2.0
-39) Ezmorph 1.0.6 : http://repository.jboss.com/maven2/net/sf/ezmorph/ezmorph/1.0.6/, Apache License 2.0
-40) Jettison (A JSON StAX Implementation) 1.0 : http://jettison.codehaus.org/, Apache License 2.0
-41) stax api 1.0.1 : http://mirrors.ibiblio.org/pub/mirrors/maven2/stax/stax-api/1.0.1/, Apache License 2.0
-42) spring modules validation 0.9 : http://www.chibi.ubc.ca/maven2/spring/spring-modules-validation/0.9/,  Apache Software License
-43) commons validator 1.3.1 : http://www.ibiblio.org/maven/commons-validator/jars/, Apache License 2.0
-44) commons digester 1.8 : http://www.ibiblio.org/maven/commons-digester/jars/, Apache License 2.0
-45) oro 2.0.8 : http://mirrors.ibiblio.org/pub/mirrors/maven2/oro/oro/2.0.8/, Apache License 2.0
-46) JSTL 1.1.2 : http://mirrors.ibiblio.org/pub/mirrors/maven2/jstl/jstl/1.1.2/, Apache License 2.0
-47) standard 1.1.2 : http://mirrors.ibiblio.org/pub/mirrors/maven2/taglibs/standard/1.1.2/, Apache License
-48) Jquery : http://jquery.com/, MIT, BSD, and GPL Licenses.
+18) Joda Time 1.1 : http://joda-time.sourceforge.net/, Apache License 2.0
+19) Log4j 1.2.15 : http://logging.apache.org/log4j, Apache License 2.0
+20) EasyMock 2.2.2 : http://www.easymock.org, MIT License
+21) Xerces Java Parser 2.6.2 : http://xerces.apache.org/xerces-j/, Apache License 1.1
+22) commons-pool-1.5.3 : http://www.jarvana.com/jarvana/browse/commons-pool/commons-pool/1.5.3/, Apache License 2.0
+23) commons-collections-3.2.1 : http://repo.exist.com/maven2/commons-collections/commons-collections/3.2.1/, Apache License 2.0
+24) Spring Security core 2.0.4 : http://www.jarvana.com/jarvana/browse/org/springframework/security/spring-security-core/2.0.4/, Apache License 2.0
+25) log4jdbc3 1.2alpha2 : http://log4jdbc.sourceforge.net, Apache License 2.0
+26) Velocity 1.6.2 : http://velocity.apache.org/, http://repo1.maven.org/maven/velocity/, Apache License 2.0
+27) Hibernate 3.3.1.GA : http://www.hibernate.org/, LGPL
+28) Antlr 2.7.6 : http://www.antlr2.org/, ANTLR 3 License
+29) dom4j 1.6.1 : http://www.dom4j.org, BSD Style License
+30) JavaAssist : http://www.csg.is.titech.ac.jp/~chiba/javassist/, MPL and the LGPL. 
+31) JPA 1.0 : http://www.jarvana.com/jarvana/browse?path=/org/domdrides/domdrides-jpa/1.0/&by=numJava&order=des, Apache License Version 2.0
+32) Java Transaction API (JTA) 1.1 : http://java.sun.com/javaee/technologies/jta/index.jsp, JTA 1.0.1
+33) ehcache 1.6.2 : http://ehcache.sourceforge.net, Apache License 2.0
+34) Jasper Reports 3.1.0 : http://jasperforge.org/website/jasperreportswebsite/trunk/index.html?group_id=252, LGPL
+35) Spring Json 1.2 : http://www.jarvana.com/jarvana/browse?path=/net/sf/spring-json/spring-json/1.2/, Apache License 2.0
+36) SOJO 1.0.0 : http://svn.freemedsoftware.org/remitt/trunk/war/WEB-INF/lib/ , Apache License 2.0
+37) Json lib 2.2.3 jdk 15: http://sourceforge.net/projects/json-lib/files/json-lib/json-lib-2.2.3/,  Apache License 2.0
+38) Ezmorph 1.0.6 : http://repository.jboss.com/maven2/net/sf/ezmorph/ezmorph/1.0.6/, Apache License 2.0
+39) Jettison (A JSON StAX Implementation) 1.0 : http://jettison.codehaus.org/, Apache License 2.0
+40) stax api 1.0.1 : http://mirrors.ibiblio.org/pub/mirrors/maven2/stax/stax-api/1.0.1/, Apache License 2.0
+41) spring modules validation 0.9 : http://www.chibi.ubc.ca/maven2/spring/spring-modules-validation/0.9/,  Apache Software License
+42) commons validator 1.3.1 : http://www.ibiblio.org/maven/commons-validator/jars/, Apache License 2.0
+43) commons digester 1.8 : http://www.ibiblio.org/maven/commons-digester/jars/, Apache License 2.0
+44) oro 2.0.8 : http://mirrors.ibiblio.org/pub/mirrors/maven2/oro/oro/2.0.8/, Apache License 2.0
+45) JSTL 1.1.2 : http://mirrors.ibiblio.org/pub/mirrors/maven2/jstl/jstl/1.1.2/, Apache License 2.0
+46) standard 1.1.2 : http://mirrors.ibiblio.org/pub/mirrors/maven2/taglibs/standard/1.1.2/, Apache License
+47) Jquery : http://jquery.com/, MIT and BSD Licenses.
+48) JQgrid : http://www.trirand.com/blog/, MIT and BSD Licenses.
+49) JSTree : http://www.jstree.com/, MIT and Bsd Licenses.
