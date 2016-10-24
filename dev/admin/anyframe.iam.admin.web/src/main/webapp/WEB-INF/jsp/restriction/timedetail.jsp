@@ -178,6 +178,22 @@ body {
                     </form:select>
                       <form:errors path="timeType" />                  </td>
                 </tr>
+                
+                <tr>
+                  <td height="1" colspan="3" bgcolor="#D6D6D6"></td>
+                </tr>
+                <tr>
+					<td class="tdHead">System Name</td>
+					<td bgcolor="#B6CDE4" width="1"></td>
+					<td class="tdin">
+						<select name="systemName" disabled="disabled" class="ct_input_g">
+							<c:forEach var="item" items="${systemNames }">
+								<option value="${item }">${item }</option>
+							</c:forEach>
+						</select>
+					</td>
+                </tr>
+                
                 <tr>
                   <td height="1" colspan="3" bgcolor="#D6D6D6"></td>
                 </tr>

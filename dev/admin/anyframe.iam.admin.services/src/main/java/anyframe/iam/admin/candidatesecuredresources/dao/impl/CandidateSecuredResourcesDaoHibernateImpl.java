@@ -31,12 +31,18 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		super(CandidateSecuredResources.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getPackagesList(String keyword) throws Exception {
+		return getPackagesList(keyword, "");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String getPackagesList(String keyword, String systemName) throws Exception{
+		systemName = StringUtil.null2str(systemName);
 		keyword = StringUtil.null2str(keyword);
 		keyword = keyword.toLowerCase();
-		Object[] args = new Object[1];
+		Object[] args = new Object[2];
 		args[0] = "keyword=" + keyword + "%";
+		args[1] = "systemName=" + systemName;
 		List list = this.getDynamicHibernateService().findList("findPackagesNameList", args);
 
 		StringBuffer resourceNameList = new StringBuffer();
@@ -46,17 +52,23 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		return resourceNameList.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getClassesList(String keyword, String packages) throws Exception {
+		return getClassesList(keyword, packages, "");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String getClassesList(String keyword, String packages, String systemName) throws Exception {
+		systemName = StringUtil.null2str(systemName);
 		keyword = StringUtil.null2str(keyword);
 		keyword = keyword.toLowerCase();
 		packages = StringUtil.null2str(packages);
 		packages = packages.toLowerCase();
-		Object[] args = new Object[2];
+		Object[] args = new Object[3];
 		args[0] = "keyword=" + keyword + "%";
 		args[1] = "packages=" + packages;
+		args[2] = "systemName=" + systemName;
 		List list = this.getDynamicHibernateService().findList("findClassesNameList", args);
-
+		
 		StringBuffer resourceNameList = new StringBuffer();
 		for (int i = 0; i < list.size(); i++) {
 			resourceNameList.append(((Map) list.get(i)).get("classes") + "\n");
@@ -64,20 +76,26 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		return resourceNameList.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getMethodList(String keyword, String packages, String classes) throws Exception {
+		return getMethodList(keyword, packages, classes, "");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String getMethodList(String keyword, String packages, String classes, String systemName) throws Exception {
+		systemName = StringUtil.null2str(systemName);
 		keyword = StringUtil.null2str(keyword);
 		keyword = keyword.toLowerCase();
 		packages = StringUtil.null2str(packages);
 		packages = packages.toLowerCase();
 		classes = StringUtil.null2str(classes);
 		classes = classes.toLowerCase();
-		Object[] args = new Object[3];
+		Object[] args = new Object[4];
 		args[0] = "keyword=" + keyword + "%";
 		args[1] = "packages=" + packages;
 		args[2] = "classes=" + classes;
+		args[3] = "systemName=" + systemName;
 		List list = this.getDynamicHibernateService().findList("findMethodNameList", args);
-
+		
 		StringBuffer resourceNameList = new StringBuffer();
 		for (int i = 0; i < list.size(); i++) {
 			resourceNameList.append(((Map) list.get(i)).get("method") + "\n");
@@ -85,14 +103,20 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		return resourceNameList.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getRequestMappingList(String keyword) throws Exception {
+		return getRequestMappingList(keyword, "");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String getRequestMappingList(String keyword, String systemName) throws Exception {
+		systemName = StringUtil.null2str(systemName);
 		keyword = StringUtil.null2str(keyword);
 		keyword = keyword.toLowerCase();
-		Object[] args = new Object[1];
+		Object[] args = new Object[2];
 		args[0] = "keyword=" + keyword + "%";
+		args[1] = "systemName=" + systemName;
 		List list = this.getDynamicHibernateService().findList("findRequestMappingNameList", args);
-
+		
 		StringBuffer resourceNameList = new StringBuffer();
 		for (int i = 0; i < list.size(); i++) {
 			resourceNameList.append(((Map) list.get(i)).get("requestMapping") + "\n");
@@ -100,19 +124,25 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		return resourceNameList.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getParameterList(String keyword, String requestMapping) throws Exception {
+		return getParameterList(keyword, requestMapping, "");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String getParameterList(String keyword, String requestMapping, String systemName) throws Exception {
+		systemName = StringUtil.null2str(systemName);
 		keyword = StringUtil.null2str(keyword);
 		keyword = keyword.toLowerCase();
 		requestMapping = StringUtil.null2str(requestMapping);
 		requestMapping = requestMapping.toLowerCase();
-
+		
 		String beanid = findMethodParam();
 		if (!"".equals(beanid) || null != beanid) {
-
-			Object[] args = new Object[2];
+			
+			Object[] args = new Object[3];
 			args[0] = "keyword=" + keyword + "%";
 			args[1] = "requestMapping=" + requestMapping;
+			args[2] = "systemName=" + systemName;
 			List list = this.getDynamicHibernateService().findList("findParameterNameList", args);
 			StringBuffer resourceNameList = new StringBuffer();
 			for (int i = 0; i < list.size(); i++) {
@@ -123,17 +153,23 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		else {
 			return "";
 		}
-
+		
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getPointCutList(String keyword) throws Exception {
+		return getPointCutList(keyword, "");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String getPointCutList(String keyword, String systemName) throws Exception {
+		systemName = StringUtil.null2str(systemName);
 		keyword = StringUtil.null2str(keyword);
 		keyword = keyword.toLowerCase();
-		Object[] args = new Object[1];
+		Object[] args = new Object[2];
 		args[0] = "keyword=" + keyword + "%";
+		args[1] = "systemName=" + systemName;
 		List list = this.getDynamicHibernateService().findList("findPointCutNameList", args);
-
+		
 		StringBuffer resourceNameList = new StringBuffer();
 		for (int i = 0; i < list.size(); i++) {
 			resourceNameList.append(((Map) list.get(i)).get("pointCut") + "\n");
@@ -141,13 +177,18 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		return resourceNameList.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public String findMethodParam() throws Exception {
-
+		return findMethodParam("");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String findMethodParam(String systemName) throws Exception {
+		
 		Object[] tempObj = new Object[1];
+		tempObj[0] = "systemName=" + systemName;
 		Long countParam = (Long) this.getDynamicHibernateService().find("countMethodParam", tempObj);
 		String param;
-
+		
 		if (countParam > 0) {
 			Map countParamResolver = (Map) this.getDynamicHibernateService().find("findMethodParam", tempObj);
 			param = (String) countParamResolver.get("beanid");

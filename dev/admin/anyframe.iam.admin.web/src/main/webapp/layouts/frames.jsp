@@ -7,7 +7,7 @@
 </head>
 
 <frameset rows="79,*" cols="*" frameborder="NO" border="0" framespacing="0">
-  <frame src="<c:url value='/layouts/top.jsp'/>" name="topFrame" scrolling="NO" noresize >
+  <frame src="<c:url value='/common/goToplayer.do'/>" name="topFrame" scrolling="NO" noresize >
   <frameset rows="*" cols="164,*" framespacing="0" frameborder="NO" border="0">
     <frame src="<c:url value='/layouts/left.jsp'/>" name="leftFrame" scrolling="NO" noresize>
     <frame src="<c:url value='/layouts/welcome.jsp'/>" name="rightFrame"  scrolling="auto">

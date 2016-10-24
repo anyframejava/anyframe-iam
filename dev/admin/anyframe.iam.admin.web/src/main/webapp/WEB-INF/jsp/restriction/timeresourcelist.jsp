@@ -19,7 +19,17 @@ jQuery(document).ready( function() {
 		url: "<c:url value='/restriction/timeresource/listData.do?' />",
 		mtype:'GET',
 		datatype : "json",
-		colNames : [ '<anyframe:message code="restrictedtimes.ui.grid.compkey" />','<anyframe:message code="restrictedtimes.ui.grid.timeid" />','<anyframe:message code="restrictedtimes.ui.grid.resourceid" />','<anyframe:message code="restrictedtimes.ui.grid.timetype" />', '<anyframe:message code="restrictedtimes.ui.grid.startdate" />', '<anyframe:message code="restrictedtimes.ui.grid.starttime" />', '<anyframe:message code="restrictedtimes.ui.grid.enddate" />', '<anyframe:message code="restrictedtimes.ui.grid.endtime" />', '<anyframe:message code="restrictedtimes.ui.grid.description" />' ],
+		colNames : [ 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.compkey" />',
+		    		'<anyframe:message code="restrictedtimes.ui.grid.timeid" />',
+		    		'<anyframe:message code="restrictedtimes.ui.grid.resourceid" />',
+		    		'<anyframe:message code="restrictedtimes.ui.grid.timetype" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.startdate" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.starttime" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.enddate" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.endtime" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.description" />' 
+		    		],
 		jsonReader: {
 	        repeatitems: false
 	    },
@@ -119,9 +129,12 @@ jQuery(document).ready( function() {
 					jQuery("#grid").delRowData(rowData.compKey);
 				}
 				jQuery.ajaxSettings.traditional = true;
-				jQuery("#grid").setPostData({timeIds:timeIdArray, resourceIds:resourceIdArray});
-				jQuery("#grid").setGridParam({url:"<c:url value='/restriction/timeresource/delete.do?' />"}).trigger("reloadGrid");
-				jQuery("#grid").setGridParam({url:"<c:url value='/restriction/timeresource/listData.do?' />"});
+				//jQuery("#grid").setPostData({timeIds:timeIdArray, resourceIds:resourceIdArray});
+				//jQuery("#grid").setGridParam({url:"<c:url value='/restriction/timeresource/delete.do?' />"}).trigger("reloadGrid");
+				//jQuery("#grid").setGridParam({url:"<c:url value='/restriction/timeresource/listData.do?' />"});
+				$.post("<c:url value='/restriction/timeresource/delete.do?' />", {timeIds:timeIdArray, resourceIds:resourceIdArray}, function(data){
+			    	jQuery("#grid").trigger("reloadGrid");
+			    });
 			}
 		}
 	});
@@ -181,7 +194,7 @@ body {
 				<option value="<anyframe:message code="restrictedtimes.ui.selectbox.timetype.weekend" />"><anyframe:message code="restrictedtimes.ui.selectbox.timetype.weekend" /></option>
 				<option value="<anyframe:message code="restrictedtimes.ui.selectbox.timetype.holiday" />"><anyframe:message code="restrictedtimes.ui.selectbox.timetype.holiday" /></option>
 			</select> 
-		</td>
+	</td>
     <td width="94" class="tdpadding">
 			<a href="#" name="searchItems" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
 		</td>

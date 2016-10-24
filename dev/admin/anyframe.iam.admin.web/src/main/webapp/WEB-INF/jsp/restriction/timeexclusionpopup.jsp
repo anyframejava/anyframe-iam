@@ -19,7 +19,17 @@ jQuery(document).ready( function() {
 			url: "<c:url value='/restriction/timeresource/listData.do?' />",
 			mtype:'GET',
 			datatype : "json",
-			colNames : [ '<anyframe:message code="restrictedtimes.ui.grid.compkey" />','<anyframe:message code="restrictedtimes.ui.grid.timeid" />','<anyframe:message code="restrictedtimes.ui.grid.resourceid" />','<anyframe:message code="restrictedtimes.ui.grid.timetype" />', '<anyframe:message code="restrictedtimes.ui.grid.startdate" />', '<anyframe:message code="restrictedtimes.ui.grid.starttime" />', '<anyframe:message code="restrictedtimes.ui.grid.enddate" />', '<anyframe:message code="restrictedtimes.ui.grid.endtime" />', '<anyframe:message code="restrictedtimes.ui.grid.description" />' ],
+			colNames : [ 
+						'<anyframe:message code="restrictedtimes.ui.grid.compkey" />',
+						'<anyframe:message code="restrictedtimes.ui.grid.timeid" />',
+						'<anyframe:message code="restrictedtimes.ui.grid.resourceid" />',
+						'<anyframe:message code="restrictedtimes.ui.grid.timetype" />', 
+						'<anyframe:message code="restrictedtimes.ui.grid.startdate" />', 
+						'<anyframe:message code="restrictedtimes.ui.grid.starttime" />', 
+						'<anyframe:message code="restrictedtimes.ui.grid.enddate" />', 
+						'<anyframe:message code="restrictedtimes.ui.grid.endtime" />', 
+						'<anyframe:message code="restrictedtimes.ui.grid.description" />' 
+						],
 			jsonReader: {
 		        repeatitems: false
 		    },
@@ -71,7 +81,7 @@ jQuery(document).ready( function() {
 				sorttype : 'text',
 				width : 40
 			} ],
-			width : 710,
+			width : 777,
 			height : 250,
 			forceFit:true,
 			pager : jQuery('#pager'),

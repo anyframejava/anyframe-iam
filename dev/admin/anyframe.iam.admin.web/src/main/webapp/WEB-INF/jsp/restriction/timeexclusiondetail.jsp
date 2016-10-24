@@ -274,6 +274,18 @@ body {
 					</tr>
 					<tr><td height="1" colspan="8" bgcolor="#D6D6D6"></td></tr>
 					<tr>
+					  	<td class="tdHead">System Name</td>
+						<td bgcolor="#D6D6D6" width="2"></td>
+						<td colspan="6" class="tdin">
+						<select name="systemName" disabled="disabled" class="ct_input_g">
+							<c:forEach var="item" items="${systemNames }">
+								<option value="${item }">${item }</option>
+							</c:forEach>
+						</select>
+				    	</td>
+					</tr>
+					<tr><td height="1" colspan="8" bgcolor="#D6D6D6"></td></tr>
+					<tr>
 					  	<td class="tdHead">
 						<anyframe:message code="restrictedtimes.ui.label.startdate" /></td>
 						<td bgcolor="#D6D6D6" width="2"></td>
@@ -324,11 +336,11 @@ body {
 						<td colspan="6" >
 						    <table width="668" border="0" cellpadding="0" cellspacing="0" class="tablemargin">
 						      <tr height="25">
-						        <td width="26" background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen"><a class="openBtn" title="Open Branch" a href="javascript:$.tree.focused().open_all();">Open</a></div></td>
-						        <td width="26" background="<c:url value='/images/bg_treer3.gif'/>"><div id="menuclose"><a class="closeBtn" title="Close Branch" a href="javascript:$.tree.focused().close_all();">Close</a></div></td>
-						        <td width="100" align="left" background="<c:url value='/images/bg_treer.gif'/>" >
+						        <td width="18" background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen"><a class="openBtn" title="Open Branch" a href="javascript:$.tree.focused().open_all();">Open</a></div></td>
+						        <td width="18" background="<c:url value='/images/bg_treer3.gif'/>"><div id="menuclose"><a class="closeBtn" title="Close Branch" a href="javascript:$.tree.focused().close_all();">Close</a></div></td>
+						        <td width="180" align="left" background="<c:url value='/images/bg_treem.gif'/>" >
 									<div id="inputArea">
-										<input id="roleName" size="20" class='ct_input_g'>
+										<input id="roleName" size="28" class='ct_input_g'>
 										<input id="searchClickYn" type="hidden" value="N">
 										<script type="text/javascript">
 											$("#roleName").autocomplete(
@@ -343,8 +355,10 @@ body {
 										</script>
 									</div>
 								</td>
-								<td width="130" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
-						        <td width="386" align="right" >
+								<td width="40" height="25" style="padding-right:8px" align="left" background="<c:url value='/images/bg_treerrr3.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
+						        <td width="260" align="right" >
+								</td>
+								<td width="123" align="right" >
 									<table height="22" border="0" cellpadding="0" cellspacing="0">
 								          <tr>
 								            <td width="18"><img src="<c:url value='/images/btn/btn_delete.gif'/>" width="18" height="22"></td>
@@ -357,19 +371,23 @@ body {
 						      
 						      <tr>
 						        <td colspan="4" align="left" valign="top">
-						        	<div id="role" class="demo" style="overflow:auto;height:137px;width:282px;border:1px solid #c3daf9;">
+						        	<div id="role" class="demo" style="overflow:auto;height:137px;width:286px;border:1px solid #c3daf9;">
 						        		<span><anyframe:message code='user.ui.tree.span'/></span>
 						        		<input id="roleName" size="20" class='ct_input_g'>
 										<input id="searchClickYn" type="hidden" value="N">
 						        	</div>
 						        </td>
-						        <td valign="top" class="tdin"><div id="roles" class="demo" style="overflow:auto; height:142px;width:370px;">
-						          <select id="roleId" name="roleId" multiple="multiple" class="selbox" style="overflow:auto; height:142px;width:370px;border:1px solid #c3daf9;">
-						            <c:forEach var="role" items="${roles}">
-						              <option value="${role.roleId}">${role.roleName}</option>
-						            </c:forEach>
-						          </select>
-						        </span></div></td>
+						        <td colspan="2" valign="top" class="tdin">
+						        	<div id="roles" class="demo" style="overflow:auto; height:138px;width:370px;">
+						        		<span class="demo" style="overflow:auto; height:138px;width:386px;">
+						          			<select id="roleId" name="roleId" multiple="multiple" class="selbox" style="overflow:auto; height:138px;width:370px;border:1px solid #c3daf9;">
+						            			<c:forEach var="role" items="${roles}">
+						              				<option value="${role.roleId}">${role.roleName}</option>
+						            			</c:forEach>
+						          			</select>
+						        		</span>
+						        	</div>
+						        </td>
 						      </tr>
 					      </table>
 						</td>

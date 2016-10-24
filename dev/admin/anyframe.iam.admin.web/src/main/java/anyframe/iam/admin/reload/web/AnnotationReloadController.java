@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
@@ -31,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+import anyframe.common.Page;
+import anyframe.core.properties.IPropertiesService;
 import anyframe.iam.core.reload.IResourceReloadService;
 
 /**
@@ -40,6 +43,9 @@ import anyframe.iam.core.reload.IResourceReloadService;
  */
 @Controller
 public class AnnotationReloadController {
+	
+	@Resource(name = "propertiesService")
+	IPropertiesService propertiesService;
 
 	/**
 	 * make bean list that matches the given bean ID when application reload
@@ -52,9 +58,12 @@ public class AnnotationReloadController {
 	 * @throws Exception fail to reload
 	 */
 	@RequestMapping("/admin/reload/resourceReload.do")
-	public String resourceReload(HttpServletRequest request, @RequestParam(value = "beanid") String beanid,
+	public String resourceReload(
+			HttpServletRequest request, 
+			@RequestParam(value = "beanid") String beanid,
 			@RequestParam(value = "reloadmaps", required = false) String reloadmaps,
-			@RequestParam(value = "reloadtimes", required = false) String reloadtimes, Model model) throws Exception {
+			@RequestParam(value = "reloadtimes", required = false) String reloadtimes, 
+			Model model) throws Exception {
 		boolean result = false;
 
 		WebApplicationContext context = RequestContextUtils.getWebApplicationContext(request);
@@ -64,6 +73,68 @@ public class AnnotationReloadController {
 
 		model.addAttribute("result", result);
 
+		return "jsonView";
+	}
+	
+	/**
+	 * make bean list that matches the given bean id when application reload
+	 * @param request HttpServletRequest 
+	 * @param beanid list of bean id
+	 * @param reloadmaps value of reloadmaps check box
+	 * @param model Model object
+	 * @return jsonView
+	 * @throws Exception fail to reload
+	 */
+	@RequestMapping("/admin/reload/reloadMaps.do")
+	public String reloadMaps(
+			HttpServletRequest request,
+			@RequestParam(value = "beanid") String[] beanid,
+			@RequestParam(value = "reloadmaps") String reloadmaps,
+			Model model) throws Exception{
+		boolean result = false;
+
+		WebApplicationContext context = RequestContextUtils.getWebApplicationContext(request);
+		IResourceReloadService resourceReloadServiceClient = null;
+		
+		for(int i = 0 ; i < beanid.length ; i++){
+			resourceReloadServiceClient = (IResourceReloadService) context.getBean(beanid[i]);
+			result = resourceReloadServiceClient.resourceReload(reloadmaps, "");
+			if(!result)
+				break;
+		}
+		
+		model.addAttribute("result", result);
+		return "jsonView";
+	}
+	
+	/**
+	 * make bean list that matches the given bean id when application reload
+	 * @param request HttpServletRequest
+	 * @param beanid list of bean id
+	 * @param reloadtimes value of reloadtimes check box
+	 * @param model Model object
+	 * @return jsonView
+	 * @throws Exception fail to reload
+	 */
+	@RequestMapping("/admin/reload/reloadTimes.do")
+	public String reloadTimes(
+			HttpServletRequest request,
+			@RequestParam(value = "beanid") String[] beanid,
+			@RequestParam(value = "reloadtimes") String reloadtimes,
+			Model model) throws Exception{
+		boolean result = false;
+
+		WebApplicationContext context = RequestContextUtils.getWebApplicationContext(request);
+		IResourceReloadService resourceReloadServiceClient = null;
+		
+		for(int i = 0 ; i < beanid.length ; i++){
+			resourceReloadServiceClient = (IResourceReloadService) context.getBean(beanid[i]);
+			result = resourceReloadServiceClient.resourceReload("", reloadtimes);
+			if(result)
+				break;
+		}
+		
+		model.addAttribute("result", result);
 		return "jsonView";
 	}
 
@@ -104,5 +175,52 @@ public class AnnotationReloadController {
 		}
 
 		return "/reload/reloadlist";
+	}
+	
+	/**
+	 * make json data that includes system name, bean id and serverURL information.
+	 * @param request HttpServletRequest
+	 * @param model Model object
+	 * @return jsonView
+	 * @throws Exception fail to make json data
+	 */
+	@RequestMapping("/admin/reload/listData.do")
+	public String listData(HttpServletRequest request, Model model) throws Exception{
+		WebApplicationContext context = RequestContextUtils.getWebApplicationContext(request);
+		int j = 0;
+		String[] systemName = propertiesService.getStringArray("SYSTEM_NAMES");
+		
+		String[] webBeanNames = context.getBeanDefinitionNames();
+		List<Map<String, String>> beanList = new ArrayList<Map<String, String>>();
+		Map<String, String> beanMap = new HashMap<String, String>();
+		
+		for (int i = 0; i < webBeanNames.length; i++) {
+			Object bean = context.getBean(webBeanNames[i]);
+
+			if (bean instanceof IResourceReloadService) {
+				beanMap = new HashMap<String, String>();
+
+				HttpInvokerProxyFactoryBean proxyBean = (HttpInvokerProxyFactoryBean) context.getBean("&"
+						+ webBeanNames[i]);
+
+				beanMap.put("systemName", systemName[j++]);
+				beanMap.put("beanId", webBeanNames[i]);
+				beanMap.put("serverUrl", proxyBean.getServiceUrl());
+
+				beanList.add(beanMap);
+			}
+		}
+		
+		Page resultPage = null;
+		if(beanList != null){
+			resultPage = new Page(beanList, 1, beanList.size(), 1, 10);
+		}
+		
+		model.addAttribute("page", resultPage.getCurrentPage() + "");
+		model.addAttribute("total", resultPage.getMaxPage() + "");
+		model.addAttribute("records", resultPage.getTotalCount());
+		model.addAttribute("rows", resultPage.getList());
+		
+		return "jsonView";
 	}
 }

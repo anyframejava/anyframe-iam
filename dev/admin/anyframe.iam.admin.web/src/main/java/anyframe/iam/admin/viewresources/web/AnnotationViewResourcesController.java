@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -88,8 +89,10 @@ public class AnnotationViewResourcesController {
 	 */
 	@JsonError
 	@RequestMapping("/viewresources/listData.do")
-	public String listData(ViewResourceSearchVO searchVO, Model model)
+	public String listData(ViewResourceSearchVO searchVO, Model model, HttpSession session)
 			throws Exception {
+		String systemName = (String) session.getAttribute("systemName");
+		searchVO.setSystemName(systemName);
 		Page resultPage = viewResourcesService.getList(searchVO);
 		model.addAttribute("page", resultPage.getCurrentPage() + "");
 		model.addAttribute("total", resultPage.getMaxPage() + "");
@@ -112,8 +115,15 @@ public class AnnotationViewResourcesController {
 	 */
 	@RequestMapping("/viewresources/get.do")
 	public String get(
+			HttpSession session,
 			@RequestParam(value = "viewResourceId", required = false) String viewResourceId,
 			Model model) throws Exception {
+		
+		String[] systemName = new String[1];
+		systemName[0] = (String) session.getAttribute("systemName");
+		
+		model.addAttribute("systemNames", systemName);
+		
 		if (!StringUtils.isBlank(viewResourceId)) {
 			ViewResource gettedVR = viewResourcesService.get(viewResourceId);
 
@@ -165,9 +175,15 @@ public class AnnotationViewResourcesController {
 	@RequestMapping("/viewresources/addView.do")
 	public String addView(
 			@ModelAttribute("searchVO") ViewResourceSearchVO searchVO,
-			Model model) throws Exception {
+			Model model, HttpSession session) throws Exception {
 
-		model.addAttribute("viewResources", new ViewResource());
+		String[] systemName = new String[1];
+		systemName[0] = (String) session.getAttribute("systemName");
+		
+		ViewResource viewResource = new ViewResource();
+		
+		model.addAttribute("systemNames", systemName);
+		model.addAttribute("viewResources", viewResource);
 		return "/viewresources/viewresourcedetail";
 	}
 
@@ -205,8 +221,11 @@ public class AnnotationViewResourcesController {
 	 *             fail to add data
 	 */
 	@RequestMapping("/viewresources/add.do")
-	public String add(ViewResource viewResource, ViewHierarchyId viewHierarchyId) throws Exception {
+	public String add(ViewResource viewResource, ViewHierarchyId viewHierarchyId, HttpSession session) throws Exception {
 
+		String systemName = (String) session.getAttribute("systemName");
+		viewResource.setSystemName(systemName);
+		
 		ViewHierarchy viewHierarchy = new ViewHierarchy();
 		viewHierarchy.setId(viewHierarchyId);
 		
@@ -235,7 +254,7 @@ public class AnnotationViewResourcesController {
 	 *             fail to update data
 	 */
 	@RequestMapping("/viewresources/update.do")
-	public String update(ViewResource vr) throws Exception {
+	public String update(ViewResource vr, HttpSession session) throws Exception {
 
 		if("".equals(vr.getDescription()))
 			vr.setDescription(viewResourcesService.get(vr.getViewResourceId()).getDescription());
@@ -252,7 +271,7 @@ public class AnnotationViewResourcesController {
 		if("".equals(vr.getViewInfo()))
 			vr.setViewInfo(viewResourcesService.get(vr.getViewResourceId()).getViewInfo());
 		
-		
+		vr.setSystemName((String) session.getAttribute("systemName"));
 		
 		
 		
@@ -306,27 +325,49 @@ public class AnnotationViewResourcesController {
 		return "/viewresources/checkid";
 	}
 
+	/**
+	 * move to view list view
+	 * @param request HttpServletRequest
+	 * @param response HttpSErvletResponse
+	 * @return move to "/viewresources/viewlist.jsp"
+	 * @throws Exception fail to move
+	 */
 	@RequestMapping("/viewresources/viewlist.do")
 	public String list(HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		return "/viewresources/viewlist";
 	}
 
+	/**
+	 * make tree data of view list
+	 * @param session HttpSession
+	 * @param id viewResourceId, if id is '0', it represents root node
+	 * @param viewName view Name
+	 * @param searchClick value of check box named searchClick
+	 * @param model Model object
+	 * @return jsonView
+	 * @throws Exception fail to make data
+	 */
 	@RequestMapping("/viewresources/listTreeData.do")
 	@SuppressWarnings("unchecked")
-	public String listViewData(@RequestParam("id") String id, 
+	public String listViewData(
+			HttpSession session,
+			@RequestParam("id") String id, 
 			@RequestParam(value = "viewName", required = false) String viewName,
-			@RequestParam(value = "searchClickYn") String searchClick, Model model)	throws Exception {
+			@RequestParam(value = "searchClickYn") String searchClick, 
+			Model model) throws Exception {
+		
 		List<IamTree> list = null;
 		ArrayList<JSTreeNode> listNode = new ArrayList<JSTreeNode>();
 		JSTreeNode node = null;
 		Attributes attribute = null;
 		Data data = null;
+		String systemName = (String) session.getAttribute("systemName");
 		
 		if("N".equals(searchClick)){
 			
 			if (id.equals("0")) {
-				listNode = makeRootNode();
+				listNode = makeRootNode(systemName);
 			}
 			else {
 				list = viewResourcesService.getViewTree(id);
@@ -357,7 +398,7 @@ public class AnnotationViewResourcesController {
 				int size = ids.size();
 				
 				if(size == 0)
-					listNode = makeRootNode();
+					listNode = makeRootNode(systemName);
 				else{
 					ArrayList<JSTreeNode>[] childNode = new ArrayList[size];
 					
@@ -409,7 +450,7 @@ public class AnnotationViewResourcesController {
 			}
 			
 			else 
-				listNode = makeRootNode();
+				listNode = makeRootNode(systemName);
 		}
 		
 		model.addAttribute(listNode);
@@ -417,14 +458,20 @@ public class AnnotationViewResourcesController {
 		return "jsonView";
 	}
 
-	private ArrayList<JSTreeNode> makeRootNode() throws Exception {
+	/**
+	 * find root node of ViewResource
+	 * @param systemName system name
+	 * @return ArrayList<JSTreeNode> root node
+	 * @throws Exception fail to find root node
+	 */
+	private ArrayList<JSTreeNode> makeRootNode(String systemName) throws Exception {
 		List<IamTree> list = null;
 		ArrayList<JSTreeNode> listNode = new ArrayList<JSTreeNode>();
 		JSTreeNode node = null;
 		Attributes attribute = null;
 		Data data = null;
 
-		list = viewResourcesService.getRootNodeOfViews();
+		list = viewResourcesService.getRootNodeOfViewsWithSystemName(systemName);
 		if (list.size() > 0) {
 
 			IamTree rootNode = list.get(0);
@@ -449,6 +496,12 @@ public class AnnotationViewResourcesController {
 
 	}
 	
+	/**
+	 * get next view resource id
+	 * @param model Model object
+	 * @return jsonView
+	 * @throws Exception fail to get next view resource id
+	 */
 	@RequestMapping("/viewresources/getViewResourceId.do")
 	public String getViewResourceId(Model model) throws Exception {
 		String viewResourceId = idGenerationServiceView.getNextStringId();
@@ -458,14 +511,36 @@ public class AnnotationViewResourcesController {
 		return "jsonView";
 	}
 	
+	/**
+	 * find list of view resource name that matches the given keyword
+	 * @param keyword keyword
+	 * @param request HttpServletRequest
+	 * @param response HttpServletResponse
+	 * @param session HttpSession
+	 * @param model Model
+	 * @throws Exception fail to find list
+	 */
 	@RequestMapping("/viewresources/getViewNameList.do")
-	public void getViewNameList(@RequestParam(value = "q", required = false) String keyword, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+	public void getViewNameList(
+			@RequestParam(value = "q", required = false) String keyword, 
+			HttpServletRequest request, 
+			HttpServletResponse response,
+			HttpSession session,
+			Model model) throws Exception{
+		
+		String systemName = (String) session.getAttribute("systemName");
 		
 		keyword = new String(keyword.getBytes("8859_1"), "utf-8");
-		String resultList = viewResourcesService.getViewNameList(keyword);
+		String resultList = viewResourcesService.getViewNameListWithSystemName(keyword, systemName);
 		response.getOutputStream().print(new String(resultList.getBytes("utf-8"), "8859_1"));
 	}
 	
+	/**
+	 * remove the selected view resource
+	 * @param viewResource an object that want to be deleted
+	 * @return jsonView
+	 * @throws Exception fail to delete
+	 */
 	@JsonError
 	@RequestMapping("/viewresources/remove.do")
 	public String remove(ViewResource viewResource) throws Exception{

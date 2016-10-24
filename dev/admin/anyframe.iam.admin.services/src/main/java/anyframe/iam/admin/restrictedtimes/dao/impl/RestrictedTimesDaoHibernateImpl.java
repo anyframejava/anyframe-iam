@@ -43,14 +43,16 @@ public class RestrictedTimesDaoHibernateImpl extends IamGenericDaoHibernate<Rest
 		String searchCondition = StringUtil.null2str(restrictedTimesSearchVO.getSearchCondition());
 		String searchKeyword = StringUtil.null2str(restrictedTimesSearchVO.getSearchKeyword());
 		String searchType = StringUtil.null2str(restrictedTimesSearchVO.getSearchtype());
+		String systemName = StringUtil.null2str(restrictedTimesSearchVO.getSystemName());
 
-		Object[] args = new Object[6];
+		Object[] args = new Object[7];
 		args[0] = "condition=" + searchCondition;
 		args[1] = "keywordStr=%" + searchKeyword + "%";
 		args[2] = "keywordNum=" + searchKeyword + "";
 		args[3] = "searchType=" + searchType;
 		args[4] = "sidx=" + sidx;
 		args[5] = "sord=" + sord;
+		args[6] = "systemName=" + systemName;
 
 		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findRestrictedTimesList", args, pageIndex,

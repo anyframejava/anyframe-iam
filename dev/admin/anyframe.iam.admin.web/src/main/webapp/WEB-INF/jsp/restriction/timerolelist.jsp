@@ -18,7 +18,16 @@ jQuery(document).ready( function() {
 		url: "<c:url value='/restriction/timerole/listData.do?' />",
 		mtype:'GET',
 		datatype : "json",
-		colNames : [ '<anyframe:message code="restrictedtimes.ui.grid.compkey" />','<anyframe:message code="restrictedtimes.ui.grid.timeid" />','<anyframe:message code="restrictedtimes.ui.grid.roleid" />','<anyframe:message code="restrictedtimes.ui.grid.timetype" />', '<anyframe:message code="restrictedtimes.ui.grid.startdate" />', '<anyframe:message code="restrictedtimes.ui.grid.starttime" />', '<anyframe:message code="restrictedtimes.ui.grid.enddate" />', '<anyframe:message code="restrictedtimes.ui.grid.endtime" />', '<anyframe:message code="restrictedtimes.ui.grid.description" />' ],
+		colNames : [ 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.compkey" />',
+		    		'<anyframe:message code="restrictedtimes.ui.grid.timeid" />',
+		    		'<anyframe:message code="restrictedtimes.ui.grid.roleid" />',
+		    		'<anyframe:message code="restrictedtimes.ui.grid.timetype" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.startdate" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.starttime" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.enddate" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.endtime" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.description" />' ],
 		jsonReader: {
 	        repeatitems: false
 	    },
@@ -118,9 +127,12 @@ jQuery(document).ready( function() {
 					jQuery("#grid").delRowData(rowData.compKey);
 				}
 				jQuery.ajaxSettings.traditional = true;
-				jQuery("#grid").setPostData({timeId:timeIdArray, roleId:roleIdArray});
-				jQuery("#grid").setGridParam({url:"<c:url value='/restriction/timerole/delete.do?' />"}).trigger("reloadGrid");
-				jQuery("#grid").setGridParam({url:"<c:url value='/restriction/timerole/listData.do?' />"});
+				//jQuery("#grid").setPostData({timeId:timeIdArray, roleId:roleIdArray});
+				//jQuery("#grid").setGridParam({url:"<c:url value='/restriction/timerole/delete.do?' />"}).trigger("reloadGrid");
+				//jQuery("#grid").setGridParam({url:"<c:url value='/restriction/timerole/listData.do?' />"});
+				$.post("<c:url value='/restriction/timerole/delete.do?' />", {timeId:timeIdArray, roleId:roleIdArray}, function(data){
+			    	jQuery("#grid").trigger("reloadGrid");
+			    });
 			}
 		}
 	});

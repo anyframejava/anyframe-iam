@@ -17,6 +17,7 @@
 		<property name="basenames">
 			<list>
 				<value>message/message-generation</value>
+				<value>message/message-menu</value>
 				<value>message/message-security</value>
 				<value>message/message-resource</value>
 				<value>message/message-viewresources</value>

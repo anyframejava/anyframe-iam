@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2008. 9. 1 ???? 1:00:43 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+	<!-- reference schema attribute when hbm2ddl tool create table. so, remove schema definition. (schema=DEFULAT)-->
+
+	
+	<query name="removeTimesExclusionByTimeResource">
+		<![CDATA[
+				DELETE FROM TimesResourcesExclusion timesResourcesExclusion
+	 			WHERE timesResourcesExclusion.id.timeId = :timeId
+	 			AND timesResourcesExclusion.id.resourceId = :resourceId
+		]]>
+	</query>
+	
+	<query name="removeTimesRolesByTime">
+		<![CDATA[
+				DELETE FROM RestrictedTimesRoles  restrictedTimesRoles
+	 			WHERE restrictedTimesRoles.id.timeId = :timeId
+		]]>
+	</query>
+	
+</hibernate-mapping>

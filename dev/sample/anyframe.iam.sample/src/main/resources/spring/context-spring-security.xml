@@ -12,6 +12,7 @@
 
     <b:bean id="securedObjectDAO" class="anyframe.iam.core.securedobject.impl.SecuredObjectDAO">
         <b:property name="dataSource" ref="dataSource" />
+        <b:property name="systemName" value="SAMPLE" />
     </b:bean>
     
     <b:bean id="roleHierarchy" class="org.springframework.security.userdetails.hierarchicalroles.RoleHierarchyImpl">

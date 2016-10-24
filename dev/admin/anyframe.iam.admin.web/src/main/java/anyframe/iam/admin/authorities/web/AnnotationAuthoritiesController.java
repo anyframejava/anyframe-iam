@@ -65,7 +65,7 @@ public class AnnotationAuthoritiesController {
 	public String delete(@RequestParam("userId") String[] userIds, @RequestParam("roleId") String roleId)
 			throws Exception {
 		authoritiesService.deleteUser(userIds, roleId);
-		return "forward:/authorities/listData.do?";
+		return "forward:/authorities/listData.do";
 	}
 
 	/**

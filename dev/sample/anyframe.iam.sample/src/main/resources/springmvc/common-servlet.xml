@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
+	<!-- context:component-scan base-package="anyframe.iam.core">
+		<context:include-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan -->
+	
 	<!--  view resolver  -->
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -14,6 +22,14 @@
 	<bean id="beanNameUrlHandlerMapping" class= "org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping">
 		<property name="order" value="1"/>
 	</bean>
+	
+	<!-- bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
+		
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+		<property name="order" value="2" />
+	</bean -->	
 	
 	<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
 	
@@ -41,5 +57,9 @@
 	
 	<bean name="/common/login.do" class="org.springframework.web.servlet.mvc.ParameterizableViewController">
 		<property name="viewName" value="/WEB-INF/jsp/common/login.jsp" />
+	</bean>
+
+	<bean name="/viewManagement.do" class="org.springframework.web.servlet.mvc.ParameterizableViewController">
+		<property name="viewName" value="/WEB-INF/jsp/sample/view/viewmanagement.jsp" />
 	</bean>
 </beans>

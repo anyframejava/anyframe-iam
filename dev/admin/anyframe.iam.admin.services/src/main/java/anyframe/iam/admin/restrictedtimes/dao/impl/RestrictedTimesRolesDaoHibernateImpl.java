@@ -48,14 +48,16 @@ public class RestrictedTimesRolesDaoHibernateImpl extends
 		String searchCondition = StringUtil.null2str(searchVO.getSearchCondition());
 		String searchKeyword = StringUtil.null2str(searchVO.getSearchKeyword());
 		String searchType = StringUtil.null2str(searchVO.getSearchtype());
+		String systemName = StringUtil.null2str(searchVO.getSystemName());
 
-		Object[] args = new Object[7];
+		Object[] args = new Object[8];
 		args[0] = "condition=" + searchCondition;
 		args[1] = "keywordStr=%" + searchKeyword + "%";
 		args[2] = "keywordNum=" + searchKeyword + "";
 		args[3] = "searchType=" + searchType;
 		args[5] = "sidx=" + sidx;
 		args[6] = "sord=" + sord;
+		args[7] = "systemName=" + systemName;
 
 		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findTimeRoleList", args, pageIndex, pageSize);

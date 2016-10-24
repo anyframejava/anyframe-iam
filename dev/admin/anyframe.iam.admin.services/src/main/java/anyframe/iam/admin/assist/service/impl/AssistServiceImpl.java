@@ -35,29 +35,36 @@ public class AssistServiceImpl extends GenericServiceImpl<CandidateSecuredResour
 
 	public boolean save(List<Map<String, Object>> resourceMapList) throws Exception {
 		
-		int delRow = assistDao.removeAll();
-		
-		LOGGER.debug(delRow + " rows deleted");
-				
 		CandidateSecuredResources candidateSecuredResources = null;
 		
-		for(int i = 0 ; i < resourceMapList.size() ; i++) {
+		if(resourceMapList.size() > 0){
 			candidateSecuredResources = new CandidateSecuredResources();
-			Map<String, Object> resourceMap = resourceMapList.get(i);
-			
-			candidateSecuredResources.setCandidateResourceId(String.valueOf(i+1));
-			candidateSecuredResources.setBeanid((String)resourceMap.get("beanid"));
-			candidateSecuredResources.setPackages((String)resourceMap.get("packages"));
-			candidateSecuredResources.setClasses((String)resourceMap.get("classes"));
-			candidateSecuredResources.setMethod((String)resourceMap.get("method"));
-			candidateSecuredResources.setParameter((String)resourceMap.get("parameter"));
-			candidateSecuredResources.setRequestMapping((String)resourceMap.get("requestmapping"));
-			candidateSecuredResources.setPointCut((String)resourceMap.get("pointcut"));
-			candidateSecuredResources.setCandidateResourceType((String)resourceMap.get("candidate_resource_type"));
+			Map<String, Object> firstMap = resourceMapList.get(0);
+			String systemName = (String)firstMap.get("systemname");
 
-			assistDao.save(candidateSecuredResources);
+			int delRow = assistDao.removeAll(systemName);
+			LOGGER.debug(delRow + " rows deleted");
+			
+			for(int i = 0 ; i < resourceMapList.size() ; i++) {
+				candidateSecuredResources = new CandidateSecuredResources();
+				Map<String, Object> resourceMap = resourceMapList.get(i);
+				
+				candidateSecuredResources.setCandidateResourceId(String.valueOf(i+1) + systemName);
+				candidateSecuredResources.setBeanid((String)resourceMap.get("beanid"));
+				candidateSecuredResources.setSystemName((String)resourceMap.get("systemname"));
+				candidateSecuredResources.setPackages((String)resourceMap.get("packages"));
+				candidateSecuredResources.setClasses((String)resourceMap.get("classes"));
+				candidateSecuredResources.setMethod((String)resourceMap.get("method"));
+				candidateSecuredResources.setParameter((String)resourceMap.get("parameter"));
+				candidateSecuredResources.setRequestMapping((String)resourceMap.get("requestmapping"));
+				candidateSecuredResources.setPointCut((String)resourceMap.get("pointcut"));
+				candidateSecuredResources.setCandidateResourceType((String)resourceMap.get("candidate_resource_type"));
+	
+				assistDao.save(candidateSecuredResources);
+			}
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 }

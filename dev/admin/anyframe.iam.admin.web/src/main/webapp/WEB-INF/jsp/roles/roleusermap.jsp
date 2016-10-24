@@ -15,9 +15,9 @@
 <!--
 jQuery(document).ready( function() {
 	var roleId = parent.document.f1.roleId.value;
-	var callbackvar = document.f1.callbackvar;
-	// Grid Component
-	jQuery("#grid2").jqGrid({
+
+	// Left Grid Component
+	jQuery("#gridLeft").jqGrid({
 		sortable: true,
 		url:"<c:url value='/authorities/listData.do?&roleId=' />" + roleId,
 		mtype:'POST',
@@ -34,51 +34,8 @@ jQuery(document).ready( function() {
 		width:240,
 		height:295,
 		multiselect: true,
-		loadComplete:function(){
-			jQuery("#grid3").jqGrid({
-				sortable: true,
-				url:"<c:url value='/authorities/existListData.do?&roleId='/> " + roleId,
-				mtype: 'POST',
-				datatype:'json',
-				colNames:['<anyframe:message code="roleuser.ui.grid.userid" />', '<anyframe:message code="roleuser.ui.grid.username" />', '<anyframe:message code="roleuser.ui.grid.usergroup" />'],
-				jsonReader: {
-			        repeatitems: false
-			    },
-				colModel: [
-				           {key: true, name: 'userId', index:'userId', sorttype : 'text', width:80},
-				           {name: 'userName', index:'userName', width:80, sorttype : 'text'},
-				           {name: 'groupName', index: 'groupName', width: 80, sorttype : 'text'}
-				           ],
-				width:240,
-				height:295,
-				multiselect : true,
-				loadComplete:function(){
-					if(callbackvar.value=="toRight"){
-						jQuery("#grid2").setGridParam({url:"<c:url value='/authorities/listData.do?&roleId=' />" + roleId}).trigger("reloadGrid");
-					}
-			    },
-				pager : jQuery('#pager3'),
-				sortname : 'userId',
-				sortorder: 'asc',
-				rowNum : 20,
-				caption : '<anyframe:message code="roleuser.ui.grid.alocaption" />',
-				rowList : [ 10, 20, 30 ],
-				viewrecords : true,
-				loadError: function(xhr,st,err) { 
-					if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									
-						location.href = "<c:url value='/login/relogin.do?inputPage=/roleusermapping/addView.do?&roleId='/>" + roleId;
-						return;
-					}
-					alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
-				}
-			});
-			
-			if(callbackvar.value=="toLeft"){
-				jQuery("#grid3").setPostData({roleId:roleId});
-				jQuery("#grid3").setGridParam({url:"<c:url value='/authorities/existListData.do?'/>"}).trigger("reloadGrid");
-			} 
-	    },
-		pager : jQuery('#pager2'),
+		loadComplete:function(){},
+		pager : jQuery('#pagerLeft'),
 		sortorder: 'asc',
 		sortname : 'userId',
 		rowNum : 20,
@@ -94,15 +51,47 @@ jQuery(document).ready( function() {
 		}
 	});
 
-	/* Button */
+	// Right Grid Component
+	jQuery("#gridRight").jqGrid({
+		sortable: true,
+		url:"<c:url value='/authorities/existListData.do?&roleId='/> " + roleId,
+		mtype: 'POST',
+		datatype:'json',
+		colNames:['<anyframe:message code="roleuser.ui.grid.userid" />', '<anyframe:message code="roleuser.ui.grid.username" />', '<anyframe:message code="roleuser.ui.grid.usergroup" />'],
+		jsonReader: {
+	        repeatitems: false
+	    },
+		colModel: [
+		           {key: true, name: 'userId', index:'userId', sorttype : 'text', width:80},
+		           {name: 'userName', index:'userName', width:80, sorttype : 'text'},
+		           {name: 'groupName', index: 'groupName', width: 80, sorttype : 'text'}
+		           ],
+		width:240,
+		height:295,
+		multiselect : true,
+		loadComplete:function(){},
+		pager : jQuery('#pagerRight'),
+		sortname : 'userId',
+		sortorder: 'asc',
+		rowNum : 20,
+		caption : '<anyframe:message code="roleuser.ui.grid.alocaption" />',
+		rowList : [ 10, 20, 30 ],
+		viewrecords : true,
+		loadError: function(xhr,st,err) { 
+			if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									
+				location.href = "<c:url value='/login/relogin.do?inputPage=/roleusermapping/addView.do?&roleId='/>" + roleId;
+				return;
+			}
+			alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
+		}
+	});
 	
 	/* toLeft Button */
 	$('[name=toLeft]').click( function() {
 		var rowNum;
 		var rowData;
 		var roleId = parent.document.f1.roleId.value;
-		callbackvar.value = "toLeft";
-		rowNum = new String(jQuery("#grid3").getGridParam('selarrrow'));
+		rowNum = new String(jQuery("#gridRight").getGridParam('selarrrow'));
 		rowNumList = rowNum.split(",");
 		var rowDataArray = new Array();
 		if(rowNum == null || rowNum ==""){
@@ -110,13 +99,14 @@ jQuery(document).ready( function() {
 			return false;
 		} else{
 			for(var i = 0 ; i < rowNumList.length ; i++){
-				rowData = jQuery("#grid3").getRowData(rowNumList[i]);
+				rowData = jQuery("#gridRight").getRowData(rowNumList[i]);
 				rowDataArray[i] = rowData.userId;
+				jQuery("#gridRight").delRowData(rowData.userId);
 			}
 			jQuery.ajaxSettings.traditional = true;
-			jQuery("#grid2").setPostData({roleId:roleId, userId:rowDataArray});
-			jQuery("#grid2").setGridParam({url:"<c:url value='/authorities/delete.do?' />"}).trigger("reloadGrid");
-			jQuery("#grid2").setGridParam({url:"<c:url value='/authorities/listData.do?&roleId=' />" + roleId});
+			$.post("<c:url value='/authorities/delete.do' />", {roleId:roleId, userId:rowDataArray}, function(data){
+				jQuery("#gridLeft").trigger("reloadGrid");
+		    });
 		}
 	});
 
@@ -124,8 +114,8 @@ jQuery(document).ready( function() {
 	$('[name=toRight]').click( function() {
 		var rowNum;
 		var rowData;
-		callbackvar.value = "toRight";
-		rowNum = new String(jQuery("#grid2").getGridParam('selarrrow'));
+		//var roleId = parent.document.f1.roleId.value;
+		rowNum = new String(jQuery("#gridLeft").getGridParam('selarrrow'));
 		rowNumList = rowNum.split(",");
 		var rowDataArray = new Array();
 		if(rowNum == null || rowNum ==""){
@@ -137,39 +127,42 @@ jQuery(document).ready( function() {
 				return false;
 			}
 			for(var i = 0 ; i < rowNumList.length ; i++){
-				rowData = jQuery("#grid2").getRowData(rowNumList[i]);
+				rowData = jQuery("#gridLeft").getRowData(rowNumList[i]);
 				rowDataArray[i] = rowData.userId;
+				jQuery("#gridLeft").delRowData(rowData.userId);
 			}
 			jQuery.ajaxSettings.traditional = true;
-			jQuery("#grid3").setPostData({roleId:roleId, userId:rowDataArray});
-			jQuery("#grid3").setGridParam({url:"<c:url value='/authorities/add.do?' />"}).trigger("reloadGrid");
-			jQuery("#grid3").setGridParam({url:"<c:url value='/authorities/existListData.do?'/> "});
+			$.post("<c:url value='/authorities/add.do?' />", {roleId:roleId, userId:rowDataArray}, function(data){
+		    	jQuery("#gridRight").trigger("reloadGrid");
+		    });
 		}
 	});
 
 	/* search Button */
-	$("[name=searchUser]").click( function() {
-		callbackvar.value = "";
-		jQuery("#grid2").setPostData({searchCondition:$("#searchCondition").val(), searchKeyword:$("#searchKeyword").val()});
-		jQuery("#grid2").setGridParam({url:"<c:url value='/authorities/listData.do?' />"}).trigger("reloadGrid");
+	$("[name=searchUserLeft]").click( function() {
+		jQuery("#gridLeft").setPostData({searchCondition:$("#searchConditionLeft").val(), searchKeyword:$("#searchKeywordLeft").val()});//, roleId:roleId});
+		jQuery("#gridLeft").trigger("reloadGrid");
 	});
 
-	$("[name=searchUser2]").click( function() {
-		callbackvar.value = "";
-		jQuery("#grid3").setPostData({searchCondition:$("#searchCondition2").val(), searchKeyword:$("#searchKeyword2").val()});
-		jQuery("#grid3").setGridParam({url:"<c:url value='/authorities/existListData.do?&roleId=' />" + roleId}).trigger("reloadGrid");
-	});
-
-	/* auto click by enter key */
-	$("#searchKeyword").keypress(function (e) {
-		if (e.which == 13)
-			$("[name=searchUser]").trigger("click");
+	$("[name=searchUserRight]").click( function() {
+		jQuery("#gridRight").setPostData({searchCondition:$("#searchConditionRight").val(), searchKeyword:$("#searchKeywordRight").val()});//, roleId:roleId});
+		jQuery("#gridRight").trigger("reloadGrid");
 	});
 
 	/* auto click by enter key */
-	$("#searchKeyword2").keypress(function (e) {
-		if (e.which == 13)
-			$("[name=searchUser2]").trigger("click");
+	$("#searchKeywordLeft").keypress(function (e) {
+		if (e.which == 13){
+			$("[name=searchUserLeft]").trigger("click");
+			return false;
+		}
+	});
+
+	/* auto click by enter key */
+	$("#searchKeywordRight").keypress(function (e) {
+		if (e.which == 13){
+			$("[name=searchUserRight]").trigger("click");
+			return false;
+		}
 	});
 });
 //-->
@@ -188,49 +181,48 @@ body {
 <body>
 
 <form name="f1">
-<input type="hidden" name="callbackvar">
 <table width="572" border="0" cellpadding="0" cellspacing="0" style="margin-top: 13px;">
 	<tr>
 		<td width="41" height="30">
-			<select name="searchCondition" id="searchCondition" class="selbox">
+			<select name="searchConditionLeft" id="searchConditionLeft" class="selbox">
 			<option value="userName"><anyframe:message code='roleuser.ui.selectbox.username' /></option>
 			<option value="userId"><anyframe:message code='roleuser.ui.selectbox.userid' /></option>
 			</select>
 		</td>
 		<td width="93" style="padding-left: 3px;">
-			<input type="text" name="searchKeyword" id="searchKeyword" size="15" class="ct_input_g">
+			<input type="text" name="searchKeywordLeft" id="searchKeywordLeft" size="15" class="ct_input_g">
 		</td>
 		<td width="123" style="padding-left: 3px;">
-			<a href="#" name="searchUser" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a>			
+			<a href="#" name="searchUserLeft" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a>			
 		</td>
 		
 		<td width="69">&nbsp;		</td>
 
 		<td width="41">
-			<select name="searchCondition2" id="searchCondition2" class="selbox">
+			<select name="searchConditionRight" id="searchConditionRight" class="selbox">
 			<option value="userName"><anyframe:message code='roleuser.ui.selectbox.username' /></option>
 			<option value="userId"><anyframe:message code='roleuser.ui.selectbox.userid' /></option>
 			</select>
 		</td>
 		<td width="93" style="padding-left: 3px;">
-			<input type="text" name="searchKeyword2" id="searchKeyword2" size="15" class="ct_input_g">
+			<input type="text" name="searchKeywordRight" id="searchKeywordRight" size="15" class="ct_input_g">
 		</td>
 		<td width="112" style="padding-left: 3px;">
-			<a href="#" name="searchUser2" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a>		
+			<a href="#" name="searchUserRight" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a>		
 		</td>
 	</tr>
 	<tr>
 		<td colspan="3" valign="top" >
-			<table id="grid2" class="scroll" cellpadding="0" cellspacing="0"></table>
-			<div id="pager2" class="scroll" style="text-align: center;"></div>
+			<table id="gridLeft" class="scroll" cellpadding="0" cellspacing="0"></table>
+			<div id="pagerLeft" class="scroll" style="text-align: center;"></div>
 		</td>
 		<td width="69" valign="middle" align="center">
 			<div id="shiftBtn"><a class="outBtn" name="toRight" href="#">out</a></div>
 			<div id="shiftBtn"><a class="inBtn" name="toLeft" href="#">in</a></div>
 		</td>
 		<td colspan="3" valign="top">
-			<table id="grid3" class="scroll" cellpadding="0" cellspacing="0"></table>
-			<div id="pager3" class="scroll" style="text-align: center;"></div>
+			<table id="gridRight" class="scroll" cellpadding="0" cellspacing="0"></table>
+			<div id="pagerRight" class="scroll" style="text-align: center;"></div>
 		</td>
 	</tr>
 </table>

@@ -102,9 +102,11 @@ public class ViewResourceAccessServiceImpl implements IViewResourceAccessService
 		// 상속 구조에서 권한 소유 여부를 체크한다.
 		// edited by youngmin.jo
 		
-		String childView = securedObjectService.getViewHierarchy(viewResourceId);
-		if(!"".equals(childView))
-			return isGranted(childView, requiredPermissionList);
+		// View Resource에 대한 상속 기능을 보류하기로 하여 아래의 내용을 주석 처리 하였음.
+		// edited by youngmin.jo
+//		String childView = securedObjectService.getViewHierarchy(viewResourceId);
+//		if(!"".equals(childView))
+//			return isGranted(childView, requiredPermissionList);
 
 		return false;
 	}

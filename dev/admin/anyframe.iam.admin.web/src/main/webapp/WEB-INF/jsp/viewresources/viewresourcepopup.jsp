@@ -78,7 +78,13 @@ jQuery(document).ready(
 		$("[name=searchResource]").click( function() {
 			jQuery("#grid2").setPostData({searchCondition:$("#searchCondition").val(), searchKeyword:$("#searchKeyword").val() });
 			jQuery("#grid2").setGridParam({url:"<c:url value='/viewresources/listData.do?' />"}).trigger("reloadGrid");
-			});
+		});
+
+		/* auto click by enter key */
+		$("#searchKeyword").keypress(function (e) {
+			if (e.which == 13)
+				$("[name=searchResource]").trigger("click");
+		});
 	});
 </script>
 <style type="text/css">

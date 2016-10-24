@@ -12,7 +12,7 @@
 				<!--hibernate dialect here -->
 				<!--hibernate dialect-START-->
 				<prop key="hibernate.dialect">${test.hibernate.dialect}</prop>
-				<prop key="hibernate.default_schema">${hibernate.default_schema}</prop>
+				<prop key="hibernate.default_schema">${test.hibernate.default_schema}</prop>
 				<!--hibernate dialect-END-->
 				<prop key="hibernate.format_sql">true</prop>
 				<prop key="hibernate.show_sql">false</prop>

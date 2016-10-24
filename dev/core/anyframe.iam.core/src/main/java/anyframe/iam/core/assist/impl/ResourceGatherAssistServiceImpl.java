@@ -35,6 +35,7 @@ import org.springframework.security.util.FieldUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.servlet.handler.AbstractUrlHandlerMapping;
+import org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping;
 import org.springframework.web.servlet.mvc.multiaction.MethodNameResolver;
 
 import anyframe.iam.core.assist.IResourceGatherAssistService;
@@ -49,6 +50,16 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 	private List filterPatterns;
 
 	private Set compiledPatterns = new HashSet();
+	
+	private String systemName;
+
+	public String getSystemName() {
+		return systemName;
+	}
+
+	public void setSystemName(String systemName) {
+		this.systemName = systemName;
+	}
 
 	public ResourceGatherAssistServiceImpl() {
 		this.candidateBeanPostfix = SERVICE_BEAN_POST_FIX;
@@ -135,6 +146,7 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 								resourceMap = new HashMap();
 
 								resourceMap.put("beanid", beanNames[i]);
+								resourceMap.put("systemname", this.getSystemName());
 								resourceMap.put("packages", classes[k].getPackage().getName());
 								resourceMap.put("classes", classes[k].getSimpleName());
 								resourceMap.put("method", methods[l].getName());
@@ -166,6 +178,7 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 					resourceMap = new HashMap();
 
 					resourceMap.put("beanid", "");
+					resourceMap.put("systemname", this.getSystemName());
 					resourceMap.put("packages", pattern);
 					resourceMap.put("classes", "");
 					resourceMap.put("method", "");
@@ -224,6 +237,7 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 								resourceMap = new HashMap();
 
 								resourceMap.put("beanid", "");
+								resourceMap.put("systemname", this.getSystemName());
 								resourceMap.put("packages", classes.getPackage().getName());
 								resourceMap.put("classes", classes.getSimpleName());
 								resourceMap.put("method", methods[j].getName());
@@ -239,6 +253,7 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 							resourceMap = new HashMap();
 
 							resourceMap.put("beanid", "");
+							resourceMap.put("systemname", this.getSystemName());
 							resourceMap.put("packages", classes.getPackage().getName());
 							resourceMap.put("classes", classes.getSimpleName());
 							resourceMap.put("method", "");
@@ -262,6 +277,7 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 						resourceMap = new HashMap();
 
 						resourceMap.put("beanid", "");
+						resourceMap.put("systemname", this.getSystemName());
 						resourceMap.put("packages", packageName);
 						resourceMap.put("classes", simpleClassName);
 						resourceMap.put("method", "");
@@ -283,6 +299,7 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 		resourceMap = new HashMap();
 
 		resourceMap.put("beanid", paramResolverName);
+		resourceMap.put("systemname", this.getSystemName());
 		resourceMap.put("packages", "paramResolver");
 		resourceMap.put("classes", "");
 		resourceMap.put("method", "");
@@ -307,8 +324,15 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 
 			LOGGER.debug("ResourceAssistProcessor postProcessBeforeInitialization with : " + webBeanNames[i]);
 
+			// Url Handler Mapping
 			if (bean instanceof AbstractUrlHandlerMapping) {
 				Map handlerMap = ((AbstractUrlHandlerMapping) bean).getHandlerMap();
+				handlerMappingAssistMap.put(bean.getClass().getSimpleName(), handlerMap);
+			}
+			
+			// Annotation Handler Mapping
+			if (bean instanceof DefaultAnnotationHandlerMapping) {
+				Map handlerMap = ((DefaultAnnotationHandlerMapping) bean).getHandlerMap();
 				handlerMappingAssistMap.put(bean.getClass().getSimpleName(), handlerMap);
 			}
 		}

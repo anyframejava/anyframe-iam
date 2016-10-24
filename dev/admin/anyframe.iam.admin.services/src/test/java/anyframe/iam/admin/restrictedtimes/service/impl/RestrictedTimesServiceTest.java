@@ -62,6 +62,7 @@ public class RestrictedTimesServiceTest {
 		domain.setEndTime("235959");
 		domain.setTimeType("holiday");
 		domain.setDescription("choosuk");
+		domain.setSystemName("SAMPLE");
 
 		return domain;
 	}
@@ -105,6 +106,7 @@ public class RestrictedTimesServiceTest {
 		domain.setEndDate("20091107");
 		domain.setEndTime("200000");
 		domain.setTimeType("daily");
+		domain.setSystemName("SAMPLE");
 
 		// update
 		restrictedTimesService.update(domain);
@@ -127,6 +129,7 @@ public class RestrictedTimesServiceTest {
 		domain2.setEndDate("20090909");
 		domain2.setEndTime("235959");
 		domain2.setTimeType("daily");
+		domain2.setSystemName("SAMPLE");
 
 		RestrictedTimes domain3 = new RestrictedTimes();
 		domain3.setStartDate("20070707");
@@ -134,6 +137,7 @@ public class RestrictedTimesServiceTest {
 		domain3.setEndDate("20101010");
 		domain3.setEndTime("235959");
 		domain3.setTimeType("daily");
+		domain3.setSystemName("SAMPLE");
 
 		// save
 		domain1 = restrictedTimesService.save(domain1);
@@ -197,6 +201,7 @@ public class RestrictedTimesServiceTest {
 		domain2.setEndDate("20090909");
 		domain2.setEndTime("235959");
 		domain2.setTimeType("daily");
+		domain2.setSystemName("SAMPLE");
 
 		RestrictedTimes domain3 = new RestrictedTimes();
 		domain3.setStartDate("20070707");
@@ -204,6 +209,7 @@ public class RestrictedTimesServiceTest {
 		domain3.setEndDate("20101010");
 		domain3.setEndTime("235959");
 		domain3.setTimeType("daily");
+		domain3.setSystemName("SAMPLE");
 
 		// save
 		domain1 = restrictedTimesService.save(domain1);
@@ -213,6 +219,7 @@ public class RestrictedTimesServiceTest {
 		// get list
 		RestrictedTimesSearchVO searchVO = new RestrictedTimesSearchVO();
 		searchVO.setSearchType("daily");
+		searchVO.setSystemName("ALL");
 		Page resultPage = restrictedTimesService.getList(searchVO);
 		assertNotNull(resultPage);
 		assertTrue(resultPage.getSize() > 0);

@@ -20,7 +20,12 @@ jQuery(document).ready( function() {
 		url: "<c:url value='/securedresourcesroles/listDataUnmapped.do?&roleId=' />" + roleId,
 		mtype:'GET',
 		datatype : "json",
-		colNames : [ '<anyframe:message code="roleresource.ui.grid.sortorder" />', '<anyframe:message code="roleresource.ui.grid.resourceid" />', '<anyframe:message code="roleresource.ui.grid.resourcename" />', '<anyframe:message code="roleresource.ui.grid.resourcepattern" />', '<anyframe:message code="roleresource.ui.grid.resourcetype" />' ],
+		colNames : [ 
+		    		'<anyframe:message code="roleresource.ui.grid.sortorder" />', 
+		    		'<anyframe:message code="roleresource.ui.grid.resourceid" />', 
+		    		'<anyframe:message code="roleresource.ui.grid.resourcename" />',
+		    		'<anyframe:message code="roleresource.ui.grid.resourcepattern" />', 
+		    		'<anyframe:message code="roleresource.ui.grid.resourcetype" />' ],
 		jsonReader: {
 	        repeatitems: false
 	    },

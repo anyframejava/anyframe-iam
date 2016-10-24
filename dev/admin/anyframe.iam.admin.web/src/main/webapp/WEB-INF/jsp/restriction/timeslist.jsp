@@ -18,7 +18,14 @@ jQuery(document).ready( function() {
 		url: "<c:url value='/restriction/listData.do?' />",
 		mtype:'GET',
 		datatype : "json",
-		colNames : [ '<anyframe:message code="restrictedtimes.ui.grid.timeid" />', '<anyframe:message code="restrictedtimes.ui.grid.timetype" />', '<anyframe:message code="restrictedtimes.ui.grid.startdate" />', '<anyframe:message code="restrictedtimes.ui.grid.starttime" />', '<anyframe:message code="restrictedtimes.ui.grid.enddate" />', '<anyframe:message code="restrictedtimes.ui.grid.endtime" />', '<anyframe:message code="restrictedtimes.ui.grid.description" />' ],
+		colNames : [ 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.timeid" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.timetype" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.startdate" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.starttime" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.enddate" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.endtime" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.description" />' ],
 		jsonReader: {
 	        repeatitems: false
 	    },
@@ -59,7 +66,7 @@ jQuery(document).ready( function() {
 			sorttype : 'text',
 			width : 100
 		} ],
-		width : 790,
+		width : 797,
 		height : 350,
 		forceFit:true,
 		multiselect : true,
@@ -105,9 +112,12 @@ jQuery(document).ready( function() {
 					jQuery("#grid").delRowData(rowData.timeId);
 				}
 				jQuery.ajaxSettings.traditional = true;
-				jQuery("#grid").setPostData({timeId:rowArray});
-				jQuery("#grid").setGridParam({url:"<c:url value='/restriction/delete.do?' />"}).trigger("reloadGrid");
-				jQuery("#grid").setGridParam({url:"<c:url value='/restriction/listData.do?' />"});
+				//jQuery("#grid").setPostData({timeId:rowArray});
+				//jQuery("#grid").setGridParam({url:"<c:url value='/restriction/delete.do?' />"}).trigger("reloadGrid");
+				//jQuery("#grid").setGridParam({url:"<c:url value='/restriction/listData.do?' />"});
+				$.post("<c:url value='/restriction/delete.do?' />", {timeId:rowArray}, function(data){
+			    	jQuery("#grid").trigger("reloadGrid");
+			    });
 			}
 		}
 	});
@@ -164,7 +174,7 @@ body {
 <div id="documentation" class="demo" style="overflow:auto; height:460px;width:800px;">
 <table width="800" border="0" cellpadding="0" cellspacing="0" style="margin-top: 10px;">
 	<tr height="30">
-		<td width="84" class="sky_h3">
+		<td width="100" class="sky_h3">
 			<img src="<c:url value='/images/arrow.gif'/>" width="13" height="13" align="absmiddle"> <anyframe:message code="restrictedtimes.ui.selectbox.timeid" />:<input type="hidden" id="searchCondition" value="timeId" readonly></td>
 		<td width="120"  class="tdpadding"><input type="text" id="searchKeyword" size="20" class="ct_input_g"></td>
 		<td width="41" class="tdpadding">
@@ -180,7 +190,7 @@ body {
 		<td width="183" class="tdpadding">
 			<a href="#"  name="searchItems" class="searchBtn"><anyframe:message code="restrictedtimes.ui.btn.search" /></a>
 		</td>
-		<td width="377" align="right">
+		<td width="367" align="right">
 			<table border="0" cellspacing="0" cellpadding="0">
 				<tr>
 	                <td class="tdpadding">

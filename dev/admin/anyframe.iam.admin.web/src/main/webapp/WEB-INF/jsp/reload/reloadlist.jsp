@@ -10,45 +10,132 @@
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
 <jsp:include page="/common/jquery-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 
 <script language="javascript">
 <!--
-function reload() {
-	var maps = document.reloadResource.reloadmaps.value;
-	var times = document.reloadResource.reloadtimes.value;
-	
-	if(document.reloadResource.reloadmaps.checked == false ) {
-		maps = "";
-	}
+jQuery(document).ready( function() {
+	jQuery("#grid").jqGrid( {
+		sortable: true,
+		url: "<c:url value='/admin/reload/listData.do?' />",
+		mtype:'GET',
+		datatype : "json",
+		colNames : [ 
+		    		'Bean ID', 
+		    		'System Name',
+		    		'Target App' 
+		],
+		jsonReader: {
+	        repeatitems: false
+	    },
+		colModel : [ {
+			key : true,
+			name : 'beanId',
+			index : 'beanId',
+			hidden : true,
+			width : 0
+		}, {
+			name : 'systemName',
+			index : 'systemName',
+			width : 120
+		}, {
+			name : 'serverUrl',
+			index : 'serverUrl',
+			width : 250
+		} ],
+		width : 787,
+		height : 300,
+		pager : jQuery('#pager'),
+		forceFit:true,
+		multiselect : true,
+		viewrecords : true,
 
-	if(document.reloadResource.reloadtimes.checked == false ) {
-		times = "";
-	}
-
-	if(document.reloadResource.reloadmaps.checked == false && document.reloadResource.reloadtimes.checked == false) {
-		alert('<anyframe:message code="resourcereload.ui.alert.noselecteditem" />');
-		return;
-	}
-
-	if(confirm('<anyframe:message code="resourcereload.ui.alert.confirmtoreload" />')) {
-		document.getElementById("transfer").style.visibility = "visible";
-
-		$.ajax({
-			type: 'POST',
-			url: '<c:url value="/admin/reload/resourceReload.do"/>',
-			data: "beanid=" + document.reloadResource.beanid.value + "&reloadmaps=" + maps + "&reloadtimes=" + times,
-			dataType: 'json',
-			success: function(msg){
-				document.getElementById("transfer").style.visibility= "hidden";
-				alert('<anyframe:message code="resourcereload.ui.alert.successreload" />');
-			},
-			error: function(msg){
-				document.getElementById("transfer").style.visibility= "hidden";
-				document.write(msg.responseText);
+		loadError: function(xhr,st,err) {
+			if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									
+				location.href = "<c:url value='/login/relogin.do?inputPage=/restriction/list.do'/>";
+				return;
 			}
-		});
-	}
-}
+			alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
+		}
+	});
+	
+	/* Button Function Start (Resource CRUD) */
+	
+	$('[name=requestMap]').click( function(){
+		var rowNum;
+		var rowData;
+		var rowArray = new Array();
+		rowNum = new String(jQuery("#grid").getGridParam('selarrrow'));
+		rowNumList = rowNum.split(",");
+
+		if(rowNum == null || rowNum ==""){
+			alert("No selected Rows");
+			return false;
+		} else {
+			for(var i = 0 ; i < rowNumList.length ; i++){
+				rowData = jQuery("#grid").getRowData(rowNumList[i]);
+				rowArray[i] = rowData.beanId;
+			}
+			jQuery.ajaxSettings.traditional = true;
+			$.ajax({
+				type: 'POST',
+				url: '<c:url value="/admin/reload/reloadMaps.do"/>',
+				data:
+				{ 
+					beanid : rowArray,
+					reloadmaps : 'maps'
+				},
+				dataType: 'json',
+				success: function(msg){
+					document.getElementById("transfer").style.visibility= "hidden";
+					alert('<anyframe:message code="resourcereload.ui.alert.successreload" />');
+				},
+				error: function(msg){
+					document.getElementById("transfer").style.visibility= "hidden";
+					document.write(msg.responseText);
+				}
+			});
+		}
+	});
+	
+	$("[name=restrictedTimes]").click( function() {
+		var rowNum;
+		var rowData;
+		var rowArray = new Array();
+		rowNum = new String(jQuery("#grid").getGridParam('selarrrow'));
+		rowNumList = rowNum.split(",");
+
+		if(rowNum == null || rowNum ==""){
+			alert("No selected Rows");
+			return false;
+		} else {
+			for(var i = 0 ; i < rowNumList.length ; i++){
+				rowData = jQuery("#grid").getRowData(rowNumList[i]);
+				rowArray[i] = rowData.beanId;
+			}
+			jQuery.ajaxSettings.traditional = true;
+			$.ajax({
+				type: 'POST',
+				url: '<c:url value="/admin/reload/reloadTimes.do"/>',
+				data:
+				{ 
+					beanid : rowArray,
+					reloadtimes : 'times'
+				},
+				dataType: 'json',
+				success: function(msg){
+					document.getElementById("transfer").style.visibility= "hidden";
+					alert('<anyframe:message code="resourcereload.ui.alert.successreload" />');
+				},
+				error: function(msg){
+					document.getElementById("transfer").style.visibility= "hidden";
+					document.write(msg.responseText);
+				}
+			});
+		}
+	});
+});
+
 //-->
 </script>
 <style type="text/css">
@@ -82,70 +169,46 @@ body {
 	<tr>
 		<td style="padding-left:10px">
 			<form action="<c:url value="/admin/reload/resourceReload.do"/>" method="post" id="reloadResource" name="reloadResource">
-			<table width="792" border="0" cellspacing="0" cellpadding="0">
-				<!-- Begin Title -->
-				<tr>
-					<td valign="top">
-				    	<table width="792" border="0" cellspacing="0" cellpadding="0" style="margin-top: 13px;">
-							<tr>
-								<td class="title" style="padding-left:21px"><anyframe:message code="resourcereload.ui.title.resourcereload" /></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-				    <td style="padding-top: 5px;">
-						<table width="792" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" >
-							<tr><td height="2" colspan="3" bgcolor="#A2BACE"></td></tr>
-							
-							<tr>
-								<td class="tdHead"><anyframe:message code="resourcereload.ui.label.targetserver" /></td>
-								<td bgcolor="#D6D6D6" width="1"></td>
-								<td class="tdin">									        
-									<select id="beanid" name="beanid" class="selbox" style="overflow:auto; border:1px solid #c3daf9;">
-										<c:forEach var="list" items="${beanlist}">
-											<option value="${list.beanId}">${list.serverUrl}</option>
-										</c:forEach>
-									</select>
-								</td>
-							</tr>
-							<tr><td height="1" colspan="3" bgcolor="#D6D6D6"></td></tr>
-							<tr>
-								<td class="tdHead"><anyframe:message code="resourcereload.ui.label.targetresource" /></td>
-								<td bgcolor="#D6D6D6" width="1"></td>
-								<td class="tdin">
-						        	<input type="checkbox" name="reloadmaps" id="reloadmaps" value="maps"><anyframe:message code="restrictedtimes.ui.checkbox.reloadmaps" />
-									<input type="checkbox" name="reloadtimes" id="reloadtimes" value="times"><anyframe:message code="restrictedtimes.ui.checkbox.reloadtimes" />
-								</td>
-							</tr>
-							<tr><td height="1" colspan="3" bgcolor="#B6CDE4"></td></tr>	
-						</table>
-					</td>
-				</tr>
-				<tr>
-				    <td>
-						<table width="792" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="margin-top:10px;">
-							<tr>
-								<td align="right">
-									<table height="22" border="0" cellpadding="0" cellspacing="0">
-										<tr>
-										  	<td style="padding-left: 3px;">
-												<table height="22" border="0" cellpadding="0" cellspacing="0">
-													<tr>
-														<td width="18"><img src="<c:url value='/images/btn/update.gif'/>" width="18" height="22"></td>
-														<td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="javascript:reload();" name="movetoback"><anyframe:message code="resourcereload.ui.btn.reload" /></a></td>
-														<td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
-													</tr>
-												</table>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
+				<div id="documentation" class="demo" style="overflow:auto; height:460px;width:800px;">
+					<table width="793" border="0" cellpadding="0" cellspacing="0">
+						<tr height="30">
+							<td width="400">
+							</td>
+							<td width="330" align="right">
+								<table>
+									<tr>
+										<td>
+										  <table height="22" border="0" cellpadding="0" cellspacing="0">
+								              <tr>
+								                <td width="18"><img src="<c:url value='/images/btn/update.gif'/>" width="18" height="22"></td>
+								                <td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="#" name="requestMap">Request Mapping</a></td>
+								                <td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
+								              </tr>
+								            </table>
+							            </td>
+							            <td>
+									    	<table height="22" border="0" cellpadding="0" cellspacing="0">
+										        <tr>
+											        <td width="18"><img src="<c:url value='/images/btn/update.gif'/>" width="18" height="22"></td>
+											        <td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="#" name="restrictedTimes">Restricted Times</a></td>
+											        <td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
+										        </tr>
+								        	</table>
+							        	</td>
+						        	</tr>
+						        </table>			
+							</td>
+						</tr>
+				</table>
+				<table width="800" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td>
+							<table id="grid" class="scroll" cellpadding="0" cellspacing="0"></table>
+							<div id="pager" class="scroll" style="text-align: center;"></div>		
+						</td>
+					</tr>
+				</table>
+				</div>			
 			</form>
 		</td>
   	</tr>

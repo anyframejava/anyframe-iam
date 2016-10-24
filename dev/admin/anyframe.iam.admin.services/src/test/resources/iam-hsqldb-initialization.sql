@@ -72,6 +72,7 @@ CREATE TABLE SECURED_RESOURCES (
   SORT_ORDER        NUMERIC, 
   CREATE_DATE       VARCHAR (8), 
   MODIFY_DATE       VARCHAR (8), 
+  SYSTEM_NAME		VARCHAR (15),
   CONSTRAINT PK_RECURED_RESOURCES
   PRIMARY KEY ( RESOURCE_ID ) ) ; 
 
@@ -96,11 +97,12 @@ CREATE TABLE RESTRICTED_TIMES (
   END_DATE     VARCHAR (8), 
   END_TIME     VARCHAR (6)  NOT NULL, 
   DESCRIPTION  VARCHAR (100), 
+  SYSTEM_NAME  VARCHAR (15),
   CONSTRAINT PK_RESTRICTED_TIMES
   PRIMARY KEY ( TIME_ID ) ) ; 
   
 CREATE TABLE CANDIDATE_SECURED_RESOURCES ( 
-  CANDIDATE_RESOURCE_ID    NUMERIC (10)   NOT NULL, 
+  CANDIDATE_RESOURCE_ID    VARCHAR (20)   NOT NULL, 
   BEANID                   VARCHAR (128), 
   PACKAGES                 VARCHAR (128)  NOT NULL, 
   CLASSES                  VARCHAR (128), 
@@ -109,6 +111,7 @@ CREATE TABLE CANDIDATE_SECURED_RESOURCES (
   REQUESTMAPPING           VARCHAR (128), 
   POINTCUT                 VARCHAR (128), 
   CANDIDATE_RESOURCE_TYPE  VARCHAR (10)  NOT NULL, 
+  SYSTEM_NAME			   VARCHAR (15),
   CONSTRAINT CANDIDATE_SECURED_RESOURCES_PK
   PRIMARY KEY ( CANDIDATE_RESOURCE_ID ) ) ; 
 
@@ -139,6 +142,7 @@ CREATE TABLE VIEW_RESOURCES  (
 	VIEW_INFO	VARCHAR(255),		
 	VIEW_TYPE	VARCHAR(10) NOT NULL,
 	VISIBLE		VARCHAR(1) NOT NULL,
+	SYSTEM_NAME VARCHAR(15),
 	CONSTRAINT PK_VIEW_RESOURCES  PRIMARY KEY(VIEW_RESOURCE_ID)
 );
 
@@ -457,32 +461,32 @@ insert into AUTHORITIES values ('ROLE_USER','GRP-0013','G','20090810',null);
 insert into AUTHORITIES values ('ROLE_A','GRP-0010','G','20090811',null);
 insert into AUTHORITIES values ('ROLE_ADMIN','GRP-0003','G','20090811',null);
 
-insert into SECURED_RESOURCES values ('web-000001','web_resource_1','\A/emplistuser\.do.*\Z','all web address like emplistuser','URL',0, '20090714','20090812');
-insert into SECURED_RESOURCES values ('web-000002','*.do','\A/.*\.do.*\Z','All web address with ".do"','URL',0, '20090714','20090812');
-insert into SECURED_RESOURCES values ('mtd_000005','test_resource_5','com.sds.emp.purchase.service.PurchaseService.deletePurchase','delete purchase','Method',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000006','test_resource_6','com.sds.emp.purchase.service.PurchaseService.PurchaseList','purchase List','Method',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000007','test_resource_7','com.sds.emp.purchase.service.PurchaseService.*','All Purchase service method','Method',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000004','method_resource_test_04','test_patterns','this is description','URL',0, '20090714','20090728');
-insert into SECURED_RESOURCES values ('mtd_000010','test_resource_11','com.sds.emp.user.service.UserService.userList','get user List method','Method',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000011','test_resource_12','com.sds.emp.user.service.UserService.*','All user service method','Method',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000012','test_resource_13','excution(* com.sds.emp.sale..*Service.delete*(..))','all delete service method','PointCut',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000013','test_resource_14','excution(* com.sds.emp.sale..*Service.update*(..))','all update service method','PointCut',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000014','test_resource_15','excction(* com.sds.emp.sale..*Service.*list(..))','all list service method','PointCut',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000015','test_resource_16','excution(* com.sds.emp.sale..*Serivice.*(..))','all sale service excution','PointCut',0, '20090714','20090727');
-insert into SECURED_RESOURCES values ('web-000005','web_resource_5','\A/emplistsale\.do.*\Z','all web address like emplistsale','URL',0, '20090714',null);
-insert into SECURED_RESOURCES values ('web-000006','web_resource_6','\A/emplistproduct\.do.*\Z','all web address like emplistproduct','URL',0, '20090714',null);
-insert into SECURED_RESOURCES values ('web-000007','web_resource_7','\A/emplistpurchase\.do.*\Z','all web address like emplistpurchase','URL',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000016','test_resource_17','com.sds.emp.sale.service.SaleService.saleList','sale List method','Method',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000017','test_resource_18','com.sds.emp.sale.service.SaleService.addSale','add sale method','Method',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000018','test_resource_19','com.sds.emp.sale.service.SaleService.deleteSale','delete sale method','Method',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000019','test_resource_20','com.sds.emp.sale.service.SaleService.updateSale','update Sale method','Method',0, '20090714',null);
-insert into SECURED_RESOURCES values ('mtd_000020','test_resource_21','com.sds.emp.sale.service.SaleService.*','All sale service method','Method',0, '20090714',null);
-insert into SECURED_RESOURCES values ('web-000008','web_resource_8','\A/empaddviewproduct\.do.*\Z','add view product page','URL',0, '20090714',null);
-insert into SECURED_RESOURCES values ('web-000009','web_resource_9','\A/empaddviewsale\.do.*\Z','add view sale page','URL',0, '20090714',null);
-insert into SECURED_RESOURCES values ('web-000010','web_resource_10','\A/empaddviewuser\.do.*\Z','add view user page','URL',0, '20090714',null);
-insert into SECURED_RESOURCES values ('web-000011','web_resource_11','\A/empaddviewcategory\.do.*\Z','add view category page','URL',0, '20090714',null);
-insert into SECURED_RESOURCES values ('web-000003','Etc_all','\A/.*\Z','Etc all web address','URL',0, '20090714',null);
-insert into SECURED_RESOURCES values ('web-000004','reloadAuthMapping','\A/reloadAuthMapping\.do.*\Z','reloadAuthMapping URL address','URL',0, '20090714',null);
+insert into SECURED_RESOURCES values ('web-000001','web_resource_1','\A/emplistuser\.do.*\Z','all web address like emplistuser','url',0, '20090714','20090812','SAMPLE');
+insert into SECURED_RESOURCES values ('web-000002','*.do','\A/.*\.do.*\Z','All web address with ".do"','url',0, '20090714','20090812','SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000005','test_resource_5','com.sds.emp.purchase.service.PurchaseService.deletePurchase','delete purchase','method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000006','test_resource_6','com.sds.emp.purchase.service.PurchaseService.PurchaseList','purchase List','method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000007','test_resource_7','com.sds.emp.purchase.service.PurchaseService.*','All Purchase service method','method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000004','method_resource_test_04','test_patterns','this is description','url',0, '20090714','20090728','SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000010','test_resource_11','com.sds.emp.user.service.UserService.userList','get user List method','method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000011','test_resource_12','com.sds.emp.user.service.UserService.*','All user service method','method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000012','test_resource_13','excution(* com.sds.emp.sale..*Service.delete*(..))','all delete service method','pointcut',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000013','test_resource_14','excution(* com.sds.emp.sale..*Service.update*(..))','all update service method','pointcut',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000014','test_resource_15','excction(* com.sds.emp.sale..*Service.*list(..))','all list service method','pointcut',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000015','test_resource_16','excution(* com.sds.emp.sale..*Serivice.*(..))','all sale service excution','pointcut',0, '20090714','20090727','SAMPLE');
+insert into SECURED_RESOURCES values ('web-000005','web_resource_5','\A/emplistsale\.do.*\Z','all web address like emplistsale','url',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000006','web_resource_6','\A/emplistproduct\.do.*\Z','all web address like emplistproduct','url',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000007','web_resource_7','\A/emplistpurchase\.do.*\Z','all web address like emplistpurchase','url',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000016','test_resource_17','com.sds.emp.sale.service.SaleService.saleList','sale List method','method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000017','test_resource_18','com.sds.emp.sale.service.SaleService.addSale','add sale method','method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000018','test_resource_19','com.sds.emp.sale.service.SaleService.deleteSale','delete sale method','method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000019','test_resource_20','com.sds.emp.sale.service.SaleService.updateSale','update Sale method','method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000020','test_resource_21','com.sds.emp.sale.service.SaleService.*','All sale service method','method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000008','web_resource_8','\A/empaddviewproduct\.do.*\Z','add view product page','url',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000009','web_resource_9','\A/empaddviewsale\.do.*\Z','add view sale page','url',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000010','web_resource_10','\A/empaddviewuser\.do.*\Z','add view user page','url',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000011','web_resource_11','\A/empaddviewcategory\.do.*\Z','add view category page','url',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000003','Etc_all','\A/.*\Z','Etc all web address','url',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000004','reloadAuthMapping','\A/reloadAuthMapping\.do.*\Z','reloadAuthMapping URL address','url',0, '20090714',null,'SAMPLE');
 
 insert into SECURED_RESOURCES_ROLES values ('web-000001','ROLE_ADMIN','20090811',null);
 insert into SECURED_RESOURCES_ROLES values ('mtd_000017','ROLE_ADMIN','20090806',null);
@@ -512,234 +516,234 @@ insert into IDS values ('RESOURCE_URL',31);
 insert into IDS values ('RESOURCE_PNC',31);
 insert into IDS values ('TIMES',31);
 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 1, 'codeService', 'com.sds.emp.code.service', 'CodeService', 'findCodeList', 'String'
-, NULL, 'com.sds.emp.code.service.CodeService.findCodeList', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'com.sds.emp.code.service.CodeService.findCodeList', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 2, 'codeService', 'com.sds.emp.code.service', 'CodeService', 'findCodeName', 'String,String'
-, NULL, 'com.sds.emp.code.service.CodeService.findCodeName', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'com.sds.emp.code.service.CodeService.findCodeName', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 3, 'deliveryCompanyService', 'com.sds.emp.purchase.service', 'DeliveryCompanyService'
 , 'findDropDownDeliveryCompanyList', NULL, NULL, 'com.sds.emp.purchase.service.DeliveryCompanyService.findDropDownDeliveryCompanyList'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 4, 'deliveryCompanyService', 'com.sds.emp.purchase.service', 'DeliveryCompanyService'
 , 'findDeliveryCompany', 'String', NULL, 'com.sds.emp.purchase.service.DeliveryCompanyService.findDeliveryCompany'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 5, 'transactionService', 'com.sds.emp.purchase.service', 'TransactionService', 'countTransactionListByDeliveryCompany'
 , 'String', NULL, 'com.sds.emp.purchase.service.TransactionService.countTransactionListByDeliveryCompany'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 6, 'transactionService', 'com.sds.emp.purchase.service', 'TransactionService', 'createTransaction'
 , 'Transaction', NULL, 'com.sds.emp.purchase.service.TransactionService.createTransaction'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 7, 'transactionService', 'com.sds.emp.purchase.service', 'TransactionService', 'updateTransaction'
 , 'Transaction', NULL, 'com.sds.emp.purchase.service.TransactionService.updateTransaction'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 8, 'transactionService', 'com.sds.emp.purchase.service', 'TransactionService', 'updateTranStatusCode'
 , 'String,String', NULL, 'com.sds.emp.purchase.service.TransactionService.updateTranStatusCode'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 9, 'categoryService', 'com.sds.emp.sales.service', 'CategoryService', 'createCategory'
-, 'Category', NULL, 'com.sds.emp.sales.service.CategoryService.createCategory', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'Category', NULL, 'com.sds.emp.sales.service.CategoryService.createCategory', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 10, 'categoryService', 'com.sds.emp.sales.service', 'CategoryService', 'updateCategory'
-, 'Category', NULL, 'com.sds.emp.sales.service.CategoryService.updateCategory', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'Category', NULL, 'com.sds.emp.sales.service.CategoryService.updateCategory', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 11, 'categoryService', 'com.sds.emp.sales.service', 'CategoryService', 'removeCategory'
-, 'Category', NULL, 'com.sds.emp.sales.service.CategoryService.removeCategory', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'Category', NULL, 'com.sds.emp.sales.service.CategoryService.removeCategory', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 12, 'categoryService', 'com.sds.emp.sales.service', 'CategoryService', 'findCategory'
-, 'String', NULL, 'com.sds.emp.sales.service.CategoryService.findCategory', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'String', NULL, 'com.sds.emp.sales.service.CategoryService.findCategory', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 13, 'categoryService', 'com.sds.emp.sales.service', 'CategoryService', 'findCategoryList'
 , 'SalesSearchVO', NULL, 'com.sds.emp.sales.service.CategoryService.findCategoryList'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 14, 'categoryService', 'com.sds.emp.sales.service', 'CategoryService', 'findCategoryListAll'
 , 'SalesSearchVO', NULL, 'com.sds.emp.sales.service.CategoryService.findCategoryListAll'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 15, 'categoryService', 'com.sds.emp.sales.service', 'CategoryService', 'findDropDownCategoryList'
 , NULL, NULL, 'com.sds.emp.sales.service.CategoryService.findDropDownCategoryList'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 16, 'categoryService', 'com.sds.emp.sales.service', 'CategoryService', 'processAll'
-, 'HashMap', NULL, 'com.sds.emp.sales.service.CategoryService.processAll', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'HashMap', NULL, 'com.sds.emp.sales.service.CategoryService.processAll', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 17, 'productService', 'com.sds.emp.sales.service', 'ProductService', 'countProductListByCategory'
 , 'String', NULL, 'com.sds.emp.sales.service.ProductService.countProductListByCategory'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 18, 'productService', 'com.sds.emp.sales.service', 'ProductService', 'createProduct'
-, 'Product', NULL, 'com.sds.emp.sales.service.ProductService.createProduct', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'Product', NULL, 'com.sds.emp.sales.service.ProductService.createProduct', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 19, 'productService', 'com.sds.emp.sales.service', 'ProductService', 'updateProduct'
-, 'Product', NULL, 'com.sds.emp.sales.service.ProductService.updateProduct', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'Product', NULL, 'com.sds.emp.sales.service.ProductService.updateProduct', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 20, 'productService', 'com.sds.emp.sales.service', 'ProductService', 'findProduct'
-, 'String', NULL, 'com.sds.emp.sales.service.ProductService.findProduct', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'String', NULL, 'com.sds.emp.sales.service.ProductService.findProduct', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 21, 'productService', 'com.sds.emp.sales.service', 'ProductService', 'findProductList'
 , 'SalesSearchVO', NULL, 'com.sds.emp.sales.service.ProductService.findProductList'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 22, 'productService', 'com.sds.emp.sales.service', 'ProductService', 'findSoldProductList'
 , 'SalesSearchVO', NULL, 'com.sds.emp.sales.service.ProductService.findSoldProductList'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 23, 'productService', 'com.sds.emp.sales.service', 'ProductService', 'findSoldProduct'
-, 'String', NULL, 'com.sds.emp.sales.service.ProductService.findSoldProduct', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'String', NULL, 'com.sds.emp.sales.service.ProductService.findSoldProduct', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 24, 'productService', 'com.sds.emp.sales.service', 'ProductService', 'findSaleProduct'
-, 'String', NULL, 'com.sds.emp.sales.service.ProductService.findSaleProduct', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'String', NULL, 'com.sds.emp.sales.service.ProductService.findSaleProduct', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 25, 'productService', 'com.sds.emp.sales.service', 'ProductService', 'findSaleProductList'
 , 'SalesSearchVO', NULL, 'com.sds.emp.sales.service.ProductService.findSaleProductList'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 26, 'productService', 'com.sds.emp.sales.service', 'ProductService', 'findProductListUsingMiP'
 , 'SalesSearchVO', NULL, 'com.sds.emp.sales.service.ProductService.findProductListUsingMiP'
-, 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 27, 'productService', 'com.sds.emp.sales.service', 'ProductService', 'findProductUsingMiP'
-, 'String', NULL, 'com.sds.emp.sales.service.ProductService.findProductUsingMiP', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'String', NULL, 'com.sds.emp.sales.service.ProductService.findProductUsingMiP', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 28, 'userService', 'com.sds.emp.user.service', 'UserService', 'findUser', 'String'
-, NULL, 'com.sds.emp.user.service.UserService.findUser', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'com.sds.emp.user.service.UserService.findUser', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 29, 'userService', 'com.sds.emp.user.service', 'UserService', 'createUser', 'Users'
-, NULL, 'com.sds.emp.user.service.UserService.createUser', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'com.sds.emp.user.service.UserService.createUser', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 30, 'userService', 'com.sds.emp.user.service', 'UserService', 'findUserList', 'SearchVO'
-, NULL, 'com.sds.emp.user.service.UserService.findUserList', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'com.sds.emp.user.service.UserService.findUserList', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 31, 'userService', 'com.sds.emp.user.service', 'UserService', 'updateUser', 'Users'
-, NULL, 'com.sds.emp.user.service.UserService.updateUser', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'com.sds.emp.user.service.UserService.updateUser', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 32, 'userService', 'com.sds.emp.user.service', 'UserService', 'checkDuplication', 'String'
-, NULL, 'com.sds.emp.user.service.UserService.checkDuplication', 'method'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'com.sds.emp.user.service.UserService.checkDuplication', 'method','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 33, NULL, 'com.sds.emp.code.service', NULL, NULL, NULL, NULL, 'com.sds.emp.code.service..*Service*.*(..)'
-, 'pointcut'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'pointcut','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 34, NULL, 'com.sds.emp.purchase.service', NULL, NULL, NULL, NULL, 'com.sds.emp.purchase.service..*Service*.*(..)'
-, 'pointcut'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'pointcut','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 35, NULL, 'com.sds.emp.sales.service', NULL, NULL, NULL, NULL, 'com.sds.emp.sales.service..*Service*.*(..)'
-, 'pointcut'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'pointcut','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 36, NULL, 'com.sds.emp.user.service', NULL, NULL, NULL, NULL, 'com.sds.emp.user.service..*Service*.*(..)'
-, 'pointcut'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, 'pointcut','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 37, NULL, 'com.sds.emp.user.web.report', 'UserController', NULL, NULL, '/**/userlist.html'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 38, NULL, 'com.sds.emp.user.web.report', 'ReportController', NULL, NULL, '/**/userlistreport.*'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 39, NULL, 'org.springframework.web.servlet.mvc', 'ParameterizableViewController', NULL
-, NULL, '/login.do', NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, '/login.do', NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 40, NULL, 'org.springframework.web.servlet.mvc', 'ParameterizableViewController', NULL
-, NULL, '/welcome.do', NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, '/welcome.do', NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 41, NULL, 'org.springframework.web.servlet.mvc', 'ParameterizableViewController', NULL
-, NULL, '/index.do', NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, '/index.do', NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 42, NULL, 'org.springframework.web.servlet.mvc', 'ParameterizableViewController', NULL
-, NULL, '/emppopcheckduplication.do', NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, '/emppopcheckduplication.do', NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 43, NULL, 'com.sds.emp.common', 'ReloadAuthMappingController', NULL, NULL, '/reloadAuthMapping.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 44, NULL, 'com.sds.emp.purchase.web', 'AddTransactionController', NULL, NULL, '/empaddtransaction.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 45, NULL, 'com.sds.emp.purchase.web', 'AddTransactionController', NULL, NULL, '/empaddtransactionview.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 46, NULL, 'com.sds.emp.purchase.web', 'GetProductSearchController', NULL, NULL, '/empgetproductsearch.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 47, NULL, 'com.sds.emp.purchase.web', 'GetProductSearchListController', NULL, NULL
-, '/emplistproductsearch.do', NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, '/emplistproductsearch.do', NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 48, NULL, 'com.sds.emp.purchase.web', 'GetTransactionController', NULL, NULL, '/empgettransaction.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 49, NULL, 'com.sds.emp.purchase.web', 'GetTransactionListController', NULL, NULL, '/emplisttransaction.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 50, NULL, 'com.sds.emp.purchase.web', 'UpdateTransactionController', NULL, NULL, '/empupdatetransactionview.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 51, NULL, 'com.sds.emp.purchase.web', 'UpdateTransactionController', NULL, NULL, '/empupdatetransaction.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 52, NULL, 'com.sds.emp.sales.web', 'AddProductController', NULL, NULL, '/empaddproduct.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 53, NULL, 'com.sds.emp.sales.web', 'AddProductController', NULL, NULL, '/empaddproductview.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 54, NULL, 'com.sds.emp.sales.web', 'GetProductController', NULL, NULL, '/empgetsaleproduct.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 55, NULL, 'com.sds.emp.sales.web', 'GetProductListController', NULL, NULL, '/emplistproduct.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 56, NULL, 'com.sds.emp.sales.web', 'UpdateProductController', NULL, NULL, '/empupdateproduct.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 57, NULL, 'com.sds.emp.sales.web', 'UpdateProductController', NULL, NULL, '/empgetproduct.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 58, NULL, 'com.sds.emp.sales.web', 'UpdateTranStatusCodeController', NULL, NULL, '/empupdatetranstatuscode.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 59, NULL, 'com.sds.emp.user.web', 'AddUserController', NULL, NULL, '/empadduser.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 60, NULL, 'com.sds.emp.user.web', 'AddUserController', NULL, NULL, '/empadduserview.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 61, NULL, 'com.sds.emp.user.web', 'CheckDuplicationController', NULL, NULL, '/empcheckduplication.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 62, NULL, 'com.sds.emp.user.web', 'GetUserListController', NULL, NULL, '/emplistuser.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 63, NULL, 'com.sds.emp.user.web', 'UpdateUserController', NULL, NULL, '/empupdateuser.do'
-, NULL, 'url'); 
-INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE ) VALUES ( 
+, NULL, 'url','SAMPLE'); 
+INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 64, NULL, 'com.sds.emp.user.web', 'UpdateUserController', NULL, NULL, '/empgetuser.do'
-, NULL, 'url'); 
+, NULL, 'url','SAMPLE'); 
 
-INSERT INTO RESTRICTED_TIMES ( TIME_ID, TIME_TYPE, START_DATE, START_TIME, END_DATE, END_TIME, DESCRIPTION ) VALUES ( 
-'time-00001', 'crash', NULL, '000000', NULL, '235959', '장애처리'); 
-INSERT INTO RESTRICTED_TIMES ( TIME_ID, TIME_TYPE, START_DATE, START_TIME, END_DATE, END_TIME, DESCRIPTION ) VALUES ( 
-'time-00002', 'holiday', NULL, '000000', NULL, '150000', '사용제한'); 
-INSERT INTO RESTRICTED_TIMES ( TIME_ID, TIME_TYPE, START_DATE, START_TIME, END_DATE, END_TIME, DESCRIPTION ) VALUES ( 
-'time-00003', 'weekend', '20091021', '000000', '20091021', '235959', '주말'); 
-INSERT INTO RESTRICTED_TIMES ( TIME_ID, TIME_TYPE, START_DATE, START_TIME, END_DATE, END_TIME, DESCRIPTION ) VALUES ( 
-'time-00004', 'holiday', '20091019', '180000', '20091021', '110000', '휴일'); 
-INSERT INTO RESTRICTED_TIMES ( TIME_ID, TIME_TYPE, START_DATE, START_TIME, END_DATE, END_TIME, DESCRIPTION ) VALUES ( 
-'time-00005', 'improve', '20090929', '200000', '20090929', '202959', '시스템 개선'); 
+INSERT INTO RESTRICTED_TIMES ( TIME_ID, TIME_TYPE, START_DATE, START_TIME, END_DATE, END_TIME, DESCRIPTION, SYSTEM_NAME ) VALUES ( 
+'time-00001', 'crash', NULL, '000000', NULL, '235959', '장애처리','SAMPLE'); 
+INSERT INTO RESTRICTED_TIMES ( TIME_ID, TIME_TYPE, START_DATE, START_TIME, END_DATE, END_TIME, DESCRIPTION, SYSTEM_NAME ) VALUES ( 
+'time-00002', 'holiday', NULL, '000000', NULL, '150000', '사용제한','SAMPLE'); 
+INSERT INTO RESTRICTED_TIMES ( TIME_ID, TIME_TYPE, START_DATE, START_TIME, END_DATE, END_TIME, DESCRIPTION, SYSTEM_NAME ) VALUES ( 
+'time-00003', 'weekend', '20091021', '000000', '20091021', '235959', '주말','SAMPLE'); 
+INSERT INTO RESTRICTED_TIMES ( TIME_ID, TIME_TYPE, START_DATE, START_TIME, END_DATE, END_TIME, DESCRIPTION, SYSTEM_NAME ) VALUES ( 
+'time-00004', 'holiday', '20091019', '180000', '20091021', '110000', '휴일','SAMPLE'); 
+INSERT INTO RESTRICTED_TIMES ( TIME_ID, TIME_TYPE, START_DATE, START_TIME, END_DATE, END_TIME, DESCRIPTION, SYSTEM_NAME ) VALUES ( 
+'time-00005', 'improve', '20090929', '200000', '20090929', '202959', '시스템 개선','SAMPLE'); 
 
 INSERT INTO RESTRICTED_TIMES_ROLES ( TIME_ID, ROLE_ID ) VALUES ( 
 'time-00002', 'ROLE_USER'); 
 
-insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('addProduct', 'Sales Mgmt.', 'Add Product', '상품 등록 화면', '', 'button', 'Y');
-insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('listProduct', 'Sales Mgmt.', 'Search List of Sales', '상품 목록조회 화면', '', 'button', 'Y');
-insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('listCategory', 'Sales Mgmt.', 'Search List of Category', '카테고리 목록조회 화면', '', 'button', 'Y');
-insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('updateCategory', 'Sales Mgmt.', 'Update Category Information', '카테고리 수정 화면', '', 'button', 'Y');
-insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('listTransaction', 'Purchase Mgmt.', 'Search List of Purchase', '거래 목록조회 화면', '', 'button', 'Y');
-insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('listUser', 'User Mgmt.', 'Search List of Users', '사용자 목록조회 화면', '', 'button', 'Y');
-insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('updateUser', 'User Mgmt.', 'Update Product', '사용자 수정 화면', '', 'button', 'Y');
+insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible, system_name) values ('addProduct', 'Sales Mgmt.', 'Add Product', '상품 등록 화면', '', 'button', 'Y','SAMPLE');
+insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible, system_name) values ('listProduct', 'Sales Mgmt.', 'Search List of Sales', '상품 목록조회 화면', '', 'button', 'Y','SAMPLE');
+insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible, system_name) values ('listCategory', 'Sales Mgmt.', 'Search List of Category', '카테고리 목록조회 화면', '', 'button', 'Y','SAMPLE');
+insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible, system_name) values ('updateCategory', 'Sales Mgmt.', 'Update Category Information', '카테고리 수정 화면', '', 'button', 'Y','SAMPLE');
+insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible, system_name) values ('listTransaction', 'Purchase Mgmt.', 'Search List of Purchase', '거래 목록조회 화면', '', 'button', 'Y','SAMPLE');
+insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible, system_name) values ('listUser', 'User Mgmt.', 'Search List of Users', '사용자 목록조회 화면', '', 'button', 'Y','SAMPLE');
+insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible, system_name) values ('updateUser', 'User Mgmt.', 'Update Product', '사용자 수정 화면', '', 'button', 'Y','SAMPLE');
 
 insert into VIEW_HIERARCHY(parent_view, child_view, create_date, modify_date) values('listProduct', 'addProduct', '20100418', null);
 insert into VIEW_HIERARCHY(parent_view, child_view, create_date, modify_date) values('listCategory', 'listProduct', '20100418', null);

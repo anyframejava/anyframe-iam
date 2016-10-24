@@ -60,6 +60,9 @@ public class ViewResource extends BaseObject implements Serializable {
 	
 	@Column(name = "VISIBLE", nullable = false, length = 1)
 	private String visible;
+	
+	@Column(name = "SYSTEM_NAME", length = 15)
+	private String systemName;
 
 	// bi-directional many-to-one association to ViewResourcesMapping
 	@OneToMany(mappedBy = "viewResource", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -153,6 +156,15 @@ public class ViewResource extends BaseObject implements Serializable {
 	public void setVisible(String visible) {
 		this.visible = visible;
 	}
+	
+	public String getSystemName() {
+		return systemName;
+	}
+
+	public void setSystemName(String systemName) {
+		this.systemName = systemName;
+	}
+
 
 	public boolean equals(Object o) {
 		if (this == o) {

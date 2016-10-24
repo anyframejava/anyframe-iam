@@ -27,6 +27,16 @@ public class RestrictedTimesSearchVO extends CommonSearchVO {
 	private String timeId;
 
 	private String searchType;
+	
+	private String systemName;
+
+	public String getSystemName() {
+		return systemName;
+	}
+
+	public void setSystemName(String systemName) {
+		this.systemName = systemName;
+	}
 
 	public String getTimeId() {
 		return timeId;

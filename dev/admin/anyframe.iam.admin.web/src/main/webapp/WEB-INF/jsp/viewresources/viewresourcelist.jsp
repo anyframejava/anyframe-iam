@@ -21,7 +21,14 @@ jQuery(document).ready(
 			url: "<c:url value='/viewresources/listData.do?&parentViewResourceId=' />" + parentViewResourceId,
 			mtype:'POST',
 			datatype : "json",
-			colNames : [ "<anyframe:message code='viewresource.ui.grid.col.viewresourceid' />", "<anyframe:message code='viewresource.ui.grid.col.category' />", "<anyframe:message code='viewresource.ui.grid.col.viewname' />", "<anyframe:message code='viewresource.ui.grid.col.description' />", "View Type", "Visible", "<anyframe:message code='viewresource.ui.grid.col.viewinfo' />"],
+			colNames : [ 
+						"<anyframe:message code='viewresource.ui.grid.col.viewresourceid' />", 
+						"<anyframe:message code='viewresource.ui.grid.col.category' />", 
+						"<anyframe:message code='viewresource.ui.grid.col.viewname' />", 
+						"<anyframe:message code='viewresource.ui.grid.col.description' />", 
+						"View Type", 
+						"Visible", 
+						"<anyframe:message code='viewresource.ui.grid.col.viewinfo' />"],
 			jsonReader: {
 		        repeatitems: false
 		    },
@@ -108,10 +115,13 @@ jQuery(document).ready(
 				}
 				
 				jQuery.ajaxSettings.traditional = true;
-				jQuery("#grid2").setPostData({viewResourceIds:rowArray, parentViewResourceId:parentViewResourceId});
-				jQuery("#grid2").setGridParam({url:"<c:url value='/viewresources/delete.do?'/>"}).trigger("reloadGrid");
-				jQuery("#grid2").setGridParam({url:"<c:url value='/viewresources/listData.do?'/>"});
-
+				//jQuery("#grid2").setPostData({viewResourceIds:rowArray, parentViewResourceId:parentViewResourceId});
+				//jQuery("#grid2").setGridParam({url:"<c:url value='/viewresources/delete.do?'/>"}).trigger("reloadGrid");
+				//jQuery("#grid2").setGridParam({url:"<c:url value='/viewresources/listData.do?'/>"});
+				$.post("<c:url value='/viewresources/delete.do?'/>", {viewResourceIds:rowArray, parentViewResourceId:parentViewResourceId}, function(data){
+			    	jQuery("#grid2").trigger("reloadGrid");
+				});
+					
 				parent.refreshTree();
 								}
 							}
@@ -126,7 +136,15 @@ jQuery(document).ready(
 		$("[name=searchResource]").click( function() {
 			jQuery("#grid2").setPostData({searchCondition:$("#searchCondition").val(), searchKeyword:$("#searchKeyword").val() });
 			jQuery("#grid2").setGridParam({url:"<c:url value='/viewresources/listData.do?' />"}).trigger("reloadGrid");
-			});
+		});
+
+		/* auto click by enter key */
+		$("#searchKeyword").keypress(function (e) {
+			if (e.which == 13){
+				$("[name=searchResource]").trigger("click");
+				return false;
+			}
+		});
 	});
 //-->
 </script>

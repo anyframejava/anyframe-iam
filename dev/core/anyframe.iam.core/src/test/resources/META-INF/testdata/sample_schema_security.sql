@@ -71,7 +71,7 @@ CREATE TABLE ROLES(ROLE_ID VARCHAR(50) NOT NULL,ROLE_NAME VARCHAR(50),DESCRIPTIO
 
 CREATE TABLE ROLES_HIERARCHY(PARENT_ROLE VARCHAR(50) NOT NULL,CHILD_ROLE VARCHAR(50) NOT NULL,CONSTRAINT PK_ROLES_HIERARCHY PRIMARY KEY(PARENT_ROLE,CHILD_ROLE),CONSTRAINT FK_ROLES1 FOREIGN KEY(PARENT_ROLE) REFERENCES ROLES(ROLE_ID),CONSTRAINT FK_ROLES2 FOREIGN KEY(CHILD_ROLE) REFERENCES ROLES (ROLE_ID));
 
-CREATE TABLE SECURED_RESOURCES(RESOURCE_ID VARCHAR(10) NOT NULL,RESOURCE_NAME VARCHAR(50),RESOURCE_PATTERN VARCHAR(300) NOT NULL,DESCRIPTION VARCHAR(100),RESOURCE_TYPE VARCHAR(10),SORT_ORDER INTEGER,CREATE_DATE DATE,MODIFY_DATE DATE,CONSTRAINT PK_RECURED_RESOURCES PRIMARY KEY(RESOURCE_ID));
+CREATE TABLE SECURED_RESOURCES(RESOURCE_ID VARCHAR(10) NOT NULL,SYSTEM_NAME VARCHAR(15),RESOURCE_NAME VARCHAR(50),RESOURCE_PATTERN VARCHAR(300) NOT NULL,DESCRIPTION VARCHAR(100),RESOURCE_TYPE VARCHAR(10),SORT_ORDER INTEGER,CREATE_DATE DATE,MODIFY_DATE DATE,CONSTRAINT PK_RECURED_RESOURCES PRIMARY KEY(RESOURCE_ID));
 
 CREATE TABLE SECURED_RESOURCES_ROLES(RESOURCE_ID VARCHAR(10) NOT NULL,ROLE_ID VARCHAR(50) NOT NULL,CONSTRAINT PK_SECURED_RESOURCES_ROLE PRIMARY KEY(RESOURCE_ID,ROLE_ID),CONSTRAINT FK_SECURED_RESOURCES FOREIGN KEY(RESOURCE_ID) REFERENCES SECURED_RESOURCES(RESOURCE_ID),CONSTRAINT FK_ROLES4 FOREIGN KEY (ROLE_ID) REFERENCES ROLES(ROLE_ID));
 
@@ -113,13 +113,13 @@ commit;
 
 -- regex type ;
 
-insert into secured_resources (resource_id, resource_name, resource_pattern, description, resource_type, sort_order, create_date) values ('web-000001', 'test_resource_1', '\A/emplistuser\.do.*\Z', '', 'url', 1, '2008-10-18');
+insert into secured_resources (resource_id, system_name, resource_name, resource_pattern, description, resource_type, sort_order, create_date) values ('web-000001', 'SAMPLE', 'test_resource_1', '\A/emplistuser\.do.*\Z', '', 'url', 1, '2008-10-18');
 
-insert into secured_resources (resource_id, resource_name, resource_pattern, description, resource_type, sort_order, create_date) values ('web-000002', '*.do', '\A/.*\.do.*\Z', '', 'url', 100, '2008-10-18');
+insert into secured_resources (resource_id, system_name, resource_name, resource_pattern, description, resource_type, sort_order, create_date) values ('web-000002', 'SAMPLE', '*.do', '\A/.*\.do.*\Z', '', 'url', 100, '2008-10-18');
 
-insert into secured_resources (resource_id, resource_name, resource_pattern, description, resource_type, sort_order, create_date) values ('web-000003', 'etc_all', '\A/.*\Z', '', 'url', 1000, '2008-10-18');
+insert into secured_resources (resource_id, system_name, resource_name, resource_pattern, description, resource_type, sort_order, create_date) values ('web-000003', 'SAMPLE', 'etc_all', '\A/.*\Z', '', 'url', 1000, '2008-10-18');
 
-insert into secured_resources (resource_id, resource_name, resource_pattern, description, resource_type, sort_order, create_date) values ('web-000004', 'reloadAuthMapping', '\A/reloadAuthMapping\.do.*\Z', '', 'url', 10, '2008-10-18');
+insert into secured_resources (resource_id, system_name, resource_name, resource_pattern, description, resource_type, sort_order, create_date) values ('web-000004', 'SAMPLE', 'reloadAuthMapping', '\A/reloadAuthMapping\.do.*\Z', '', 'url', 10, '2008-10-18');
 
 commit;
 
@@ -163,6 +163,7 @@ commit;
 
 CREATE TABLE RESTRICTED_TIMES (
 	TIME_ID		VARCHAR(10) NOT NULL,
+	SYSTEM_NAME VARCHAR(15),
 	TIME_TYPE	VARCHAR(10) NOT NULL, -- crash, holiday, weekend, improve, daily
 	START_DATE	VARCHAR(8),
 	START_TIME	VARCHAR(6) NOT NULL, -- 장애인 경우 최소~최대로 설정, daily 인 경우 java 영역에서 금일+시각 ~ 익일+시각 으로 설정
@@ -200,12 +201,12 @@ CREATE TABLE RESTRICTED_TIMES_ROLES (
 );
 
 
-insert into restricted_times(time_id, time_type, start_date, start_time, end_date, end_time, description) values ('time-00001', 'crash', '', '000000', '', '235959', '장애');
-insert into restricted_times(time_id, time_type, start_date, start_time, end_date, end_time, description) values ('time-00002', 'daily', '', '180000', '', '075959', '업무종료');
-insert into restricted_times(time_id, time_type, start_date, start_time, end_date, end_time, description) values ('time-00003', 'weekend', to_char(current_date, 'yyyyMMdd'), '000000', to_char(current_date, 'yyyyMMdd'), '235959', '테스트 휴일-오늘');
-insert into restricted_times(time_id, time_type, start_date, start_time, end_date, end_time, description) values ('time-00004', 'holiday', '20091005', '000000', '20091007', '235959', '추석');
-insert into restricted_times(time_id, time_type, start_date, start_time, end_date, end_time, description) values ('time-00005', 'improve', '20090929', '200000', '20090930', '015959', '시스템 개선');
-insert into restricted_times(time_id, time_type, start_date, start_time, end_date, end_time, description) values ('time-00006', 'improve', to_char(current_date, 'yyyyMMdd'), case when hour(curtime()) <= 9 then '0'||hour(curtime()) else ''||hour(curtime()) end ||'0000', to_char(current_date, 'yyyyMMdd'), '235959', '테스트 시스템개선-오늘일과후');
+insert into restricted_times(time_id, system_name, time_type, start_date, start_time, end_date, end_time, description) values ('time-00001', 'SAMPLE', 'crash', '', '000000', '', '235959', '장애');
+insert into restricted_times(time_id, system_name, time_type, start_date, start_time, end_date, end_time, description) values ('time-00002', 'SAMPLE', 'daily', '', '180000', '', '075959', '업무종료');
+insert into restricted_times(time_id, system_name, time_type, start_date, start_time, end_date, end_time, description) values ('time-00003', 'SAMPLE', 'weekend', to_char(current_date, 'yyyyMMdd'), '000000', to_char(current_date, 'yyyyMMdd'), '235959', '테스트 휴일-오늘');
+insert into restricted_times(time_id, system_name, time_type, start_date, start_time, end_date, end_time, description) values ('time-00004', 'SAMPLE', 'holiday', '20091005', '000000', '20091007', '235959', '추석');
+insert into restricted_times(time_id, system_name, time_type, start_date, start_time, end_date, end_time, description) values ('time-00005', 'SAMPLE', 'improve', '20090929', '200000', '20090930', '015959', '시스템 개선');
+insert into restricted_times(time_id, system_name, time_type, start_date, start_time, end_date, end_time, description) values ('time-00006', 'SAMPLE', 'improve', to_char(current_date, 'yyyyMMdd'), case when hour(curtime()) <= 9 then '0'||hour(curtime()) else ''||hour(curtime()) end ||'0000', to_char(current_date, 'yyyyMMdd'), '235959', '테스트 시스템개선-오늘일과후');
 
 insert into restricted_times_resources(time_id, resource_id) values ('time-00001', 'web-000001');
 insert into restricted_times_resources(time_id, resource_id) values ('time-00002', 'web-000002');
@@ -234,6 +235,7 @@ commit;
 
 CREATE TABLE VIEW_RESOURCES  (
 	VIEW_RESOURCE_ID 	VARCHAR(50) NOT NULL,	-- ex.) LOGI_001
+	SYSTEM_NAME VARCHAR(15),
 	CATEGORY	VARCHAR(255),		-- ex.) 물류 > 입고관리
 	VIEW_NAME	VARCHAR(50) NOT NULL,	-- ex.) 미입고현황
 	DESCRIPTION	VARCHAR(255) NOT NULL,	-- ex.) 입고되지 않은 주문 리스트
@@ -263,13 +265,13 @@ CREATE TABLE VIEW_HIERARCHY	(
 	CONSTRAINT FK_VIEW2 FOREIGN KEY(CHILD_VIEW) REFERENCES VIEW_RESOURCES(VIEW_RESOURCE_ID)
 );
 
-insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('addProduct', 'Sales Mgmt.', 'Add Product', '상품 등록 화면', '', 'button', 'Y');
-insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('listProduct', 'Sales Mgmt.', 'Search List of Sales', '상품 목록조회 화면', '', 'button', 'Y');
-insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('listCategory', 'Sales Mgmt.', 'Search List of Category', '카테고리 목록조회 화면', '', 'button', 'N');
-insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('updateCategory', 'Sales Mgmt.', 'Update Category Information', '카테고리 수정 화면', '', 'button', 'Y');
-insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('listTransaction', 'Purchase Mgmt.', 'Search List of Purchase', '거래 목록조회 화면', '', 'button', 'Y');
-insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('listUser', 'User Mgmt.', 'Search List of Users', '사용자 목록조회 화면', '', 'button', 'Y');
-insert into view_resources(view_resource_id, category, view_name, description, view_info, view_type, visible) values ('updateUser', 'User Mgmt.', 'Update Product', '사용자 수정 화면', '', 'button', 'Y');
+insert into view_resources(view_resource_id, system_name, category, view_name, description, view_info, view_type, visible) values ('addProduct', 'SAMPLE', 'Sales Mgmt.', 'Add Product', '상품 등록 화면', '', 'button', 'Y');
+insert into view_resources(view_resource_id, system_name, category, view_name, description, view_info, view_type, visible) values ('listProduct', 'SAMPLE', 'Sales Mgmt.', 'Search List of Sales', '상품 목록조회 화면', '', 'button', 'Y');
+insert into view_resources(view_resource_id, system_name, category, view_name, description, view_info, view_type, visible) values ('listCategory', 'SAMPLE', 'Sales Mgmt.', 'Search List of Category', '카테고리 목록조회 화면', '', 'button', 'N');
+insert into view_resources(view_resource_id, system_name, category, view_name, description, view_info, view_type, visible) values ('updateCategory', 'SAMPLE', 'Sales Mgmt.', 'Update Category Information', '카테고리 수정 화면', '', 'button', 'Y');
+insert into view_resources(view_resource_id, system_name, category, view_name, description, view_info, view_type, visible) values ('listTransaction', 'SAMPLE', 'Purchase Mgmt.', 'Search List of Purchase', '거래 목록조회 화면', '', 'button', 'Y');
+insert into view_resources(view_resource_id, system_name, category, view_name, description, view_info, view_type, visible) values ('listUser', 'SAMPLE', 'User Mgmt.', 'Search List of Users', '사용자 목록조회 화면', '', 'button', 'Y');
+insert into view_resources(view_resource_id, system_name, category, view_name, description, view_info, view_type, visible) values ('updateUser', 'SAMPLE', 'User Mgmt.', 'Update Product', '사용자 수정 화면', '', 'button', 'Y');
 
 insert into view_resources_mapping(view_resource_id, ref_id, mask, permissions, ref_type) values ('addProduct', 'ROLE_USER', 7, 'READ,WRITE,CREATE', 'ROLE');
 insert into view_resources_mapping(view_resource_id, ref_id, mask, permissions, ref_type) values ('addProduct', 'buyer', 5, 'READ,CREATE', 'USER');

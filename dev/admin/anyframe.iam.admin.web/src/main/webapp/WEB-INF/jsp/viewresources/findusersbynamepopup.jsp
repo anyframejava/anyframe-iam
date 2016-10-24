@@ -76,6 +76,12 @@ jQuery(document).ready(
 					url : "<c:url value='/users/listData.do?'/>"
 				}).trigger("reloadGrid");
 		});
+
+		/* auto click by enter key */
+		$("#searchKeyword").keypress(function (e) {
+			if (e.which == 13)
+				$("[name=searchUsers]").trigger("click");
+		});
 	});
 
 </script>
@@ -139,7 +145,7 @@ body {
 <table width="572" height="100%" border="0" cellpadding="0" cellspacing="0" >
 	<tr>
 		<td>
-		<table id="grid" class="scroll" cellpadding="0" cellspacing="0" style="margin-top: 10px;"></table>
+		<table id="grid" class="scroll" cellpadding="0" cellspacing="0"></table>
 		<div id="pager2" class="scroll" style="text-align: center;"></div>
 		</td>
 	</tr>

@@ -53,6 +53,8 @@ public class RestrictedTimes extends BaseObject implements Serializable {
 	private String endTime;
 
 	private String description;
+	
+	private String systemName;
 
 	private Set<RestrictedTimesRoles> restrictedTimesRoleses = new HashSet<RestrictedTimesRoles>(0);
 
@@ -135,6 +137,15 @@ public class RestrictedTimes extends BaseObject implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	@Column(name = "SYSTEM_NAME", length = 15)
+	public String getSystemName(){
+		return this.systemName;
+	}
+	
+	public void setSystemName(String systemName){
+		this.systemName = systemName;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "restrictedTimes")

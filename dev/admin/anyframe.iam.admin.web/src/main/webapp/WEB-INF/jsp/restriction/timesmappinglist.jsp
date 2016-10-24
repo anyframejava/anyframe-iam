@@ -79,7 +79,7 @@ body {
 			            		<tr height="25">
 			              			<td width="134" height="27" align="center" valign="bottom"  background="<c:url value='/images/content/bg_tab_menu2.gif'/>" bgcolor="#EDEDED"
 										id="timeRoleTab" >
-										<a href="javascript:moveTotimeRoleTab();">Time-Role </a>						  			</td>
+										<a href="#">Time-Role </a>						  			</td>
 			              			<td width="134" height="27" align="center" valign="bottom"   background="<c:url value='/images/content/bg_tab_menu3.gif'/>" bgcolor="#EDEDED"
 								 		id="timeResourceTab" >
 										<a href="#">Time-Resource</a>						  			</td>
@@ -93,7 +93,7 @@ body {
 						<td></td>
 					</tr>
 					<tr>
-					  <td style="padding-left:10px;padding-top:10px"><iframe src="<c:url value='/restriction/timerole/list.do?' />" width="800" height="445" frameborder="0" scrolling="no" name="frame01" id="frame01"></iframe></td>
+					  <td style="padding-left:10px;padding-top:10px"><iframe src="<c:url value='/restriction/timerole/list.do?' />" width="800" height="495" frameborder="0" scrolling="no" name="frame01" id="frame01"></iframe></td>
 					</tr>
 				</table>
 			</form>

@@ -335,6 +335,12 @@ public class AnnotationGroupsController {
 		response.getOutputStream().print(new String(resultList.getBytes("utf-8"), "8859_1"));
 	}
 
+	/**
+	 * get next group id
+	 * @param model Model object
+	 * @return jsonView
+	 * @throws Exception fail to get next group id
+	 */
 	@RequestMapping("/groups/getGroupId.do")
 	public String getGroupId(Model model) throws Exception {
 		String groupId = idGenerationServiceGroup.getNextStringId();

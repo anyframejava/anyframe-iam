@@ -18,7 +18,13 @@ jQuery(document).ready( function() {
 		url: "<c:url value='/resources/listData.do?' />",
 		mtype:'GET',
 		datatype : "json",
-		colNames : [ '<anyframe:message code="resource.ui.grid.sortorder" />', '<anyframe:message code="resource.ui.grid.resourceid" />', '<anyframe:message code="resource.ui.grid.resourcename" />', '<anyframe:message code="resource.ui.grid.resourcepattern" />', '<anyframe:message code="resource.ui.grid.resourcetype" />' ],
+		colNames : [ 
+		    		'<anyframe:message code="resource.ui.grid.sortorder" />', 
+		    		'<anyframe:message code="resource.ui.grid.resourceid" />', 
+		    		'<anyframe:message code="resource.ui.grid.resourcename" />', 
+		    		'<anyframe:message code="resource.ui.grid.resourcepattern" />', 
+		    		'<anyframe:message code="resource.ui.grid.resourcetype" />' 
+		    		],
 		jsonReader: {
 	        repeatitems: false
 	    },
@@ -98,9 +104,12 @@ jQuery(document).ready( function() {
 					jQuery("#grid2").delRowData(rowData.resourceId);
 				}
 				jQuery.ajaxSettings.traditional = true;
-				jQuery("#grid2").setPostData({resourceId:rowArray});
-				jQuery("#grid2").setGridParam({url:"<c:url value='/resources/delete.do?' />"}).trigger("reloadGrid");
-				jQuery("#grid2").setGridParam({url:"<c:url value='/resources/listData.do?' />"});
+				//jQuery("#grid2").setPostData({resourceId:rowArray});
+				//jQuery("#grid2").setGridParam({url:"<c:url value='/resources/delete.do?' />"}).trigger("reloadGrid");
+				//jQuery("#grid2").setGridParam({url:"<c:url value='/resources/listData.do?' />"});
+				$.post("<c:url value='/resources/delete.do?' />", {resourceId:rowArray}, function(data){
+			    	jQuery("#grid2").trigger("reloadGrid");
+			    });
 			}
 		}
 	});
@@ -169,7 +178,7 @@ body {
 		</td>
 		<td width="41" class="tdpadding">
 			<select id="searchType" class="selbox">
-				<option value="All"><anyframe:message code="resource.ui.selectbox.resourcetype.all" /></option>
+				<option value="ALL"><anyframe:message code="resource.ui.selectbox.resourcetype.all" /></option>
 				<option value="url"><anyframe:message code="resource.ui.selectbox.resourcetype.url" /></option>
 				<option value="method"><anyframe:message code="resource.ui.selectbox.resourcetype.method" /></option>
 				<option value="pointcut"><anyframe:message code="resource.ui.selectbox.resourcetype.pointcut" /></option>

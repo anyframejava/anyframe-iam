@@ -18,7 +18,15 @@ jQuery(document).ready( function() {
 		url: "<c:url value='/restriction/listData.do?' />",
 		mtype:'GET',
 		datatype : "json",
-		colNames : [ '<anyframe:message code="restrictedtimes.ui.grid.timeid" />', '<anyframe:message code="restrictedtimes.ui.grid.timetype" />', '<anyframe:message code="restrictedtimes.ui.grid.startdate" />', '<anyframe:message code="restrictedtimes.ui.grid.starttime" />', '<anyframe:message code="restrictedtimes.ui.grid.enddate" />', '<anyframe:message code="restrictedtimes.ui.grid.endtime" />', '<anyframe:message code="restrictedtimes.ui.grid.description" />' ],
+		colNames : [ 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.timeid" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.timetype" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.startdate" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.starttime" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.enddate" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.endtime" />', 
+		    		'<anyframe:message code="restrictedtimes.ui.grid.description" />' 
+		    		],
 		jsonReader: {
 	        repeatitems: false
 	    },
@@ -59,7 +67,7 @@ jQuery(document).ready( function() {
 			sorttype : 'text',
 			width : 100
 		} ],
-		width : 760,
+		width : 777,
 		height : 250,
 		forceFit:true,
 		pager : jQuery('#pager'),
@@ -122,7 +130,7 @@ body {
 <body>
 <form name="restrictionGrid" onsubmit="return false">
 <div id="documentation" class="demo" style="overflow:auto; height:360px;width:830px;">
-<table width="820" border="0" cellpadding="0" cellspacing="0">
+<table width="777" border="0" cellpadding="0" cellspacing="0">
 	<tr height="30">
 		<td width="83"><img src="<c:url value='/images/arrow.gif'/>" width="13" height="13" align="absmiddle"> <anyframe:message code="restrictedtimes.ui.selectbox.timeid" /> :
 			<input type="hidden" id="searchCondition" value="timeId" readonly>
@@ -162,7 +170,7 @@ body {
 		</td>
 	</tr>
 </table>
-<table width="820" border="0" cellpadding="0" cellspacing="0">
+<table width="777" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 		<td>
 		<table id="grid" class="scroll" cellpadding="0" cellspacing="0"></table>

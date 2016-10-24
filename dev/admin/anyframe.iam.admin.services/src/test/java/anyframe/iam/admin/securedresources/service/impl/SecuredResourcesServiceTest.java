@@ -73,6 +73,7 @@ public class SecuredResourcesServiceTest {
 		domain.setResourcePattern("com.sds.emp.code.service.codeService.findCodeName");
 		domain.setResourceType("pointCut");
 		domain.setDescription("......");
+		domain.setSystemName("SAMPLE");
 
 		return domain;
 	}
@@ -83,6 +84,7 @@ public class SecuredResourcesServiceTest {
 		domain.setResourcePattern("com.sds.emp.code.service.codeService.findCodeName");
 		domain.setResourceType("pointCut");
 		domain.setDescription("......");
+		domain.setSystemName("SAMPLE");
 
 		return domain;
 	}
@@ -91,8 +93,9 @@ public class SecuredResourcesServiceTest {
 		SecuredResources domain = new SecuredResources();
 		domain.setResourceName("aaaa");
 		domain.setResourcePattern("com.sds.emp.code.service.codeService.findCodeName");
-		domain.setResourceType("Method");
+		domain.setResourceType("method");
 		domain.setDescription("......");
+		domain.setSystemName("SAMPLE");
 
 		return domain;
 	}
@@ -101,8 +104,9 @@ public class SecuredResourcesServiceTest {
 		SecuredResources domain = new SecuredResources();
 		domain.setResourceName("aaaa");
 		domain.setResourcePattern("com.sds.emp.code.service.codeService.findCodeName");
-		domain.setResourceType("URL");
+		domain.setResourceType("url");
 		domain.setDescription("......");
+		domain.setSystemName("SAMPLE");
 
 		return domain;
 	}
@@ -113,18 +117,21 @@ public class SecuredResourcesServiceTest {
 		SecuredResources pointCutDomain = new SecuredResources();
 		pointCutDomain.setResourceName("aaaa");
 		pointCutDomain.setResourcePattern("com.sds.emp.code.service.codeService.findCodeName");
-		pointCutDomain.setResourceType("PointCut");
+		pointCutDomain.setResourceType("pointcut");
 		pointCutDomain.setDescription("......");
+		pointCutDomain.setSystemName("SAMPLE");
 		SecuredResources methodDomain = new SecuredResources();
 		methodDomain.setResourceName("aaaa");
 		methodDomain.setResourcePattern("com.sds.emp.code.service.codeService.findCodeName");
-		methodDomain.setResourceType("Method");
+		methodDomain.setResourceType("method");
 		methodDomain.setDescription("......");
+		methodDomain.setSystemName("SAMPLE");
 		SecuredResources urlDomain = new SecuredResources();
 		urlDomain.setResourceName("aaaa");
 		urlDomain.setResourcePattern("com.sds.emp.code.service.codeService.findCodeName");
-		urlDomain.setResourceType("URL");
+		urlDomain.setResourceType("url");
 		urlDomain.setDescription("......");
+		urlDomain.setSystemName("SAMPLE");
 		String[] resourceIds = new String[3];
 
 		// save data
@@ -190,7 +197,7 @@ public class SecuredResourcesServiceTest {
 		ResourceSearchVO searchVO = new ResourceSearchVO();
 		searchVO.setSearchKeyword("aaaa");
 		searchVO.setSearchCondition("resourceName");
-
+		searchVO.setSystemName("ALL");
 		// save one data
 		securedResourcesService.save(domain);
 
@@ -249,8 +256,8 @@ public class SecuredResourcesServiceTest {
 
 		// check
 		assertEquals(resourceIds[0], ((Map) iter.next()).get("resourceId"));
-		assertEquals(resourceIds[2], ((Map) iter.next()).get("resourceId"));
 		assertEquals(resourceIds[1], ((Map) iter.next()).get("resourceId"));
+		assertEquals(resourceIds[2], ((Map) iter.next()).get("resourceId"));
 	}
 
 	@Test
@@ -272,8 +279,8 @@ public class SecuredResourcesServiceTest {
 
 		// check
 		assertEquals(resourceIds[0], ((SecuredResources) iter.next()).getResourceId());
-		assertEquals(resourceIds[2], ((SecuredResources) iter.next()).getResourceId());
 		assertEquals(resourceIds[1], ((SecuredResources) iter.next()).getResourceId());
+		assertEquals(resourceIds[2], ((SecuredResources) iter.next()).getResourceId());
 	}
 
 	@Test

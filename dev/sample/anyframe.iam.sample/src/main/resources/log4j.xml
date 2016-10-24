@@ -9,18 +9,18 @@
 	</appender>
 
 	<logger name="anyframe.iam.sample" additivity="false">	
-		<level value="ERROR"/>
+		<level value="DEBUG"/>
 		<appender-ref ref="console"/>
 	</logger>
 	
 	<logger name="org.springframework.security" additivity="false">
-        <level value="ERROR"/>
+        <level value="DEBUG"/>
         <appender-ref ref="console"/>
     </logger>
 
 	<!-- log SQL (pre-execution) plus exceptions caused by SQL -->
 	<logger name="jdbc.sqlonly" additivity="false">
-		<level value="ERROR" />
+		<level value="DEBUG" />
 		<appender-ref ref="console" />
 	</logger>
 

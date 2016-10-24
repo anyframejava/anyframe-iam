@@ -95,7 +95,7 @@ public interface GroupsService extends GenericService<Groups, String> {
 	 * find all ancestor for the given group ID
 	 * @param groupId
 	 * @return List of group ID
-	 * @throws Exception
+	 * @throws Exception fail to find list
 	 */
 	List<String> getParentsGroupIds(String groupId) throws Exception;
 }

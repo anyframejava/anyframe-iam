@@ -49,14 +49,16 @@ public class SecuredResourcesDaoHibernateImpl extends IamGenericDaoHibernate<Sec
 		String searchCondition = StringUtil.null2str(resourceSearchVO.getSearchCondition());
 		String searchKeyword = StringUtil.null2str(resourceSearchVO.getSearchKeyword());
 		String searchType = StringUtil.null2str(resourceSearchVO.getSearchtype());
+		String systemName = StringUtil.null2str(resourceSearchVO.getSystemName());
 
-		Object[] args = new Object[6];
+		Object[] args = new Object[7];
 		args[0] = "condition=" + searchCondition;
 		args[1] = "keywordStr=%" + searchKeyword + "%";
 		args[2] = "keywordNum=" + searchKeyword + "";
 		args[3] = "searchType=" + searchType;
 		args[4] = "sidx=" + sidx;
 		args[5] = "sord=" + sord;
+		args[6] = "systemName=" + systemName;
 
 		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findSecuredResourcesList", args, pageIndex,
@@ -79,8 +81,9 @@ public class SecuredResourcesDaoHibernateImpl extends IamGenericDaoHibernate<Sec
 		String searchKeyword = StringUtil.null2str(resourceSearchVO.getSearchKeyword());
 		String searchType = StringUtil.null2str(resourceSearchVO.getSearchtype());
 		String roleId = StringUtil.null2str(resourceSearchVO.getRoleId());
+		String systemName = StringUtil.null2str(resourceSearchVO.getSystemName());
 
-		Object[] args = new Object[7];
+		Object[] args = new Object[8];
 		args[0] = "condition=" + searchCondition;
 		args[1] = "keywordStr=%" + searchKeyword + "%";
 		args[2] = "keywordNum=" + searchKeyword + "";
@@ -88,6 +91,7 @@ public class SecuredResourcesDaoHibernateImpl extends IamGenericDaoHibernate<Sec
 		args[4] = "roleId=" + roleId;
 		args[5] = "sidx=" + sidx;
 		args[6] = "sord=" + sord;
+		args[7] = "systemName=" + systemName;
 
 		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findMappedResourcesList", args, pageIndex,
@@ -110,8 +114,9 @@ public class SecuredResourcesDaoHibernateImpl extends IamGenericDaoHibernate<Sec
 		String searchKeyword = StringUtil.null2str(resourceSearchVO.getSearchKeyword());
 		String searchType = StringUtil.null2str(resourceSearchVO.getSearchtype());
 		String roleId = StringUtil.null2str(resourceSearchVO.getRoleId());
+		String systemName = StringUtil.null2str(resourceSearchVO.getSystemName());
 
-		Object[] args = new Object[7];
+		Object[] args = new Object[8];
 		args[0] = "condition=" + searchCondition;
 		args[1] = "keywordStr=%" + searchKeyword + "%";
 		args[2] = "keywordNum=" + searchKeyword + "";
@@ -119,6 +124,7 @@ public class SecuredResourcesDaoHibernateImpl extends IamGenericDaoHibernate<Sec
 		args[4] = "sidx=" + sidx;
 		args[5] = "sord=" + sord;
 		args[6] = "roleId=" + roleId;
+		args[7] = "systemName=" + systemName;
 		
 		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findUnmappedResourcesList", args, pageIndex,
@@ -141,6 +147,7 @@ public class SecuredResourcesDaoHibernateImpl extends IamGenericDaoHibernate<Sec
 		String searchKeyword = StringUtil.null2str(resourceSearchVO.getSearchKeyword());
 		String searchType = StringUtil.null2str(resourceSearchVO.getSearchtype());
 		String roleId = StringUtil.null2str(resourceSearchVO.getRoleId());
+		String systemName = StringUtil.null2str(resourceSearchVO.getSystemName());
 
 		int startIndex = (pageIndex - 1) * pageSize;
 
@@ -161,6 +168,10 @@ public class SecuredResourcesDaoHibernateImpl extends IamGenericDaoHibernate<Sec
 		if ("URL".equals(searchType) || "Method".equals(searchType) || "PointCut".equals(searchType)) {
 			replaceSQL.append("AND a.resource_type like '" + searchType + "'");
 		}
+		if("".equals(systemName) || "All".equals(systemName)){
+			replaceSQL.append(" AND a.resource_name = " + systemName);
+		}
+		
 		String queryString = query.getQueryString();
 		queryString = queryString.replace("--replaceSQL1", replaceSQL.toString());
 

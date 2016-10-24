@@ -67,25 +67,49 @@ public class CandidateSecuredResourcesServiceImpl extends GenericServiceImpl<Can
 	public String getPackagesList(String keyword) throws Exception {
 		return this.candidateSecuredResourcesDao.getPackagesList(keyword);
 	}
+	
+	public String getPackagesList(String keyword, String systemName) throws Exception {
+		return this.candidateSecuredResourcesDao.getPackagesList(keyword, systemName);
+	}
 
 	public String getClassesList(String keyword, String packages) throws Exception {
 		return this.candidateSecuredResourcesDao.getClassesList(keyword, packages);
+	}
+	
+	public String getClassesList(String keyword, String packages, String systemName) throws Exception {
+		return this.candidateSecuredResourcesDao.getClassesList(keyword, packages, systemName);
 	}
 
 	public String getMethodList(String keyword, String packages, String classes) throws Exception {
 		return this.candidateSecuredResourcesDao.getMethodList(keyword, packages, classes);
 	}
+	
+	public String getMethodList(String keyword, String packages, String classes, String systemName) throws Exception {
+		return this.candidateSecuredResourcesDao.getMethodList(keyword, packages, classes, systemName);
+	}
 
 	public String getRequestMappingList(String keyword) throws Exception {
 		return this.candidateSecuredResourcesDao.getRequestMappingList(keyword);
+	}
+	
+	public String getRequestMappingList(String keyword, String systemName) throws Exception {
+		return this.candidateSecuredResourcesDao.getRequestMappingList(keyword, systemName);
 	}
 
 	public String getParameterList(String keyword, String requestMapping) throws Exception {
 		return this.candidateSecuredResourcesDao.getParameterList(keyword, requestMapping);
 	}
+	
+	public String getParameterList(String keyword, String requestMapping, String systemName) throws Exception {
+		return this.candidateSecuredResourcesDao.getParameterList(keyword, requestMapping, systemName);
+	}
 
 	public String getPointCutList(String keyword) throws Exception {
 		return this.candidateSecuredResourcesDao.getPointCutList(keyword);
+	}
+	
+	public String getPointCutList(String keyword, String systemName) throws Exception {
+		return this.candidateSecuredResourcesDao.getPointCutList(keyword, systemName);
 	}
 
 	// Resource Pattern이 적절한지 여부를 검사하는 method
@@ -144,5 +168,9 @@ public class CandidateSecuredResourcesServiceImpl extends GenericServiceImpl<Can
 
 	public String findMethodParam() throws Exception {
 		return this.candidateSecuredResourcesDao.findMethodParam();
+	}
+	
+	public String findMethodParam(String systemName) throws Exception {
+		return this.candidateSecuredResourcesDao.findMethodParam(systemName);
 	}
 }

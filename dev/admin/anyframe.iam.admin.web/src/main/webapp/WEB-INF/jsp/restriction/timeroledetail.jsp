@@ -244,8 +244,8 @@ body {
 							<tr>
 								<td width="130" class="tdHead"><anyframe:message code="restrictedtimes.ui.label.timeid" /></td>
 								<td bgcolor="#D6D6D6" width="2"></td>
-								<td width="120" class="tdin"><form:input path="timeId" id="timeId" readonly="true" cssClass="ct_input_g" cssErrorClass="text medium error" maxlength="10"/><form:errors path="timeId" cssClass="error" /></td>
-								<td width="549" class="tdpadding"><a href="#"  name="selectTimeId" class="searchBtn"><anyframe:message code='user.ui.link.select' /></a></td>
+								<td width="80" class="tdin"><form:input path="timeId" id="timeId" readonly="true" cssClass="ct_input_g" cssErrorClass="text medium error" maxlength="10"/><form:errors path="timeId" cssClass="error" /></td>
+								<td width="589" class="tdpadding"><a href="#"  name="selectTimeId" class="searchBtn"><anyframe:message code='user.ui.link.select' /></a></td>
 							</tr>
 							<tr>
 								<td height="1" colspan="4" bgcolor="#D6D6D6"></td>
@@ -272,6 +272,19 @@ body {
 									</form:option>
 								</form:select>
         						<form:errors path="timeType" />
+								</td>
+							</tr>
+  							<tr><td height="1" colspan="4" bgcolor="#D6D6D6"></td></tr>
+							<tr>
+								<td class="tdHead">System Name</td>
+								<td bgcolor="#D6D6D6" width="2"></td>
+								<td colspan="2" class="tdin">
+								
+								<select name="systemName" disabled="disabled" class="ct_input_g">
+									<c:forEach var="item" items="${systemNames }">
+										<option value="${item }">${item }</option>
+									</c:forEach>
+								</select>
 								</td>
 							</tr>
   							<tr><td height="1" colspan="4" bgcolor="#D6D6D6"></td></tr>
@@ -313,11 +326,11 @@ body {
 								<td colspan="2" valign="top">
 									<table width="668" border="0" cellpadding="0" cellspacing="0" class="tablemargin">
 										<tr height="25">
-											<td width="26" background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen"><a class="openBtn" title="Open Branch" a href="javascript:$.tree.focused().open_all();">Open</a></div></td>
-											<td width="26" background="<c:url value='/images/bg_treer3.gif'/>"><div id="menuclose"><a class="closeBtn" title="Close Branch" a href="javascript:$.tree.focused().close_all();">Close</a></div></td>
-											<td width="100" align="left" background="<c:url value='/images/bg_treer.gif'/>" >
+											<td width="18" background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen"><a class="openBtn" title="Open Branch" a href="javascript:$.tree.focused().open_all();">Open</a></div></td>
+											<td width="18" background="<c:url value='/images/bg_treer3.gif'/>"><div id="menuclose"><a class="closeBtn" title="Close Branch" a href="javascript:$.tree.focused().close_all();">Close</a></div></td>
+											<td width="180" align="left" background="<c:url value='/images/bg_treem.gif'/>" >
 												<div id="inputArea">
-													<input id="roleName" size="20" class='ct_input_g'>
+													<input id="roleName" size="28" class='ct_input_g'>
 													<input id="searchClickYn" type="hidden" value="N">
 													<script type="text/javascript">
 														$("#roleName").autocomplete(
@@ -332,8 +345,10 @@ body {
 													</script>
 												</div>
 								  			</td>
-											<td width="130" align="left" background="<c:url value='/images/bg_treer.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
-											<td width="386" align="right" >
+											<td width="40" align="left" style="padding-right:8px" background="<c:url value='/images/bg_treerrr3.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
+											<td width="260" align="right" >
+											</td>
+											<td width="123">
 												<table height="22" border="0" cellpadding="0" cellspacing="0">
 													<tr>
 														<td width="18"><img src="<c:url value='/images/btn/btn_delete.gif'/>" width="18" height="22"></td>
@@ -345,14 +360,14 @@ body {
 										</tr>
 										<tr>
 											<td colspan="4" valign="top">
-												<div id="role" class="demo" style="overflow:auto;height:140px;width:282px;border:1px solid #c3daf9;">
+												<div id="role" class="demo" style="overflow:auto;height:140px;width:286px;border:1px solid #c3daf9;">
 													<span><anyframe:message code='user.ui.tree.span'/></span>
 												</div>
 											</td>
-											<td valign="top" class="tdin">
-												<div id="roles" class="demo" style="overflow:auto; height:142px;width:370px;">
-													<span class="demo" style="overflow:auto; height:142px;width:386px;">
-														<select id="roleId" name="roleId" multiple="multiple" class="selbox" style="overflow:auto; height:142px;width:370px;border:1px solid #c3daf9;">
+											<td colspan="2" valign="top" class="tdin">
+												<div id="roles" class="demo" style="overflow:auto; height:144px;width:370px;">
+													<span class="demo" style="overflow:auto; height:144px;width:386px;">
+														<select id="roleId" name="roleId" multiple="multiple" class="selbox" style="overflow:auto; height:144px;width:370px;border:1px solid #c3daf9;">
 														<c:forEach var="role" items="${roles}">
 															<option value="${role.roleId}">${role.roleName}</option>
 														</c:forEach>

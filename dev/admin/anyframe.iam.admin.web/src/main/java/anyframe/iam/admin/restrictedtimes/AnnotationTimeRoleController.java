@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -83,8 +84,13 @@ public class AnnotationTimeRoleController {
 	 */
 	@JsonError
 	@RequestMapping("/restriction/timerole/listData.do")
-	public String listData(RestrictedTimesSearchVO searchVO, Model model) throws Exception {
+	public String listData(
+			HttpSession session,
+			RestrictedTimesSearchVO searchVO, Model model) throws Exception {
 
+		String systemName = (String) session.getAttribute("systemName");
+		searchVO.setSystemName(systemName);
+		
 		Page resultPage = restrictedTimesRolesService.getTimeRoleList(searchVO);
 
 		model.addAttribute("page", resultPage.getCurrentPage() + "");
@@ -104,7 +110,15 @@ public class AnnotationTimeRoleController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/restriction/timerole/addView.do")
-	public String addView(@ModelAttribute("searchVO") RestrictedTimesSearchVO searchVO, Model model) throws Exception {
+	public String addView(
+			HttpSession session,
+			@ModelAttribute("searchVO") RestrictedTimesSearchVO searchVO, Model model) throws Exception {
+		
+		String[] systemName = new String[1];
+		
+		systemName[0] = (String) session.getAttribute("systemName");
+		
+		model.addAttribute("systemNames", systemName);
 		model.addAttribute("restrictedtimes", new RestrictedTimes());
 		model.addAttribute("roles", new ArrayList());
 
@@ -176,7 +190,14 @@ public class AnnotationTimeRoleController {
 	 * 
 	 */
 	@RequestMapping("/restriction/timerole/get.do")
-	public String get(@RequestParam(value = "timeId", required = false) String timeId, Model model) throws Exception {
+	public String get(
+			HttpSession session,
+			@RequestParam(value = "timeId", required = false) String timeId, Model model) throws Exception {
+		
+		String[] systemName = new String[1];
+		
+		systemName[0] = (String) session.getAttribute("systemName");
+		
 		if (!StringUtils.isBlank(timeId)) {
 			RestrictedTimes rt = restrictedTimesService.get(timeId);
 			@SuppressWarnings("unchecked")

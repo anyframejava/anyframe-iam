@@ -126,6 +126,45 @@
 		</td>
 	</tr>
 	<!--Product-END-->
+	
+	<!--View Management-START-->
+	<tr>
+		<td valign="top"> 
+			<table border="0" cellspacing="0" cellpadding="0" width="159" >
+				<tr> 
+					<td class="Depth02off"><a href="javascript:toggle(1262671623438)">View</a></td>
+				</tr>
+			</table>
+			<div ID="sub1262671623438" style="DISPLAY: none">
+				<table  border="0" cellspacing="0" cellpadding="0" width="159">
+					<tr>
+						<td class="Depth03"><a href="<c:url value='/viewManagement.do'/>" target="rightFrame">View Management</a></td>
+					</tr>
+				</table>
+			</div>
+		</td>
+	</tr>
+	<!--View Management-END-->
+	
+	<!--Flex Control-START>
+	<tr>
+		<td valign="top"> 
+			<table border="0" cellspacing="0" cellpadding="0" width="159" >
+				<tr> 
+					<td class="Depth02off"><a href="javascript:toggle(1262671623439)">Flex Control</a></td>
+				</tr>
+			</table>
+			<div ID="sub1262671623439" style="DISPLAY: none">
+				<table  border="0" cellspacing="0" cellpadding="0" width="159">
+					<tr>
+						<td class="Depth03"><a href="<c:url value='/iam-flex-debug/main.html'/>" target="rightFrame">Flex Control</a></td>
+					</tr>
+				</table>
+			</div>
+		</td>
+	</tr>
+	<Flex Control-END-->
+	
 	<!-- Add new Menus here -->
 </table>
 </form>

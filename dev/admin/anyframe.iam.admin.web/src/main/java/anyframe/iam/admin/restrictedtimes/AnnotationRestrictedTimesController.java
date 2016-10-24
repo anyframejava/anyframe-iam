@@ -17,6 +17,7 @@
 package anyframe.iam.admin.restrictedtimes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +71,11 @@ public class AnnotationRestrictedTimesController {
 	 */
 	@JsonError
 	@RequestMapping("/restriction/listData.do")
-	public String listData(RestrictedTimesSearchVO searchVO, Model model) throws Exception {
+	public String listData(HttpSession session, RestrictedTimesSearchVO searchVO, Model model) throws Exception {
 
+		String systemName = (String)session.getAttribute("systemName");
+		searchVO.setSystemName(systemName);
+		
 		Page resultPage = restrictedTimesService.getList(searchVO);
 
 		model.addAttribute("page", resultPage.getCurrentPage() + "");
@@ -90,8 +94,14 @@ public class AnnotationRestrictedTimesController {
 	 * @throws Exception fail to move to the page
 	 */
 	@RequestMapping("/restriction/addView.do")
-	public String addView(@ModelAttribute("searchVO") RestrictedTimesSearchVO searchVO, Model model) throws Exception {
+	public String addView(
+			HttpSession session, 
+			@ModelAttribute("searchVO") RestrictedTimesSearchVO searchVO, Model model) throws Exception {
 
+		String[] systemNames = new String[1];
+		systemNames[0] = (String) session.getAttribute("systemName");
+		
+		model.addAttribute("systemNames", systemNames);
 		model.addAttribute("restrictedtimes", new RestrictedTimes());
 
 		return "/restriction/timedetail";
@@ -105,10 +115,15 @@ public class AnnotationRestrictedTimesController {
 	 * @throws Exception fail to get data
 	 */
 	@RequestMapping("/restriction/get.do")
-	public String get(@RequestParam(value = "timeId", required = false) String timeId, Model model) throws Exception {
+	public String get(@RequestParam(value = "timeId", required = false) String timeId, HttpSession session, Model model) throws Exception {
+		
+		String[] systemName = new String[1];
+		systemName[0] = (String) session.getAttribute("systemName");
+		
+		model.addAttribute("systemNames", systemName);
+		
 		if (!StringUtils.isBlank(timeId)) {
 			RestrictedTimes rt = restrictedTimesService.get(timeId);
-			System.out.println(rt);
 			model.addAttribute("restrictedtimes", rt);
 		}
 		return "/restriction/timedetail";
@@ -123,14 +138,20 @@ public class AnnotationRestrictedTimesController {
 	 * @throws Exception fail to update data
 	 */
 	@RequestMapping("/restriction/update.do")
-	public String update(@ModelAttribute("restrictedtimes") RestrictedTimes rt, BindingResult bindingResult,
+	public String update(
+			@ModelAttribute("restrictedtimes") RestrictedTimes rt, 
+			BindingResult bindingResult,
+			HttpSession session,
 			SessionStatus status) throws Exception {
 		beanValidator.validate(rt, bindingResult);
 
 		if (bindingResult.hasErrors()) {
 			return "/restriction/timedetail";
 		}
-
+		
+		if("".equals(rt.getSystemName()) || rt.getSystemName() == null)
+			rt.setSystemName((String)session.getAttribute("systemName"));
+		
 		restrictedTimesService.update(rt);
 		status.setComplete();
 
@@ -146,13 +167,19 @@ public class AnnotationRestrictedTimesController {
 	 * @throws Exception fail to add data
 	 */
 	@RequestMapping("/restriction/add.do")
-	public String add(@ModelAttribute("restrictedtimes") RestrictedTimes rt, BindingResult bindingResult,
+	public String add(
+			@ModelAttribute("restrictedtimes") RestrictedTimes rt, 
+			BindingResult bindingResult,
+			HttpSession session,
 			SessionStatus status) throws Exception {
 		beanValidator.validate(rt, bindingResult);
 
 		if (bindingResult.hasErrors()) {
 			return "/restriction/timedetail";
 		}
+		
+		if("".equals(rt.getSystemName()) || rt.getSystemName() == null)
+			rt.setSystemName((String)session.getAttribute("systemName"));
 
 		restrictedTimesService.save(rt);
 		status.setComplete();

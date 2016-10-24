@@ -29,6 +29,7 @@ import org.springframework.security.ConfigAttributeDefinition;
 import org.springframework.security.SecurityConfig;
 import org.springframework.security.intercept.web.RequestKey;
 
+import anyframe.common.util.StringUtil;
 import anyframe.iam.core.securedobject.ISecuredObjectService;
 
 /**
@@ -44,6 +45,7 @@ public class SecuredObjectDAO {
 	 */
 	public static final String DEF_ROLES_AND_URL_QUERY = "SELECT a.resource_pattern url, b.role_id authority "
 			+ "FROM secured_resources a, secured_resources_roles b " + "WHERE a.resource_id = b.resource_id "
+			+ "{{systemCondition}} "
 			+ "AND a.resource_type = 'url' " + "ORDER BY a.sort_order, a.resource_id ";
 
 	/**
@@ -51,6 +53,7 @@ public class SecuredObjectDAO {
 	 */
 	public static final String DEF_ROLES_AND_METHOD_QUERY = "SELECT a.resource_pattern method, b.role_id authority "
 			+ "FROM secured_resources a, secured_resources_roles b " + "WHERE a.resource_id = b.resource_id "
+			+ "{{systemCondition}} "
 			+ "AND a.resource_type = 'method' " + "ORDER BY a.sort_order, a.resource_id ";
 
 	/**
@@ -59,6 +62,7 @@ public class SecuredObjectDAO {
 	public static final String DEF_ROLES_AND_POINTCUT_QUERY = "SELECT a.resource_pattern pointcut, b.role_id authority "
 			+ "FROM secured_resources a, secured_resources_roles b "
 			+ "WHERE a.resource_id = b.resource_id "
+			+ "{{systemCondition}} "
 			+ "AND a.resource_type = 'pointcut' " + "ORDER BY a.sort_order, a.resource_id ";
 
 	/**
@@ -69,6 +73,7 @@ public class SecuredObjectDAO {
 	public static final String DEF_REGEX_MATCHED_REQUEST_MAPPING_QUERY_ORACLE10G = "SELECT a.resource_pattern uri, b.role_id authority "
 			+ "FROM secured_resources a, secured_resources_roles b "
 			+ "WHERE a.resource_id = b.resource_id "
+			+ "{{systemCondition}} "
 			+ "AND a.resource_id =  "
 			+ " ( SELECT resource_id FROM "
 			+ "    ( SELECT resource_id, ROW_NUMBER() OVER (ORDER BY sort_order) resource_order FROM secured_resources c "
@@ -88,6 +93,7 @@ public class SecuredObjectDAO {
 	public static final String DEF_RESTRICTED_TIMES_ROLES_QUERY = "SELECT time_type, a.time_id as time_id, start_date, start_time, end_date, end_time, role_id "
 			+ "FROM restricted_times a, restricted_times_roles b "
 			+ "WHERE a.time_id = b.time_id "
+			+ "{{systemCondition}} "
 			+ "ORDER BY time_type, start_date, start_time, end_date, end_time ";
 
 	/**
@@ -101,6 +107,8 @@ public class SecuredObjectDAO {
 			+ "WHERE a.time_id = b.time_id "
 			+ "AND b.resource_id = d.resource_id "
 			+ "AND d.resource_type = 'url' "
+			+ "{{systemCondition}} "
+			+ "{{systemCondition2}} "
 			+ "ORDER BY d.sort_order, time_type, start_date, start_time, end_date, end_time ";
 
 	/**
@@ -112,6 +120,7 @@ public class SecuredObjectDAO {
 			+ "WHERE b.view_resource_id = :viewResourceId "
 			+ "AND a.view_resource_id = b.view_resource_id "
 			+ "AND a.visible = 'Y' "
+			+ "{{systemCondition}} "
 			+ "AND ( "
 			+ "		   ( b.ref_id IN ( {{userRoleList}} ) AND b.ref_type = 'ROLE' ) "
 			+ "		OR ( b.ref_id = :userId AND b.ref_type = 'USER' ) "
@@ -123,8 +132,12 @@ public class SecuredObjectDAO {
 			  "SELECT a.child_view child "
 			+ "FROM view_hierarchy a "
 			+ "WHERE a.parent_view = :viewResourceId ";
-		
 	
+	/**
+	 * default value for target application name. (NONE for solo target.)
+	 */
+	public static final String DEF_SYSTEM_NAME = "NONE";
+
 	private String sqlRolesAndUrl;
 
 	private String sqlRolesAndMethod;
@@ -142,6 +155,8 @@ public class SecuredObjectDAO {
 	private String sqlViewResourceMapping;
 	
 	private String sqlViewHierarchy;
+	
+	private String systemName;
 
 	public SecuredObjectDAO() {
 		this.sqlRolesAndUrl = DEF_ROLES_AND_URL_QUERY;
@@ -153,6 +168,7 @@ public class SecuredObjectDAO {
 		this.sqlRestrictedTimesResources = DEF_RESTRICTED_TIMES_RESOURCES_QUERY;
 		this.sqlViewResourceMapping = DEF_VIEW_RESOURCE_MAPPING_QUERY;
 		this.sqlViewHierarchy = DEF_HIERARCHYCAL_VIEW_QUERY;
+		this.systemName = DEF_SYSTEM_NAME;
 	}
 
 	public String getSqlViewHierarchy() {
@@ -233,25 +249,35 @@ public class SecuredObjectDAO {
 		this.sqlViewResourceMapping = sqlViewResourceMapping;
 	}
 
+	public String getSystemName() {
+		return systemName;
+	}
+
+	public void setSystemName(String systemName) {
+		this.systemName = systemName;
+	}
+
 	public LinkedHashMap getRolesAndResources(String resourceType) throws Exception {
 
 		LinkedHashMap resourcesMap = new LinkedHashMap();
 
-		String sqlRolesAndResources;
+		String sql;
 		boolean isResourcesUrl = true;
 		if ("method".equals(resourceType)) {
-			sqlRolesAndResources = getSqlRolesAndMethod();
+			sql = getSqlRolesAndMethod();
 			isResourcesUrl = false;
 		}
 		else if ("pointcut".equals(resourceType)) {
-			sqlRolesAndResources = getSqlRolesAndPointcut();
+			sql = getSqlRolesAndPointcut();
 			isResourcesUrl = false;
 		}
 		else {
-			sqlRolesAndResources = getSqlRolesAndUrl();
+			sql = getSqlRolesAndUrl();
 		}
+		
+		sql = getReplacedSqlBySystemCondition(sql, "{{systemCondition}}", "a");
 
-		List resultList = this.namedParameterJdbcTemplate.queryForList(sqlRolesAndResources, new HashMap());
+		List resultList = this.namedParameterJdbcTemplate.queryForList(sql, new HashMap());
 
 		Iterator itr = resultList.iterator();
 		Map tempMap;
@@ -318,7 +344,11 @@ public class SecuredObjectDAO {
 		// custom function, Oracle 10g regexp_like 등)
 		Map paramMap = new HashMap();
 		paramMap.put("url", url);
-		List resultList = this.namedParameterJdbcTemplate.queryForList(getSqlRegexMatchedRequestMapping(), paramMap);
+		
+		String sql = getSqlRegexMatchedRequestMapping();
+		sql = getReplacedSqlBySystemCondition(sql, "{{systemCondition}}", "a");
+		
+		List resultList = this.namedParameterJdbcTemplate.queryForList(sql, paramMap);
 
 		Iterator itr = resultList.iterator();
 		Map tempMap;
@@ -359,13 +389,21 @@ public class SecuredObjectDAO {
 
 	public List getRestrictedTimesRoles() throws Exception {
 
-		return this.namedParameterJdbcTemplate.queryForList(getSqlRestrictedTimesRoles(), new HashMap());
+		String sql = getSqlRestrictedTimesRoles();
+		sql = getReplacedSqlBySystemCondition(sql, "{{systemCondition}}", "a");
+		
+		return this.namedParameterJdbcTemplate.queryForList(sql, new HashMap());
 
 	}
 
 	public List getRestrictedTimesResources() throws Exception {
 
-		return this.namedParameterJdbcTemplate.queryForList(getSqlRestrictedTimesResources(), new HashMap());
+		String sql = getSqlRestrictedTimesResources();
+
+		sql = getReplacedSqlBySystemCondition(sql, "{{systemCondition}}", "a");
+		sql = getReplacedSqlBySystemCondition(sql, "{{systemCondition2}}", "d");
+
+		return this.namedParameterJdbcTemplate.queryForList(sql, new HashMap());
 
 	}
 
@@ -392,6 +430,7 @@ public class SecuredObjectDAO {
 			}
 		}
 
+		sql = getReplacedSqlBySystemCondition(sql, "{{systemCondition}}", "a");
 		sql = sql.replace("{{userRoleList}}", userRoleList);
 
 		return this.namedParameterJdbcTemplate.queryForList(sql, paramMap);
@@ -410,5 +449,17 @@ public class SecuredObjectDAO {
 		} else{
 			return "";
 		}
+	}
+	
+	private String getReplacedSqlBySystemCondition(String sql, String pattern, String tableAlias) {
+		if (StringUtil.isEmpty(sql) || StringUtil.isEmpty(pattern) || StringUtil.isEmpty(tableAlias))
+			return sql;
+		
+		if (!getSystemName().equals(DEF_SYSTEM_NAME)) {
+			sql = sql.replace(pattern, "AND " + tableAlias + ".system_name = '" + getSystemName() + "'");
+		} else {
+			sql = sql.replace(pattern, "");
+		}
+		return sql;
 	}
 }

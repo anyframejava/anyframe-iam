@@ -47,14 +47,16 @@ public class RestrictedTimesResourcesDaoHibernateImpl extends
 		String searchCondition = StringUtil.null2str(searchVO.getSearchCondition());
 		String searchKeyword = StringUtil.null2str(searchVO.getSearchKeyword());
 		String searchType = StringUtil.null2str(searchVO.getSearchtype());
+		String systemName = StringUtil.null2str(searchVO.getSystemName());
 
-		Object[] args = new Object[7];
+		Object[] args = new Object[8];
 		args[0] = "condition=" + searchCondition;
 		args[1] = "keywordStr=%" + searchKeyword + "%";
 		args[2] = "keywordNum=" + searchKeyword + "";
 		args[3] = "searchType=" + searchType;
 		args[5] = "sidx=" + sidx;
 		args[6] = "sord=" + sord;
+		args[7] = "systemName=" + systemName;
 
 		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findTimeResourceList", args, pageIndex, pageSize);
@@ -82,11 +84,13 @@ public class RestrictedTimesResourcesDaoHibernateImpl extends
 		String timeId = StringUtil.null2str(searchVO.getSearchKeyword());
 		String sidx = StringUtil.null2str(searchVO.getSidx());
 		String sord = StringUtil.null2str(searchVO.getSord());
+		String systemName = StringUtil.null2str(searchVO.getSystemName());
 
-		Object[] args = new Object[3];
+		Object[] args = new Object[4];
 		args[0] = "timeId=" + timeId;
 		args[1] = "sidx=" + sidx;
 		args[2] = "sord=" + sord;
+		args[3] = "systemName=" + systemName;
 
 		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findResourceListByTime", args, pageIndex,
@@ -109,8 +113,9 @@ public class RestrictedTimesResourcesDaoHibernateImpl extends
 		String searchKeyword = StringUtil.null2str(searchVO.getSearchKeyword());
 		String searchType = StringUtil.null2str(searchVO.getSearchtype());
 		String timeId = StringUtil.null2str(searchVO.getTimeId());
+		String systemName = StringUtil.null2str(searchVO.getSystemName());
 
-		Object[] args = new Object[7];
+		Object[] args = new Object[8];
 		args[0] = "condition=" + searchCondition;
 		args[1] = "keywordStr=%" + searchKeyword + "%";
 		args[2] = "keywordNum=" + searchKeyword + "";
@@ -118,6 +123,7 @@ public class RestrictedTimesResourcesDaoHibernateImpl extends
 		args[4] = "timeId=" + timeId;
 		args[5] = "sidx=" + sidx;
 		args[6] = "sord=" + sord;
+		args[7] = "systemName=" + systemName;
 
 		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findUnmappedResourceListByTime", args, pageIndex,

@@ -69,6 +69,7 @@ public class ViewResourcesServiceTest {
 		domain.setViewInfo("사용자 추가");
 		domain.setViewType("Button");
 		domain.setVisible("Y");
+		domain.setSystemName("SAMPLE");
 		
 		ViewHierarchyId viewHierarchyId = new ViewHierarchyId();
 		ViewHierarchy viewHierarchy = new ViewHierarchy();
@@ -86,6 +87,34 @@ public class ViewResourcesServiceTest {
 		return domain;
 	}
 	
+	// make another domain
+	public ViewResource makeAnotherDomain() {
+		ViewResource domain = new ViewResource();
+		domain.setViewResourceId("addAnotherUser");
+		domain.setViewName("addAnotherUser");
+		domain.setCategory("User Mgmt.");
+		domain.setDescription("다른 사용자 추가");
+		domain.setViewInfo("다른 사용자 추가");
+		domain.setViewType("Button");
+		domain.setVisible("Y");
+		domain.setSystemName("SAMPLE");
+		
+		ViewHierarchyId viewHierarchyId = new ViewHierarchyId();
+		ViewHierarchy viewHierarchy = new ViewHierarchy();
+		
+		viewHierarchyId.setChildView("addUser");
+		viewHierarchyId.setParentView(domain.getViewResourceId());
+		viewHierarchy.setId(viewHierarchyId);
+		
+		Set<ViewHierarchy> parentView = new HashSet<ViewHierarchy>();
+		
+		parentView.add(viewHierarchy);
+		
+		domain.setViewHierarchiesForParentView(parentView);
+		
+		return domain;
+	}
+	
 	@Test
 	public void testSave() throws Exception{
 		ViewResource domain = makeDomain();
@@ -97,6 +126,16 @@ public class ViewResourcesServiceTest {
 		assertNotNull(resultDomain);
 		assertEquals(domain.getViewResourceId(), resultDomain.getViewResourceId());
 		assertEquals("addUser", resultDomain.getViewResourceId());
+		
+		ViewResource anotherDomain = makeAnotherDomain();
+		
+		viewResourcesService.save(anotherDomain);
+		
+		ViewResource resultAnotherDomain = viewResourcesService.get(anotherDomain.getViewResourceId());
+		
+		assertNotNull(resultAnotherDomain);
+		assertEquals(anotherDomain.getViewResourceId(), resultAnotherDomain.getViewResourceId());
+		assertEquals("addAnotherUser", resultAnotherDomain.getViewResourceId());
 	}
 
 	@Test
@@ -112,6 +151,7 @@ public class ViewResourcesServiceTest {
 		ViewResourceSearchVO searchVO = new ViewResourceSearchVO();
 		searchVO.setSearchCondition("viewResourceId");
 		searchVO.setSearchKeyword("addUser");
+		searchVO.setSystemName("SAMPLE");
 		Page resultPage = viewResourcesService.getList(searchVO);
 
 		// check
@@ -149,6 +189,47 @@ public class ViewResourcesServiceTest {
 			assertEquals("Fail to compare exception message.",
 					"'class anyframe.iam.admin.domain.ViewResource' object with id '" + domain.getViewResourceId()
 							+ "' not found", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testMultiDelete() throws Exception{
+		// make domain
+		ViewResource domain = makeDomain();
+		ViewResource anotherDomain = makeAnotherDomain();
+
+		// save
+		viewResourcesService.save(domain);
+		viewResourcesService.save(anotherDomain);
+		
+		// delete
+		String[] viewResourceIds = new String[1];
+		viewResourceIds[0] = "addUser";
+		viewResourcesService.delete(viewResourceIds);
+		
+		// check
+		try {
+			viewResourcesService.get("addUser");
+			fail("ObjectRetrievalFailureException 이 발생해야합니다.");
+		}
+		catch (Exception e) {
+			assertNotNull(e);
+			assertTrue("Fail to check exception.", e instanceof BaseException);
+			assertEquals("Fail to compare exception message.",
+					"'class anyframe.iam.admin.domain.ViewResource' object with id '" + domain.getViewResourceId()
+							+ "' not found", e.getMessage());
+		}
+
+		try {
+			viewResourcesService.get("addAnotherUser");
+			fail("ObjectRetrievalFailureException 이 발생해야합니다.");
+		}
+		catch (Exception e) {
+			assertNotNull(e);
+			assertTrue("Fail to check exception.", e instanceof BaseException);
+			assertEquals("Fail to compare exception message.",
+					"'class anyframe.iam.admin.domain.ViewResource' object with id '" + anotherDomain.getViewResourceId()
+					+ "' not found", e.getMessage());
 		}
 	}
 
@@ -197,6 +278,73 @@ public class ViewResourcesServiceTest {
 		assertTrue(resultList.size() > 0);
 		assertEquals("addUser", resultList.get(0).getId());
 		
+	}
+	
+	@Test
+	public void testGetViewResourceIdByViewName() throws Exception{
+		// make domain
+		ViewResource domain = makeDomain();
+		
+		// save
+		ViewResource savedViewResource = viewResourcesService.save(domain);
+		
+		String viewId = viewResourcesService.getViewResourceIdByViewName(domain.getViewName());
+		
+		assertNotNull(viewId);
+		assertEquals(viewId, savedViewResource.getViewResourceId());
+	}
+	
+	@Test
+	public void testGetViewNameList() throws Exception{
+		// make domain
+		ViewResource domain = makeDomain();
+		
+		// save
+		ViewResource savedViewResource = viewResourcesService.save(domain);
+		
+		String resultList = viewResourcesService.getViewNameList(savedViewResource.getViewName());
+		assertNotNull(resultList);
+		assertEquals(resultList, "");
+	}
+	
+	@Test
+	public void testGetViewNameListWithSystemName() throws Exception{
+		// make domain
+		ViewResource domain = makeDomain();
+		
+		// save
+		ViewResource savedViewResource = viewResourcesService.save(domain);
+		
+		String resultList = viewResourcesService.getViewNameListWithSystemName(savedViewResource.getViewName(), savedViewResource.getSystemName());
+		assertNotNull(resultList);
+		assertEquals(resultList, domain.getViewName() + "\n");
+	}
+	
+	@Test
+	public void testGetRootNodeOfViewsWithSystemName() throws Exception{
+		// make domain
+		ViewResource domain = makeDomain();
+		
+		List<IamTree> list = viewResourcesService.getRootNodeOfViewsWithSystemName(domain.getSystemName());
+		
+		assertNotNull(list);
+		assertTrue(list.size() > 0);
+		assertEquals(list.get(0).getId(), "addProduct");
+	}
+	
+	@Test
+	public void testGetParentsViewIds() throws Exception{
+		// make domain
+		ViewResource domain = makeDomain();
+
+		// save
+		viewResourcesService.save(domain);
+		
+		List<String> ids = viewResourcesService.getParentsViewIds(domain.getViewResourceId());
+		
+		assertNotNull(ids);
+		assertTrue(ids.size() > 0);
+		assertEquals(ids.get(0), "listTransaction");
 	}
 	
 }

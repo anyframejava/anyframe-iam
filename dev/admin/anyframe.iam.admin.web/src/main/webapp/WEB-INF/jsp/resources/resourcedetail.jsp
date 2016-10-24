@@ -50,6 +50,7 @@ jQuery(document).ready( function(){
 function changeType(frm){
 	var patternArea = document.getElementById("patternArea");
 	var inputArea = document.getElementById("inputArea");
+	var resourcePattern = document.getElementById("resourcePattern");
 	patternArea.removeChild(inputArea);
 
 	// Method 로 변경 될 경우
@@ -146,7 +147,6 @@ function changeType(frm){
 		$("#pointCut").focus();
 	}
 
-	var resoucePattern = document.resources.resourcePattern;
 	resourcePattern.value = "";
 }
 
@@ -359,6 +359,19 @@ body {
 				<tr><td height="1" colspan="3" bgcolor="#D6D6D6"></td></tr>
 				<tr>
 					<td class="tdHead">
+						System Name</td>
+					<td bgcolor="#B6CDE4" width="1"></td>
+					<td class="tdin">									        
+			        <select name="systemName" disabled="disabled" class="ct_input_g">
+			        	<c:forEach var="item" items="${systemNames }">
+			        		<option value="${item }">${item }</option>
+			        	</c:forEach>
+			        </select>
+			        </td>
+				</tr>
+				<tr><td height="1" colspan="3" bgcolor="#D6D6D6"></td></tr>
+				<tr>
+					<td class="tdHead">
 						<anyframe:message code="resource.ui.label.resourcetype" /></td>
 					<td bgcolor="#B6CDE4" width="1"></td>
 					<td class="tdin">									        
@@ -471,6 +484,7 @@ body {
 					<td class="tdin">									        
 						<form:input path="resourcePattern" id="resourcePattern" cssClass="ct_input_g" cssErrorClass="text medium error" maxlength="300" size="40" readonly="true" />&nbsp;<form:errors path="resourcePattern" cssClass="error" />
 						<input type="checkbox" name="isSelfInput" onchange="changeReadOnly(this);" "${checked }"><anyframe:message code="resource.ui.selectbox.selfinput" />
+						<input type="checkbox" name="skipvalidation" value="Y" checked="checked" />Skip Validation
 					</td>
 				</tr>
 				<tr><td height="1" colspan="3" bgcolor="#D6D6D6"></td></tr>

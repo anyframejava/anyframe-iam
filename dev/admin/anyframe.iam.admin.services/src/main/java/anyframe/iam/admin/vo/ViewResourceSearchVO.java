@@ -30,6 +30,16 @@ public class ViewResourceSearchVO extends CommonSearchVO {
 
 	private String type;
 	
+	private String systemName;
+	
+	public String getSystemName() {
+		return systemName;
+	}
+
+	public void setSystemName(String systemName) {
+		this.systemName = systemName;
+	}
+
 	public String getParentViewResourceId(){
 		return parentViewResourceId;
 	}

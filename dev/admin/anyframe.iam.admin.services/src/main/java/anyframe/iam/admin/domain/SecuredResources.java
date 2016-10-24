@@ -55,6 +55,8 @@ public class SecuredResources extends BaseObject implements Serializable {
 	private String createDate;
 
 	private String modifyDate;
+	
+	private String systemName;
 
 	private Set<SecuredResourcesRoles> securedResourcesRoleses = new HashSet<SecuredResourcesRoles>(0);
 
@@ -140,6 +142,15 @@ public class SecuredResources extends BaseObject implements Serializable {
 
 	public void setModifyDate(String modifyDate) {
 		this.modifyDate = modifyDate;
+	}
+	
+	@Column(name = "SYSTEM_NAME", length = 15)
+	public String getSystemName() {
+		return this.systemName;
+	}
+	
+	public void setSystemName(String systemName){
+		this.systemName = systemName;
 	}
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "securedResources")

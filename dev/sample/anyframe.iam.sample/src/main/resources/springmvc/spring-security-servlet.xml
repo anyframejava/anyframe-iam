@@ -16,6 +16,7 @@
 				<value>java\..*</value>
 			</list>
 		</property>
+		<property name="systemName" value="SAMPLE" />
 	</bean>
 	
 	<bean id="gatherService" 

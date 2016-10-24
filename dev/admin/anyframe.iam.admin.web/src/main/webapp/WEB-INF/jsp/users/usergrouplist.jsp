@@ -98,9 +98,12 @@ jQuery(document).ready(
 //							jQuery("#grid_user").delRowData(rowData.userId);
 						}
 						jQuery.ajaxSettings.traditional = true;
-						jQuery("#grid_user").setPostData({userId : rowArray});
-						jQuery("#grid_user").setGridParam({	url : "<c:url value='/users/delete.do?groupId='/>" + groupId}).trigger("reloadGrid");
-						jQuery("#grid_user").setGridParam({ url : "<c:url value='/users/listData.do?'/>"});
+						//jQuery("#grid_user").setPostData({userId : rowArray});
+						//jQuery("#grid_user").setGridParam({	url : "<c:url value='/users/delete.do?groupId='/>" + groupId}).trigger("reloadGrid");
+						//jQuery("#grid_user").setGridParam({ url : "<c:url value='/users/listData.do?'/>"});
+						$.post("<c:url value='/users/delete.do?groupId='/>" + groupId, {userId : rowArray}, function(data){
+				    		jQuery("#grid_user").trigger("reloadGrid");
+						});
 					}
 				}
 			});

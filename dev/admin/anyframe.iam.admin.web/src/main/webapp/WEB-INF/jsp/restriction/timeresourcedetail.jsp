@@ -42,7 +42,14 @@
 			url: "<c:url value='/restriction/timeresource/listResourceData.do?&searchKeyword=' />" + document.restrictedtimes.timeId.value,
 			mtype:'POST',
 			datatype : "json",
-			colNames : [ '<anyframe:message code="roleresource.ui.grid.sortorder" />', '<anyframe:message code="roleresource.ui.grid.resourceid" />', '<anyframe:message code="roleresource.ui.grid.resourcename" />','<anyframe:message code="roleresource.ui.grid.resourcepattern" />', '<anyframe:message code="roleresource.ui.grid.resourcetype" />' ],
+			colNames : [ 
+						'<anyframe:message code="roleresource.ui.grid.sortorder" />', 
+						'<anyframe:message code="roleresource.ui.grid.resourceid" />', 
+						'<anyframe:message code="roleresource.ui.grid.resourcename" />',
+						'System Name',
+						'<anyframe:message code="roleresource.ui.grid.resourcepattern" />', 
+						'<anyframe:message code="roleresource.ui.grid.resourcetype" />' 
+						],
 			jsonReader: {
 		        repeatitems: false
 		    },
@@ -67,6 +74,11 @@
 				sorttype : 'text',
 				width : 90
 			}, {
+				name : 'systemName',
+				index : 'systemName',
+				sorttype : 'text',
+				width : 90
+			}, {
 				name : 'resourcePattern',
 				index : 'resourcePattern',
 				sorttype : 'text',
@@ -77,7 +89,7 @@
 				sorttype : 'text',
 				width : 60
 			} ],
-			width : 746,
+			width : 790,
 			height : 130,
 			multiselect : true,
 			pager : jQuery('#pager_timeresource'),
@@ -115,9 +127,12 @@
 						rowArray[i] = rowData.resourceId;
 						jQuery("#grid_timeresource").delRowData(rowData.resourceId);
 					}
-					jQuery("#grid_timeresource").setPostData({resourceIds:rowArray, timeId:document.restrictedtimes.timeId.value});
-					jQuery("#grid_timeresource").setGridParam({url:"<c:url value='/restriction/timeresource/deleteResourceFromDetail.do?' />"}).trigger("reloadGrid");
-					jQuery("#grid_timeresource").setGridParam({url:"<c:url value='/restriction/timeresource/listResourceData.do?&searchKeyword=' />" + document.restrictedtimes.timeId.value});
+					//jQuery("#grid_timeresource").setPostData({resourceIds:rowArray, timeId:document.restrictedtimes.timeId.value});
+					//jQuery("#grid_timeresource").setGridParam({url:"<c:url value='/restriction/timeresource/deleteResourceFromDetail.do?' />"}).trigger("reloadGrid");
+					//jQuery("#grid_timeresource").setGridParam({url:"<c:url value='/restriction/timeresource/listResourceData.do?&searchKeyword=' />" + document.restrictedtimes.timeId.value});
+					$.post("<c:url value='/restriction/timeresource/deleteResourceFromDetail.do?' />", {resourceIds:rowArray, timeId:document.restrictedtimes.timeId.value}, function(data){
+				    	jQuery("#grid_timeresource").trigger("reloadGrid");
+				    });
 				}
 			}
 		});
@@ -137,8 +152,13 @@
 		var rowDataArray = new Array();
 		for(i = 0 ; i < tempArray.length ; i++)
 			rowDataArray[i] = tempArray[i];
-		jQuery("#grid_timeresource").setPostData({timeId:timeId, resourceId:rowDataArray, searchKeyword:timeId});
-	    jQuery("#grid_timeresource").setGridParam({url:"<c:url value='/restriction/timeresource/add.do?' />"}).trigger("reloadGrid");
+		//jQuery("#grid_timeresource").setPostData({timeId:timeId, resourceId:rowDataArray, searchKeyword:timeId});
+	    //jQuery("#grid_timeresource").setGridParam({url:"<c:url value='/restriction/timeresource/add.do?' />"}).trigger("reloadGrid");
+		
+		jQuery.ajaxSettings.traditional = true;
+		$.post("<c:url value='/restriction/timeresource/add.do?' />", {timeId:timeId, resourceId:rowDataArray, searchKeyword:timeId}, function(data){
+	    	jQuery("#grid_timeresource").trigger("reloadGrid");
+	    });
 		alert("<anyframe:message code='roleresource.ui.alert.allocationsuccess' />");
 	}
 //-->
@@ -210,6 +230,18 @@ body {
 					        	<form:option value="weekend"><anyframe:message code="restrictedtimes.ui.selectbox.timetype.weekend" /></form:option>
 					        	<form:option value="holiday"><anyframe:message code="restrictedtimes.ui.selectbox.timetype.holiday" /></form:option>
 					        </form:select><form:errors path="timeType" />								        
+							</td>
+						</tr>
+						<tr><td height="1" colspan="4" bgcolor="#D6D6D6"></td></tr>
+						<tr>
+							<td class="tdHead">System Name</td>
+							<td bgcolor="#D6D6D6" width="1"></td>
+							<td colspan="2" class="tdin">	
+							<select name="systemName" disabled="disabled" class="ct_input_g">
+								<c:forEach var="item" items="${systemNames }">
+									<option value="${item }">${item }</option>
+								</c:forEach>
+							</select>
 							</td>
 						</tr>
 						<tr><td height="1" colspan="4" bgcolor="#D6D6D6"></td></tr>

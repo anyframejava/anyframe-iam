@@ -17,6 +17,7 @@
 package anyframe.iam.admin.securedresources.web;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,8 +66,13 @@ public class AnnotationResourcesController {
 	 */
 	@JsonError
 	@RequestMapping("/resources/listData.do")
-	public String listData(ResourceSearchVO searchVO, Model model) throws Exception {
+	public String listData(
+			HttpSession session,
+			ResourceSearchVO searchVO, Model model) throws Exception {
 
+		String systemName = (String)session.getAttribute("systemName");
+		searchVO.setSystemName(systemName);
+		
 		Page resultPage = securedResourcesService.getList(searchVO);
 
 		model.addAttribute("page", resultPage.getCurrentPage() + "");
@@ -87,8 +93,16 @@ public class AnnotationResourcesController {
 	 * 
 	 */
 	@RequestMapping("/resources/addView.do")
-	public String addView(@ModelAttribute("searchVO") ResourceSearchVO searchVO, Model model) throws Exception {
-		String beanid = candidateSecuredResourcesService.findMethodParam();
+	public String addView(
+			HttpSession session,
+			@ModelAttribute("searchVO") ResourceSearchVO searchVO, 
+			Model model) throws Exception {
+		
+		String[] systemName = new String[1];
+		systemName[0] = (String) session.getAttribute("systemName");
+		
+		String beanid = candidateSecuredResourcesService.findMethodParam(systemName[0]);
+		model.addAttribute("systemNames", systemName);
 		model.addAttribute("beanid", beanid);
 		model.addAttribute("resources", new SecuredResources());
 		return "/resources/resourcedetail";
@@ -146,13 +160,21 @@ public class AnnotationResourcesController {
 	 * @throws Exception fail to get a resource
 	 */
 	@RequestMapping("/resources/get.do")
-	public String get(@RequestParam(value = "resourceId", required = false) String resourceId, Model model)
-			throws Exception {
+	public String get(
+			HttpSession session,
+			@RequestParam(value = "resourceId", required = false) String resourceId, 
+			Model model) throws Exception {
+		
+		String[] systemName = new String[1];
+		systemName[0] = (String) session.getAttribute("systemName");
+		
+		model.addAttribute("systemNames", systemName);
+
 		if (!StringUtils.isBlank(resourceId)) {
 			SecuredResources sr = securedResourcesService.get(resourceId);
 			model.addAttribute("resources", sr);
 		}
-		String beanid = candidateSecuredResourcesService.findMethodParam();
+		String beanid = candidateSecuredResourcesService.findMethodParam(systemName[0]);
 		model.addAttribute("beanid", beanid);
 		return "/resources/resourcedetail";
 	}
@@ -166,19 +188,26 @@ public class AnnotationResourcesController {
 	 * @throws Exception fail to add resource
 	 */
 	@RequestMapping("/resources/add.do")
-	public String add(@ModelAttribute("resources") SecuredResources sr, BindingResult bindingResult,
+	public String add(@RequestParam(value="skipvalidation", required = false) String skipValidation,
+			@ModelAttribute("resources") SecuredResources sr, BindingResult bindingResult,
+			HttpSession session,
 			SessionStatus status) throws Exception {
-		beanValidator.validate(sr, bindingResult);
 
-		boolean isMatched = candidateSecuredResourcesService
-				.checkMatched(sr.getResourcePattern(), sr.getResourceType());
-		if (!isMatched) {
-			bindingResult.rejectValue("resourcePattern", "errors.resourcepattern", new Object[] { sr
-					.getResourcePattern() }, "check resource pattern.");
+		if(!("Y").equals(skipValidation)){
+			beanValidator.validate(sr, bindingResult);
+			boolean isMatched = candidateSecuredResourcesService
+					.checkMatched(sr.getResourcePattern(), sr.getResourceType());
+			if (!isMatched) {
+				bindingResult.rejectValue("resourcePattern", "errors.resourcepattern", new Object[] { sr
+						.getResourcePattern() }, "check resource pattern.");
+			}
+			if (bindingResult.hasErrors()) {
+				return "/resources/resourcedetail";
+			}
 		}
-		if (bindingResult.hasErrors()) {
-			return "/resources/resourcedetail";
-		}
+		String[] systemName = new String[1];
+		systemName[0] = (String) session.getAttribute("systemName");
+		sr.setSystemName(systemName[0]);
 
 		String currentTime = anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd");
 
@@ -199,6 +228,7 @@ public class AnnotationResourcesController {
 	 */
 	@RequestMapping("/resources/update.do")
 	public String update(@ModelAttribute("resources") SecuredResources sr, BindingResult bindingResult,
+			HttpSession session,
 			SessionStatus status) throws Exception {
 		beanValidator.validate(sr, bindingResult);
 
@@ -212,8 +242,11 @@ public class AnnotationResourcesController {
 		if (bindingResult.hasErrors()) {
 			return "/resources/resourcedetail";
 		}
+		String[] systemName = new String[1];
+		systemName[0] = (String) session.getAttribute("systemName");
+		sr.setSystemName(systemName[0]);
+		
 		String currentTime = anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd");
-
 		sr.setModifyDate(currentTime);
 		SecuredResources gettedsr = securedResourcesService.get(sr.getResourceId());
 		sr.setCreateDate(gettedsr.getCreateDate());

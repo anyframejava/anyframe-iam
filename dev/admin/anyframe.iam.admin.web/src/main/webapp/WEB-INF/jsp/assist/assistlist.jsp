@@ -10,9 +10,96 @@
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
 <jsp:include page="/common/jquery-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 
 <script language="javascript">
 <!--
+jQuery(document).ready( function() {
+	jQuery("#grid").jqGrid( {
+		sortable: true,
+		url: "<c:url value='/admin/assist/listData.do?' />",
+		mtype:'GET',
+		datatype : "json",
+		colNames : [ 
+		    		'Bean ID',
+		    		'System Name',
+		    		'Target App' 
+		],
+		jsonReader: {
+	        repeatitems: false
+	    },
+		colModel : [ {
+			key : true,
+			name : 'beanId',
+			index : 'beanId',
+			hidden : true,
+			width : 0
+		}, {
+			name : 'systemName',
+			index : 'systemName',
+			width : 120
+		}, {
+			name : 'serverUrl',
+			index : 'serverUrl',
+			width : 250
+		} ],
+		width : 787,
+		height : 300,
+		pager : jQuery('#pager'),
+		forceFit:true,
+		multiselect : true,
+		viewrecords : true,
+
+		loadError: function(xhr,st,err) {
+			if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									
+				location.href = "<c:url value='/login/relogin.do?inputPage=/restriction/list.do'/>";
+				return;
+			}
+			alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
+		}
+	});
+
+	$('[name=gatherResource]').click( function(){
+		var rowNum;
+		var rowData;
+		var rowArray = new Array();
+		rowNum = new String(jQuery("#grid").getGridParam('selarrrow'));
+		rowNumList = rowNum.split(",");
+
+		if(rowNum == null || rowNum ==""){
+			alert("No selected Rows");
+			return false;
+		} else {
+			for(var i = 0 ; i < rowNumList.length ; i++){
+				rowData = jQuery("#grid").getRowData(rowNumList[i]);
+				rowArray[i] = rowData.beanId;
+			}
+			if(confirm('<anyframe:message code="resourcereload.ui.alert.confirmtogather" />')) {
+				document.getElementById("transfer").style.visibility = "visible";
+
+				jQuery.ajaxSettings.traditional = true;
+				$.ajax({
+					type: 'POST',
+					url: '<c:url value="/admin/assist/resourceGatehr.do"/>',
+					data:{
+						beanid : rowArray
+					},
+					dataType: 'json',
+					success: function(msg){
+						document.getElementById("transfer").style.visibility= "hidden";
+						document.location.href = "<c:url value='/common/complete.jsp'/>";
+					},
+					error: function(msg){
+						document.getElementById("transfer").style.visibility= "hidden";
+						document.write(msg.responseText);
+					}
+				});
+			}
+		}
+	});
+	
+});
+
 function reload() {
 	if(confirm('<anyframe:message code="resourcereload.ui.alert.confirmtogather" />')) {
 		document.getElementById("transfer").style.visibility = "visible";
@@ -65,61 +152,34 @@ body {
 	<tr>
 		<td style="padding-left:10px">
 			<form action="<c:url value="/admin/assist/resourceAssist.do"/>" method="post" id="reloadAssist" name="reloadAssist">
-			<table width="792" border="0" cellspacing="0" cellpadding="0">
-				<!-- Begin Title -->
-				<tr>
-					<td valign="top">
-				    	<table width="792" border="0" cellspacing="0" cellpadding="0" style="margin-top: 13px;">
-							<tr>
-								<td class="title" style="padding-left:21px"><anyframe:message code="resourcereload.ui.title.resourcegather" /></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-				    <td style="padding-top: 5px;">
-						<table width="792" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" >
-							<tr><td height="2" colspan="3" bgcolor="#A2BACE"></td></tr>
-							
-							<tr>
-								<td class="tdHead"><anyframe:message code="resourcereload.ui.label.targetserver" /></td>
-								<td bgcolor="#D6D6D6" width="1"></td>
-								<td class="tdin">									        
-									<select id="beanid" name="beanid" class="selbox" style="overflow:auto; border:1px solid #c3daf9;">
-										<c:forEach var="list" items="${beanlist}">
-											<option value="${list.beanId}">${list.serverUrl}</option>
-										</c:forEach>
-									</select>
-								</td>
-							</tr>
-							<tr><td height="1" colspan="3" bgcolor="#B6CDE4"></td></tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-				    <td>
-						<table width="792" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="margin-top:10px;">
-							<tr>
-								<td align="right">
-									<table height="22" border="0" cellpadding="0" cellspacing="0">
-										<tr>
-										  	<td style="padding-left: 3px;">
-												<table height="22" border="0" cellpadding="0" cellspacing="0">
-													<tr>
-														<td width="18"><img src="<c:url value='/images/btn/update.gif'/>" width="18" height="22"></td>
-														<td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="javascript:reload();" name="movetoback"><anyframe:message code="resourcereload.ui.btn.gather" /></a></td>
-														<td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
-													</tr>
-												</table>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
+				<div id="documentation" class="demo" style="overflow:auto; height:460px;width:800px;">			
+					<table width="792" border="0" cellspacing="0" cellpadding="0">
+						<tr height="30">
+						    <td align="right">
+								<table height="22" border="0" cellpadding="0" cellspacing="0">
+									<tr>
+									  	<td style="padding-left: 3px;">
+											<table height="22" border="0" cellpadding="0" cellspacing="0">
+												<tr>
+													<td width="18"><img src="<c:url value='/images/btn/update.gif'/>" width="18" height="22"></td>
+													<td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="#" name="gatherResource"><anyframe:message code="resourcereload.ui.btn.gather" /></a></td>
+													<td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
+					<table width="800" border="0" cellpadding="0" cellspacing="0">
+						<tr>
+							<td>
+							<table id="grid" class="scroll" cellpadding="0" cellspacing="0"></table>
+							<div id="pager" class="scroll" style="text-align: center;"></div>		</td>
+						</tr>
+					</table>
+				</div>
 			</form>
 		</td>
 	</tr>

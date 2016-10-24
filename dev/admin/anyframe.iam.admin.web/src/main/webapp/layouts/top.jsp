@@ -1,8 +1,12 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ include file="/common/taglibs.jsp"%> 
 <html>
 <head>
 <title>IAM Admin Web</title>
+
+<jsp:include page="/common/jquery-include.jsp" />
+
 <script language="JavaScript">
 <!--
 function fncLogOut() {
@@ -11,6 +15,15 @@ function fncLogOut() {
 	    document.logoutForm.action="<c:url value='/j_spring_security_logout'/>";
 	    document.logoutForm.submit();	
     }
+}
+
+function changeSystemName(frm) {
+	alert("change select box value to" + frm.value);
+
+	var systemName = frm.value;
+	$.post("<c:url value='/common/changeSystemName.do'/>", {systemName:systemName}, function(data){
+	});
+	
 }
 //-->
 </script>
@@ -38,7 +51,13 @@ margin:0;
   <tr>
     <td height="30" colspan="2" align="right"><table width="380" border="0" cellpadding="0" cellspacing="0">
       <tr>
-        <td align="right" style="padding-right:8px">IAM에 오신것을 환영합니다!</td>
+        <td align="right" style="padding-right:8px">
+        	IAM에 오신것을 환영합니다!
+        	<select name="systemName" onchange="javascript:changeSystemName(this);">
+        		<option value="sample">SAMPLE</option>
+        		<option value="sample2">SAMPLE2</option>
+        	</select>
+        </td>
         <td width="62" colspan="2" align="right" style="padding-right:18px"><a href="javascript:fncLogOut();"> <img src="<c:url value='/images/btn_logout.gif'/>" alt="로그아웃" width="62" height="16" border="0" ></a></td>
         <!-- td width="76" align="right" style="padding-right:18px"><a href="#"><img src="<c:url value='/images/btn_add.gif'/>" alt="사용자 추가" width="72" height="16" border="0"></a></td -->
       </tr>

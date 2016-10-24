@@ -150,6 +150,12 @@ body {
 			$.tree.focused().refresh();
 			document.getElementById("searchClickYn").value = "N";
 		});
+
+		/* auto click by enter key */
+		$("#groupName").keypress(function (e) {
+			if (e.which == 13)
+				$("[name=searchUsers]").trigger("click");
+		});
 	});
 //-->
 </script>
@@ -207,7 +213,7 @@ function deleteGroup(groupId) {
 							</script>
 						</div>
 					</td>        
-					<td width="62" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
+					<td width="62" height="25" align="left" background="<c:url value='/images/bg_treerrr3.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
 				</tr>
 				<tr height="400">
 					<td height="100%" colspan="4" valign="top" style="margin-top:10px">

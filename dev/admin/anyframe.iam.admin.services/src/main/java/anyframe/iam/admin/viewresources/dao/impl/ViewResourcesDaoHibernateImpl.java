@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 
 import anyframe.common.Page;
@@ -50,15 +51,17 @@ public class ViewResourcesDaoHibernateImpl extends IamGenericDaoHibernate<ViewRe
 		String searchCondition = StringUtil.null2str(viewResourceSearchVO.getSearchCondition());
 		String searchKeyword = StringUtil.null2str(viewResourceSearchVO.getSearchKeyword());
 		String parentViewResourceId = StringUtil.null2str(viewResourceSearchVO.getParentViewResourceId());
+		String systemName = StringUtil.null2str(viewResourceSearchVO.getSystemName());
 		
-		Object[] args = new Object[6];
+		Object[] args = new Object[7];
 		args[0] = "condition=" + searchCondition;
 		args[1] = "keywordStr=%" + searchKeyword + "%";
 		args[2] = "keywordNum=" + searchKeyword + "";
 		args[3] = "sidx=" + sidx;
 		args[4] = "sord=" + sord;
 		args[5] = "parentViewResourceId=" + parentViewResourceId;
-
+		args[6] = "systemName=" + systemName;
+		
 		List resultList = this.getDynamicHibernateService().findList("findViewResourceList", args, pageIndex, pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countViewResourceList", args);
 
@@ -83,6 +86,24 @@ public class ViewResourcesDaoHibernateImpl extends IamGenericDaoHibernate<ViewRe
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<IamTree> getRootNodeOfViewsWithSystemName(String systemName) throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("getRootNodeOfView");
+		StringBuffer replaceSQL = new StringBuffer();
+		
+		if(!"".equals("systemName"))
+			replaceSQL.append(" AND B.SYSTEM_NAME = '" + systemName + "'");
+		
+		String queryString = query.getQueryString();
+		queryString = queryString.replace("--replaceSQL", replaceSQL.toString());
+		
+		SQLQuery replacedQuery = this.getSessionFactory().getCurrentSession().createSQLQuery(queryString);
+		replacedQuery.addEntity(IamTree.class);
+		
+		List<IamTree> resultList = replacedQuery.list();
+		return resultList;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<String> getViewHierarchy(String parentNode) throws Exception{
 		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("countViewList");
 		query.setParameter("parentView", parentNode);
@@ -97,6 +118,24 @@ public class ViewResourcesDaoHibernateImpl extends IamGenericDaoHibernate<ViewRe
 		keyword = keyword.toLowerCase();
 		Object[] args = new Object[1];
 		args[0] = "keyword=" + keyword + "%";
+		List list = this.getDynamicHibernateService().findList("findViewNameList", args);
+		
+		StringBuffer viewNameList = new StringBuffer();
+		for(int i = 0 ; i < list.size() ; i++)
+			viewNameList.append(((Map) list.get(i)).get("viewName") + "\n");
+		
+		return viewNameList.toString();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String getViewNameListWithSystemName(String keyword, String systemName) throws Exception{
+		keyword = StringUtil.null2str(keyword);
+		keyword = keyword.toLowerCase();
+		systemName = StringUtil.null2str(systemName);
+		
+		Object[] args = new Object[2];
+		args[0] = "keyword=" + keyword + "%";
+		args[1] = "systemName=" + systemName;
 		List list = this.getDynamicHibernateService().findList("findViewNameList", args);
 		
 		StringBuffer viewNameList = new StringBuffer();

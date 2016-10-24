@@ -156,6 +156,14 @@
 			$.tree.focused().refresh();
 			document.getElementById("searchClickYn").value = "N";
 		});
+
+		/* auto click by enter key */
+		$("#viewName").keypress(function (e) {
+			if (e.which == 13){
+				$("[name=searchUsers]").trigger("click");
+				return false;
+			}
+		});
 	});
 
 	function moveToViewResourceDetail() {
@@ -246,7 +254,7 @@ body {
 							</script>
 						</div>
 					</td>
-					<td width="62" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
+					<td width="62" height="25" align="left" background="<c:url value='/images/bg_treerrr3.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
 				</tr>
 	      		<tr height="400">
 	        		<td height="100%" colspan="4" valign="top" style="margin-top:10px">
@@ -269,11 +277,11 @@ body {
 						<table height="24" border="0" cellpadding="0" cellspacing="0">
 							<tr height="21">
 								<td width="134" height="27" align="center" valign="bottom" background="<c:url value='/images/content/bg_tab_menu2.gif'/>" bgcolor="#EDEDED" 
-									id="viewDetailTab" ><a href="javascript:moveToViewResourceDetail();">View Detail</a></td>
+									id="viewDetailTab" ><a href="javascript:moveToViewResourceDetail();"><anyframe:message code="viewresource.ui.tab.viewdetail" /></a></td>
 								<td width="134" height="27" align="center" valign="bottom" background="<c:url value='/images/content/bg_tab_menu3.gif'/>" bgcolor="#EDEDED" 
-									id="viewListTab" ><a href="javascript:moveToViewList();">View List</a></td>
-								<td width="134" height="27" align="center" valign="bottom" background="<c:url value='/images/content/bg_tab_menu3.gif'/>" bgcolor="#EDEDED" 
-									id="viewMappingTab" ><a href="javascript:moveToViewMapping();">View Mapping</a></td>
+									id="viewListTab" ><a href="javascript:moveToViewList();"><anyframe:message code="viewresource.ui.tab.viewlist" /></a></td>
+								<td width="145" height="21" align="center" valign="bottom" background="<c:url value='/images/content/bg_tab_menu3.gif'/>" bgcolor="#EDEDED" 
+									id="viewMappingTab" ><a href="javascript:moveToViewMapping();"><anyframe:message code="viewresource.ui.tab.viewmapping" /></a></td>
 							</tr>
 						</table>
 					</td>

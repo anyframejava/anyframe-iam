@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -73,8 +74,13 @@ public class AnnotationTimeResourceExclusionController {
 	 */
 	@JsonError
 	@RequestMapping("/restriction/timeexclusion/listData.do")
-	public String listData(RestrictedTimesSearchVO searchVO, Model model) throws Exception {
+	public String listData(
+			HttpSession session,
+			RestrictedTimesSearchVO searchVO, Model model) throws Exception {
 
+		String systemName = (String) session.getAttribute("systemName");
+		searchVO.setSystemName(systemName);
+		
 		Page resultPage = timesResourcesExclusionService.getTimeExclusionList(searchVO);
 
 		model.addAttribute("page", resultPage.getCurrentPage() + "");
@@ -94,11 +100,21 @@ public class AnnotationTimeResourceExclusionController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/restriction/timeexclusion/addView.do")
-	public String addView(@ModelAttribute("searchVO") RestrictedTimesSearchVO searchVO, Model model) throws Exception {
+	public String addView(
+			HttpSession session,
+			@ModelAttribute("searchVO") RestrictedTimesSearchVO searchVO, 
+			Model model) throws Exception {
+		
+		String[] systemName = new String[1];
+		
+		systemName[0] = (String) session.getAttribute("systemName");
+		
+		
 		TimesResourcesExclusion timeResourcesExclusion = new TimesResourcesExclusion();
 		timeResourcesExclusion.setId(new TimesResourcesExclusionId());
 		timeResourcesExclusion.setRestrictedTimes(new RestrictedTimes());
 
+		model.addAttribute("systemNames", systemName);
 		model.addAttribute("timesresourcesexclusion", timeResourcesExclusion);
 		model.addAttribute("roles", new ArrayList());
 
@@ -115,8 +131,17 @@ public class AnnotationTimeResourceExclusionController {
 	 * 
 	 */
 	@RequestMapping("/restriction/timeexclusion/get.do")
-	public String get(@RequestParam(value = "timeId", required = true) String timeId,
-			@RequestParam(value = "resourceId", required = true) String resourceId, Model model) throws Exception {
+	public String get(
+			HttpSession session,
+			@RequestParam(value = "timeId", required = true) String timeId,
+			@RequestParam(value = "resourceId", required = true) String resourceId, 
+			Model model) throws Exception {
+		
+		String[] systemName = new String[1];
+		systemName[0] = (String) session.getAttribute("systemName");
+		
+		model.addAttribute("systemNames", systemName);
+		
 		if (!StringUtils.isBlank(timeId) && !StringUtils.isBlank(resourceId)) {
 
 			RestrictedTimes rt = restrictedTimesService.get(timeId);

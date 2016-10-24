@@ -168,6 +168,18 @@
 				$.tree.focused().refresh();
 				document.getElementById("searchClickYn").value = "N";
 		});
+
+		/* auto click by enter key */
+		$("#roleName").keypress(function (e) {
+			if (e.which == 13){
+				$("[name=searchUsers]").trigger("click");
+
+				// trigger 실행과는 별도로 form submit이 전송되는 현상이 존재하기 때문에
+				// 반드시 return false 구문을 붙여주어야 한다.
+				// edited by youngmin.jo
+				return false;
+			}
+		});
 	});
 
 	function addrole(selectedText,selectedValue) {
@@ -277,9 +289,9 @@ body {
 				<table width="572" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" >
 					<tr><td height="2" colspan="4" bgcolor="#A2BACE"></td></tr>
 					<tr>
-						<td width="130" class="tdHead"><anyframe:message code='user.ui.label.userid' /></td>
+						<td width="150" class="tdHead" style="padding-right: 2px;"><anyframe:message code='user.ui.label.userid' /></td>
 					  	<td bgcolor="#B6CDE4" width="1"></td>
-						<td width="141" class="tdin">
+						<td width="80" class="tdin">
 							<form:input path="userId" id="userId" cssClass="ct_input_g" cssErrorClass="text medium error" readonly="${readonly}" onchange="javascript:changeIdcheck();" maxlength="20"/>
 								<c:if test="${empty users.userId}">
 			          				<c:set var="readonly" value="false"/>
@@ -287,7 +299,7 @@ body {
 			        		<form:errors path="userId" />
 					    	<input type="hidden" name="isAvailable" value="false">
 					  	</td>
-					  	<td width="320" align="left">
+					  	<td width="370" align="left">
 							<c:if test="${empty users.userId}">
 					  			<table height="19" border="0" cellpadding="0" cellspacing="0">
 					                <tr>
@@ -301,7 +313,7 @@ body {
 					</tr>		
 					<tr><td height="1" colspan="4" bgcolor="#D6D6D6"></td></tr>
 					<tr>
-					  	<td class="tdHead"><anyframe:message code='user.ui.label.username' /></td>
+					  	<td class="tdHead" style="padding-right: 2px;"><anyframe:message code='user.ui.label.username' /></td>
 						<td bgcolor="#B6CDE4" width="1"></td>
 						<td colspan="2" class="tdin">									        
 				        	<form:input path="userName" id="userName" cssClass="ct_input_g" cssErrorClass="text medium error" maxlength="50"/>&nbsp;<form:errors path="userName" />
@@ -309,7 +321,7 @@ body {
 					</tr>
 					<tr><td height="1" colspan="4" bgcolor="#D6D6D6"></td></tr>
 					<tr>
-					  	<td class="tdHead"><anyframe:message code='user.ui.label.groupname' /></td>
+					  	<td class="tdHead" style="padding-right: 2px;"><anyframe:message code='user.ui.label.groupname' /></td>
 					  	<td bgcolor="#B6CDE4" width="1"></td>
 						<td class="tdin">
 							<input type="text" name="groupName" class="ct_input_g" value="${groups.groupName}" required readonly="readonly" onClick="javascript:selectGroup();">
@@ -322,7 +334,7 @@ body {
 					</tr>
 					<tr><td height="1" colspan="4" bgcolor="#D6D6D6"></td></tr>
 					<tr>
-					  	<td class="tdHead"><anyframe:message code='user.ui.label.enabled' /></td>
+					  	<td class="tdHead" style="padding-right: 2px;"><anyframe:message code='user.ui.label.enabled' /></td>
 					  	<td bgcolor="#B6CDE4" width="1"></td>
 						<td colspan="2" class="tdin">
 					        <form:select path="enabled" id="enabled" cssClass="ct_input_g">
@@ -333,16 +345,16 @@ body {
 					</tr>
 					<tr><td height="1" colspan="4" bgcolor="#D6D6D6"></td></tr>
 					<tr>
-			  		  	<td class="tdHead"><anyframe:message code="user.ui.label.roleslist" /></td>
+			  		  	<td class="tdHead" style="padding-right: 2px;"><anyframe:message code="user.ui.label.roleslist" /></td>
 			    		<td bgcolor="#B6CDE4" width="1"></td>
 			    	  	<td colspan="2"> 	
-							<table width="100%" class="tablemargin" height="195" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" >
+							<table class="tablemargin" width="480" height="195" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" >
 								<tr height="25">
-								  <td width="26" height="25" background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen"><a class="openBtn" title="Open Branch" href="javascript:$.tree.focused().open_all();">Open</a></div></td>
-							  	  <td width="26" height="25" background="<c:url value='/images/bg_treer.gif'/>"><div id="menuclose"><a class="closeBtn" title="Close Branch" href="javascript:$.tree.focused().close_all();">Close</a></div></td>
-							  	  <td width="100" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>" >
+								  <td width="18" height="25" background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen"><a class="openBtn" title="Open Branch" href="javascript:$.tree.focused().open_all();">Open</a></div></td>
+							  	  <td width="18" height="25" background="<c:url value='/images/bg_treer.gif'/>"><div id="menuclose"><a class="closeBtn" title="Close Branch" href="javascript:$.tree.focused().close_all();">Close</a></div></td>
+							  	  <td width="80" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>" >
 									<div id="inputArea">
-										<input id="roleName" size="20" class='ct_input_g'>
+										<input id="roleName" size="25" class='ct_input_g'>
 										<input id="searchClickYn" type="hidden" value="N">
 										<script type="text/javascript">
 											$("#roleName").autocomplete(
@@ -357,9 +369,10 @@ body {
 										</script>
 									</div>
 								  </td>
-								  <td width="40" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
+								  <td width="20" height="25" align="left" background="<c:url value='/images/bg_treerrr2.gif'/>" style="padding-right:8px"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
 								  <td width="5"></td>
-								  <td align="left">
+								  <td width="100"></td>
+								  <td>
 									<table height="22" border="0" cellpadding="0" cellspacing="0">
 										<tr>
 											<td width="18"><img src="<c:url value='/images/btn/btn_delete.gif'/>" width="18" height="22"></td>
@@ -371,14 +384,14 @@ body {
 								</tr>
 								<tr>
 									<td valign="top" colspan="4">
-										<div id="role" class="demo" style="overflow:auto;height:167px;width:220px;border:1px solid #c3daf9;">
+										<div id="role" class="demo" style="overflow:auto;height:167px;width:255px;border:1px solid #c3daf9;">
 											<span><anyframe:message code='user.ui.tree.span'/></span>
 										</div>
 									</td>
 									<td></td>
-									<td valign="top">
-										<div id="roles" class="demo" style="overflow:auto; height:170px;width:188px;">
-											<select id="roleId" name="roleId" multiple="multiple" class="selbox" style="overflow:auto; height:170px;width:188px;border:1px solid #c3daf9;">
+									<td valign="top" colspan="2">
+										<div id="roles" class="demo" style="overflow:auto; height:170px;width:220px;">
+											<select id="roleId" name="roleId" multiple="multiple" class="selbox" style="overflow:auto; height:170px;width:220px;border:1px solid #c3daf9;">
 												<c:forEach var="role" items="${roles}">
 													<option value="${role.roleId}">${role.roleName}</option>
 												</c:forEach>

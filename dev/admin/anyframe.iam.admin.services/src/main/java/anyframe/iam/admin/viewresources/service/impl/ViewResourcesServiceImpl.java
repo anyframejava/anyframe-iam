@@ -116,6 +116,10 @@ public class ViewResourcesServiceImpl extends GenericServiceImpl<ViewResource, S
 		return viewResourcesDao.getViewNameList(keyword);
 	}
 	
+	public String getViewNameListWithSystemName(String keyword, String systemName) throws Exception{
+		return viewResourcesDao.getViewNameListWithSystemName(keyword, systemName);
+	}
+	
 	public String getViewResourceIdByViewName(String viewName) throws Exception{
 		return viewResourcesDao.getViewResourceIdByViewName(viewName);
 	}
@@ -138,5 +142,9 @@ public class ViewResourcesServiceImpl extends GenericServiceImpl<ViewResource, S
 		}
 		
 		return viewIds;
+	}
+	
+	public List<IamTree> getRootNodeOfViewsWithSystemName(String systemName) throws Exception{
+		return viewResourcesDao.getRootNodeOfViewsWithSystemName(systemName);
 	}
 }

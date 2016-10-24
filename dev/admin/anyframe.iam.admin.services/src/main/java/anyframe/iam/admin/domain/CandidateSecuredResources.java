@@ -54,13 +54,15 @@ public class CandidateSecuredResources extends BaseObject implements Serializabl
 	private String pointCut;
 	
 	private String candidateResourceType;
-
+	
+	private String systemName;
+	
 	public CandidateSecuredResources() {
 
 	}
 
 	@Id
-	@Column(name = "CANDIDATE_RESOURCE_ID", unique = true, nullable = false, length = 10)
+	@Column(name = "CANDIDATE_RESOURCE_ID", unique = true, nullable = false, length = 20)
 	public String getCandidateResourceId() {
 		return candidateResourceId;
 	}
@@ -139,6 +141,15 @@ public class CandidateSecuredResources extends BaseObject implements Serializabl
 
 	public void setPointCut(String pointCut) {
 		this.pointCut = pointCut;
+	}
+	
+	@Column(name = "SYSTEM_NAME", length = 15)
+	public String getSystemName(){
+		return systemName;
+	}
+	
+	public void setSystemName(String systemName){
+		this.systemName = systemName;
 	}
 
 	public boolean equals(Object o) {

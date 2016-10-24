@@ -15,12 +15,27 @@
 <!--
 	jQuery(document).ready( function() {
 		var roleId = parent.document.f1.roleId.value;
+		var isNested = document.resourceGrid.isNested;
+		var url;
+		 if("Y" == isNested.value) {
+			url = "<c:url value='/securedresourcesroles/listDataWithLevel.do?&roleId=' />" + roleId;
+		} else {
+			url = "<c:url value='/securedresourcesroles/listData.do?&roleId=' />" + roleId;
+		}
+
 		jQuery("#grid2").jqGrid({
 			sortable: true,
 			url: "<c:url value='/securedresourcesroles/listData.do?&roleId=' />" + roleId,
 			mtype:'POST',
 			datatype : "json",
-			colNames : [ '<anyframe:message code="roleresource.ui.grid.sortorder" />', '<anyframe:message code="roleresource.ui.grid.resourceid" />', '<anyframe:message code="roleresource.ui.grid.resourcename" />', '<anyframe:message code="roleresource.ui.grid.roleId" />', '<anyframe:message code="roleresource.ui.grid.roleName" />', '<anyframe:message code="roleresource.ui.grid.resourcepattern" />', '<anyframe:message code="roleresource.ui.grid.resourcetype" />' ],
+			colNames : [ 
+						'<anyframe:message code="roleresource.ui.grid.sortorder" />', 
+						'<anyframe:message code="roleresource.ui.grid.resourceid" />', 
+						'<anyframe:message code="roleresource.ui.grid.resourcename" />',
+						'<anyframe:message code="roleresource.ui.grid.roleId" />', 
+						'<anyframe:message code="roleresource.ui.grid.roleName" />', 
+						'<anyframe:message code="roleresource.ui.grid.resourcepattern" />', 
+						'<anyframe:message code="roleresource.ui.grid.resourcetype" />' ],
 			jsonReader: {
 		        repeatitems: false
 		    },
@@ -31,7 +46,7 @@
 				align : 'right',
 				sorttype : 'int',
 				formatter : 'integer',
-				width : 60
+				width : 30
 			}, {
 				key : true,
 				name : 'resourceId',
@@ -110,16 +125,20 @@
 						jQuery("#grid2").delRowData(rowData.resourceId);
 					}
 					jQuery.ajaxSettings.traditional = true;
-					jQuery("#grid2").setPostData({resourceIds:rowArray, roleId:roleId});
-					jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/delete.do?' />"}).trigger("reloadGrid");
-					jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/listData.do?&roleId=' />" + roleId}).trigger("reloadGrid");
+					if("Y" == document.resourceGrid.isNested.value)
+						url = "<c:url value='/securedresourcesroles/listDataWithLevel.do?&roleId=' />" + roleId;
+					else
+						url = "<c:url value='/securedresourcesroles/listData.do?&roleId=' />" + roleId;
+					$.post("<c:url value='/securedresourcesroles/delete.do?' />", {resourceIds:rowArray, roleId:roleId}, function(data){
+				    	jQuery("#grid2").trigger("reloadGrid");
+					});
 				}
-							}
-						});
+			}
+		});
 
 		/* Mapping Resources */
 		$("[name=addResource]").click( function() {
-			window.open("<c:url value='/securedresourcesroles/listPopUp.do?' />", 'resourceList', 'height=400, width=700');
+			window.open("<c:url value='/securedresourcesroles/listPopUp.do' />", 'resourceList', 'height=400, width=700');
 		});
 
 		/* Search Resource */
@@ -132,7 +151,7 @@
 					jQuery("#grid2").setPostData({searchCondition:$("#searchCondition").val(), searchKeyword:$("#searchKeyword").val(), searchType:$("#searchType").val()});
 					jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/listDataWithLevel.do?&roleId=' />" + roleId}).trigger("reloadGrid");
 				}
-			});
+		});
 
 		/* auto click by enter key */
 		$("#searchKeyword").keypress(function (e) {
@@ -147,9 +166,13 @@
 		for(i = 0 ; i < tempArray.length ; i++)
 			rowDataArray[i] = tempArray[i];
 		jQuery.ajaxSettings.traditional = true;
-		jQuery("#grid2").setPostData({roleId:roleId, resourceId:rowDataArray});
-	    jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/add.do?' />"}).trigger("reloadGrid");
-		alert("<anyframe:message code='roleresource.ui.alert.allocationsuccess' />");
+		if("Y" == document.resourceGrid.isNested.value)
+			url = "<c:url value='/securedresourcesroles/listDataWithLevel.do?&roleId=' />" + roleId;
+		else
+			url = "<c:url value='/securedresourcesroles/listData.do?&roleId=' />" + roleId;
+		$.post("<c:url value='/securedresourcesroles/add.do?' />", {roleId:roleId, resourceId:rowDataArray}, function(data){
+	    	jQuery("#grid2").trigger("reloadGrid");
+	    });
 	}
 
 	function changeRole(obj){
@@ -203,7 +226,7 @@ body {
 				<option value="method"><anyframe:message code='roleresource.ui.selectbox.resourcetype.method' /></option>
 				<option value="pointcut"><anyframe:message code='roleresource.ui.selectbox.resourcetype.pointcut' /></option>
 			</select>
-	  </td>
+		</td>
 		<td width="38" align="left" id="button_links" style="padding-left: 3px;">
 			<a href="#" name="searchResource" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a>
 		</td>
@@ -213,6 +236,10 @@ body {
 					<option value="parent"><anyframe:message code="roleresource.ui.selectbox.roleInfo.parent" /></option>
 					<option value="child"><anyframe:message code="roleresource.ui.selectbox.roleInfo.child" /></option>
 				</select>
+				<input type="hidden" name="isNested" value="Y" />
+			</c:if>
+			<c:if test="${ isOracle == false}">
+				<input type="hidden" name="isNested" value="N" />
 			</c:if>
 	  </td>
 		<td width="277" align="right">

@@ -26,10 +26,18 @@ import anyframe.iam.admin.domain.CandidateSecuredResources;
  */
 public interface AssistDao extends IamGenericDao<CandidateSecuredResources, String> {
 	
+//	/**
+//	 * delete All candidate secured resources in DB.
+//	 * @return the number of deleted resources 
+//	 * @throws Exception fail to delete
+//	 */
+//	int removeAll() throws Exception;
+	
 	/**
-	 * delete All candidate secured resources in DB.
-	 * @return the number of deleted resources 
+	 * delete All candidate secured resources in DB that matches the given system Name field.
+	 * @param systemName String system name
+	 * @return the number of deleted resources
 	 * @throws Exception fail to delete
 	 */
-	int removeAll() throws Exception;
+	int removeAll(String systemName) throws Exception;
 }

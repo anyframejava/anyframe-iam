@@ -12,7 +12,7 @@
 	<groupId>anyframe</groupId>
 	<artifactId>anyframe.iam.admin.services</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.3.RC1</version>
+	<version>1.0.3.RC2</version>
 	<name>anyframe.iam.admin.services</name>
 	<url>http://maven.apache.org</url>
 
@@ -67,7 +67,7 @@
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.iam.core</artifactId>
-			<version>1.0.3.RC1</version>
+			<version>1.0.3.RC2</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -73,8 +74,10 @@ public class AnnotationTimeResourceController {
 	 */
 	@JsonError
 	@RequestMapping("/restriction/timeresource/listData.do")
-	public String listData(RestrictedTimesSearchVO searchVO, Model model) throws Exception {
-
+	public String listData(HttpSession session, RestrictedTimesSearchVO searchVO, Model model) throws Exception {
+		String systemName = (String) session.getAttribute("systemName");
+		searchVO.setSystemName(systemName);
+		
 		Page resultPage = restrictedTimesResourcesService.getTimeResourceList(searchVO);
 
 		model.addAttribute("page", resultPage.getCurrentPage() + "");
@@ -94,7 +97,14 @@ public class AnnotationTimeResourceController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/restriction/timeresource/addView.do")
-	public String addView(@ModelAttribute("searchVO") RestrictedTimesSearchVO searchVO, Model model) throws Exception {
+	public String addView(
+			HttpSession session,
+			@ModelAttribute("searchVO") RestrictedTimesSearchVO searchVO, Model model) throws Exception {
+		String[] systemName = new String[1];
+		
+		systemName[0] = (String) session.getAttribute("systemName");
+		
+		model.addAttribute("systemNames", systemName);
 		model.addAttribute("restrictedtimes", new RestrictedTimes());
 		model.addAttribute("roles", new ArrayList());
 
@@ -109,7 +119,15 @@ public class AnnotationTimeResourceController {
 	 * @throws Exception fail to get data
 	 */
 	@RequestMapping("/restriction/timeresource/get.do")
-	public String get(@RequestParam(value = "timeId", required = false) String timeId, Model model) throws Exception {
+	public String get(
+			HttpSession session,
+			@RequestParam(value = "timeId", required = false) String timeId, Model model) throws Exception {
+		
+		String[] systemName = new String[1];
+		systemName[0] = (String) session.getAttribute("systemName");
+		
+		model.addAttribute("systemNames", systemName);
+		
 		if (!StringUtils.isBlank(timeId)) {
 			RestrictedTimes rt = restrictedTimesService.get(timeId);
 			@SuppressWarnings("unchecked")
@@ -140,8 +158,13 @@ public class AnnotationTimeResourceController {
 	 */
 	@JsonError
 	@RequestMapping("/restriction/timeresource/listResourceData.do")
-	public String listResourceData(RestrictedTimesSearchVO searchVO, Model model) throws Exception {
+	public String listResourceData(
+			HttpSession session, 
+			RestrictedTimesSearchVO searchVO, Model model) throws Exception {
 
+		String systemName = (String) session.getAttribute("systemName");
+		searchVO.setSystemName(systemName);
+		
 		Page resultPage = restrictedTimesResourcesService.findResourceListByTime(searchVO);
 
 		model.addAttribute("page", resultPage.getCurrentPage() + "");
@@ -171,8 +194,13 @@ public class AnnotationTimeResourceController {
 	 */
 	@JsonError
 	@RequestMapping("/restriction/timeresource/listUnmappedResourceData.do")
-	public String listUnmappedResourceData(RestrictedTimesSearchVO searchVO, Model model) throws Exception {
+	public String listUnmappedResourceData(
+			HttpSession session,
+			RestrictedTimesSearchVO searchVO, Model model) throws Exception {
 
+		String systemName = (String) session.getAttribute("systemName");
+		searchVO.setSystemName(systemName);
+		
 		Page resultPage = restrictedTimesResourcesService.findUnmappedResourceListByTime(searchVO);
 
 		model.addAttribute("page", resultPage.getCurrentPage() + "");

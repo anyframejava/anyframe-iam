@@ -164,6 +164,7 @@ public class ViewMappingServiceTest {
 		ViewResourceSearchVO searchVO = new ViewResourceSearchVO();
 		searchVO.setSearchCondition("viewResourceId");
 		searchVO.setSearchKeyword("updateUser");
+		searchVO.setSystemName("SAMPLE");
 		Page resultPage = viewMappingService.getList(searchVO);
 
 		// check

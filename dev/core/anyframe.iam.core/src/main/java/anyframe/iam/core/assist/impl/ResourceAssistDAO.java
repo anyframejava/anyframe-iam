@@ -31,7 +31,7 @@ public class ResourceAssistDAO {
 	public static final String DEL_CANDIDATE_RESOURCE_SQL = "DELETE FROM CANDIDATE_SECURED_RESOURCES";
 
 	public static final String INS_CANDIDATE_RESOURCE_SQL = "INSERT INTO CANDIDATE_SECURED_RESOURCES	"
-			+ "VALUES(:candidate_resource_id, :beanid, 	" + "		:packages, :classes, :method, 		"
+			+ "VALUES(:candidate_resource_id, :system_name, :beanid, 	" + "		:packages, :classes, :method, 		"
 			+ "		:parameter, :requestmapping, 		" + "		:pointcut, :candidate_resource_type)";
 
 	private String delCandidateResources;

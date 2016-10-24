@@ -53,6 +53,12 @@
 			$.tree.focused().refresh();
 			document.getElementById("searchClickYn").value = "N";
 		});
+
+		/* auto click by enter key */
+		$("#groupName").keypress(function (e) {
+			if (e.which == 13)
+				$("[name=searchUsers]").trigger("click");
+		});
 	});
 </script>
 <style type="text/css">
@@ -87,9 +93,9 @@ a.search { color:green !important; }
 					<!---START: Tree Btn ------>
 					<td width="26" height="25"  background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen"> <a class="openBtn" title="Open Branch" href="javascript:$.tree.focused().open_all();">Open</a></div></td>
 					<td width="26" background="<c:url value='/images/bg_treer2.gif'/>"><div id="menuclose"><a class="closeBtn" title="Close Branch" href="javascript:$.tree.focused().close_all();">Close</a></div></td>
-					<td width="100" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>" >
+					<td width="177" height="25" align="left" background="<c:url value='/images/bg_treem.gif'/>" >
 						<div id="inputArea">
-							<input id="groupName" size="20" class='ct_input_g'>
+							<input id="groupName" size="31" class='ct_input_g'>
 							<input id="searchClickYn" type="hidden" value="N">
 							<script type="text/javascript">
 							$("#groupName").autocomplete(
@@ -104,7 +110,7 @@ a.search { color:green !important; }
 							</script>
 						</div>
 					</td>
-					<td width="125" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
+					<td width="125" height="25" align="left" background="<c:url value='/images/bg_treerrr3.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
 					<!---END: Tree Btn ------>
 				</tr>
 				<tr height="400">

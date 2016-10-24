@@ -41,6 +41,7 @@ public class AssistServiceTest {
 		
 		Map<String, Object> resourceMap = new HashMap<String, Object>();
 		resourceMap.put("beanid", "codeService");
+		resourceMap.put("systemName", "sample1");
 		resourceMapList.add(resourceMap);
 		assistService.save(resourceMapList);
 		assertNotNull(resourceMap);

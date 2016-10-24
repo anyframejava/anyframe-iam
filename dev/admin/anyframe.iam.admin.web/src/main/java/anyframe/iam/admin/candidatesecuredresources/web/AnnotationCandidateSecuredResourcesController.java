@@ -19,6 +19,7 @@ package anyframe.iam.admin.candidatesecuredresources.web;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,10 +49,16 @@ public class AnnotationCandidateSecuredResourcesController {
 	 * @throws Exception fail to find list
 	 */
 	@RequestMapping("/candidateSecuredResources/getPackagesList.do")
-	public void getPackagesList(@RequestParam(value = "q", required = false) String keyword,
-			HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	public void getPackagesList(
+			@RequestParam(value = "q", required = false) String keyword,
+			HttpServletRequest request, 
+			HttpServletResponse response, 
+			HttpSession session,
+			Model model) throws Exception {
 
-		String resultList = candidateSecuredResourcesService.getPackagesList(keyword);
+		String systemName = (String) session.getAttribute("systemName");
+		
+		String resultList = candidateSecuredResourcesService.getPackagesList(keyword, systemName);
 		response.getOutputStream().print(resultList);
 	}
 
@@ -66,11 +73,17 @@ public class AnnotationCandidateSecuredResourcesController {
 	 * @throws Exception fail to find list
 	 */
 	@RequestMapping("/candidateSecuredResources/getClassesList.do")
-	public void getClassesList(@RequestParam(value = "q", required = false) String keyword,
-			@RequestParam(value = "packages", required = false) String packages, HttpServletRequest request,
-			HttpServletResponse response, Model model) throws Exception {
+	public void getClassesList(
+			@RequestParam(value = "q", required = false) String keyword,
+			@RequestParam(value = "packages", required = false) String packages, 
+			HttpServletRequest request,
+			HttpServletResponse response, 
+			HttpSession session,
+			Model model) throws Exception {
 
-		String resultList = candidateSecuredResourcesService.getClassesList(keyword, packages);
+		String systemName = (String) session.getAttribute("systemName");
+		
+		String resultList = candidateSecuredResourcesService.getClassesList(keyword, packages, systemName);
 		response.getOutputStream().print(resultList);
 	}
 
@@ -86,12 +99,18 @@ public class AnnotationCandidateSecuredResourcesController {
 	 * @throws Exception fail to find list
 	 */
 	@RequestMapping("/candidateSecuredResources/getMethodList.do")
-	public void getMethodList(@RequestParam(value = "q", required = false) String keyword,
+	public void getMethodList(
+			@RequestParam(value = "q", required = false) String keyword,
 			@RequestParam(value = "packages", required = false) String packages,
-			@RequestParam(value = "classes", required = false) String classes, HttpServletRequest request,
-			HttpServletResponse response, Model model) throws Exception {
-
-		String resultList = candidateSecuredResourcesService.getMethodList(keyword, packages, classes);
+			@RequestParam(value = "classes", required = false) String classes, 
+			HttpServletRequest request,
+			HttpServletResponse response, 
+			HttpSession session,
+			Model model) throws Exception {
+		
+		String systemName = (String) session.getAttribute("systemName");
+		
+		String resultList = candidateSecuredResourcesService.getMethodList(keyword, packages, classes, systemName);
 		response.getOutputStream().print(resultList);
 	}
 
@@ -105,10 +124,16 @@ public class AnnotationCandidateSecuredResourcesController {
 	 * @throws Exception fail to find list
 	 */
 	@RequestMapping("/candidateSecuredResources/getUrlMappingList.do")
-	public void getUrlMappingList(@RequestParam(value = "q", required = false) String keyword,
-			HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	public void getUrlMappingList(
+			@RequestParam(value = "q", required = false) String keyword,
+			HttpServletRequest request, 
+			HttpServletResponse response, 
+			HttpSession session,
+			Model model) throws Exception {
 
-		String resultList = candidateSecuredResourcesService.getRequestMappingList(keyword);
+		String systemName = (String) session.getAttribute("systemName");
+		
+		String resultList = candidateSecuredResourcesService.getRequestMappingList(keyword, systemName);
 		response.getOutputStream().print(resultList);
 	}
 
@@ -122,11 +147,17 @@ public class AnnotationCandidateSecuredResourcesController {
 	 * @throws Exception fail to find list
 	 */
 	@RequestMapping("/candidateSecuredResources/getParameterList.do")
-	public void getParameterList(@RequestParam(value = "q", required = false) String keyword,
+	public void getParameterList(
+			@RequestParam(value = "q", required = false) String keyword,
 			@RequestParam(value = "requestMapping", required = false) String requestMapping,
-			HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+			HttpServletRequest request, 
+			HttpServletResponse response,
+			HttpSession session,
+			Model model) throws Exception {
 
-		String resultList = candidateSecuredResourcesService.getParameterList(keyword, requestMapping);
+		String systemName = (String)session.getAttribute("systemName");
+		
+		String resultList = candidateSecuredResourcesService.getParameterList(keyword, requestMapping, systemName);
 		response.getOutputStream().print(resultList);
 	}
 
@@ -140,10 +171,16 @@ public class AnnotationCandidateSecuredResourcesController {
 	 * @throws Exception fail to find list
 	 */
 	@RequestMapping("/candidateSecuredResources/getPointCutList.do")
-	public void getPointCutList(@RequestParam(value = "q", required = false) String keyword,
-			HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	public void getPointCutList(
+			@RequestParam(value = "q", required = false) String keyword,
+			HttpServletRequest request, 
+			HttpServletResponse response, 
+			HttpSession session,
+			Model model) throws Exception {
 
-		String resultList = candidateSecuredResourcesService.getPointCutList(keyword);
+		String systemName = (String)session.getAttribute("systemName");
+		
+		String resultList = candidateSecuredResourcesService.getPointCutList(keyword, systemName);
 		response.getOutputStream().print(resultList);
 	}
 }

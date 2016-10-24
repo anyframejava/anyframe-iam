@@ -21,7 +21,15 @@ jQuery(document).ready(
 			url: "<c:url value='/viewresourcesmapping/listData.do?&parentViewResourceId=' />" + viewResourceId,
 			mtype:'GET',
 			datatype : "json",
-			colNames : [ '<anyframe:message code="restrictedtimes.ui.grid.compkey" />', "<anyframe:message code='viewresource.ui.label.viewresourceid' />", "<anyframe:message code='viewresource.ui.label.reftype' />", "<anyframe:message code='viewresource.ui.label.viewname' />", "<anyframe:message code='viewresource.ui.label.category' />", "<anyframe:message code='viewresource.ui.label.refid' />", "<anyframe:message code='viewresource.ui.label.permissions' />"],
+			colNames : [ 
+						'<anyframe:message code="restrictedtimes.ui.grid.compkey" />', 
+						"<anyframe:message code='viewresource.ui.label.viewresourceid' />", 
+						"<anyframe:message code='viewresource.ui.label.reftype' />", 
+						"<anyframe:message code='viewresource.ui.label.viewname' />", 
+						"<anyframe:message code='viewresource.ui.label.category' />", 
+						"<anyframe:message code='viewresource.ui.label.refid' />", 
+						"<anyframe:message code='viewresource.ui.label.permissions' />"
+						],
 			jsonReader: {
 		        repeatitems: false
 		    },
@@ -114,9 +122,12 @@ jQuery(document).ready(
 						jQuery("#grid2").delRowData(rowData.compKey);
 					}
 					jQuery.ajaxSettings.traditional = true;
-					jQuery("#grid2").setPostData({viewResourceId:viewID, refId:refId});
-					jQuery("#grid2").setGridParam({url:"<c:url value='/viewresourcesmapping/delete.do?' />"}).trigger("reloadGrid");
-					jQuery("#grid2").setGridParam({url:"<c:url value='/viewresourcesmapping/listData.do?' />"});
+					//jQuery("#grid2").setPostData({viewResourceId:viewID, refId:refId});
+					//jQuery("#grid2").setGridParam({url:"<c:url value='/viewresourcesmapping/delete.do?' />"}).trigger("reloadGrid");
+					//jQuery("#grid2").setGridParam({url:"<c:url value='/viewresourcesmapping/listData.do?' />"});
+					$.post("<c:url value='/viewresourcesmapping/delete.do?' />", {viewResourceId:viewID, refId:refId}, function(data){
+			    		jQuery("#grid2").trigger("reloadGrid");
+					});
 				}
 			}
 		});
@@ -130,7 +141,15 @@ jQuery(document).ready(
 		$("[name=searchMapping]").click( function() {
 			jQuery("#grid2").setPostData({searchCondition:$("#searchCondition").val(), searchKeyword:$("#searchKeyword").val(), type:$("#type").val() });
 			jQuery("#grid2").setGridParam({url:"<c:url value='/viewresourcesmapping/listData.do?' />"}).trigger("reloadGrid");
-			});
+		});
+
+		/* auto click by enter key */
+		$("#searchKeyword").keypress(function (e) {
+			if (e.which == 13){
+				$("[name=searchMapping]").trigger("click");
+				return false;
+			}
+		});
 	});
 //-->
 </script>

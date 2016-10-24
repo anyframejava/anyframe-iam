@@ -19,6 +19,7 @@ package anyframe.iam.admin.securedresourcesroles.web;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -112,8 +113,10 @@ public class AnnotationSecuredResourcesRolesController {
 	 */
 	@JsonError
 	@RequestMapping("/securedresourcesroles/listData.do")
-	public String listData(ResourceSearchVO searchVO, Model model) throws Exception {
-
+	public String listData(HttpSession session, ResourceSearchVO searchVO, Model model) throws Exception {
+		String systemName = (String) session.getAttribute("systemName");
+		
+		searchVO.setSystemName(systemName);
 		Page resultPage = securedResourcesService.getMappedList(searchVO);
 
 		model.addAttribute("page", resultPage.getCurrentPage() + "");
@@ -135,8 +138,10 @@ public class AnnotationSecuredResourcesRolesController {
 	 */
 	@JsonError
 	@RequestMapping("/securedresourcesroles/listDataWithLevel.do")
-	public String listDataWithLevel(ResourceSearchVO searchVO, Model model) throws Exception {
+	public String listDataWithLevel(HttpSession session, ResourceSearchVO searchVO, Model model) throws Exception {
 
+		String systemName = (String) session.getAttribute("systemName");
+		searchVO.setSystemName(systemName);
 		Page resultPage = securedResourcesService.getListwithLevel(searchVO);
 
 		model.addAttribute("page", resultPage.getCurrentPage() + "");
@@ -157,8 +162,10 @@ public class AnnotationSecuredResourcesRolesController {
 	 */
 	@JsonError
 	@RequestMapping("/securedresourcesroles/listDataUnmapped.do")
-	public String listDataUnmapped(ResourceSearchVO searchVO, Model model) throws Exception {
+	public String listDataUnmapped(HttpSession session, ResourceSearchVO searchVO, Model model) throws Exception {
 
+		String systemName = (String) session.getAttribute("systemName");
+		searchVO.setSystemName(systemName);
 		Page resultPage = securedResourcesService.getUnmappedList(searchVO);
 
 		model.addAttribute("page", resultPage.getCurrentPage() + "");

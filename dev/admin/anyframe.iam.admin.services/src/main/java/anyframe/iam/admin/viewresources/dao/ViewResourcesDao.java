@@ -40,16 +40,59 @@ public interface ViewResourcesDao extends IamGenericDao<ViewResource, String> {
 	 */
 	Page getList(ViewResourceSearchVO viewResourceSearchVO) throws Exception;
 	
+	/**
+	 * find child nodes that extend the given node in one level
+	 * @param parentNode parent node
+	 * @return List<IamTree> all child node that extend the given node on one level
+	 * @throws Exception fail to find node
+	 */
 	List<IamTree> getViewTree(String parentNode) throws Exception;
 	
+	/**
+	 * find root node in VIEW_HIERARCHY table
+	 * @return List<IamTree> root node of View table
+	 * @throws Exception
+	 */
 	List<IamTree> getRootNodeOfViews() throws Exception;
 	
-//	List<ViewResource> findViewResource(String viewId) throws Exception;
-	
+	/**
+	 * find all the child node that extend the given node in VIEWS_HIERARCHY table
+	 * @param parentNode parent node
+	 * @return List<String> list of the child node that extend the given node
+	 * @throws Exception fail to find list
+	 */
 	List<String> getViewHierarchy(String parentNode) throws Exception;
 	
+	/**
+	 * find list of view name that have the given keyword
+	 * @param keyword
+	 * @return list of view name
+	 * @throws Exception fail to find list	 
+	 */
 	String getViewNameList(String keyword) throws Exception;
 	
+	/**
+	 * find list of view name that have the given keyword and system name
+	 * @param keyword
+	 * @param systemName
+	 * @return list of view name
+	 * @throws Exception fail to find list
+	 */
+	String getViewNameListWithSystemName(String keyword, String systemName) throws Exception;
+	
+	/**
+	 * find viewResourceId that matches the given view name
+	 * @param viewName
+	 * @return view resource id
+	 * @throws Exception fail to find view resource id
+	 */
 	String getViewResourceIdByViewName(String ViewName) throws Exception;
 	
+	/**
+	 * find root node that matches the given system name in VIEW_HIERARCHY table
+	 * @param systemName
+	 * @return List<IamTree> root node of View table
+	 * @throws Exception fail to find root node
+	 */
+	List<IamTree> getRootNodeOfViewsWithSystemName(String systemName) throws Exception;
 }

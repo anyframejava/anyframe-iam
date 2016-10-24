@@ -144,13 +144,31 @@ body {
 		</tr>
 
 		<tr>
-			<td class="tdHead">View Type</td>
+			<td class="tdHead">System Name</td>
+			<td bgcolor="#D6D6D6" width="1"></td>
+			<td class="tdin">
+			<select name="systemName" disabled="disabled" class="ct_input_g">
+				<c:forEach var="item" items="${systemNames }">
+					<option value="${item }">${item }</option>
+				</c:forEach>			
+			</select>
+			
+		</tr>
+		<tr>
+			<td height="1" colspan="3" bgcolor="#D6D6D6"></td>
+		</tr>
+		
+		<tr>
+			<td class="tdHead"><anyframe:message
+				code="viewresource.ui.label.viewtype" /></td>
 			<td bgcolor="#D6D6D6" width="1"></td>
 			<td class="tdin">
 			<form:select path="viewType" id="viewType"
 				cssClass="ct_input_g" cssErrorClass="text medium error">
-				<form:option value="menu">Menu</form:option>	
-				<form:option value="button">Button</form:option>	
+				<form:option value="menu"><anyframe:message
+				code="viewresource.ui.selbox.viewtype.menu" /></form:option>	
+				<form:option value="button"><anyframe:message
+				code="viewresource.ui.selbox.viewtype.button" /></form:option>	
 			</form:select>
 			<form:errors path="viewType" /></td>
 		</tr>
@@ -159,13 +177,16 @@ body {
 		</tr>
 
 		<tr>
-			<td class="tdHead">Visible</td>
+			<td class="tdHead"><anyframe:message
+				code="viewresource.ui.label.visible" /></td>
 			<td bgcolor="#D6D6D6" width="1"></td>
 			<td class="tdin">
 			<form:select path="visible" id="visible"
 				cssClass="ct_input_g" cssErrorClass="text medium error">
-				<form:option value="Y">Y</form:option>	
-				<form:option value="N">N</form:option>
+				<form:option value="Y"><anyframe:message
+				code="viewresource.ui.selbox.visible.y" /></form:option>	
+				<form:option value="N"><anyframe:message
+				code="viewresource.ui.selbox.visible.n" /></form:option>
 			</form:select>
 			<form:errors path="visible" /></td>
 		</tr>

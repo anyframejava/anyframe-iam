@@ -18,6 +18,7 @@ package anyframe.iam.admin.assist.dao.impl;
 
 import org.hibernate.Query;
 
+import anyframe.common.util.StringUtil;
 import anyframe.iam.admin.assist.dao.AssistDao;
 import anyframe.iam.admin.common.IamGenericDaoHibernate;
 import anyframe.iam.admin.domain.CandidateSecuredResources;
@@ -28,8 +29,16 @@ public class AssistDaoHibernateImpl extends IamGenericDaoHibernate<CandidateSecu
 		super(CandidateSecuredResources.class);
 	}
 	
-	public int removeAll() throws Exception {
+//	public int removeAll() throws Exception {
+//		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeCandidateSecuredResources");
+//		return query.executeUpdate();
+//	}
+	
+	public int removeAll(String systemName) throws Exception {
+		systemName = StringUtil.null2str(systemName);
+		
 		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeCandidateSecuredResources");
+		query.setParameter("systemName", systemName);
 		return query.executeUpdate();
 	}
 }

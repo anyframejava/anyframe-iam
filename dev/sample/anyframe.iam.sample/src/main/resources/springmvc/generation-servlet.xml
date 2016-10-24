@@ -50,6 +50,16 @@
 	    
     <!--Product-END-->
 
+	<!-- Flex Control-START>
+	<bean name="/flexControl.do"
+		class="anyframe.iam.sample.common.FlexController">
+		<property name="methodNameResolver" ref="paramResolver" />
+		<property name="success_get" value="/iam/flexAccessControl.do" />
+		<property name="success_addView" value="/WEB-INF/jsp/sample/flex/flexTest.jsp" />
+	</bean>
+	
+	<Flex Control-END -->
+    
     <!-- Add additional controller beans here -->
 
 </beans>

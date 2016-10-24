@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -86,7 +87,9 @@ public class AnnotationViewMappingController {
 	 */
 	@JsonError
 	@RequestMapping("/viewresourcesmapping/listData.do")
-	public String listData(ViewResourceSearchVO searchVO, Model model) throws Exception {
+	public String listData(ViewResourceSearchVO searchVO, Model model, HttpSession session) throws Exception {
+		String systemName = (String) session.getAttribute("systemName");
+		searchVO.setSystemName(systemName);
 		Page resultPage = viewMappingService.getList(searchVO);
 		model.addAttribute("page", resultPage.getCurrentPage() + "");
 		model.addAttribute("total", resultPage.getMaxPage() + "");
@@ -115,7 +118,7 @@ public class AnnotationViewMappingController {
 			idList.add(vsPK);
 		}
 		viewMappingService.delete(idList);
-		return "forward:/viewresourcesmapping/listData.do";
+		return "forward:/viewresourcesmapping/list.do";
 	}
 
 	/**

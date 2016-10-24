@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
+<dynamic-hibernate>
+	<query name="findCategoryList">
+		<![CDATA[
+		FROM Category category 
+		#if ($keywordNum != "")			
+			WHERE 		
+			#if ($condition == "All" || $condition == "")
+				(
+				  category.name like :keywordStr
+				 #if($isNumeric == "true")
+				 	or category.categoryId = {{keywordNum}} 
+				 #end
+				)	
+			#elseif($condition == "categoryId")
+				category.{{condition}} = {{keywordNum}}			
+			#elseif($condition == "name")
+				category.{{condition}} like :keywordStr			
+			#end
+		#end			
+			order by							
+				category.categoryId
+		]]>
+	</query>
+
+	<query name="countCategoryList">
+		<![CDATA[
+		SELECT count(*) 
+		FROM Category category 
+		#if ($keywordNum != "")			
+			WHERE 		
+			#if ($condition == "All" || $condition == "")
+				(
+				  category.name like :keywordStr
+				 #if($isNumeric == "true")
+				 	or category.categoryId = {{keywordNum}} 
+				 #end
+				)	
+			#elseif($condition == "categoryId")
+				category.{{condition}} = {{keywordNum}}			
+			#elseif($condition == "name")
+				category.{{condition}} like :keywordStr			
+			#end
+		#end					
+		]]>
+	</query>	
+</dynamic-hibernate>
+
+
+

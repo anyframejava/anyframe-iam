@@ -28,6 +28,16 @@ public class ResourceSearchVO extends CommonSearchVO {
 	private String searchType;
 
 	private String roleId;
+	
+	private String systemName;
+
+	public String getSystemName() {
+		return systemName;
+	}
+
+	public void setSystemName(String systemName) {
+		this.systemName = systemName;
+	}
 
 	public String getRoleId() {
 		return roleId;
