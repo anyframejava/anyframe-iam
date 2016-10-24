@@ -5,8 +5,8 @@
 <head>
 	
 <jsp:include page="/common/jstree-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jqueryui-include.jsp" />
-<jsp:include page="/common/jquery-autocomplete-include.jsp" />
 
 <script type="text/javascript">
 <!--
@@ -15,58 +15,35 @@
 		var jqSearchForm = document.usersForm;
 		$("#group").tree({
 			data	: {
-				type	: "json",
-				async	: true,
-				opts 	: {
-					method	: "POST",
-					url		: "<c:url value='/groups/listData.do?' />"
+			type	: "json",
+			method	: "POST",
+			url		: "<c:url value='/groups/listData.do?' />",
+			async	: true,
+			async_data : function (NODE) { return { id : $(NODE).attr("id") || "0" } }
+		},
+		ui	: {
+			theme_name : "classic",
+			context : false
+		},
+		callback	: {
+			onselect	: function(NODE, TREE_OBJ) {
+				var sText = jqSearchForm.selectedText;
+				sText.value = $(NODE).children("a:visible").text();
+				var sValue = jqSearchForm.selectedValue;
+				sValue.value = NODE.id;
+			},
+			ondblclk	: function(NODE, TREE_OBJ) {
+				addrole($(NODE).children("a:visible").text(), NODE.id);
+			},
+			error 		: function(TEXT){
+				var roleId = document.usersForm.roleId.value;
+				if(TEXT.match('parsererror') != null){
+					location.href = "<c:url value='/login/relogin.do?inputPage=/rolegroupmapping/addView.do?&roleId='/>" + roleId;
+					return;
 				}
-			},
-			ui	: {
-				theme_name : "apple"
-			},
-			types : {
-				"default" : {
-					draggable : false
-				}
-			},
-			plugins : {
-				cookie : { prefix : "rolegroupmap_" }
-			},
-			
-			callback	: {
-				beforedata	: function(NODE, TREE_OBJ) {
-					return {
-						id : $(NODE).attr("id") || "0",
-						groupName : document.getElementById("groupName").value,
-						searchClickYn : document.getElementById("searchClickYn").value
-					}
-				},
-				onselect	: function(NODE, TREE_OBJ) {
-					var sText = jqSearchForm.selectedText;
-					sText.value = $.tree.focused().get_text(NODE);
-					var sValue = jqSearchForm.selectedValue;
-					sValue.value = NODE.id;
-				},
-				ondblclk	: function(NODE, TREE_OBJ) {
-					addrole($.tree.focused().get_text(NODE), NODE.id);
-				},
-				error 		: function(TEXT){
-					var roleId = document.usersForm.roleId.value;
-					if(TEXT.match('parsererror') != null){
-						location.href = "<c:url value='/login/relogin.do?inputPage=/rolegroupmapping/addView.do?&roleId='/>" + roleId;
-						return;
-					}
-					alert(TEXT);
-				}
-			}  
-		});
-
-		$("[name=searchUsers]").click(
-			function() {
-				document.getElementById("searchClickYn").value = "Y";
-				$.tree.focused().refresh();
-				document.getElementById("searchClickYn").value = "N";
+				alert(TEXT);
+			}
+		}  
 		});
 	});
 
@@ -195,26 +172,8 @@ body {
 	    <td width="224" valign="bottom" style="padding-top:6px">
     		<table width="220" height="25" border="0" cellpadding="0" cellspacing="0">
       			<tr height="25">
-        			<td width="26" height="25" background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen" ><a class="openBtn" title="Open Branch" href="javascript:$.tree.focused().open_all();"><anyframe:message code="role.ui.tree.openbranch" />Open</a></div></td>
-        			<td width="26" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>" ><div id="menuclose"><a class="closeBtn" title="Close Branch" href="javascript:$.tree.focused().close_all();"><anyframe:message code="role.ui.tree.closebranch" />Close</a></div></td>
-        			<td width="100" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>" >
-						<div id="inputArea">
-							<input id="groupName" size="20" class='ct_input_g'>
-							<input id="searchClickYn" type="hidden" value="N">
-							<script type="text/javascript">
-								$("#groupName").autocomplete(
-									"<c:url value='/groups/getGroupNameList.do' />", {
-										width : 200,
-										selectFirst:true,
-										mustMatch:true,
-										autoFill:true,
-										scroll: true
-									}
-								);
-							</script>
-						</div>
-					</td>
-					<td width="62" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
+        			<td width="26" height="25" background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen" ><a class="openBtn" title="Open Branch" href="javascript:$.tree_reference('group').open_all();"><anyframe:message code="role.ui.tree.openbranch" />Open</a></div></td>
+        			<td width="188" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>" ><div id="menuclose"><a class="closeBtn" title="Close Branch" href="javascript:$.tree_reference('group').close_all();"><anyframe:message code="role.ui.tree.closebranch" />Close</a></div></td>
       			</tr>
     		</table>
 		</td>

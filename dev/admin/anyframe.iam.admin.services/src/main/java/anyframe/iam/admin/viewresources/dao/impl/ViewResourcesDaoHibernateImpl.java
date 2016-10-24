@@ -35,7 +35,6 @@ public class ViewResourcesDaoHibernateImpl extends IamGenericDaoHibernate<ViewRe
 		super(ViewResource.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	public Page getList(ViewResourceSearchVO viewResourceSearchVO) throws Exception {
 		int pageIndex = viewResourceSearchVO.getPage();
 		int pageSize = viewResourceSearchVO.getRows();

@@ -32,7 +32,7 @@
 	<b:bean id="antUrlPathMatcher" class="org.springframework.security.util.AntUrlPathMatcher" />
 	<b:bean id="regexUrlPathMatcher" class="org.springframework.security.util.RegexUrlPathMatcher" />
 
-    <http access-denied-page="/common/accessDenied.do" path-type="regex" lowercase-comparisons="false">
+    <http access-denied-page="/common/error.do" path-type="regex" lowercase-comparisons="false">
         <intercept-url pattern="\A/images/.*\Z" filters="none" />
 		<intercept-url pattern="\A/common/.*\Z" filters="none" />
 		<intercept-url pattern="\A/css/.*\Z" filters="none" />
@@ -58,7 +58,7 @@
 
     <b:bean id="jdbcUserService"
             class="anyframe.iam.core.userdetails.jdbc.ExtJdbcUserDetailsManager" >
-        <!-- USER_ID, PASSWORD, ENABLED should be selected in 1st, 2nd, 3rd place sequentially -->
+        <!-- USER_ID, PASSWORD, ENABLED 는 항상 1,2,3 번째 순서로 나타나야 함! -->
         <b:property name="usersByUsernameQuery" value="SELECT USER_ID, PASSWORD, CASE WHEN ENABLED = 'Y' THEN 1 ELSE 0 END ENABLED, USER_NAME, CREATE_DATE, MODIFY_DATE FROM USERS WHERE USER_ID = ?"/>
         <b:property name="authoritiesByUsernameQuery">
         	<b:value>
@@ -87,15 +87,13 @@
 				<b:ref local="anyframe.iam.core.acl.ExtBasePermission.WRITE" />
 				<b:ref local="anyframe.iam.core.acl.ExtBasePermission.CREATE" />
 				<b:ref local="anyframe.iam.core.acl.ExtBasePermission.DELETE" />
-				<!--
 				<b:ref local="anyframe.iam.core.acl.ExtBasePermission.ADMINISTRATION" />
 				<b:ref local="anyframe.iam.core.acl.ExtBasePermission.LIST" />
 				<b:ref local="anyframe.iam.core.acl.ExtBasePermission.PRINT" />
+				<!--
 				<b:ref local="anyframe.iam.core.acl.ExtBasePermission.REPORT" />
 				<b:ref local="anyframe.iam.core.acl.ExtBasePermission.POPUP" />
-				-->
 				<b:ref local="anyframe.iam.core.acl.ExtBasePermission.DOWNLOAD" />
-				<!--
 				<b:ref local="anyframe.iam.core.acl.ExtBasePermission.UPLOAD" />
 				<b:ref local="anyframe.iam.core.acl.ExtBasePermission.HELP" />
 				-->
@@ -103,7 +101,7 @@
 		</b:property>
 	</b:bean>
 	
-	<!-- definition of Permission using by current Application -->
+	<!-- 현재 Application 에서 사용하는 Permission 정의 -->
 	<b:bean id="anyframe.iam.core.acl.ExtBasePermission.READ"
 		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
 		<b:property name="staticField"
@@ -124,7 +122,6 @@
 		<b:property name="staticField"
 			value="anyframe.iam.core.acl.ExtBasePermission.DELETE" />
 	</b:bean>
-	<!--
 	<b:bean id="anyframe.iam.core.acl.ExtBasePermission.ADMINISTRATION"
 		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
 		<b:property name="staticField"
@@ -140,6 +137,7 @@
 		<b:property name="staticField"
 			value="anyframe.iam.core.acl.ExtBasePermission.PRINT" />
 	</b:bean>
+	<!--
 	<b:bean id="anyframe.iam.core.acl.ExtBasePermission.REPORT"
 		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
 		<b:property name="staticField"
@@ -150,13 +148,11 @@
 		<b:property name="staticField"
 			value="anyframe.iam.core.acl.ExtBasePermission.POPUP" />
 	</b:bean>
-	-->
 	<b:bean id="anyframe.iam.core.acl.ExtBasePermission.DOWNLOAD"
 		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
 		<b:property name="staticField"
 			value="anyframe.iam.core.acl.ExtBasePermission.DOWNLOAD" />
 	</b:bean>
-	<!--
 	<b:bean id="anyframe.iam.core.acl.ExtBasePermission.UPLOAD"
 		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
 		<b:property name="staticField"

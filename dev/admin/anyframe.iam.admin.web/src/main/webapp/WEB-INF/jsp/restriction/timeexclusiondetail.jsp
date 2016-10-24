@@ -10,9 +10,8 @@
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
-<jsp:include page="/common/jquery-autocomplete-include.jsp" />
+<jsp:include page="/common/jqueryui-include.jsp" />
 
 <script type="text/javascript" src="<c:url value='/validator.do'/>"></script>
 <validator:javascript formName="restrictedTimes" staticJavascript="false" xhtml="true" cdata="false"/>
@@ -133,52 +132,33 @@
 	$(function () {
 		$("#role").tree({
 			data	: {
-				type	: "json",
-				async	: true,
-				opts 	: {
-					method	: "POST",
-					url		: "<c:url value='/roles/listData.do?' />"
-				}
+			type	: "json",
+			method	: "POST",
+			url		: "<c:url value='/roles/listData.do?' />",
+			async	: true,
+			async_data : function (NODE) { return { id : $(NODE).attr("id") || "0" } }
+		},
+		ui	: {
+			theme_name : "classic",
+			context : false
+		},
+		callback	: {
+			ondblclk	: function(NODE,TREE_OBJ) {
+	        	addrole($(NODE).children("a:visible").text(), NODE.id);
 			},
-			ui	: {
-				theme_name : "apple"
-			},
-			types : {
-				"default" : {
-					draggable : false
-				}
-			},
-			callback	: {
-				beforedata	: function(NODE, TREE_OBJ) { 
-					return {
-						id : $(NODE).attr("id") || "0",
-						roleName : document.getElementById("roleName").value,
-						searchClickYn : document.getElementById("searchClickYn").value
-					} 
-				},
-				ondblclk	: function(NODE,TREE_OBJ) {
-	        		addrole($.tree.focused().get_text(NODE), NODE.id);
-				},
-				error 		: function(TEXT){
-					var userId = document.timesresourcesexclusion.userId.value;
-					if(TEXT.match('parsererror') != null){
-						if(userId == "" || userId == null){
-							location.href = "<c:url value='/login/relogin.do?inputPage=/users/addView.do?'/>";
-						} else{
-							location.href = "<c:url value='/login/relogin.do?inputPage=/users/get.do?&userId='/>" + userId;
-						}
-						return;
+			error 		: function(TEXT){
+				var userId = document.timesresourcesexclusion.userId.value;
+				if(TEXT.match('parsererror') != null){
+					if(userId == "" || userId == null){
+						location.href = "<c:url value='/login/relogin.do?inputPage=/users/addView.do?'/>";
+					} else{
+						location.href = "<c:url value='/login/relogin.do?inputPage=/users/get.do?&userId='/>" + userId;
 					}
-					alert(TEXT);
+					return;
 				}
+				alert(TEXT);
 			}
-		});
-
-		$("[name=searchUsers]").click(
-				function() {
-					document.getElementById("searchClickYn").value = "Y";
-					$.tree.focused().refresh();
-					document.getElementById("searchClickYn").value = "N";
+		}
 		});
 	});
 
@@ -254,9 +234,9 @@ body {
 						<td bgcolor="#D6D6D6" width="1"></td>
 						<td width="120" class="tdHead"><anyframe:message code="restrictedtimes.ui.label.resourceid" /></td>
 						<td bgcolor="#D6D6D6" width="1"></td>
-						<td width="145" class="tdin">
+						<td width="139" class="tdin">
 							<form:input path="id.resourceId" id="resourceId" readonly="true" cssClass="ct_input_g" cssErrorClass="text medium error" maxlength="10" size="20"/>&nbsp;<form:errors path="id.resourceId" cssClass="error" /></td>
-					  	<td width="260" align="left">
+					  	<td width="277" align="left">
 					  		<a href="#"  name="selectTimeId" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>					  	
 					</tr>		
 					<tr><td height="1" colspan="8" bgcolor="#D6D6D6"></td></tr>
@@ -325,26 +305,8 @@ body {
 						<td colspan="6" >
 						    <table width="668" border="0" cellpadding="0" cellspacing="0" class="tablemargin">
 						      <tr height="25">
-						        <td width="26" background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen"><a class="openBtn" title="Open Branch" a href="javascript:$.tree.focused().open_all();">Open</a></div></td>
-						        <td width="26" background="<c:url value='/images/bg_treer3.gif'/>"><div id="menuclose"><a class="closeBtn" title="Close Branch" a href="javascript:$.tree.focused().close_all();">Close</a></div></td>
-						        <td width="100" align="left" background="<c:url value='/images/bg_treer.gif'/>" >
-									<div id="inputArea">
-										<input id="roleName" size="20" class='ct_input_g'>
-										<input id="searchClickYn" type="hidden" value="N">
-										<script type="text/javascript">
-											$("#roleName").autocomplete(
-												"<c:url value='/roles/getRoleNameList.do' />", {
-												width : 200,
-												selectFirst:true,
-												mustMatch:true,
-												autoFill:true,
-												scroll: true
-												}
-											);
-										</script>
-									</div>
-								</td>
-								<td width="130" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
+						        <td width="26" background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen"><a class="openBtn" title="Open Branch" a href="javascript:$.tree_reference('role').open_all();">Open</a></div></td>
+						        <td width="258" background="<c:url value='/images/bg_treer3.gif'/>"><div id="menuclose"><a class="closeBtn" title="Close Branch" a href="javascript:$.tree_reference('role').close_all();">Close</a></div></td>
 						        <td width="386" align="right" >
 									<table height="22" border="0" cellpadding="0" cellspacing="0">
 								          <tr>
@@ -357,13 +319,9 @@ body {
 						      </tr>
 						      
 						      <tr>
-						        <td colspan="4" align="left" valign="top">
-						        	<div id="role" class="demo" style="overflow:auto;height:137px;width:282px;border:1px solid #c3daf9;">
-						        		<span><anyframe:message code='user.ui.tree.span'/></span>
-						        		<input id="roleName" size="20" class='ct_input_g'>
-										<input id="searchClickYn" type="hidden" value="N">
-						        	</div>
-						        </td>
+						        <td colspan="2" align="left" valign="top"><div id="role" class="demo" style="overflow:auto;height:137px;width:282px;border:1px solid #c3daf9;"> <span>
+						          <anyframe:message code='user.ui.tree.span'/>
+						        </span> </div></td>
 						        <td valign="top" class="tdin"><div id="roles" class="demo" style="overflow:auto; height:142px;width:370px;">
 						          <select id="roleId" name="roleId" multiple="multiple" class="selbox" style="overflow:auto; height:142px;width:370px;border:1px solid #c3daf9;">
 						            <c:forEach var="role" items="${roles}">

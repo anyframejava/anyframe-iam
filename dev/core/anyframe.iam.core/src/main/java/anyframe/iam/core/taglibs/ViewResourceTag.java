@@ -32,9 +32,9 @@ import org.springframework.web.util.ExpressionEvaluationUtils;
 import anyframe.iam.core.acl.IViewResourceAccessService;
 
 /**
- * This class check required permission with view resource based on permission mapping information of view resource
- * about currently log-in user. If user have permission, draw Tag body in given JSP page.
- *  
+ * 로그인한 사용자에 대한 view resource 퍼미션 맵핑 정보를 기반으로 조건으로 설정된 view resource 와 required
+ * permission 을 만족하는지 체크하여 JSP 화면에 Tag Body 를 포함할지(버튼 영역을 그릴지)를 처리한다.
+ * 
  * @author Byunghun Woo
  * 
  */
@@ -63,10 +63,10 @@ public class ViewResourceTag extends TagSupport {
 	}
 
 	/**
-	 * Setting required permission to bit mask. ex) READ-1 WRITE-2,
-	 * If permission information is not one, 
-	 * then separate information with comma such as 'hasPermission="3,16"'
-	 * This method also support EL expression. ex) hasPermission="${permissions}"
+	 * 체크할 required permission 을 bit mask (숫자) 로 설정한다. ex.) READ-1 WRITE-2
+	 * READ,WRITE-3 CREATE-4 .. 체크하고자 하는 permissions 정보가 다수인 경우
+	 * hasPermission="3,16" 과 같이 ,로 구분하여 입력하면 된다. 또한
+	 * hasPermission="${permissions} 와 같이 EL 표현식을 지원한다.
 	 * 
 	 * @param hasPermission
 	 */
@@ -75,8 +75,8 @@ public class ViewResourceTag extends TagSupport {
 	}
 
 	/**
-	 * Check if user has permission with current view resource by using viewResourceAccessService.
-	 * INCLUDE if user has permission, SKIP doesn't have.
+	 * viewResourceAccessService 를 사용하여 사용자에 대해 현재 view resource 에 대한 지시된
+	 * permission 을 만족하는지 확인하여 Tag Body 에 대한 INCLUDE/SKIP 을 결정한다. <br/>
 	 */
 	public int doStartTag() throws JspException {
 		initializeIfRequired();
@@ -100,7 +100,7 @@ public class ViewResourceTag extends TagSupport {
 	}
 
 	/**
-	 * Return list of split permission with comma 
+	 * , 로 구분된 permission 들을 분리하여 List 형태로 되돌려준다.
 	 * 
 	 * @param evaledPermissionsString
 	 * @return
@@ -117,7 +117,7 @@ public class ViewResourceTag extends TagSupport {
 	}
 
 	/**
-	 * find context of Spring
+	 * Spring 의 context 를 찾는다.
 	 * 
 	 * @return
 	 */
@@ -126,7 +126,8 @@ public class ViewResourceTag extends TagSupport {
 	}
 
 	/**
-	 * As initialize logic of tag, get Spring context to use viewResourceAccessService bean.
+	 * 태그의 초기화 로직으로 Spring context 를 구해 viewResourceAccessService bean 을 사용 가능토록
+	 * 준비한다.
 	 * 
 	 * @throws JspException
 	 */

@@ -169,6 +169,8 @@ public class UsersServiceTest {
 
 		Users resultDomain = usersService.get(users.getUserId());
 		assertEquals(users.getUserName(), resultDomain.getUserName());
+		String resultGroupId = resultDomain.getGroupsUserses().iterator().next().getGroups().getGroupId();
+		assertEquals(newGroupsUsersId.getGroupId(), resultGroupId);
 	}
 
 	@Test

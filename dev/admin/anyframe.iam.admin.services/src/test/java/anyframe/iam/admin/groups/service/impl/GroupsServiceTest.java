@@ -53,31 +53,22 @@ public class GroupsServiceTest {
 	@Qualifier("groupsService")
 	GroupsService groupsService;
 
-	public Groups makeDomain() throws Exception{
-		
-		Groups domain = new Groups();
-		domain.setGroupName("TEST");
-		domain.setGroupId("GRP-0042");
-		
-		GroupsHierarchy groupsHierarchy = new GroupsHierarchy();
-		
-		GroupsHierarchyId groupsHierarchyId = new GroupsHierarchyId();
-		groupsHierarchyId.setParentGroup("GRP-0041");
-		
-		groupsHierarchy.setId(groupsHierarchyId);
-		
-		Set<GroupsHierarchy> childGroup = new HashSet<GroupsHierarchy>();
-		childGroup.add(groupsHierarchy);
-		domain.setGroupsHierarchiesForChildGroup(childGroup);
-		
-		return domain;
-	}
-	
 	@Test
-	public void testSave() throws Exception {
+	public void testAddGroup() throws Exception {
 
 		// make domain
-		Groups domain = makeDomain();
+		Groups domain = new Groups();
+		domain.setGroupName("test");
+		GroupsHierarchy groupsHierarchy = new GroupsHierarchy();
+		GroupsHierarchyId id = new GroupsHierarchyId();
+		id.setParentGroup("GRP-0041");
+		groupsHierarchy.setId(id);
+
+		Set<GroupsHierarchy> childGroup = new HashSet<GroupsHierarchy>();
+
+		childGroup.add(groupsHierarchy);
+
+		domain.setGroupsHierarchiesForChildGroup(childGroup);
 
 		// save
 		Groups savedGroups = groupsService.save(domain);
@@ -91,25 +82,48 @@ public class GroupsServiceTest {
 	public void testUpdate() throws Exception {
 
 		// make domain
-		Groups domain = makeDomain();
+		Groups domain = new Groups();
+		domain.setGroupName("test");
+		GroupsHierarchy groupsHierarchy = new GroupsHierarchy();
+		GroupsHierarchyId id = new GroupsHierarchyId();
+		id.setParentGroup("GRP-0041");
+		groupsHierarchy.setId(id);
+
+		Set<GroupsHierarchy> childGroup = new HashSet<GroupsHierarchy>();
+
+		childGroup.add(groupsHierarchy);
+
+		domain.setGroupsHierarchiesForChildGroup(childGroup);
 
 		// save
 		Groups savedGroups = groupsService.save(domain);
 
 		// update
-		domain.setGroupName("TEST123");
+		domain.setGroupName("TEST");
 		groupsService.update(domain);
 
 		// check
 		Groups resultGroups = groupsService.get(savedGroups.getGroupId());
-		assertEquals("TEST123", resultGroups.getGroupName());
+		assertEquals("TEST", resultGroups.getGroupName());
 	}
 
 	@Test
 	public void testGetGroupTree() throws Exception {
 
 		// make domain
-		Groups domain = makeDomain();
+		Groups domain = new Groups();
+		domain.setGroupName("test");
+		GroupsHierarchy groupsHierarchy = new GroupsHierarchy();
+		GroupsHierarchyId id = new GroupsHierarchyId();
+		id.setParentGroup("GRP-0041");
+		groupsHierarchy.setId(id);
+
+		Set<GroupsHierarchy> childGroup = new HashSet<GroupsHierarchy>();
+
+		childGroup.add(groupsHierarchy);
+
+		domain.setGroupsHierarchiesForChildGroup(childGroup);
+
 		// save
 		Groups savedGroups = groupsService.save(domain);
 
@@ -119,57 +133,26 @@ public class GroupsServiceTest {
 		// check
 		assertNotNull(resultList);
 		assertTrue(resultList.size() > 0);
-		assertEquals(1, resultList.size());
-		assertEquals(savedGroups.getGroupId(), resultList.get(0).getId());
+		assertEquals(3, resultList.size());
+		assertEquals(savedGroups.getGroupId(), resultList.get(2).getId());
 	}
-	
-	@Test
-	public void testGetGroupName() throws Exception{
-		
-		Groups domain = makeDomain();
-		
-		groupsService.save(domain);
-		
-		String keyword = domain.getGroupName();
-		
-		String resultNameList = groupsService.getGroupNameList(keyword);
-		
-		assertNotNull(resultNameList);
-		assertEquals("TEST\n", resultNameList);
-	}
-	
-	@Test
-	public void testGetGroupIdByGroupName() throws Exception{
-		
-		Groups domain = makeDomain();
-		
-		groupsService.save(domain);
-		
-		String resultGroupId = groupsService.getGroupIdByGroupName(domain.getGroupName());
-		
-		assertNotNull(resultGroupId);
-		assertEquals("GRP-0042", resultGroupId);
-	}
-	
-	@Test
-	public void testGetParentsGroupIds() throws Exception{
-		
-		Groups domain = makeDomain();
-		
-		groupsService.save(domain);
-		
-		List<String> resultParentsGroupIds = groupsService.getParentsGroupIds(domain.getGroupId());
-		
-		assertNotNull(resultParentsGroupIds);
-		assertTrue(resultParentsGroupIds.size() > 0);
-		assertEquals("GRP-0001", resultParentsGroupIds.get(0));
-	}
-	
+
 	@Test
 	public void testRemove() throws Exception {
 
 		// make domain
-		Groups domain1 = makeDomain();
+		Groups domain1 = new Groups();
+		domain1.setGroupName("test");
+		GroupsHierarchy groupsHierarchy1 = new GroupsHierarchy();
+		GroupsHierarchyId id1 = new GroupsHierarchyId();
+		id1.setParentGroup("GRP-0041");
+		groupsHierarchy1.setId(id1);
+
+		Set<GroupsHierarchy> childGroup1 = new HashSet<GroupsHierarchy>();
+
+		childGroup1.add(groupsHierarchy1);
+
+		domain1.setGroupsHierarchiesForChildGroup(childGroup1);
 
 		// save
 		Groups savedGroups1 = groupsService.save(domain1);
@@ -197,7 +180,6 @@ public class GroupsServiceTest {
 		// make domain
 		Groups domain2 = new Groups();
 		domain2.setGroupName("test2");
-		domain2.setGroupId("GRP-0042");
 		GroupsHierarchy groupsHierarchy2 = new GroupsHierarchy();
 		GroupsHierarchyId id2 = new GroupsHierarchyId();
 		id2.setParentGroup("GRP-0041");
@@ -213,7 +195,6 @@ public class GroupsServiceTest {
 
 		Groups domain3 = new Groups();
 		domain3.setGroupName("test3");
-		domain3.setGroupId("GRP-0043");
 		GroupsHierarchy groupsHierarchy3 = new GroupsHierarchy();
 		GroupsHierarchyId id3 = new GroupsHierarchyId();
 		id3.setParentGroup(savedGroups2.getGroupId());

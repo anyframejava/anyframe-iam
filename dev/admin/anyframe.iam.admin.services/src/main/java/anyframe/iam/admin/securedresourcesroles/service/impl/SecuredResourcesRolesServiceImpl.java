@@ -17,6 +17,7 @@
 package anyframe.iam.admin.securedresourcesroles.service.impl;
 
 import anyframe.core.generic.service.impl.GenericServiceImpl;
+import anyframe.iam.admin.domain.Roles;
 import anyframe.iam.admin.domain.SecuredResourcesRoles;
 import anyframe.iam.admin.domain.SecuredResourcesRolesId;
 import anyframe.iam.admin.securedresourcesroles.dao.SecuredResourcesRolesDao;

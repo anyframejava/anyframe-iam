@@ -26,7 +26,8 @@ import org.springframework.security.ConfigAttributeDefinition;
 import anyframe.common.exception.BaseException;
 
 /**
- * This class offer some function to find data about secured object resources based on DB.
+ * Spring Security 의 초기 데이터로 참조되는 DB 기반의 보호된 자원(secured object resource) 데이터들에
+ * 대한 조회 기능을 제공한다.
  * 
  * @author Byunghun Woo
  */
@@ -34,33 +35,31 @@ public interface ISecuredObjectService {
 	Log LOGGER = LogFactory.getLog(ISecuredObjectService.class);
 
 	/**
-	 * Get mapping information of authority about secured resource with URL type.
+	 * Url 보호 자원에 대한 권한 맵핑 정보를 얻는다.
 	 * 
+	 * @return
 	 * @throws BaseException
-	 *				fail to get data 
 	 */
 	public LinkedHashMap getRolesAndUrl() throws BaseException;
 
 	/**
-	 * Get mapping information of authority about secured resource with Method type.
+	 * Method 보호 자원에 대한 권한 맵핑 정보를 얻는다.
 	 * 
+	 * @return
 	 * @throws BaseException
-	 *				fail to get data
 	 */
 	public LinkedHashMap getRolesAndMethod() throws BaseException;
 
 	/**
-	 * Get mapping information of authority about secured resource with PointCut type.
+	 * Pointcut 보호 자원에 대한 권한 맵핑 정보를 얻는다.
 	 * 
+	 * @return
 	 * @throws BaseException
-	 *				fail to get data
 	 */
 	public LinkedHashMap getRolesAndPointcut() throws BaseException;
 
 	/**
-	 * find URL data that matches the given url information.
-	 * (Oracle 10g specific)
-	 * 
+	 * 매치되는 url 을 DB 로 부터 직접 찾는다. 현재 Oracle 10g 이상에 specific 한 쿼리로 기본 설정되어 있다.
 	 * 
 	 * @see anyframe.iam.core.intercept.LookupAttributesMethodReplacer#reimplement(Object,
 	 * java.lang.reflect.Method, Object[])
@@ -71,7 +70,7 @@ public interface ISecuredObjectService {
 	public ConfigAttributeDefinition getMatchedRequestMapping(String url) throws BaseException;
 
 	/**
-	 * Get hierarchy information of Role
+	 * Role 의 Hierarchy 정보를 얻는다.
 	 * 
 	 * @return
 	 * @throws BaseException
@@ -79,7 +78,7 @@ public interface ISecuredObjectService {
 	public String getHierarchicalRoles() throws BaseException;
 
 	/**
-	 * get mapping information of restricted times-roles.
+	 * restricted times-roles (시간에 따른 Role 제한) 맵핑 정보 를 얻는다.
 	 * 
 	 * @return
 	 * @throws BaseException
@@ -87,7 +86,7 @@ public interface ISecuredObjectService {
 	public List getRestrictedTimesRoles() throws BaseException;
 
 	/**
-	 * get mapping information of restricted times-resources
+	 * restricted times-resources (시간에 따른 Resource(Url) 제한) 맵핑 정보를 얻는다.
 	 * 
 	 * @return
 	 * @throws BaseException
@@ -95,14 +94,12 @@ public interface ISecuredObjectService {
 	public List getRestrictedTimesResources() throws BaseException;
 
 	/**
-	 * get list of access permissions related with view resource that user register
+	 * 사용자가 view resource 로 등록한 자원에 대한 접근 권한(permissions) 리스트를 얻는다.
 	 * 
-	 * @param paramMap
-	 * 				Map object that contains viewResourceId and user information(userId, groupId,authorities)
-	 * @return List
-	 * 				List of access permissions that matches the given search conditions
+	 * @param paramMap - viewResourceId 와 로그인한 사용자 정보(userId, groupId,
+	 * authorities) 를 담고 있는 검색조건 Map
+	 * @return 해당 검색조건에 따른 view Resource 접근 권한 리스트
 	 * @throws BaseException
-	 * 				fail to make list
 	 */
 	public List getViewResourceMapping(Map paramMap) throws BaseException;
 

@@ -92,7 +92,6 @@ public class AnnotationTimeResourceExclusionController {
 	 * @return return "/restriction/timeexclusiondetail" page
 	 * @throws Exception fail to move to the page
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping("/restriction/timeexclusion/addView.do")
 	public String addView(@ModelAttribute("searchVO") RestrictedTimesSearchVO searchVO, Model model) throws Exception {
 		TimesResourcesExclusion timeResourcesExclusion = new TimesResourcesExclusion();
@@ -127,7 +126,6 @@ public class AnnotationTimeResourceExclusionController {
 			timeResourcesExclusionId.setResourceId(resourceId);
 			timeResourcesExclusion.setId(timeResourcesExclusionId);
 
-			@SuppressWarnings("unchecked")
 			List roleList = timesResourcesExclusionService.findRoleListByTimeResource(timeId, resourceId);
 
 			model.addAttribute("timesresourcesexclusion", timeResourcesExclusion);
@@ -159,8 +157,6 @@ public class AnnotationTimeResourceExclusionController {
 	@RequestMapping("/restriction/timeexclusion/findrolebytimeresource.do")
 	public String findRoleListByTimeResource(@RequestParam("timeId") String timeId,
 			@RequestParam("resourceId") String resourceId, Model model) throws Exception {
-		
-		@SuppressWarnings("unchecked")
 		List resultList = timesResourcesExclusionService.findRoleListByTimeResource(timeId, resourceId);
 
 		model.addAttribute("roles", resultList);

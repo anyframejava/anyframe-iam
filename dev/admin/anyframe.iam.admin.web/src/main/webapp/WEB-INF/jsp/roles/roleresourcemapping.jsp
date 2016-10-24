@@ -8,15 +8,14 @@
 <title><anyframe:message code="roleresource.ui.title.resourcelist" /></title>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jqueryui-include.jsp" />
 
 <script type="text/javascript">
 <!--
 	jQuery(document).ready( function() {
 		var roleId = parent.document.f1.roleId.value;
 		jQuery("#grid2").jqGrid({
-			sortable: true,
 			url: "<c:url value='/securedresourcesroles/listData.do?&roleId=' />" + roleId,
 			mtype:'POST',
 			datatype : "json",
@@ -64,7 +63,7 @@
 				sorttype : 'text',
 				width : 60
 			} ],
-			width : 615,
+			width : 556,
 			height : 312,
 			multiselect : true,
 			pager : jQuery('#pager2'),
@@ -79,10 +78,9 @@
 					return;
 				}
 				alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
-			}
+			},
+			imgpath : "<c:url value='/jquery/jqgrid/themes/steel/images' />"
 		});
-		jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
-		jQuery("#grid2").jqGrid('gridResize',{minWidth:350,maxWidth:800,minHeight:80, maxHeight:350});
 
 		/* Button Function Start (Resource CRUD) */
 		
@@ -95,12 +93,7 @@
 			rowNum = new String(jQuery("#grid2").getGridParam('selarrrow'));
 			rowNumList = rowNum.split(",");
 
-			if(roleId == "" || roleId == null){
-				alert("Select Role first");
-				return;
-			}
-			
-			if(rowNum == "" || rowNum == null){
+			if(rowNum == null || rowNum ==""){
 				alert("<anyframe:message code='roleresource.ui.alert.noselectedrow' />");
 				return false;
 			} else {
@@ -119,7 +112,7 @@
 
 		/* Mapping Resources */
 		$("[name=addResource]").click( function() {
-			window.open("<c:url value='/securedresourcesroles/listPopUp.do?' />", 'resourceList', 'height=400, width=700');
+			window.open("<c:url value='/securedresourcesroles/listPopUp.do?' />", 'resourceList', 'height=370, width=640');
 		});
 
 		/* Search Resource */
@@ -141,12 +134,10 @@
 		});
 	});
 
-	function reloadGrid(roleId, rowDataArray){
-		jQuery("#grid2").setPostData({roleId:roleId, resourceId:rowDataArray});
-	    jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/add.do?' />"}).trigger("reloadGrid");
+	function reloadGrid(roleId){
 		alert("<anyframe:message code='roleresource.ui.alert.allocationsuccess' />");
-//		jQuery("#grid2").setPostData({roleId:roleId});
-//		jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/listData.do? '/>"}).trigger("reloadGrid");
+		jQuery("#grid2").setPostData({roleId:roleId});
+		jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/listData.do? '/>"}).trigger("reloadGrid");
 	}
 
 	function changeRole(obj){

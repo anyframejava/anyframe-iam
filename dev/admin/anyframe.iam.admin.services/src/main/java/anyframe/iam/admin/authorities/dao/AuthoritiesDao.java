@@ -68,7 +68,6 @@ public interface AuthoritiesDao extends IamGenericDao<Authorities, AuthoritiesId
 	 * conditions
 	 * @throws Exception fail to get a list
 	 */
-	@SuppressWarnings("unchecked")
 	List getGroupList(AuthoritySearchVO authorituSearchVO) throws Exception;
 
 	/**
@@ -78,6 +77,5 @@ public interface AuthoritiesDao extends IamGenericDao<Authorities, AuthoritiesId
 	 * groups Table
 	 * @throws Exception fail to get a list
 	 */
-	@SuppressWarnings("unchecked")
 	List getGroupIdList(AuthoritySearchVO authorituSearchVO) throws Exception;
 }

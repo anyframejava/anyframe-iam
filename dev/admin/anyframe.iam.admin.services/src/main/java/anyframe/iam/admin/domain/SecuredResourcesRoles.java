@@ -39,8 +39,6 @@ import anyframe.core.generic.model.BaseObject;
 @Entity
 @Table(name = "SECURED_RESOURCES_ROLES")
 public class SecuredResourcesRoles extends BaseObject implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
 	private SecuredResourcesRolesId id;
 
 	private Roles roles;

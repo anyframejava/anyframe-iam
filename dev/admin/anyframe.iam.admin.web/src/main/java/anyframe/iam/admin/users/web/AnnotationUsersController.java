@@ -18,7 +18,6 @@ package anyframe.iam.admin.users.web;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -94,7 +93,7 @@ public class AnnotationUsersController {
 			model.addAttribute("groups", new Groups());
 		}
 
-		model.addAttribute("roles", new ArrayList<Roles>());
+		model.addAttribute("roles", new ArrayList());
 
 		return "/users/userdetail";
 	}
@@ -110,9 +109,9 @@ public class AnnotationUsersController {
 	 * @throws Exception fail to add data
 	 */
 	@RequestMapping("/users/add.do")
-	public String add(@ModelAttribute("users") Users users, BindingResult bindingResult, GroupsUsersId groupsUsersId,
+	public String add(@ModelAttribute("users") Users users, BindingResult bindingResult,
 			@RequestParam("groupId") String groupId,
-			@RequestParam(value = "roleId", required = false) String[] roleId, SessionStatus status) throws Exception {
+			@RequestParam(value = "roleId", required = false) String[] roleIds, SessionStatus status) throws Exception {
 
 		beanValidator.validate(users, bindingResult);
 		if (bindingResult.hasErrors()) {
@@ -124,10 +123,10 @@ public class AnnotationUsersController {
 		users.setCreateDate(currentTime);
 
 		GroupsUsers groupUsers = new GroupsUsers();
-//		GroupsUsersId groupsUsersId = new GroupsUsersId();
-//
-//		groupsUsersId.setUserId(users.getUserId());
-//		groupsUsersId.setGroupId(groupId);
+		GroupsUsersId groupsUsersId = new GroupsUsersId();
+
+		groupsUsersId.setUserId(users.getUserId());
+		groupsUsersId.setGroupId(groupId);
 
 		groupUsers.setId(groupsUsersId);
 		groupUsers.setUsers(users);
@@ -138,24 +137,17 @@ public class AnnotationUsersController {
 		groups.add(groupUsers);
 
 		users.setGroupsUserses(groups);
-		
-		bindingResult.setNestedPath("groupsUserses[0].id");
-		beanValidator.validate(users.getGroupsUserses().iterator().next().getId(), bindingResult);
-		bindingResult.setNestedPath(null);
-		if (bindingResult.hasErrors()) {
-			return "/users/userdetail";
-		}
 
 		Authorities[] authorities = null;
 
-		if (roleId != null) {
-			authorities = new Authorities[roleId.length];
-			for (int i = 0; i < roleId.length; i++) {
+		if (roleIds != null) {
+			authorities = new Authorities[roleIds.length];
+			for (int i = 0; i < roleIds.length; i++) {
 				authorities[i] = new Authorities();
 
 				AuthoritiesId authoritiesId = new AuthoritiesId();
 
-				authoritiesId.setRoleId(roleId[i]);
+				authoritiesId.setRoleId(roleIds[i]);
 				authoritiesId.setSubjectId(users.getUserId());
 
 				authorities[i].setId(authoritiesId);
@@ -182,28 +174,24 @@ public class AnnotationUsersController {
 	public String get(@RequestParam(value = "userId", required = false) String userId, Model model) throws Exception {
 		String newUserId = new String(userId.getBytes("8859_1"), "utf-8");
 		if (!StringUtils.isBlank(newUserId)) {
-			Users users = usersService.get(newUserId);
+			Users gettedUsers = usersService.get(newUserId);
 
-			model.addAttribute("users", users);
-			
-			Set<GroupsUsers> setGroupsUsers = users.getGroupsUserses();
-			
-			Iterator<GroupsUsers> itrGroupsUsers = setGroupsUsers.iterator();
-			
-			if(itrGroupsUsers.hasNext()) {
-				model.addAttribute("groups", itrGroupsUsers.next().getGroups());
+			model.addAttribute("users", gettedUsers);
+
+			if (gettedUsers.getGroupsUserses().iterator().hasNext()) {
+				model.addAttribute("groups", gettedUsers.getGroupsUserses().iterator().next().getGroups());
 			}
 			else {
 				model.addAttribute("groups", new Groups());
 			}
 
 			List<Roles> roles = rolesService.findRoles(newUserId);
-			
+
 			if (roles.size() > 0) {
 				model.addAttribute("roles", roles);
 			}
 			else {
-				model.addAttribute("roles", new ArrayList<Roles>());
+				model.addAttribute("roles", new ArrayList());
 			}
 		}
 
@@ -223,36 +211,33 @@ public class AnnotationUsersController {
 	@RequestMapping("/users/update.do")
 	public String update(@ModelAttribute("users") Users users, BindingResult bindingResult,
 			@RequestParam("groupId") String groupId,
-			@RequestParam(value = "roleId", required = false) String[] roleId, SessionStatus status) throws Exception {
+			@RequestParam(value = "roleId", required = false) String[] roleIds, SessionStatus status) throws Exception {
 
 		beanValidator.validate(users, bindingResult);
 		if (bindingResult.hasErrors()) {
 			return "/users/userdetail";
 		}
-		String currentTime = anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd");
-		
 		Users gettedUsers = usersService.get(users.getUserId());
 		users.setPassword(gettedUsers.getPassword());
-		users.setModifyDate(currentTime);
 
 		Authorities[] authorities = null;
 
 		//		
 		// roleId 값이 있을 경우에만 수행 한다.
 		//		 
-		if (roleId != null) {
-			authorities = new Authorities[roleId.length];
+		if (roleIds != null) {
+			authorities = new Authorities[roleIds.length];
 
-			for (int i = 0; i < roleId.length; i++) {
+			for (int i = 0; i < roleIds.length; i++) {
 				authorities[i] = new Authorities();
 				AuthoritiesId authoritiesId = new AuthoritiesId();
 
-				authoritiesId.setRoleId(roleId[i]);
+				authoritiesId.setRoleId(roleIds[i]);
 				authoritiesId.setSubjectId(users.getUserId());
 
 				authorities[i].setId(authoritiesId);
 				authorities[i].setType("U");
-				authorities[i].setModifyDate(currentTime);
+				authorities[i].setModifyDate(anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd"));
 			}
 		}
 
@@ -261,52 +246,33 @@ public class AnnotationUsersController {
 		//		 
 		GroupsUsers newGroupUsers = new GroupsUsers();
 		GroupsUsersId newGroupsUsersId = new GroupsUsersId();
-		
 		newGroupsUsersId.setGroupId(groupId);
 		newGroupsUsersId.setUserId(users.getUserId());
-		
 		newGroupUsers.setId(newGroupsUsersId);
-		newGroupUsers.setCreateDate(currentTime);
-		
-		Set<GroupsUsers> set = new HashSet<GroupsUsers>();
-		set.add(newGroupUsers);
-		
-		users.setGroupsUserses(set);
+		newGroupUsers.setCreateDate(anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd"));
+		newGroupUsers.setModifyDate(anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd"));
 
 		//		
 		// 현재의 GroupsUsers 값을 가져온다.
 		//		 
 		GroupsUsers currentGroupUsers = null;
 		GroupsUsersId currentGroupsUsersId = null;
-		
-		Set<GroupsUsers> setGroupsUsers1 = gettedUsers.getGroupsUserses();
-		
-		Iterator<GroupsUsers> itrGroupsUsers1 = setGroupsUsers1.iterator();
-		
-		if(itrGroupsUsers1.hasNext()) {
-			GroupsUsers groupsUsers1 = itrGroupsUsers1.next();
-			Groups groups1 = groupsUsers1.getGroups();
-			
-			Set<GroupsUsers> setGroupsUsers2 = groups1.getGroupsUserses();
-			Iterator<GroupsUsers> itrGroupsUsers2 = setGroupsUsers2.iterator();
-			
-			if(itrGroupsUsers2.hasNext()) {
-				GroupsUsers groupsUsers2 = itrGroupsUsers2.next();
-				GroupsUsersId groupsUsersId = groupsUsers2.getId();
-				
+
+		if (gettedUsers.getGroupsUserses().iterator().hasNext()) {
+			if (gettedUsers.getGroupsUserses().iterator().next().getGroups().getGroupsUserses().iterator().hasNext()) {
 				currentGroupUsers = new GroupsUsers();
 				currentGroupsUsersId = new GroupsUsersId();
-				
-				currentGroupsUsersId.setGroupId(groupsUsersId.getGroupId());
+
+				currentGroupsUsersId.setGroupId(gettedUsers.getGroupsUserses().iterator().next().getGroups()
+						.getGroupsUserses().iterator().next().getId().getGroupId());
 				currentGroupsUsersId.setUserId(users.getUserId());
 				
 				currentGroupUsers.setId(currentGroupsUsersId);
 			}
 		}
-		
 
 		usersService.update(users, newGroupUsers, currentGroupUsers, authorities);
-		
+
 		return "forward:/userdetail/list.do?&groupId=" + groupId;
 	}
 

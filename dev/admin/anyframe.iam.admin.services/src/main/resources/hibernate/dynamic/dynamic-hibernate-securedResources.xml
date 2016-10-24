@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
-"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
 <dynamic-hibernate>
 	<query name="findSecuredResourcesList">
 		<![CDATA[
@@ -72,10 +70,8 @@
 		FROM SecuredResources securedResources, SecuredResourcesRoles securedResourcesRoles, Roles roles
 		WHERE 
 			securedResources.resourceId = securedResourcesRoles.securedResources.resourceId
-			AND securedResourcesRoles.roles.roleId = roles.roleId
-		#if($roleId != "")
 			AND securedResourcesRoles.roles.roleId = :roleId
-		#end
+			AND securedResourcesRoles.roles.roleId = roles.roleId
 		#if($keywordNum != "")
 			#if($condition == "resourceId")
 				AND securedResources.resourceId like :keywordStr 

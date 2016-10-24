@@ -8,8 +8,8 @@
 <title><anyframe:message code="restrictedtimes.ui.title.timesmapping" /></title>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jqueryui-include.jsp" />
 <script type="text/javascript">
 <!--
 	function moveToTimeRole(){

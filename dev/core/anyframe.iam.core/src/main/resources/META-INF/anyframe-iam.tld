@@ -50,7 +50,7 @@
 		<function-class>anyframe.iam.core.acl.ExtBasePermission</function-class>
 		<function-signature>int getPermissionMask(java.lang.String)</function-signature>
 		<example>
-      	&lt;iam:access viewResourceId="testResource" hasPermission="${iam:getPermissionMask('READ,WRITE')}"&gt;
+      	&lt;iam:access viewResourceId="testResource" hasPermission="${iam:getPermissionMask('READ,WRITE')}">
     	</example>
   </function>
 

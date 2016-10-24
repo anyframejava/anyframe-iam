@@ -39,8 +39,6 @@ import anyframe.core.generic.model.BaseObject;
 @Entity
 @Table(name = "TIMES_RESOURCES_EXCLUSION")
 public class TimesResourcesExclusion extends BaseObject implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
 	private TimesResourcesExclusionId id;
 
 	private RestrictedTimes restrictedTimes;
@@ -102,33 +100,12 @@ public class TimesResourcesExclusion extends BaseObject implements Serializable 
 		}
 
 		TimesResourcesExclusion pojo = (TimesResourcesExclusion) o;
-		
-		if((id != null) ? (!id.equals(pojo.id)) : (pojo.id != null)){
-			return false;
-		}
 
-		if((restrictedTimes != null) ? (!restrictedTimes.equals(pojo.restrictedTimes)) : (pojo.restrictedTimes != null)){
-			return false;
-		}
-		
-		if((securedResources != null) ? (!securedResources.equals(pojo.securedResources)) : (pojo.securedResources != null)){
-			return false;
-		}
-		
-		if((roles != null) ? (!roles.equals(pojo.roles)) : (pojo.roles != null)){
-			return false;
-		}
-		
 		return true;
 	}
 
 	public int hashCode() {
 		int result = 0;
-		result = ((id != null) ? id.hashCode() : 0);
-		result = (31 * result) + ((restrictedTimes != null) ? restrictedTimes.hashCode() : 0);
-		result = (31 * result) + ((securedResources != null) ? securedResources.hashCode() : 0);
-		result = (31 * result) + ((roles != null) ? roles.hashCode() : 0);
-		
 
 		return result;
 	}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Package to refer hierarchy information of Role based on DB.
+ * DB 기반의 Hierarchical Role 정보를 참조하기 위한 기능을 제공한다.
  * 
  * @since 1.0.0
  */

@@ -132,7 +132,6 @@ public class AnnotationViewMappingController {
 
 		List<Groups> grouplist = groupsService.getList();
 		List<Roles> rolelist = rolesService.getList();
-		@SuppressWarnings("unchecked")
 		List permissionlist = viewResourceAccessService.getRegisteredPermissionList();
 
 		model.addAttribute("grouplist", grouplist);
@@ -149,12 +148,10 @@ public class AnnotationViewMappingController {
 	 * @return move to "/viewresources/viewmappingdetail"
 	 * @throws Exception faii to get data
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping("/viewresourcesmapping/get.do")
 	public String get(@RequestParam(value = "viewResourceId", required = false) String viewResourceId, Model model)
 			throws Exception {
 
-		
 		List<ViewResourcesMapping> list = viewMappingService.get(viewResourceId);
 
 		List<Groups> grouplist = groupsService.getList();
@@ -218,7 +215,6 @@ public class AnnotationViewMappingController {
 	public String findUserListDataByName(@RequestParam(value = "userName") String userName,
 			@RequestParam(value = "index") int index, Model model) throws Exception {
 
-		@SuppressWarnings("unchecked")
 		List list = usersService.findUserByName(userName);
 
 		model.addAttribute("records", list.size());
@@ -236,7 +232,6 @@ public class AnnotationViewMappingController {
 	 * @return move to "/viewresourcesmapping/list.do" page
 	 * @throws Exception fail to save data
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping("/viewresourcesmapping/save.do")
 	public String save(HttpServletRequest request, @RequestParam(value = "viewResourceId") String viewResourceId,
 			@RequestParam(value = "roleid") String[] roleid, @RequestParam(value = "refType") String[] refType)

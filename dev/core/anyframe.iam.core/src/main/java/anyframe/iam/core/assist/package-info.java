@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Package that offers some function to collect/register resource information of target application
+ * 타겟 어플리케이션의 자원 정보를 수집/등록하기 위한 기능을 제공한다.
  * 
  * @since 1.0.0
  */

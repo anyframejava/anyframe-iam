@@ -55,7 +55,6 @@ public interface ViewMappingService extends GenericService<ViewResourcesMapping,
 	 * viewResource ID
 	 * @throws Exception fail to find list
 	 */
-	@SuppressWarnings("unchecked")
 	List get(String viewResourceId) throws Exception;
 
 	/**

@@ -12,7 +12,6 @@
 			<props>
 				<prop key="/common/login.do">urlFilenameViewController</prop>
 				<prop key="/common/error.do">urlFilenameViewController</prop>
-				<prop key="/common/accessDenied.do">urlFilenameViewController</prop>
                 <prop key="/common/validator.do">urlFilenameViewController</prop>
 			</props>
 		</property>

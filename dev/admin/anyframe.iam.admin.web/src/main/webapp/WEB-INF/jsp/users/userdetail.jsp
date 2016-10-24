@@ -1,19 +1,15 @@
 <%@ taglib uri='http://www.sds.samsung.com/tags' prefix='anyframe' %>
-<%@ include file="/common/taglibs.jsp"%>
+<%@ include file="/common/taglibs.jsp"%> 
 <%@ page language="java" pageEncoding="UTF-8"
 	contentType="text/html;charset=utf-8"%>
-<%@ taglib prefix="validator" uri="http://www.springmodules.org/tags/commons-validator" %>
 <html>
-<head>
+<head>	
 <script type="text/javascript" src="<c:url value='/js/global.js'/>"></script>
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
 <jsp:include page="/common/jstree-include.jsp" />
+<jsp:include page="/common/jqgrid-include.jsp" />
 <jsp:include page="/common/jqueryui-include.jsp" />
-<jsp:include page="/common/jquery-autocomplete-include.jsp" />
-
-<script type="text/javascript" src="<c:url value='/validator.do'/>"></script>
-<validator:javascript formName="users" staticJavascript="false" xhtml="true" cdata="false"/>
 
 <script language="JavaScript">
 <!--
@@ -23,54 +19,35 @@
 			alert("<anyframe:message code='user.ui.alert.savebeforeconfirm' />");
 			return;
 		}
-
-		if(!validateUsers(document.usersForm)){
-			return;
-		}
-
-		var groupId = document.usersForm.groupId;
-		if(groupId.value == "" || groupId.value == null){
-			alert("Group ID is a required field");
-			groupId.focus();
-			return;
-		}
-
-		var boxLength = document.usersForm.roleId.length;
-	    var obj = document.usersForm.roleId.options;
-	    
-		if(boxLength != 0) {
-			for (i = 0; i < boxLength; i++) {
-				obj[i].selected = true;
+		// Form validation
+		if(FormValidation(document.usersForm) != false) {
+		    document.usersForm.action="<c:url value='/users/add.do?'/>";
+		    var boxLength = document.usersForm.roleId.length;
+		    var obj = document.usersForm.roleId.options;
+		    
+			if(boxLength != 0) {
+				for (i = 0; i < boxLength; i++) {
+					obj[i].selected = true;
+				}
 			}
+		    document.usersForm.submit();
 		}
-		
-		document.usersForm.action="<c:url value='/users/add.do?'/>";
-	    document.usersForm.submit();
 	}
 	
 	function fncUpdateUsers() {
-
-		if(!validateUsers(document.usersForm)){
-			return;
-		}
-
-		var groupId = document.usersForm.groupId.value;
-		if(groupId == "" || groupId == null){
-			alert("Group ID is a required field");
-			return;
-		}
-
-		var boxLength = document.usersForm.roleId.length;
-	    var obj = document.usersForm.roleId.options;
-	    
-		if(boxLength != 0) {
-			for (i = 0; i < boxLength; i++) {
-				obj[i].selected = true;
+		// Form validation
+		if(FormValidation(document.usersForm) != false) {
+		    document.usersForm.action="<c:url value='/users/update.do?'/>";
+		    var boxLength = document.usersForm.roleId.length;
+		    var obj = document.usersForm.roleId.options;
+		    
+			if(boxLength != 0) {
+				for (i = 0; i < boxLength; i++) {
+					obj[i].selected = true;
+				}
 			}
+		    document.usersForm.submit();
 		}
-	
-	    document.usersForm.action="<c:url value='/users/update.do'/>";
-	    document.usersForm.submit();
 	}
 	function fncDeleteUsers(){
 		if(confirmDelete('users')) {
@@ -121,52 +98,33 @@
 	$(function () {
 		$("#role").tree({
 			data	: {
-				type	: "json",
-				async	: true,
-				opts 	: {
-					method	: "POST",
-					url		: "<c:url value='/roles/listData.do?' />"
-				}
+			type	: "json",
+			method	: "POST",
+			url		: "<c:url value='/roles/listData.do?' />",
+			async	: true,
+			async_data : function (NODE) { return { id : $(NODE).attr("id") || "0" }; }
+		},
+		ui	: {
+			theme_name : "classic",
+			context : false
+		},
+		callback	: {
+			ondblclk	: function(NODE,TREE_OBJ) {
+	        	addrole($(NODE).children("a:visible").text(), NODE.id);
 			},
-			ui	: {
-				theme_name : "apple"
-			},
-			types : {
-				"default" : {
-					draggable : false
-				}
-			},
-			callback	: {
-				beforedata	: function(NODE, TREE_OBJ) { 
-					return {
-						id : $(NODE).attr("id") || "0",
-						roleName : document.getElementById("roleName").value,
-						searchClickYn : document.getElementById("searchClickYn").value
-					} 
-				},
-				ondblclk	: function(NODE,TREE_OBJ) {
-	        		addrole($.tree.focused().get_text(NODE), NODE.id);
-				},
-				error 		: function(TEXT){
-					var userId = document.usersForm.userId.value;
-					if(TEXT.match('parsererror') != null){
-						if(userId == "" || userId == null){
-							location.href = "<c:url value='/login/relogin.do?inputPage=/users/addView.do?'/>";
-						} else{
-							location.href = "<c:url value='/login/relogin.do?inputPage=/users/get.do?&userId='/>" + userId;
-						}
-						return;
+			error 		: function(TEXT){
+				var userId = document.usersForm.userId.value;
+				if(TEXT.match('parsererror') != null){
+					if(userId == "" || userId == null){
+						location.href = "<c:url value='/login/relogin.do?inputPage=/users/addView.do?'/>";
+					} else{
+						location.href = "<c:url value='/login/relogin.do?inputPage=/users/get.do?&userId='/>" + userId;
 					}
-					alert(TEXT);
+					return;
 				}
+				alert(TEXT);
 			}
-		});
-
-		$("[name=searchUsers]").click(
-			function() {
-				document.getElementById("searchClickYn").value = "Y";
-				$.tree.focused().refresh();
-				document.getElementById("searchClickYn").value = "N";
+		}
 		});
 	});
 
@@ -204,12 +162,7 @@
 				}
 				count++;
 			}
-
-			if(arrSelected.length == 0){
-				alert("No selected Role(s)");
-				return;
-			}
-
+			
 			var x;
 			for(i = 0 ; i < boxLength ; i++) {
 				for(x = 0 ; x < arrSelected.length ; x++) {
@@ -317,7 +270,6 @@ body {
 						</td>
 						<td align="left">
 						  	<a href="javascript:selectGroup();" id="button_links" name="selectGroup" class="searchBtn"></a>
-						  	<form:errors path="groupsUserses*"/>
 						</td>
 					</tr>
 					<tr><td height="1" colspan="4" bgcolor="#D6D6D6"></td></tr>
@@ -338,39 +290,21 @@ body {
 			    	  	<td colspan="2"> 	
 							<table width="100%" class="tablemargin" height="195" border="0" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" >
 								<tr height="25">
-								  <td width="26" height="25" background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen"><a class="openBtn" title="Open Branch" href="javascript:$.tree.focused().open_all();">Open</a></div></td>
-							  	  <td width="26" height="25" background="<c:url value='/images/bg_treer.gif'/>"><div id="menuclose"><a class="closeBtn" title="Close Branch" href="javascript:$.tree.focused().close_all();">Close</a></div></td>
-							  	  <td width="100" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>" >
-									<div id="inputArea">
-										<input id="roleName" size="20" class='ct_input_g'>
-										<input id="searchClickYn" type="hidden" value="N">
-										<script type="text/javascript">
-											$("#roleName").autocomplete(
-												"<c:url value='/roles/getRoleNameList.do' />", {
-													width : 200,
-													selectFirst:true,
-													mustMatch:true,
-													autoFill:true,
-													scroll: true
-												}
-											);
-										</script>
-									</div>
-								  </td>
-								  <td width="40" height="25" align="left" background="<c:url value='/images/bg_treer.gif'/>"><a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
-								  <td width="5"></td>
-								  <td align="left">
-									<table height="22" border="0" cellpadding="0" cellspacing="0">
-										<tr>
-											<td width="18"><img src="<c:url value='/images/btn/btn_delete.gif'/>" width="18" height="22"></td>
-											<td background="<c:url value='/images/btn/bg_btn.gif'/>" height="22" class="boldBtn"><a href="#" name="deleteRole"><anyframe:message code='restrictedtimes.ui.btn.removeroles' /></a></td>
-											<td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
-										</tr>
-									</table>
-								  </td>
+								  <td width="26" height="25" background="<c:url value='/images/bg_treel.gif'/>" style="padding-left:8px"><div id="menuopen"><a class="openBtn" title="Open Branch" href="javascript:$.tree_reference('role').open_all();">Open</a></div></td>
+							  	  <td width="186" height="25" background="<c:url value='/images/bg_treer.gif'/>"><div id="menuclose"><a class="closeBtn" title="Close Branch" href="javascript:$.tree_reference('role').close_all();">Close</a></div></td>
+									<td width="5"></td>
+									<td align="left">
+										<table height="22" border="0" cellpadding="0" cellspacing="0">
+											<tr>
+									            <td width="18"><img src="<c:url value='/images/btn/btn_delete.gif'/>" width="18" height="22"></td>
+									            <td background="<c:url value='/images/btn/bg_btn.gif'/>" height="22" class="boldBtn"><a href="#" name="deleteRole"><anyframe:message code='restrictedtimes.ui.btn.removeroles' /></a></td>
+									            <td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
+											</tr>
+										</table>
+									</td>
 								</tr>
 								<tr>
-									<td valign="top" colspan="4">
+									<td valign="top" colspan="2">
 										<div id="role" class="demo" style="overflow:auto;height:167px;width:220px;border:1px solid #c3daf9;">
 											<span><anyframe:message code='user.ui.tree.span'/></span>
 										</div>

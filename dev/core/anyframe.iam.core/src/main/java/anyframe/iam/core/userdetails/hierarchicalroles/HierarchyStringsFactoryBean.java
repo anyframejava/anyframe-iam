@@ -20,9 +20,7 @@ import org.springframework.beans.factory.FactoryBean;
 import anyframe.iam.core.securedobject.ISecuredObjectService;
 
 /**
- * Get hierarchy information of Role based on DB
- * and offer as initialize data to Bean.
- * 
+ * DB 기반의 Role 계층 관계 정보를 얻어 이를 참조하는 Bean 의 초기화 데이터로 제공한다.
  * @author marcos.sousa - reference
  * http://forum.springframework.org/showthread.php
  * ?t=56615&highlight=database&page=2

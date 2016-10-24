@@ -68,19 +68,4 @@ public interface GroupsDao extends IamGenericDao<Groups, String> {
 	 * @throws Exception fail to find list
 	 */
 	List<Groups> getList() throws Exception;
-	
-	/**
-	 * find all group name that have the given keyword
-	 * @param keyword String keyword
-	 * @return list of group name that matches the given keyword
-	 * @throws Exception fail to find list
-	 */
-	String getGroupNameList(String keyword) throws Exception;
-	/**
-	 * find group ID that matches the given group name
-	 * @param groupName
-	 * @return	group ID
-	 * @throws Exception fail to find group ID
-	 */
-	String getGroupIdByGroupName(String groupName) throws Exception;
 }

@@ -25,11 +25,12 @@ import org.springframework.security.acls.Permission;
 import org.springframework.security.acls.domain.BasePermission;
 
 /**
- * An object that extends BasePermission in Spring Security
- * and contains definition of additional permission.
- * To refer permission information easily, this class contains permission name and code of authority mask(Integer).
+ * Spring Security 의 BasePermission 을 확장하고 있으며 기본 권한 외 많이 쓰이는 유형의 추가 권한의 정의를
+ * 포함하고 있다. 또한 registeredPermissionNames 라는 Map 에 권한 mask (Integer) 에 대한 퍼미션
+ * 명/코드에 대한 맵핑을 등록해두어 쉽게 퍼미션 정보를 참조 가능토록 하였다.
  * 
  * @author Byunghun Woo
+ * 
  */
 public class ExtBasePermission extends BasePermission {
 
@@ -110,7 +111,8 @@ public class ExtBasePermission extends BasePermission {
 	}
 
 	/**
-	 * Return registerdPermissionNames that contains permission name and code of mask(Integer)  
+	 * mask (Integer) 에 대한 퍼미션 명/코드에 대한 맵핑정보를 제공하는 registeredPermissionNames 를
+	 * 돌려준다.
 	 * 
 	 * @return Map
 	 */
@@ -119,14 +121,11 @@ public class ExtBasePermission extends BasePermission {
 	}
 
 	/**
-	 * Get permission name that contains a code from pattern of permission
-	 * and return list.
-	 *  
-	 * @param permission
-	 * 				Permission object
+	 * permission 에 따른 pattern 에서 코드가 존재하는 각 퍼미션 명을 구해와 list 형태로 돌려준다.
 	 * 
-	 * @return List
-	 * 				list of permissionName
+	 * @param permission 입력 객체
+	 * 
+	 * @return List permissionName 의 list
 	 */
 	public static List getPermissionNamesList(Permission permission) {
 		if (permission == null) {
@@ -151,13 +150,10 @@ public class ExtBasePermission extends BasePermission {
 	}
 
 	/**
-	 * Get permission name that contains a code from pattern of permission
-	 * and return array of String
+	 * permission 에 따른 pattern 에서 코드가 존재하는 각 퍼미션 명을 구해와 String 배열 형태로 돌려준다.
 	 * 
-	 * @param permission
-	 * 				Permission object
-	 * @return String[]
-	 * 				array of permissionName
+	 * @param permission 입력 객체(Permission)
+	 * @return permissionName 의 배열
 	 */
 	public static String[] getPermissionNamesArray(Permission permission) {
 		List permissionNames = getPermissionNamesList(permission);
@@ -165,28 +161,22 @@ public class ExtBasePermission extends BasePermission {
 	}
 
 	/**
-	 * Get permission name that contains a code from pattern of permission
-	 * and return String that split with comma
-	 *  
-	 * @param permission
-	 * 				Permission class
-	 * @return String
-	 * 				permissionNames that split with comma
+	 * permission 에 따른 pattern 에서 코드가 존재하는 각 퍼미션 명을 구해와 ,로 구분된 String 형태로 돌려준다.
+	 * 
+	 * @param permission 입력 객체(Permission)
+	 * @return ,(콤마) 로 구분된 permissionNames
 	 */
 	public static String getPermissionNames(Permission permission) {
 		return getPermissionNames(permission, ",");
 	}
 
 	/**
-	 * Get permission name that contains a code from pattern of permission
-	 * and return String that split with given separator
+	 * permission 에 따른 pattern 에서 코드가 존재하는 각 퍼미션 명을 구해와 separator 로 구분된 String
+	 * 형태로 돌려준다.
 	 * 
-	 * @param permission
-	 * 				Permission class
-	 * @param String
-	 * 				separator
-	 * @return String
-	 * 				permissionNames that split with comma
+	 * @param permission 입력 객체(Permission)
+	 * @param separator 구분자(ex. ",")
+	 * @return
 	 */
 	public static String getPermissionNames(Permission permission, String separator) {
 		List permissionNames = getPermissionNamesList(permission);
@@ -210,38 +200,38 @@ public class ExtBasePermission extends BasePermission {
 	}
 
 	/**
-	 * Get value of mask from permission name that split with comma
+	 * ,로 구분된 주어진 permission 명들로 부터 해당 mask 값을 얻는다.
 	 * 
-	 * @param permissionNames
-	 * 				permission names that split with comma.  ex) "READ,WRITE"
-	 * @return value of mask(int)
-	 * 				value of mask(int) that is sum of permission names
+	 * @param permissionNames - , 로 구분된 permission 명 ex.)"READ,WRITE"
+	 * @return 해당 permission name 들의 합에 대한 mask 값(int)
 	 */
 	public static int getPermissionMask(String permissionNames) {
 		return getPermissionMask(permissionNames, ",");
 	}
 
 	/**
-	 * Get value of mask from permission name that split with given separator
 	 * 
 	 * @param permissionNames
-	 * 				permission names that split with given separator.  ex) "READ,WRITE,PRINT"
-	 * @param String
-	 * 				separator
-	 * @return value of mask(int)
-	 * 				value of mask(int) that is sum of permission names
+	 * @param separator
+	 * @return
+	 */
+	/**
+	 * separator 로 구분된 주어진 permission 명들로 부터 해당 mask 값을 얻는다.
+	 * 
+	 * @param permissionNames , 로 구분된 permission 명 ex.)"READ,WRITE"
+	 * @param separator 구분자 ex.) "," split 의 인자로 사용되므로 정규식 예약어 사용에 유의할 것
+	 * @return 해당 permission name 들의 합에 대한 mask 값(int)
 	 */
 	public static int getPermissionMask(String permissionNames, String separator) {
 		return getPermissionMask(permissionNames.replaceAll("\\s+", "").split(separator));
 	}
 
 	/**
-	 * Get value of mask from array of permission name
+	 * 주어진 permission 명들의 배열로 부터 해당 mask 값을 얻는다.
 	 * 
-	 * @param permissionNames
-	 * 				String array of permission names
-	 * @return value of mask(int)
-	 * 				value of mask(int) that is sum of permission names
+	 * @param permissionNames permission 명의 배열 ex.) new String[]{"READ",
+	 * "WRITE"}
+	 * @return 해당 permission name 들의 합에 대한 mask 값(int)
 	 */
 	public static int getPermissionMask(String[] permissionNames) {
 		int mask = 0;

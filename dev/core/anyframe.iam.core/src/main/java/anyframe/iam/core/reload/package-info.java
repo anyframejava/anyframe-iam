@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * This package offer some function to run-time reload authorities mapping of secured resources
+ * 보호자원 권한 맵핑의 런타임 리로드 기능을 제공한다.
  * 
  * @since 1.0.0
  */

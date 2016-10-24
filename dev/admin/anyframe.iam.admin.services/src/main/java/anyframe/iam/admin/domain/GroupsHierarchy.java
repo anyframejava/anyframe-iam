@@ -38,8 +38,6 @@ import anyframe.core.generic.model.BaseObject;
 @Entity
 @Table(name = "GROUPS_HIERARCHY")
 public class GroupsHierarchy extends BaseObject implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
 	private GroupsHierarchyId id;
 
 	private Groups groupsByChildGroup;

@@ -8,9 +8,9 @@
 	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<context:property-placeholder
-		location="classpath*:spring/jdbc.properties" />
+		location="/WEB-INF/config/spring/jdbc.properties" />
 		
-	<util:properties id="jdbcProperties" location="classpath:spring/jdbc.properties" />
+	<util:properties id="jdbcProperties" location="/WEB-INF/config/spring/jdbc.properties" />
 
 	<bean class="org.springframework.context.support.ResourceBundleMessageSource"
 		id="messageSource">

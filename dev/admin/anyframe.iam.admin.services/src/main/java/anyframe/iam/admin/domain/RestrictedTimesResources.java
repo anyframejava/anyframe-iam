@@ -39,8 +39,6 @@ import anyframe.core.generic.model.BaseObject;
 @Entity
 @Table(name = "RESTRICTED_TIMES_RESOURCES")
 public class RestrictedTimesResources extends BaseObject implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
 	private RestrictedTimesResourcesId id;
 
 	private RestrictedTimes restrictedTimes;
@@ -89,28 +87,12 @@ public class RestrictedTimesResources extends BaseObject implements Serializable
 		}
 
 		RestrictedTimesResources pojo = (RestrictedTimesResources) o;
-		
-		if((id != null) ? (!id.equals(pojo.id)) : (pojo.id != null)) {
-			return false;
-		}
-		
-		if((restrictedTimes != null) ? (!restrictedTimes.equals(pojo.restrictedTimes)) : (pojo.restrictedTimes != null)) {
-			return false;
-		}
-		
-		if((securedResources != null) ? (!securedResources.equals(pojo.securedResources)) : (pojo.securedResources != null)) {
-			return false;
-		}
-		
 
 		return true;
 	}
 
 	public int hashCode() {
 		int result = 0;
-		result = ((id != null) ? id.hashCode() : 0);
-		result = (31 * result) + ((restrictedTimes != null) ? restrictedTimes.hashCode() : 0);
-		result = (31 * result) + ((securedResources != null) ? securedResources.hashCode() : 0);
 
 		return result;
 	}
@@ -120,8 +102,6 @@ public class RestrictedTimesResources extends BaseObject implements Serializable
 
 		sb.append(" [");
 		sb.append("id").append("='").append(getId()).append("', ");
-		sb.append("restrictedTimes").append("='").append(getRestrictedTimes()).append("', ");
-		sb.append("securedResources").append("='").append(getSecuredResources()).append("', ");
 
 		sb.append("]");
 

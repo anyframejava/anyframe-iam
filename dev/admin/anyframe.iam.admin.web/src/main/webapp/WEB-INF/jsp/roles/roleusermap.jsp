@@ -9,8 +9,8 @@
 <title><anyframe:message code="roleuser.ui.title.userlist" /></title>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jqueryui-include.jsp" />
 
 <script type="text/javascript">
 <!--
@@ -19,7 +19,6 @@ jQuery(document).ready( function() {
 	var callbackvar = document.f1.callbackvar;
 	// Grid Component
 	jQuery("#grid2").jqGrid({
-		sortable: true,
 		url:"<c:url value='/authorities/listData.do?&roleId=' />" + roleId,
 		mtype:'POST',
 		datatype: 'json',
@@ -37,7 +36,6 @@ jQuery(document).ready( function() {
 		multiselect: true,
 		loadComplete:function(){
 			jQuery("#grid3").jqGrid({
-				sortable: true,
 				url:"<c:url value='/authorities/existListData.do?&roleId='/> " + roleId,
 				mtype: 'POST',
 				datatype:'json',
@@ -71,9 +69,10 @@ jQuery(document).ready( function() {
 						return;
 					}
 					alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
-				}
+				},
+				imgpath : "<c:url value='/jquery/jqgrid/themes/steel/images' />" 
+				
 			});
-			
 			if(callbackvar.value=="toLeft"){
 				jQuery("#grid3").setPostData({roleId:roleId});
 				jQuery("#grid3").setGridParam({url:"<c:url value='/authorities/existListData.do?'/>"}).trigger("reloadGrid");
@@ -87,13 +86,17 @@ jQuery(document).ready( function() {
 		rowList : [ 10, 20, 30 ],
 		viewrecords : true,
 		loadError: function(xhr,st,err) {
+
 			if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									
 				location.href = "<c:url value='/login/relogin.do?inputPage=/roleusermapping/addView.do?&roleId='/>" + roleId;
 				return;
 			}
 			alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
-		}
+
+		},
+		imgpath : "<c:url value='/jquery/jqgrid/themes/steel/images' />"
 	});
+
 
 	/* Button */
 	

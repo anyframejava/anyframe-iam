@@ -71,6 +71,10 @@ public class JsonErrorAdvisingBeanPostProcessor implements BeanPostProcessor, Ap
 
 				// jsonErrorAdvisor 조작 전 기본 Pointcut 인 경우 - 현재 찾아진 JsonError
 				// Annotation 이 달려있는 Bean 에 대한 Pointcut 으로 대체
+				// cf.)(현재까지 생성된 Bean - SampleBeanPostProcessor 로 일반 bean 보다 먼저
+				// 생성됨)은
+				// 최초 등록시 Pointcut.TRUE 이기 때문에 customizableTraceInterceptor 가
+				// 구동되었을 것임
 				if (advisor.getPointcut() == Pointcut.TRUE) {
 					advisor.setPointcut(new ComposablePointcut(new RootClassFilter(clazz), annotationMethodMatcher));
 					// 한번 대체된 Pointcut 에 대해서는 다음에 찾아진 JsonError Annotation 이

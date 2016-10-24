@@ -205,7 +205,7 @@ insert into restricted_times(time_id, time_type, start_date, start_time, end_dat
 insert into restricted_times(time_id, time_type, start_date, start_time, end_date, end_time, description) values ('time-00003', 'weekend', to_char(current_date, 'yyyyMMdd'), '000000', to_char(current_date, 'yyyyMMdd'), '235959', '테스트 휴일-오늘');
 insert into restricted_times(time_id, time_type, start_date, start_time, end_date, end_time, description) values ('time-00004', 'holiday', '20091005', '000000', '20091007', '235959', '추석');
 insert into restricted_times(time_id, time_type, start_date, start_time, end_date, end_time, description) values ('time-00005', 'improve', '20090929', '200000', '20090930', '015959', '시스템 개선');
-insert into restricted_times(time_id, time_type, start_date, start_time, end_date, end_time, description) values ('time-00006', 'improve', to_char(current_date, 'yyyyMMdd'), case when hour(curtime()) <= 9 then '0'||hour(curtime()) else ''||hour(curtime()) end ||'0000', to_char(current_date, 'yyyyMMdd'), '235959', '테스트 시스템개선-오늘일과후');
+insert into restricted_times(time_id, time_type, start_date, start_time, end_date, end_time, description) values ('time-00006', 'improve', to_char(current_date, 'yyyyMMdd'), hour(curtime())||'0000', to_char(current_date, 'yyyyMMdd'), '235959', '테스트 시스템개선-오늘일과후');
 
 insert into restricted_times_resources(time_id, resource_id) values ('time-00001', 'web-000001');
 insert into restricted_times_resources(time_id, resource_id) values ('time-00002', 'web-000002');

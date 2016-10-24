@@ -16,14 +16,13 @@
 
 package anyframe.iam.admin.groups.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 import anyframe.core.generic.service.impl.GenericServiceImpl;
-import anyframe.iam.admin.common.IAMException;
+import anyframe.core.idgen.IIdGenerationService;
 import anyframe.iam.admin.domain.Groups;
 import anyframe.iam.admin.domain.GroupsHierarchy;
 import anyframe.iam.admin.domain.GroupsHierarchyId;
@@ -33,36 +32,47 @@ import anyframe.iam.admin.groups.service.GroupsService;
 
 public class GroupsServiceImpl extends GenericServiceImpl<Groups, String> implements GroupsService {
 	private GroupsDao groupsDao;
-	
-	private static List<String> groupIds = new ArrayList<String>();
+
+	private IIdGenerationService idGenerationServiceGroup;
 
 	public GroupsServiceImpl(GroupsDao groupsDao) {
 		super(groupsDao);
 		this.groupsDao = groupsDao;
 	}
 
-//	Group Tree 정보 조회
-	 
+	public void setIdGenerationServiceGroup(IIdGenerationService idGenerationServiceGroup) {
+		this.idGenerationServiceGroup = idGenerationServiceGroup;
+	}
+
+	/**
+	 * Group Tree 정보 조회
+	 */
 	public List<IamTree> getGroupTree(String parentNode) throws Exception {
 		return groupsDao.getGroupTree(parentNode);
 	}
 
-	
-//	RootNode 정보를 조회
-	
+	/**
+	 * RootNode 정보를 조회
+	 */
 	public List<IamTree> getRootNodeOfGroups() throws Exception {
 		return groupsDao.getRootNodeOfGroups();
 	}
 
-//	Group 정보를 수정
+	/**
+	 * Group 정보를 수정
+	 */
 	public void update(Groups groups) throws Exception {
-		groups.setModifyDate(anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd"));
-		
 		groupsDao.update(groups);
 	}
 
-//	Group 정보 등록
+	/**
+	 * Group 정보 등록
+	 */
 	public Groups save(Groups groups) throws Exception {
+		/**
+		 * IdGenerationService를 이용하여 Group ID를 생성
+		 */
+		String groupId = idGenerationServiceGroup.getNextStringId();
 		String createDate = anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd");
 
 		Iterator<GroupsHierarchy> it = groups.getGroupsHierarchiesForChildGroup().iterator();
@@ -72,7 +82,7 @@ public class GroupsServiceImpl extends GenericServiceImpl<Groups, String> implem
 		GroupsHierarchy groupsHierarchy = new GroupsHierarchy();
 		GroupsHierarchyId groupsHierarchyId = new GroupsHierarchyId();
 
-		groupsHierarchyId.setChildGroup(groups.getGroupId());
+		groupsHierarchyId.setChildGroup(groupId);
 		groupsHierarchyId.setParentGroup(hierarchy.getId().getParentGroup());
 
 		groupsHierarchy.setId(groupsHierarchyId);
@@ -82,76 +92,50 @@ public class GroupsServiceImpl extends GenericServiceImpl<Groups, String> implem
 
 		childGroup.add(groupsHierarchy);
 
+		groups.setGroupId(groupId);
 		groups.setCreateDate(createDate);
 		groups.setGroupsHierarchiesForChildGroup(childGroup);
 
 		return groupsDao.save(groups);
 	}
 
-//	Group 정보를 삭제한다.
+	/**
+	 * Group 정보를 삭제한다.
+	 */
 	public void remove(String currentNode) throws Exception {
-//		node 가 선택이 되었을 경우에만 수행을 한다.
+		/**
+		 * node 가 선택이 되었을 경우에만 수행을 한다.
+		 */
 		if (currentNode != null) {
-
-//			선택된 node 의 하위 node 가 있는지 확인한다.
+			/**
+			 * 선택된 node 의 하위 node 가 있는지 확인한다.
+			 */
 			List<String> childNode = groupsDao.getGroupHierarchy(currentNode);
 			int childNodeCount = childNode.size();
 
-
-//			하위 node 가 있을 경우 하위 node 부터 삭제를 한다.
+			/**
+			 * 하위 node 가 있을 경우 하위 node 부터 삭제를 한다.
+			 */
 			if (childNodeCount > 0) {
 				for (int i = 0; i < childNodeCount; i++) {
 					dao.remove(childNode.get(i).toString());
 				}
 			}
 
-
-//			선택된 node 정보를 삭제한다.
+			/**
+			 * 선택된 node 정보를 삭제한다.
+			 */
 			dao.remove(currentNode);
 		}
-
-//		node 정보가 없이 remove method 를 호출 할 경우 Exception 발생
+		/**
+		 * node 정보가 없이 remove method 를 호출 할 경우 Exception 발생
+		 */
 		else {
-			throw new IAMException("No selected node");
+			throw new Exception();
 		}
 	}
 
 	public List<Groups> getList() throws Exception {
-		List<Groups> list = groupsDao.getList();
-		
-		for(int i = 0 ; i < list.size() ; i++) {
-			Groups groups = list.get(i);
-			findRepeatParentGroup(groups);
-		}
-		
-		return list;
-	}
-	
-	public String getGroupNameList(String keyword) throws Exception {
-		return this.groupsDao.getGroupNameList(keyword);
-	}
-	
-	public String getGroupIdByGroupName(String groupName) throws Exception {
-		return groupsDao.getGroupIdByGroupName(groupName);
-	}
-	
-	public List<String> getParentsGroupIds(String groupId) throws Exception {
-		Groups groups = this.groupsDao.get(groupId);
-		
-		List<String> groupIds = findRepeatParentGroup(groups);
-
-		return groupIds;
-	}
-	
-	private List<String> findRepeatParentGroup(Groups foundGroup) {
-		Set<GroupsHierarchy> childSet = foundGroup.getGroupsHierarchiesForChildGroup();
-		
-		for(GroupsHierarchy groupsHierarchy : childSet) {
-			Groups parentGroup = groupsHierarchy.getGroupsByParentGroup();
-			groupIds.add(parentGroup.getGroupId());
-			findRepeatParentGroup(parentGroup);
-		}
-
-		return groupIds;
+		return groupsDao.getList();
 	}
 }

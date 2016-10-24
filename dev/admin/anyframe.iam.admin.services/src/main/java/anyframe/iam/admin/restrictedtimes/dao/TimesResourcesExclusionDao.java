@@ -46,7 +46,6 @@ public interface TimesResourcesExclusionDao extends IamGenericDao<TimesResources
 	 * @return List list of time exclusion
 	 * @throws Exception fail to find list
 	 */
-	@SuppressWarnings("unchecked")
 	List findRoleListByTimeResource(String timeId, String resourceId) throws Exception;
 
 	/**

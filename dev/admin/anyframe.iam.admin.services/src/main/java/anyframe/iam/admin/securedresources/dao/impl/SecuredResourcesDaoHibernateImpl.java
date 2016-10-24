@@ -58,7 +58,6 @@ public class SecuredResourcesDaoHibernateImpl extends IamGenericDaoHibernate<Sec
 		args[4] = "sidx=" + sidx;
 		args[5] = "sord=" + sord;
 
-		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findSecuredResourcesList", args, pageIndex,
 				pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countSecuredResourcesList", args);
@@ -89,7 +88,6 @@ public class SecuredResourcesDaoHibernateImpl extends IamGenericDaoHibernate<Sec
 		args[5] = "sidx=" + sidx;
 		args[6] = "sord=" + sord;
 
-		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findMappedResourcesList", args, pageIndex,
 				pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countMappedResourcesList", args);
@@ -119,8 +117,6 @@ public class SecuredResourcesDaoHibernateImpl extends IamGenericDaoHibernate<Sec
 		args[4] = "sidx=" + sidx;
 		args[5] = "sord=" + sord;
 		args[6] = "roleId=" + roleId;
-		
-		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findUnmappedResourcesList", args, pageIndex,
 				pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countUnmappedResourcesList", args);
@@ -186,8 +182,6 @@ public class SecuredResourcesDaoHibernateImpl extends IamGenericDaoHibernate<Sec
 		replacedQuery.setParameter("roleId", roleId);
 		replacedQuery.setFirstResult(startIndex);
 		replacedQuery.setMaxResults(pageSize);
-		
-		@SuppressWarnings("unchecked")
 		List<IamResourceResult> resultList = replacedQuery.list();
 
 		query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("countsecuredResourceswithlevel");

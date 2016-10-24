@@ -29,8 +29,6 @@ import anyframe.core.generic.model.BaseObject;
  */
 @Embeddable
 public class GroupsHierarchyId extends BaseObject implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
 	private String parentGroup;
 
 	private String childGroup;

@@ -23,7 +23,7 @@ import org.springframework.security.userdetails.hierarchicalroles.UserDetailsWra
 import anyframe.iam.core.userdetails.ExtUser;
 
 /**
- * Get custom user information about currently log-in user
+ * 로그인한 사용자에 대한 커스텀 사용자 정보를 쉽게 얻을 수 있도록 제공한다.
  * 
  * @author Byunghun Woo
  * 
@@ -33,11 +33,10 @@ public class CustomUserDetailsHelper {
 	private final static Log log = LogFactory.getLog(CustomUserDetailsHelper.class);
 
 	/**
-	 * In case of using IAM ExtJdbcUserDetailsManager, 
-	 * get ExtUser that contains custom user information about currently log-in user 
+	 * IAM 의 ExtJdbcUserDetailsManager 를 사용하는 경우 로그인한 사용자에 대한 커스텀 사용자 정보를 포함하는
+	 * ExtUser 를 얻는다.
 	 * 
-	 * @return ExtUser
-	 * 				ExtUser that contains custom user information
+	 * @return 커스텀 사용자 정보를 포함하는 ExtUser
 	 */
 	public static ExtUser getAuthenticatedUser() {
 		try {

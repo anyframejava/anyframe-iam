@@ -9,12 +9,27 @@
 	<bean id="gatherServiceClient"
 		class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">				
 		<!-- <property name="serviceUrl"
-			value="https://localhost:8443/anyframe.iam.sample/assist/resourceGatherAssist.do" /> -->
+			value="https://localhost:8443/anyframe-sample-web/assist/resourceGatherAssist.do" /> -->
 		<property name="serviceUrl"
-			value="http://localhost:8080/anyframe.iam.sample-1.0.0/assist/resourceGatherAssist.do" />
+			value="http://localhost:8080/anyframe-sample-web/assist/resourceGatherAssist.do" />
 		<property name="serviceInterface"
 			value="anyframe.iam.core.assist.IResourceGatherAssistService" />
 		<property name="httpInvokerRequestExecutor">		
+			<bean
+				class="org.springframework.security.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor" />
+		</property>
+	</bean>
+	
+	<bean id="creationServiceClient"
+		class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">	
+		<!-- 			
+		<property name="serviceUrl"
+		 	value="https://localhost:8443/anyframe-sample-web/assist/resourceCreationAssist.do" /> -->
+		<property name="serviceUrl"
+		 	value="http://localhost:8080/anyframe-sample-web/assist/resourceCreationAssist.do" />
+		<property name="serviceInterface"
+			value="anyframe.iam.core.assist.IResourceCreationAssistService" />
+		<property name="httpInvokerRequestExecutor">
 			<bean
 				class="org.springframework.security.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor" />
 		</property>
@@ -24,9 +39,9 @@
 		class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
 		<!-- 
 		<property name="serviceUrl"
-			value="https://localhost:8443/anyframe.iam.sample/reload/resourceReload.do" /> -->
+			value="https://localhost:8443/anyframe-sample-web/reload/resourceReload.do" /> -->
 		<property name="serviceUrl"
-			value="http://localhost:8080/anyframe.iam.sample-1.0.0/reload/resourceReload.do" />			
+			value="http://localhost:8080/anyframe-sample-web/reload/resourceReload.do" />			
 		<property name="serviceInterface"
 			value="anyframe.iam.core.reload.IResourceReloadService" />
 		<property name="httpInvokerRequestExecutor">

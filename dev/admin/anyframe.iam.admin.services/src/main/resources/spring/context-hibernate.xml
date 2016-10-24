@@ -57,7 +57,6 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.sprin
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-securedResourcesRoles.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-securedResources.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-restrictedTimes.xml</value>
-				<value>classpath:hibernate/namedquery/namedquery-hibernate-candidateSecuredResources.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-viewMapping.xml</value>
 			</list>
 		</property>

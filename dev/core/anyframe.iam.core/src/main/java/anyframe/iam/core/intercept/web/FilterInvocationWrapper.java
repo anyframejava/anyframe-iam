@@ -22,8 +22,8 @@ import javax.servlet.ServletResponse;
 import org.springframework.security.intercept.web.FilterInvocation;
 
 /**
- * This class extends FilterInvocation of Spring Security.
- * It is used to divide with FilterInvocation
+ * Spring Security 의 FilterInvocation 을 extends 하고 있으며 FilterInvocation 과의 단순
+ * 구분을 위해 사용된다.
  * 
  * @author Byunghun Woo
  * 
@@ -31,26 +31,16 @@ import org.springframework.security.intercept.web.FilterInvocation;
 public class FilterInvocationWrapper extends FilterInvocation {
 
 	/**
-	 * This method set request, response, chain about original filterInvocation.
-	 * After this, it will call super's method.
+	 * 원본 filterInvocation 에 대한 request, response, chain 을 설정하여 super 를 호출한다.
 	 * 
 	 * @param fi
-	 * 				FilterInvocation object
 	 */
 	public FilterInvocationWrapper(FilterInvocation fi) {
 		super(fi.getRequest(), fi.getResponse(), fi.getChain());
 	}
 
 	/**
-	 * This method set request, response, chain about original filterInvocation.
-	 * After this, it will call super's method.
 	 * 
-	 * @param request
-	 * 				ServletRequest object
-	 * @param response
-	 * 				ServletResponse object
-	 * @param chain
-	 * 				FilterChain object
 	 */
 	public FilterInvocationWrapper(ServletRequest request, ServletResponse response, FilterChain chain) {
 		super(request, response, chain);

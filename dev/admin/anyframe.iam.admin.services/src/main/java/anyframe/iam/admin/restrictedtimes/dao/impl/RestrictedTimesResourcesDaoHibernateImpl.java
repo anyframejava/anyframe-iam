@@ -56,7 +56,6 @@ public class RestrictedTimesResourcesDaoHibernateImpl extends
 		args[5] = "sidx=" + sidx;
 		args[6] = "sord=" + sord;
 
-		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findTimeResourceList", args, pageIndex, pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countTimeResourceList", args);
 
@@ -64,7 +63,6 @@ public class RestrictedTimesResourcesDaoHibernateImpl extends
 		return resultPage;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List findRoleListByTime(String timeId) throws Exception {
 		Object[] args = new Object[1];
 		args[0] = "timeId=" + timeId;
@@ -88,7 +86,6 @@ public class RestrictedTimesResourcesDaoHibernateImpl extends
 		args[1] = "sidx=" + sidx;
 		args[2] = "sord=" + sord;
 
-		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findResourceListByTime", args, pageIndex,
 				pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countResourceListByTime", args);
@@ -119,7 +116,6 @@ public class RestrictedTimesResourcesDaoHibernateImpl extends
 		args[5] = "sidx=" + sidx;
 		args[6] = "sord=" + sord;
 
-		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findUnmappedResourceListByTime", args, pageIndex,
 				pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countUnmappedResourceListByTime", args);

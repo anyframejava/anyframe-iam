@@ -59,7 +59,6 @@ public class AuthoritiesDaoHibernateImpl extends IamGenericDaoHibernate<Authorit
 		args[5] = "sidx=" + sidx;
 		args[6] = "sord=" + sord;
 
-		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findAuthoritiesList", args, pageIndex, pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countAuthoritiesList", args);
 
@@ -87,7 +86,6 @@ public class AuthoritiesDaoHibernateImpl extends IamGenericDaoHibernate<Authorit
 		args[4] = "sord=" + sord;
 		args[5] = "roleId=" + roleId;
 
-		@SuppressWarnings("unchecked")
 		List resultList = this.getDynamicHibernateService().findList("findExistAuthoritiesList", args, pageIndex,
 				pageSize);
 		Long totalSize = (Long) this.getDynamicHibernateService().find("countExistAuthoritiesList", args);
@@ -96,7 +94,6 @@ public class AuthoritiesDaoHibernateImpl extends IamGenericDaoHibernate<Authorit
 		return resultPage;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List getGroupList(AuthoritySearchVO authoritySearchVO) throws Exception {
 		String type = StringUtil.null2str(authoritySearchVO.getType());
 		String roleId = StringUtil.null2str(authoritySearchVO.getRoleId());
@@ -109,7 +106,6 @@ public class AuthoritiesDaoHibernateImpl extends IamGenericDaoHibernate<Authorit
 		return resultList;
 	}
 
-	@SuppressWarnings("unchecked")
 	public List getGroupIdList(AuthoritySearchVO authoritySearchVO) throws Exception {
 		String type = StringUtil.null2str(authoritySearchVO.getType());
 		String roleId = StringUtil.null2str(authoritySearchVO.getRoleId());
@@ -131,6 +127,13 @@ public class AuthoritiesDaoHibernateImpl extends IamGenericDaoHibernate<Authorit
 			query.executeUpdate();
 		}
 
+		// 사용하지 않음
+		// else if( type.equals("ROLE")) {
+		// query =
+		// (Query)this.getSessionFactory().getCurrentSession().getNamedQuery("removeAuthoritiesByRoleId");
+		// query.setParameter("roleId", id);
+		// query.executeUpdate();
+		// }
 		else {
 			throw new Exception();
 		}

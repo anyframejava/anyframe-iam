@@ -25,12 +25,13 @@ import org.springframework.security.intercept.web.FilterInvocation;
 import org.springframework.security.intercept.web.FilterSecurityInterceptor;
 
 /**
- * This class extends FilterSecurityInterceptor of Spring Security.
- * In pair of ReloadableRestrictedTimesFilterInvocationDefinitionSource and 
- * AnyframeRoleHierarchyRestrictedVoter, it calls alwaysTimeRoleCheck, 
- * dailyFilteredTimeRoleCheck, alwaysTimeResourceCheck and dailyFilteredTimeResourceCheck sequentially.
- * The order will be duplicated because of FilterSecurityInterceptor is included by default
- * in case of using Namespace of Spring Security, so register it as custom-filter, keep in mind about position
+ * Spring Security 의 FilterSecurityInterceptor 를 extends 하고 있으며 restricted times
+ * 에 대한 맵핑 정보를 담고 있는 ReloadableRestrictedTimesFilterInvocationDefinitionSource 및
+ * AnyframeRoleHierarchyRestrictedVoter 와 쌍으로 설정되어 filter 를 통해
+ * alwaysTimeRoleCheck, dailyFilteredTimeRoleCheck, alwaysTimeResourceCheck,
+ * dailyFilteredTimeResourceCheck 를 순서대로 처리한다. Spring Security 의 Namespace 태그를
+ * 사용하는 경우 FilterSecurityInterceptor 가 기본 포함되어 order 가 겹치는 문제가 있으므로
+ * custom-filter 로 등록하되 position 에 유의한다.
  * 
  * @author Byunghun Woo
  * 
@@ -44,12 +45,15 @@ public class RestrictedTimesFilterSecurityInterceptor extends FilterSecurityInte
 	 */
 	private static final String FILTER_APPLIED = "__anyframe_iam_restrictedTimesFilterSecurityInterceptor_filterApplied";
 
+	/**
+	 * 
+	 */
 	public int getOrder() {
 		return super.getOrder() - 60;
 	}
 
 	/**
-	 * Main method of filter to check restricted times
+	 * restricted times 체크를 위한 filter 의 메인 메서드이다.
 	 */
 	public void invoke(FilterInvocation fi) throws IOException, ServletException {
 

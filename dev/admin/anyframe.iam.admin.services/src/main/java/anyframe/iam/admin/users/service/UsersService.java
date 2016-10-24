@@ -44,11 +44,11 @@ public interface UsersService extends GenericService<Users, String> {
 
 	/**
 	 * find a row that matches the given user id in Users table
-	 * @param userId user id
+	 * @param id user id
 	 * @return Users Users domain object that matches the given user id
 	 * @throws Exception fail to find a rows
 	 */
-	Users get(String userId) throws Exception;
+	Users get(String id) throws Exception;
 
 	/**
 	 * save rows in Users table and Authorities table
@@ -85,6 +85,5 @@ public interface UsersService extends GenericService<Users, String> {
 	 * @return List List of Users domain objects
 	 * @throws Exception fail to find list
 	 */
-	@SuppressWarnings("unchecked")
 	List findUserByName(String userName) throws Exception;
 }

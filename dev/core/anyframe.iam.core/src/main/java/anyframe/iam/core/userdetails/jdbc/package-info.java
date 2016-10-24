@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 /**
- * This package offer the function to treat custom user information
- * by extending JdbcUserDetailsManager of Spring Security.
+ * Spring Security 의 JdbcUserDetailsManager 확장하여 커스텀 사용자 정보를 처리하기 위한 기능을 제공한다.
  * 
  * @since 1.0.0
  */

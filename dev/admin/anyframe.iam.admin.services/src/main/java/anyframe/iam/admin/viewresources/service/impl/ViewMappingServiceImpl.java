@@ -46,7 +46,6 @@ public class ViewMappingServiceImpl extends GenericServiceImpl<ViewResourcesMapp
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public List get(String viewResourceId) throws Exception {
 		return viewMappingDao.get(viewResourceId);
 	}

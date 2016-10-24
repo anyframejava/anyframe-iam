@@ -38,8 +38,6 @@ public class CandidateSecuredResources extends BaseObject implements Serializabl
 	private static final long serialVersionUID = 1L;
 
 	private String candidateResourceId;
-	
-	private String beanid;
 
 	private String packages;
 
@@ -50,10 +48,10 @@ public class CandidateSecuredResources extends BaseObject implements Serializabl
 	private String parameter;
 
 	private String requestMapping;
-	
-	private String pointCut;
-	
+
 	private String candidateResourceType;
+
+	private String pointCut;
 
 	public CandidateSecuredResources() {
 
@@ -67,15 +65,6 @@ public class CandidateSecuredResources extends BaseObject implements Serializabl
 
 	public void setCandidateResourceId(String candidateResourceId) {
 		this.candidateResourceId = candidateResourceId;
-	}
-	
-	@Column(name = "BEANID", length = 128)
-	public String getBeanid() {
-		return beanid;
-	}
-
-	public void setBeanid(String beanid) {
-		this.beanid = beanid;
 	}
 
 	@Column(name = "PACKAGES", length = 128)
@@ -141,87 +130,22 @@ public class CandidateSecuredResources extends BaseObject implements Serializabl
 		this.pointCut = pointCut;
 	}
 
-	public boolean equals(Object o) {
-		if(this == o){
-			return true;
-		}
-		
-		if((o == null) || (getClass() != o.getClass())){
-			return false;
-		}
-		
-		CandidateSecuredResources pojo = (CandidateSecuredResources) o;
-		
-		if((candidateResourceId != null) ? (!candidateResourceId.equals(pojo.candidateResourceId)) : (pojo.candidateResourceId != null)){
-			return false;
-		}
-		
-		if((beanid != null) ? (!beanid.equals(pojo.beanid)) : (pojo.beanid != null)){
-			return false;
-		}
-		
-		if((packages != null) ? (!packages.equals(pojo.packages)) : (pojo.packages != null)){
-			return false;
-		}
-		
-		if((classes != null) ? (!classes.equals(pojo.classes)) : (pojo.classes != null)){
-			return false;
-		}
-		
-		if((method != null) ? (!method.equals(pojo.method)) : (pojo.method != null)){
-			return false;
-		}
-		
-		if((parameter != null) ? (!parameter.equals(pojo.parameter)) : (pojo.parameter != null)){
-			return false;
-		}
-		
-		if((requestMapping != null) ? (!requestMapping.equals(pojo.requestMapping)) : (pojo.requestMapping != null)){
-			return false;
-		}
-		
-		if((pointCut != null) ? (!pointCut.equals(pojo.pointCut)) : (pojo.pointCut != null)){
-			return false;
-		}
-		
-		if((candidateResourceType != null) ? (!candidateResourceType.equals(pojo.candidateResourceType)) : (pojo.candidateResourceType != null)){
-			return false;
-		}
-		
-		return true;
+	@Override
+	public boolean equals(Object arg0) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
+	@Override
 	public int hashCode() {
-		int result = 0;
-		result = ((candidateResourceId != null) ? candidateResourceId.hashCode() : 0);
-		result = (31 * result) + ((beanid != null) ? beanid.hashCode() : 0);
-		result = (31 * result) + ((packages != null) ? packages.hashCode() : 0);
-		result = (31 * result) + ((classes != null) ? classes.hashCode() : 0);
-		result = (31 * result) + ((method != null) ? method.hashCode() : 0);
-		result = (31 * result) + ((parameter != null) ? parameter.hashCode() : 0);
-		result = (31 * result) + ((requestMapping != null) ? requestMapping.hashCode() : 0);
-		result = (31 * result) + ((pointCut != null) ? pointCut.hashCode() : 0);
-		result = (31 * result) + ((candidateResourceType != null) ? candidateResourceType.hashCode() : 0);
-		
-		return result;
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
+	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer(getClass().getSimpleName());
-		
-		sb.append(" [");
-		sb.append("candidateResourceId").append("='").append(getCandidateResourceId()).append("', ");
-		sb.append("beanid").append("='").append(getBeanid()).append("', ");
-		sb.append("packages").append("='").append(getPackages()).append("', ");
-		sb.append("classes").append("='").append(getClasses()).append("', ");
-		sb.append("method").append("='").append(getMethod()).append("', ");
-		sb.append("parameter").append("='").append(getParameter()).append("', ");
-		sb.append("requestMapping").append("='").append(getRequestMapping()).append("', ");
-		sb.append("pointCut").append("='").append(getPointCut()).append("', ");
-		sb.append("candidateResourceType").append("='").append(getCandidateResourceType()).append("', ");
-		
-		sb.append("]");
-		return sb.toString();
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

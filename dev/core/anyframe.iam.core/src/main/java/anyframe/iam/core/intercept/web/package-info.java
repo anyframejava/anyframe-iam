@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 /**
- * Package that contains classes to control resources and roles related with restricted time based on DB
+ * DB 기반의 시간 제한 설정에 따른 자원, 역할 제어 기능을 제공한다.
  * 
  * @since 1.0.0
  */

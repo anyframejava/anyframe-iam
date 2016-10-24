@@ -19,11 +19,16 @@ package anyframe.iam.admin.roleinformation.web;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springmodules.validation.commons.DefaultBeanValidator;
 
 import anyframe.iam.admin.domain.Roles;
 import anyframe.iam.admin.roles.service.RolesService;
@@ -40,6 +45,9 @@ public class AnnotationRoleInformationController {
 	@Resource(name = "rolesService")
 	private RolesService rolesService;
 
+	@Autowired
+	private DefaultBeanValidator beanValidator;
+
 	/**
 	 * get Roles information that matches the given role Id
 	 * @param roleId role Id
@@ -53,7 +61,8 @@ public class AnnotationRoleInformationController {
 
 		if (!StringUtils.isBlank(roleId)) {
 			roles = rolesService.get(roleId);
-		} else {
+		}
+		else {
 			roles = new Roles();
 		}
 
@@ -62,4 +71,25 @@ public class AnnotationRoleInformationController {
 		return "/roles/roleinfo";
 	}
 
+	/**
+	 * update Roles in Roles Tab UI
+	 * @param roles Roles domain object that want to be updated
+	 * @param bindingResult an object to check input data with validation rules
+	 * @param status SessionStatus object to block double submit
+	 * @return move to "/roleinformation/get.do?"
+	 * @throws Exception fail to update Roles
+	 */
+	@RequestMapping("/roleinformation/update.do")
+	public String update(@ModelAttribute("roles") Roles roles, BindingResult bindingResult, SessionStatus status)
+			throws Exception {
+
+		beanValidator.validate(roles, bindingResult);
+		if (bindingResult.hasErrors()) {
+			return "/roles/roleinfo";
+		}
+		roles.setModifyDate(anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd"));
+
+		rolesService.update(roles);
+		return "forward:/roleinformation/get.do?";
+	}
 }

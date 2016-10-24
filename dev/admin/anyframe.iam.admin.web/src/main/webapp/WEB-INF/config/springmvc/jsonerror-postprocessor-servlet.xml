@@ -15,9 +15,21 @@
 		class="anyframe.iam.admin.common.web.JsonErrorAdvisingBeanPostProcessor" />
 
 	<!--
-		CGLib 사용 default 는 false 임
+		CGLib 을 사용한 proxy 자동 생성을 위한 설정 ex.) Interface 없는 POJO 클래스인데 이에 대해
+		DebugAdvisor 를 달아주려면 CGLib 으로 Proxy 처리 되어야 함.
 	-->
 	<aop:config proxy-target-class="false" />
+
+	<!--
+		jsonErrorAdvisor 에 제공될 advice 로 jsonExceptionTransfer 지정  <bean
+		id="jsonExceptionTransfer"
+		class="anyframe.iam.admin.common.web.JsonExceptionTransfer"/>
+
+		<aop:config> <aop:pointcut id="serviceMethod" expression="execution(*
+		notexist.*(..))" /> <aop:aspect ref="jsonExceptionTransfer" order="1">
+		<aop:after-throwing throwing="exception" pointcut-ref="serviceMethod"
+		method="transfer" /> </aop:aspect> </aop:config>
+	-->
 
 	<bean id="jsonExceptionTransferAdvice"
 		class="anyframe.iam.admin.common.web.JsonExceptionTransferAdvice" />

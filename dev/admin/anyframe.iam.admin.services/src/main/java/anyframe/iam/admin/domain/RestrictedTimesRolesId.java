@@ -29,8 +29,6 @@ import anyframe.core.generic.model.BaseObject;
  */
 @Embeddable
 public class RestrictedTimesRolesId extends BaseObject implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
 	private String timeId;
 
 	private String roleId;

@@ -43,6 +43,7 @@ import anyframe.iam.admin.vo.ResourceSearchVO;
  * 
  */
 @Controller
+// @SessionAttributes(types = SecuredResources.class)
 @SessionAttributes("resources")
 public class AnnotationResourcesController {
 

@@ -31,7 +31,6 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		super(CandidateSecuredResources.class);
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getPackagesList(String keyword) throws Exception {
 		keyword = StringUtil.null2str(keyword);
 		keyword = keyword.toLowerCase();
@@ -46,7 +45,6 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		return resourceNameList.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getClassesList(String keyword, String packages) throws Exception {
 		keyword = StringUtil.null2str(keyword);
 		keyword = keyword.toLowerCase();
@@ -64,7 +62,6 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		return resourceNameList.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getMethodList(String keyword, String packages, String classes) throws Exception {
 		keyword = StringUtil.null2str(keyword);
 		keyword = keyword.toLowerCase();
@@ -85,7 +82,6 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		return resourceNameList.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getRequestMappingList(String keyword) throws Exception {
 		keyword = StringUtil.null2str(keyword);
 		keyword = keyword.toLowerCase();
@@ -100,7 +96,6 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		return resourceNameList.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getParameterList(String keyword, String requestMapping) throws Exception {
 		keyword = StringUtil.null2str(keyword);
 		keyword = keyword.toLowerCase();
@@ -118,7 +113,6 @@ public class CandidateSecuredResourcesDaoHibernateImpl extends
 		return resourceNameList.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public String getPointCutList(String keyword) throws Exception {
 		keyword = StringUtil.null2str(keyword);
 		keyword = keyword.toLowerCase();

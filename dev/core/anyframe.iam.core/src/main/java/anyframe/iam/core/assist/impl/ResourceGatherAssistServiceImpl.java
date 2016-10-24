@@ -18,14 +18,12 @@ package anyframe.iam.core.assist.impl;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Map.Entry;
-import java.util.regex.Pattern;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -43,10 +41,6 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 
 	private String candidateBeanPostfix;
 
-	private List filterPatterns;
-
-	private Set compiledPatterns = new HashSet();
-
 	public ResourceGatherAssistServiceImpl() {
 		this.candidateBeanPostfix = SERVICE_BEAN_POST_FIX;
 	}
@@ -57,31 +51,6 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 
 	public void setCandidateBeanPostfix(String candidateBeanPostfix) {
 		this.candidateBeanPostfix = candidateBeanPostfix;
-	}
-
-	public void setFilterPatterns(List filterPatterns) {
-		this.filterPatterns = filterPatterns;
-
-		// pattern compile
-		for (int i = 0; i < filterPatterns.size(); i++) {
-			compiledPatterns.add(Pattern.compile((String) filterPatterns.get(i)));
-		}
-	}
-
-	public List getFilterPatterns() {
-		return filterPatterns;
-	}
-
-	private boolean attemptPatternMatch(String className) {
-		Iterator itr = compiledPatterns.iterator();
-		boolean isMatchFound = false;
-		while (itr.hasNext()) {
-			if (((Pattern) itr.next()).matcher(className).matches()) {
-				isMatchFound = true;
-				break;
-			}
-		}
-		return isMatchFound;
 	}
 
 	public List getTargetApplicationResourceInformation() throws Exception {
@@ -107,40 +76,39 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 							Method[] methods = ReflectionUtils.getAllDeclaredMethods(classes[k]);
 							String className = classes[k].getName();
 
-							// skip user defined filtering pattern
-							if (attemptPatternMatch(className)) {
-								continue;
-							}
+							if (className.indexOf("anyframe") < 0 && className.indexOf("org") < 0
+									&& className.indexOf("net") < 0 && className.indexOf("java") < 0) {
 
-							/**
-							 * using pointcut pattern
-							 */
-							pointcutSet.add(classes[k].getPackage().getName());
+								/**
+								 * using pointcut pattern
+								 */
+								pointcutSet.add(classes[k].getPackage().getName());
 
-							for (int l = 0; l < methods.length; l++) {
-								Class[] parameterTypes = methods[l].getParameterTypes();
-								String parameter = "";
+								for (int l = 0; l < methods.length; l++) {
+									Class[] parameterTypes = methods[l].getParameterTypes();
+									String parameter = "";
 
-								for (int m = 0; m < parameterTypes.length; m++) {
-									if (m == parameterTypes.length - 1) {
-										parameter = parameter + parameterTypes[m].getSimpleName();
+									for (int m = 0; m < parameterTypes.length; m++) {
+										if (m == parameterTypes.length - 1) {
+											parameter = parameter + parameterTypes[m].getSimpleName();
+										}
+										else {
+											parameter = parameter + parameterTypes[m].getSimpleName() + ",";
+										}
 									}
-									else {
-										parameter = parameter + parameterTypes[m].getSimpleName() + ",";
-									}
+									resourceMap = new HashMap();
+
+									resourceMap.put("beanid", beanNames[i]);
+									resourceMap.put("packages", classes[k].getPackage().getName());
+									resourceMap.put("classes", classes[k].getSimpleName());
+									resourceMap.put("method", methods[l].getName());
+									resourceMap.put("parameter", parameter);
+									resourceMap.put("requestmapping", "");
+									resourceMap.put("pointcut", classes[k].getName() + "." + methods[l].getName());
+									resourceMap.put("candidate_resource_type", "method");
+
+									resourceMapList.add(resourceMap);
 								}
-								resourceMap = new HashMap();
-
-								resourceMap.put("beanid", beanNames[i]);
-								resourceMap.put("packages", classes[k].getPackage().getName());
-								resourceMap.put("classes", classes[k].getSimpleName());
-								resourceMap.put("method", methods[l].getName());
-								resourceMap.put("parameter", parameter);
-								resourceMap.put("requestmapping", "");
-								resourceMap.put("pointcut", classes[k].getName() + "." + methods[l].getName());
-								resourceMap.put("candidate_resource_type", "method");
-
-								resourceMapList.add(resourceMap);
 							}
 						}
 					}
@@ -193,7 +161,7 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 
 				String[] splitValue = entryValue.split(",");
 
-				/*
+				/**
 				 * 현재 BeanNameUrlHandlerMapping 일 경우에만 상세 정보가 필요하다.
 				 */
 				if ("BeanNameUrlHandlerMapping".equals(entryKey)) {
@@ -299,5 +267,4 @@ public class ResourceGatherAssistServiceImpl implements IResourceGatherAssistSer
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.context = applicationContext;
 	}
-
 }

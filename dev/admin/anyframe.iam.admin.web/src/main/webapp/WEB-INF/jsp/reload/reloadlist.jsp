@@ -10,8 +10,8 @@
 <script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jqueryui-include.jsp" />
 
 <script language="javascript">
 <!--
@@ -39,7 +39,7 @@ function reload() {
 			type: 'POST',
 			url: '<c:url value="/admin/reload/resourceReload.do"/>',
 			data: "beanid=" + document.reloadResource.beanid.value + "&reloadmaps=" + maps + "&reloadtimes=" + times,
-			dataType: 'json',
+			dataType: 'html',
 			success: function(msg){
 				document.getElementById("transfer").style.visibility= "hidden";
 				alert('<anyframe:message code="resourcereload.ui.alert.successreload" />');
@@ -185,15 +185,21 @@ body {
 			</div>
 		</td>
   	</tr>
-	<tr valign="top">
-		<td height="50%" colspan="2" valign="top" >
-			<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#E9ECF1">
-				<tr><td height="10" bgcolor="#ffffff"></td></tr>
-				<tr><td height="1" bgcolor="#C9CFDD"></td></tr>
-				<tr><td valign="top" bgcolor="#E9ECF1"><div id="footSub"></div></td></tr>
-			</table>
-		</td>
-	</tr>
+	 <tr valign="top">
+	   <td height="50%" colspan="2" valign="top" >
+	   	<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#E9ECF1">
+		  <tr>
+		    <td height="10" bgcolor="#ffffff"></td>
+		  </tr>
+		  <tr>
+		    <td height="1" bgcolor="#C9CFDD"></td>
+		  </tr>
+		  <tr>
+		    <td valign="top" bgcolor="#E9ECF1"><div id="footSub"></div></td>
+		  </tr>
+		</table>
+	  </td>
+	 </tr>
 </table>
 </body>
 </html>

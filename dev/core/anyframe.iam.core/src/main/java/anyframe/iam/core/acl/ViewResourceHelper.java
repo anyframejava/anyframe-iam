@@ -29,21 +29,20 @@ import org.springframework.security.userdetails.hierarchicalroles.UserDetailsWra
 import anyframe.iam.core.userdetails.ExtUser;
 
 /**
- * This class provide some function to treat view resource
+ * view resource 에 대한 처리를 위한 util 성 기능을 제공한다.
  * 
  * @author Byunghun Woo
+ * 
  */
 public class ViewResourceHelper {
 
 	/**
-	 * Get userId, groupId, authorities(List of assigned role) from authentication object of log-in user
-	 * and return this information as Map.
-	 * in case of IAM ExtUser, keep a fact in mind that groupId should be set in userGroupPropertyName
-	 * of jdbcUserService(ExtJdbcUserDetailsManager).
-	 * Also usersByUsernameQuery query should contain selection of UserGroups 
+	 * 로그인 한 사용자의 authentication 객체로 부터 userId, groupId, authorities(할당된 권한의
+	 * List) 를 구하여 Map 형태로 돌려준다. groupId 의 경우 IAM 의 ExtUser 인 경우 jdbcUserService
+	 * (ExtJdbcUserDetailsManager) 에 userGroupPropertyName 설정 및
+	 * usersByUsernameQuery 쿼리에 사용자 그룹 조회를 포함하는 경우에 설정됨에 유의한다.
 	 * 
-	 * @return Map
-	 * 				Map object that contains information of log-in user
+	 * @return 로그인 사용자 정보 Map
 	 */
 	public static Map makeLoginUserMap() {
 
@@ -92,15 +91,12 @@ public class ViewResourceHelper {
 	}
 
 	/**
-	 * Return true when given mask - foundMask is matched 
-	 * with requiredPermissionList(List of bit mask(Integer) ) at least once.
+	 * requiredPermissionList (bit mask(Integer) 의 list) 에 대한 loop 를 돌며 하나라도
+	 * foundMask 로 제공된 권한을 만족하면 true 를 리턴한다.
 	 * 
-	 * @param foundMask 
-	 * 				bit mask of input permission(int)
-	 * @param requiredPermissionList 
-	 * 				List of permission that want to be checked
-	 * @return boolean
-	 * 				true when given mask is matched with permission list at least once.
+	 * @param foundMask 입력 permission 에 대한 bit mask (int)
+	 * @param requiredPermissionList 체크하고자 하는 접근 권한 리스트
+	 * @return granted 여부
 	 */
 	public static boolean isGranted(int foundMask, List requiredPermissionList) {
 		for (int i = 0; i < requiredPermissionList.size(); i++) {

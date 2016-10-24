@@ -47,7 +47,6 @@ public interface RestrictedTimesResourcesService extends
 	 * @return list of Role
 	 * @throws Exception fail to find list
 	 */
-	@SuppressWarnings("unchecked")
 	List findRoleListByTime(String timeId) throws Exception;
 
 	/**

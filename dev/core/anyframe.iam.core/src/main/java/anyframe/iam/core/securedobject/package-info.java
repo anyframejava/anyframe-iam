@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 /**
- * This package offers some services to refer initialized data from database
- * about secured object of Spring Security
+ * 어플리케이션이 Spring Security 의 보호된 자원(secured object) 에 대한 초기 데이터를 
+ * 데이터베이스로부터 참조하기 위한 서비스를 제공한다.
  * 
  * @since 1.0.0
  */

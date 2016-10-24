@@ -21,8 +21,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Class offers a method that check if currently log-in user has accessable permission
- * Class also offers a method that make list of permission information
+ * view resource 에 대한 접근 권한 리스트에 대한 권한여부 판단 기능 및 어플리케이션에 등록된 permission 리스트 정보를
+ * 제공한다.
  * 
  * @author Byunghun Woo
  * 
@@ -32,22 +32,20 @@ public interface IViewResourceAccessService {
 	Log LOGGER = LogFactory.getLog(IViewResourceAccessService.class);
 
 	/**
-	 * Check if currently log-in user(user > user group > given role) has accessable permission about given view resources
+	 * 인자로 주어진 viewResourceId 에 대하여 현재 로그인한 사용자(사용자 > 사용자 그룹 > 사용자에게 주어진 Role) 가
+	 * requiredPermissionList 으로 제시한 접근 권한이 있는지 체크한다.
 	 * 
 	 * @param viewResourceId
-	 * @param requiredPermissionList
-	 * 				List of bit mask(Integer)
-	 * @return boolean
-	 * 				true if granted
+	 * @param requiredPermissionList 비교대상 permission 의 Bit mask (Integer) List
+	 * @return 허용여부
 	 * @throws Exception
-	 * 				fail to check
 	 */
 	public boolean isGranted(String viewResourceId, List requiredPermissionList) throws Exception;
 
 	/**
-	 * Offer list of permission information(permission name, code, mask, pattern, bit order)
-	 * that registered in (used by) target application.
-	 * To register permission, add information into list tag in registeredPermissions of viewResourceAccessService bean
+	 * 해당 시스템에서 사용하는(등록되어 있는) 퍼미션 정보(퍼미션 명, 코드, mask, 패턴, bit order) 의 리스트를
+	 * 제공한다. 등록하는 방법은viewResourceAccessService bean 의 registeredPermissions 에
+	 * setter 방식의 list 태그를 사용한다.
 	 * 
 	 * <pre>
 	 * &lt;b:bean id=&quot;viewResourceAccessService&quot;
@@ -72,8 +70,9 @@ public interface IViewResourceAccessService {
 	 * 	 &lt;/b:bean&gt;
 	 * </pre>
 	 * 
-	 * each permission should be registered as bean 
-	 * by using org.springframework.beans.factory.config.FieldRetrievingFactoryBean  
+	 * 각 permission 은
+	 * org.springframework.beans.factory.config.FieldRetrievingFactoryBean 를
+	 * 사용하여 bean 으로 등록되어 있어야 함.
 	 * 
 	 * <pre>
 	 * &lt;b:bean id=&quot;anyframe.iam.core.acl.ExtBasePermission.READ&quot;
@@ -89,10 +88,8 @@ public interface IViewResourceAccessService {
 	 *  ...
 	 * </pre>
 	 * 
-	 * @return List 
-	 * 				list of Map that contains permission information  
+	 * @return 퍼미션 정보 Map 의 list
 	 * @throws Exception
-	 * 				fail to make List
 	 */
 	public List getRegisteredPermissionList() throws Exception;
 

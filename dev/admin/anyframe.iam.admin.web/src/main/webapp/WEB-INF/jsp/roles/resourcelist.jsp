@@ -8,15 +8,14 @@
 <title><anyframe:message code="roleresource.ui.title.resourcelist" /></title>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jqueryui-include.jsp" />
 
 <script type="text/javascript">
 <!--
 jQuery(document).ready( function() {
    	var roleId = opener.document.resourceGrid.roleId.value;
 	jQuery("#grid2").jqGrid( {
-		sortable: true,
 		url: "<c:url value='/securedresourcesroles/listDataUnmapped.do?&roleId=' />" + roleId,
 		mtype:'GET',
 		datatype : "json",
@@ -55,7 +54,7 @@ jQuery(document).ready( function() {
 			width : 100,
 			sorttype : 'text'
 		} ],
-		width : 615,
+		width : 568,
 		height : 230,
 		multiselect : true,
 		pager : jQuery('#pager2'),
@@ -71,10 +70,10 @@ jQuery(document).ready( function() {
 				return;
 			}
 			alert("Type: "+st+ "\nErr: "+ xhr.responseText +"\n Response: "+ xhr.status + " "+xhr.statusText); 
-		}
+		},
+		imgpath : "<c:url value='/jquery/jqgrid/themes/steel/images' />"
 	});
-	jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
-	
+
 	/* Button Function Start (Resource CRUD) */
 	
 	/* Close the window */
@@ -104,7 +103,10 @@ jQuery(document).ready( function() {
 				rowDataArray[i] = rowData.resourceId;
 				jQuery("#grid2").delRowData(rowData.resourceId);
 			}
-		    window.opener.reloadGrid(roleId, rowDataArray);
+			var params = "&roleId=" + roleId + "&resourceId=" + rowDataArray;
+			jQuery("#grid2").setPostData({roleId:roleId, resourceId:rowDataArray});
+		    jQuery("#grid2").setGridParam({url:"<c:url value='/securedresourcesroles/add.do?' />"}).trigger("reloadGrid");
+		    opener.reloadGrid(roleId);
 			window.close();
 		}
 	});

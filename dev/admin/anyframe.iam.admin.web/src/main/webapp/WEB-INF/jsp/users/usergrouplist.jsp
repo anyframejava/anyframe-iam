@@ -9,8 +9,8 @@
 <title><anyframe:message code="user.ui.title.userlist" /></title>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jqueryui-include.jsp" />
 
 <script type="text/javascript">
 <!--
@@ -22,7 +22,6 @@ jQuery(document).ready(
 		// Grid Component
 		jQuery("#grid_user").jqGrid(
 		{
-			sortable: true,
 			url : "<c:url value='/users/listData.do?&groupId='/>" + groupId,
 			mtype : 'POST',
 			datatype : "json",
@@ -49,7 +48,7 @@ jQuery(document).ready(
 				index : 'enabled',
 				width : 70
 			} ],
-			width : 572,
+			width : 530,
 			height : 315,
 			multiselect : true,
 			sortname : 'userId',
@@ -58,6 +57,7 @@ jQuery(document).ready(
 			rowNum : 20,
 			rowList : [ 10, 20, 30, 40 ],
 			viewrecords : true,
+			imgpath : "<c:url value='/jquery/jqgrid/themes/steel/images'/>",
 			loadError: function(xhr,st,err) {
 				if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									
 					location.href = "<c:url value='/login/relogin.do?inputPage=/userdetail/list.do?&groupId='/>" + groupId;
@@ -70,7 +70,6 @@ jQuery(document).ready(
 						+ rowid;
 			}
 		});
-		jQuery("#grid_user").jqGrid('navGrid','#pager_user',{edit:false,add:false,del:false,search:false});
 
 		/* Button Function Start (User CRUD) */
 		/* Delete User */
@@ -119,7 +118,12 @@ jQuery(document).ready(
 					url : "<c:url value='/users/listData.do?'/>"
 				}).trigger("reloadGrid");
 			});
-		
+
+		/* Change group */
+		$("[name=groupChange]").click(function() {
+			alert("아직 준비중입니다.");
+		});
+
 		/* Button Function End (User CRUD) */
 
 		/* auto click by enter key */
@@ -143,7 +147,7 @@ body {
 -->
 </style></head>
 
-<body>
+<body height="100%>
 <div id="grid" class="demo" style="overflow: auto; height:100%; width: 624px;margin-top: 13px;" >
 <form name="searchForm" onSubmit="return false"><input type="hidden" name="groupId">
 <table width="572" border="0" cellpadding="0" cellspacing="0" >
@@ -152,40 +156,47 @@ body {
 			<select name="searchCondition" id="searchSelect" class="selbox">
 				<option value="userName"><anyframe:message code="user.ui.selectbox.username" /></option>
 				<option value="userId"><anyframe:message code="user.ui.selectbox.userid" /></option>
-			</select>
-		</td>
-		<td width="93" style="padding-left: 3px;">
-			<input type="text" name="searchKeyword" size="15" class="ct_input_g" id="searchKeyword">
-		</td>
-		<td width="145" style="padding-left: 3px;">
-			<a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a>
-		</td>
-		<td width="207" align="right">
-			<table height="22" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td width="18"><img src="<c:url value='/images/btn/btn_add.gif'/>" width="18" height="22"></td>
-					<td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="#" name="addUser"><anyframe:message code="user.ui.btn.register" /></a></td>
-					<td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
-				</tr>
-			</table>
-		</td>
-		<td width="71" align="right" style="padding-left:2px">
-			<table height="22" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td width="18"><img src="<c:url value='/images/btn/btn_delete.gif'/>" width="18" height="22"></td>
-					<td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="#" name="deleteUser">Delete</a></td>
-					<td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
-				</tr>
-			</table>
+			</select>		</td>
+			<td width="93" style="padding-left: 3px;">
+			<input type="text" name="searchKeyword" size="15" class="ct_input_g" id="searchKeyword">		</td>
+			<td width="145" style="padding-left: 3px;">
+				<a href="#"  name="searchUsers" class="searchBtn"><anyframe:message code="user.ui.btn.search" /></a></td>
+			<td width="207" align="right">
+			  <table height="22" border="0" cellpadding="0" cellspacing="0">
+	              <tr>
+	                <td width="18"><img src="<c:url value='/images/btn/btn_add.gif'/>" width="18" height="22"></td>
+	                <td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="#" name="addUser"><anyframe:message code="user.ui.btn.register" /></a></td>
+	                <td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
+	              </tr>
+              </table>
+	        </td>
+		    <!--td width="71" align="right" style="padding-left:2px">
+		    	<table height="22" border="0" cellpadding="0" cellspacing="0">
+		          <tr>
+		            <td width="18"><img src="<c:url value='/images/btn/btn_update.gif'/>" width="18" height="22"></td>
+		            <td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="#" name="groupChange"><anyframe:message code="user.ui.btn.chggroup" /></a></td>
+		            <td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
+		          </tr>
+		        </table>
+	        </td-->
+		    <td width="71" align="right" style="padding-left:2px">
+		    	<table height="22" border="0" cellpadding="0" cellspacing="0">
+		          <tr>
+		            <td width="18"><img src="<c:url value='/images/btn/btn_delete.gif'/>" width="18" height="22"></td>
+		            <td background="<c:url value='/images/btn/bg_btn.gif'/>" class="boldBtn"><a href="#" name="deleteUser">Delete</a></td>
+		            <td width="10" align="right"><img src="<c:url value='/images/btn/btn_tailb.gif'/>" width="10" height="22"></td>
+		          </tr>
+	        	</table>
+	        </td>
 		</td>
 	</tr>
 </table>
 <table width="572" height="100%" border="0" cellpadding="0" cellspacing="0" >
 	<tr>
 		<td valign="top">
-			<table id="grid_user" class="scroll" cellpadding="0" cellspacing="0" style="margin-top: 10px;"></table>
-			<div id="pager_user" class="scroll" style="text-align: center;"></div>
-		</td>
+		<table id="grid_user" class="scroll" cellpadding="0" cellspacing="0" style="margin-top: 10px;"></table>
+		<div id="pager_user" class="scroll" style="text-align: center;"></div>
+	  </td>
 	</tr>
 </table>
 </form>

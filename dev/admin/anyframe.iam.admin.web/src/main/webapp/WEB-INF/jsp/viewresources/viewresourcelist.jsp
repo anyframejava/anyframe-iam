@@ -8,8 +8,8 @@
 <title><anyframe:message code="viewresource.ui.title.viewresources" /></title>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jqueryui-include.jsp" />
 
 <script type="text/javascript">
 jQuery(document).ready(
@@ -17,7 +17,6 @@ jQuery(document).ready(
 
 		jQuery("#grid2").jqGrid( 
 		{
-			sortable: true,
 			url: "<c:url value='/viewresources/listData.do?' />",
 			mtype:'GET',
 			datatype : "json",
@@ -53,7 +52,7 @@ jQuery(document).ready(
 				sorttype : 'text',
 				width : 80
 			} ],
-			width : 790,
+			width : 747,
 			height : 350,
 			forceFit:true,
 			multiselect : true,
@@ -63,6 +62,7 @@ jQuery(document).ready(
 			rowNum : 20,
 			rowList : [ 10, 20, 30 ],
 			viewrecords : true,
+			imgpath : "<c:url value='/jquery/jqgrid/themes/steel/images'/>",
 
 			loadError: function(xhr,st,err) {
 				if(st == "parsererror" && xhr.responseText.match('<title>Login</title>') != null) {									
@@ -76,7 +76,6 @@ jQuery(document).ready(
 			    location.href = "<c:url value='/viewresources/get.do?&viewResourceId=' />" + rowid;
 		    }
 		});
-		jQuery("#grid2").jqGrid('navGrid','#pager2',{edit:false,add:false,del:false,search:false});
 		
 		/* Button Function Start (Resource CRUD) */
 		

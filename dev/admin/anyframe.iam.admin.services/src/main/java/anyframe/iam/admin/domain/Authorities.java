@@ -38,8 +38,6 @@ import anyframe.core.generic.model.BaseObject;
 @Entity
 @Table(name = "AUTHORITIES")
 public class Authorities extends BaseObject implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
 	private AuthoritiesId id;
 
 	private Roles roles;

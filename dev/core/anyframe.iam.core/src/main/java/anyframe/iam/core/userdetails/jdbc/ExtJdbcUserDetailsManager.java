@@ -29,8 +29,8 @@ import org.springframework.security.userdetails.jdbc.JdbcUserDetailsManager;
 import anyframe.iam.core.userdetails.ExtUser;
 
 /**
- * This class extends JdbcUserDetailsManager of Spring Security.
- * It treat custom user information.
+ * Spring Security 의 JdbcUserDetailsManager 를 extends 하고 있으며 커스텀 사용자 정보를 처리 가능토록
+ * 확장하고 있다.
  * 
  * @author Byunghun Woo
  * 
@@ -38,19 +38,17 @@ import anyframe.iam.core.userdetails.ExtUser;
 public class ExtJdbcUserDetailsManager extends JdbcUserDetailsManager {
 
 	/**
-	 * MappingSqlQuery to user extension
+	 * 사용자 정보 확장을 위한 MappingSqlQuery
 	 */
 	private MappingSqlQuery extUsersByUsernameMapping;
 
 	/**
-	 * in case of making mapping javaBeans for custom user information object, 
-	 * set property.
+	 * 커스텀 사용자 정보 객체를 위한 맵핑 javaBeans 를 만든 경우 해당 property 로 설정함
 	 */
 	private String mapClass;
 
 	/**
-	 * this field is property name of group information 
-	 * in case of user information has group info when custom user finding 
+	 * 커스텀 사용자 정보 조회 시 사용자의 group 정보 를 포함하는 경우 해당 group 정보에 대한 property 명
 	 */
 	private String userGroupPropertyName;
 
@@ -70,6 +68,9 @@ public class ExtJdbcUserDetailsManager extends JdbcUserDetailsManager {
 		return userGroupPropertyName;
 	}
 
+	/**
+	 * 
+	 */
 	protected void initDao() throws ApplicationContextException {
 		super.initDao();
 
@@ -77,8 +78,7 @@ public class ExtJdbcUserDetailsManager extends JdbcUserDetailsManager {
 	}
 
 	/**
-	 * This method operates initialization in inheritance area of Spring Security.
-	 * After that to treat custom user information, method operates additional initialization logic. 
+	 * Spring Security 상속 영역의 초기화 후 커스텀 사용자 정보 처리를 위한 추가 초기화 로직을 수행한다.
 	 * 
 	 * @throws ApplicationContextException
 	 */
@@ -106,17 +106,16 @@ public class ExtJdbcUserDetailsManager extends JdbcUserDetailsManager {
 	}
 
 	/**
-	 * In case of setting extUsersByUsernameMapping, 
-	 * this method operate MappingSqlQuery that extends IAM ExtUsersByUsernameMapping to treat custom user information.
-	 * In case of not setting extUSersByUsernameMapping,
-	 * this method run base ExtUserByUsernameMapping.(Return will be Map object)  
+	 * extUsersByUsernameMapping 을 설정한 경우 커스텀 사용자 정보 처리를 위한 IAM 의
+	 * ExtUsersByUsernameMapping 을 확장한 해당 MappingSqlQuery 를 실행한다. 설정하지 않은 경우 기본
+	 * ExtUsersByUsernameMapping 를 실행한다.(결과는 Map 으로 되돌려짐)
 	 */
 	protected List loadUsersByUsername(String username) {
 		return extUsersByUsernameMapping.execute(username);
 	}
 
 	/**
-	 * Setting UserDetails treated by Spring Security to ExtUSer 
+	 * Spring Security 가 처리하는 UserDetails 를 ExtUser 로 설정한다. <br/>
 	 */
 	protected UserDetails createUserDetails(String username, UserDetails userFromUserQuery,
 			GrantedAuthority[] combinedAuthorities) {

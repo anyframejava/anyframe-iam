@@ -64,7 +64,7 @@ public class AnnotationReloadController {
 
 		model.addAttribute("result", result);
 
-		return "jsonView";
+		return result ? "jsonView" : "common/error";
 	}
 
 	/**

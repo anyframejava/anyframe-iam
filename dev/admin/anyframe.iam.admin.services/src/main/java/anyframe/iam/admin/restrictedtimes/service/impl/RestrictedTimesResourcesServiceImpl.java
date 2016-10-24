@@ -40,7 +40,6 @@ public class RestrictedTimesResourcesServiceImpl extends
 		return this.restrictedTimesResourcesDao.getTimeResourceList(restrictedTimesSearchVO);
 	}
 
-	@SuppressWarnings("unchecked")
 	public List findRoleListByTime(String timeId) throws Exception {
 		return restrictedTimesResourcesDao.findRoleListByTime(timeId);
 	}

@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import anyframe.core.idgen.IIdGenerationService;
-import anyframe.iam.admin.common.IAMException;
 import anyframe.iam.admin.common.web.JsonError;
 import anyframe.iam.admin.domain.Attributes;
 import anyframe.iam.admin.domain.Data;
@@ -45,7 +45,7 @@ import anyframe.iam.admin.roles.service.RolesService;
 
 /**
  * Annotation Roles Controller
- * @author Jongpil Park
+ * @author jongpil.park
  * 
  */
 @Controller
@@ -57,38 +57,6 @@ public class AnnotationRolesController {
 
 	@Resource(name = "idGenerationServiceRole")
 	private IIdGenerationService idGenerationServiceRole;
-
-	private ArrayList<JSTreeNode> makeRootNode() throws Exception {
-
-		List<IamTree> list = null;
-		ArrayList<JSTreeNode> listNode = new ArrayList<JSTreeNode>();
-		JSTreeNode node = null;
-		Attributes attribute = null;
-		Data data = null;
-
-		list = rolesService.getRootNodeOfRoles();
-		if (list.size() > 0) {
-			IamTree rootNode = list.get(0);
-
-			node = new JSTreeNode();
-			data = new Data();
-			attribute = new Attributes();
-
-			data.setTitle(rootNode.getTitle());
-			attribute.setId(rootNode.getId());
-
-			node.setAttributes(attribute);
-			node.setData(data);
-			node.setState(rootNode.getState());
-
-			listNode.add(node);
-			
-			return listNode;
-		}
-		else {
-			throw new IAMException("Root node is not exist");
-		}
-	}
 
 	/**
 	 * move to add roles form
@@ -115,18 +83,33 @@ public class AnnotationRolesController {
 	 */
 	@JsonError
 	@RequestMapping("/roles/add.do")
-	public String add(Roles roles, RolesHierarchyId rolesHierarchyId) throws Exception {
+	public String add(HttpSession session, Roles roles, RolesHierarchyId rolesHierarchyId) throws Exception {
 
 		RolesHierarchy rolesHierarchy = new RolesHierarchy();
+
+		String currentDate = anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd");
+
+		// parentRole에 입력을 하지만 child Role 에 해당 하는 부분이다. 이부분을 Id Generation
+		// Service 를 이용하도록 변경을 해야한다.
+
+		String parentRole = idGenerationServiceRole.getNextStringId();
+		rolesHierarchyId.setParentRole(parentRole);
+
 		rolesHierarchy.setId(rolesHierarchyId);
+		rolesHierarchy.setCreateDate(currentDate);
 
-		Set<RolesHierarchy> parentRole = new HashSet<RolesHierarchy>();
+		Set<RolesHierarchy> childRole = new HashSet<RolesHierarchy>();
 
-		parentRole.add(rolesHierarchy);
+		childRole.add(rolesHierarchy);
 
-		roles.setRolesHierarchiesForParentRole(parentRole);
+		roles.setRolesHierarchiesForChildRole(childRole);
+
+		roles.setRoleId(parentRole);
+		roles.setDescription(parentRole + " DESC");
+		roles.setCreateDate(currentDate);
 
 		rolesService.save(roles);
+		session.setAttribute("CHILDROLE", parentRole);
 
 		return "forward:/roles/list.do";
 	}
@@ -151,11 +134,16 @@ public class AnnotationRolesController {
 	 */
 	@JsonError
 	@RequestMapping("/roles/update.do")
-	public String update(Roles roles) throws Exception {
+	public String update(HttpSession session, Roles roles) throws Exception {
 
-		if ("".equals(roles.getDescription())) {
-			roles.setDescription(rolesService.get(roles.getRoleId()).getDescription());
+		if ("".equals(roles.getRoleId())) {
+			String roleId = (String) session.getAttribute("CHILDROLE");
+			roles.setRoleId(roleId);
+			session.removeAttribute("CHILDROLE");
 		}
+
+		roles.setDescription(rolesService.get(roles.getRoleId()).getDescription());
+		roles.setModifyDate(anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd"));
 
 		rolesService.update(roles);
 
@@ -198,125 +186,58 @@ public class AnnotationRolesController {
 	 */
 	@JsonError
 	@RequestMapping("/roles/listData.do")
-	public String listData(@RequestParam("id") String id,
-			@RequestParam(value = "roleName", required = false) String roleName,
-			@RequestParam(value = "searchClickYn") String searchClickYn, Model model) throws Exception {
+	public String listData(@RequestParam("id") String id, Model model) throws Exception {
 
 		List<IamTree> list = null;
-		ArrayList<JSTreeNode> listNode = new ArrayList<JSTreeNode>();
 		JSTreeNode node = null;
 		Attributes attribute = null;
 		Data data = null;
+		ArrayList<JSTreeNode> listNode = new ArrayList<JSTreeNode>();
 
-		if ("N".equals(searchClickYn)) {
-			if (id.equals("0")) { // root node
-				listNode = makeRootNode();
+		if (id.equals("0")) {
+			list = rolesService.getRootNodeOfRoles();
+			if (list.size() > 0) {
+				IamTree rootNode = list.get(0);
+
+				node = new JSTreeNode();
+				data = new Data();
+				attribute = new Attributes();
+
+				data.setTitle(rootNode.getTitle());
+				attribute.setId(rootNode.getId());
+
+				node.setAttributes(attribute);
+				node.setData(data);
+				node.setState(rootNode.getState());
+
+				listNode.add(node);
 			}
 			else {
-				list = rolesService.getRoleTree(id);
-
-				for (int i = 0; i < list.size(); i++) {
-					IamTree tree = list.get(i);
-
-					node = new JSTreeNode();
-					data = new Data();
-					attribute = new Attributes();
-
-					data.setTitle(tree.getTitle());
-					attribute.setId(tree.getId());
-
-					node.setAttributes(attribute);
-					node.setData(data);
-					node.setState(tree.getState());
-
-					listNode.add(node);
-				}
+				throw new Exception();
 			}
 		}
-		else if ("Y".equals(searchClickYn)) {
-			String roleId = rolesService.getRoleIdByRoleName(roleName);
+		else {
+			list = rolesService.getRoleTree(id);
 
-			if (!"".equals(roleId)) {
-				List<String> ids = rolesService.getParentsRoleIds(roleId);
-				int size = ids.size();
+			for (int i = 0; i < list.size(); i++) {
+				IamTree tree = list.get(i);
 
-				if (size == 0) {
-					listNode = makeRootNode();
-				}
-				else {
-					@SuppressWarnings("unchecked")
-					ArrayList<JSTreeNode>[] childNode = new ArrayList[size];
+				node = new JSTreeNode();
+				data = new Data();
+				attribute = new Attributes();
 
-					for (int i = 0; i < size; i++) {
-						list = rolesService.getRoleTree(ids.get(i));
-						childNode[i] = new ArrayList<JSTreeNode>();
+				data.setTitle(tree.getTitle());
+				attribute.setId(tree.getId());
 
-						for (int j = 0; j < list.size(); j++) {
-							IamTree tree = list.get(j);
+				node.setAttributes(attribute);
+				node.setData(data);
+				node.setState(tree.getState());
 
-							node = new JSTreeNode();
-							data = new Data();
-							attribute = new Attributes();
-
-							data.setTitle(tree.getTitle());
-							attribute.setId(tree.getId());
-
-							node.setAttributes(attribute);
-							node.setData(data);
-							node.setState(tree.getState());
-
-							if (i != 0) {
-								if (tree.getId().equals(ids.get(i - 1))) {
-									node.setState("open");
-									node.setChildren(childNode[i - 1]);
-								}
-							}
-
-							childNode[i].add(node);
-						}
-					}
-
-					Roles rootNode = rolesService.get(ids.get(size - 1));
-
-					node = new JSTreeNode();
-					data = new Data();
-					attribute = new Attributes();
-
-					data.setTitle(rootNode.getRoleName());
-					attribute.setId(rootNode.getRoleId());
-
-					node.setAttributes(attribute);
-					node.setData(data);
-					node.setState("open");
-					node.setChildren(childNode[size - 1]);
-
-					listNode.add(node);
-				}
+				listNode.add(node);
 			}
-			else {
-				listNode = makeRootNode();
-			}
+
 		}
-
 		model.addAttribute(listNode);
-
-		return "jsonView";
-	}
-
-	@RequestMapping("/roles/getRoleNameList.do")
-	public void getGroupNameList(@RequestParam(value = "q", required = false) String keyword,
-			HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-
-		keyword = new String(keyword.getBytes("8859_1"), "utf-8");
-		String resultList = rolesService.getRoleNameList(keyword);
-		response.getOutputStream().print(new String(resultList.getBytes("utf-8"), "8859_1"));
-	}
-
-	@RequestMapping("/roles/getRoleId.do")
-	public String getRoleId(Model model) throws Exception {
-		String roleId = idGenerationServiceRole.getNextStringId();
-
-		model.addAttribute("roleId", roleId);
 
 		return "jsonView";
 	}

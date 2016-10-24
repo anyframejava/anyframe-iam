@@ -8,11 +8,11 @@
 <head>
 <title><anyframe:message code="resource.ui.title.resourcedetail" /></title>
 
-<script type="text/javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
+<script language="javascript" src="<c:url value='/js/CommonScript.js'/>"></script>
 
 <jsp:include page="/common/jstree-include.jsp" />
-<jsp:include page="/common/jqueryui-include.jsp" />
 <jsp:include page="/common/jqgrid-include.jsp" />
+<jsp:include page="/common/jqueryui-include.jsp" />
 <jsp:include page="/common/jquery-autocomplete-include.jsp" />
 
 <script type="text/javascript" src="<c:url value='/validator.do'/>"></script>
@@ -21,7 +21,10 @@
 <script type="text/javascript">
 <!--
 jQuery(document).ready( function(){
-
+	// TODO : session 종료 이후 검색 시도하면 input box 내부에서 
+	// login page 가 호출되는 것을 방지 하기 위해
+	// candidateSecuredResources.do url의 권한 설정 변경 필요
+	
 	// button click event
 	$('[name=addResource]').click( function(){
 		if(!validateSecuredResources(document.resources)){
@@ -147,9 +150,6 @@ function changeType(frm){
 		);
 		$("#pointCut").focus();
 	}
-
-	var resoucePattern = document.resources.resourcePattern;
-	resourcePattern.value = "";
 }
 
 //self input ckeck box를 이용한 resource pattern read only 제어
