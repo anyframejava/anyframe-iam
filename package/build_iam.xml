@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+
+<project name="Make Distribution Structure for Anyframe IAM" default="updateIAM" basedir="." xmlns:artifact="urn:maven-artifact-ant">
+	<property environment="env"/>
+	<property file="${basedir}/build.properties" />
+	
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant">
+		<classpath>
+			<pathelement location="${env.ANT_HOME}/lib/maven-artifact-ant-2.0.4-dep.jar" />
+		</classpath>
+	</typedef>
+	
+	<path id="project.classpath">
+		<pathelement location="${env.ANT_HOME}/lib/svnjavahl.jar" />
+		<pathelement location="${env.ANT_HOME}/lib/svnant.jar" />
+		<pathelement location="${env.ANT_HOME}/lib/svnClientAdapter.jar" />
+	</path>
+	
+	<taskdef resource="svntask.properties" classpathref="project.classpath"/>
+	
+	<target name="initIAM">
+		<echo message="initialize distribution structure"/>
+		<delete dir="${basedir}/temp/dist"/>
+
+		<mkdir dir="${basedir}/temp/dist"/>
+			
+		<mkdir dir="${basedir}/temp/dist/admin"/>
+		<mkdir dir="${basedir}/temp/dist/core"/>
+		<mkdir dir="${basedir}/temp/dist/lib"/>
+		<mkdir dir="${basedir}/temp/dist/sample"/>
+		<mkdir dir="${basedir}/temp/dist/temp"/>
+		
+		<mkdir dir="${basedir}/temp/dist/admin/docs"/>
+		<mkdir dir="${basedir}/temp/dist/admin/lib"/>
+		<mkdir dir="${basedir}/temp/dist/admin/licenses"/>
+		<mkdir dir="${basedir}/temp/dist/admin/src"/>
+		
+		<mkdir dir="${basedir}/temp/dist/core/docs"/>
+		<mkdir dir="${basedir}/temp/dist/core/lib"/>
+		<mkdir dir="${basedir}/temp/dist/core/licenses"/>
+		<mkdir dir="${basedir}/temp/dist/core/src"/>
+		
+		<mkdir dir="${basedir}/temp/dist/sample/src"/>
+		<mkdir dir="${basedir}/temp/dist/DATABASE"/>
+		
+		<mkdir dir="${basedir}/temp/dist/temp/admin"/>
+		<mkdir dir="${basedir}/temp/dist/temp/core"/>
+		<mkdir dir="${basedir}/temp/dist/temp/sample"/>
+		
+		<!--delete>
+			<fileset dir="${m2.repo}/anyframe" />
+		</delete-->
+	</target>
+	
+	<!-- ############################### UPDATE LIBRARIES ################################### -->
+	
+	<target name="updateIAMLibs">
+		<echo message="Update all anyframe IAM libraries from maven remote repository"/>
+		<exec dir="${basedir}/pomfiles" executable="cmd.exe" failonerror="true">
+			<arg line="/c mvn compile -U -e -f iam_pom.xml"/>
+		</exec>
+		<copy todir="${basedir}/temp/dist/core/lib">
+			<fileset dir="${m2.repo}/">
+				<include name="**/anyframe-iam-core-${core.version}.jar"/>
+			</fileset>
+			<mapper type="flatten" />
+		</copy>
+ 
+		<copy todir="${basedir}/temp/dist/admin/lib">
+			<fileset dir="${m2.repo}/">
+				<include name="**/anyframe-iam-admin-services-${core.version}.jar"/>
+			</fileset>
+			<mapper type="flatten" />
+		</copy>
+		
+		<copy todir="${basedir}/temp/dist/admin">
+			<fileset dir="${m2.repo}/">
+				<include name="**/anyframe-iam-admin-web-${core.version}.war"/>
+			</fileset>
+			<mapper type="flatten" />
+		</copy>
+
+	</target>
+
+	<target name="updateIAMDepLibs">
+		<echo message="Deploy Anyframe dependency libraries using iam_dep_pom.xml"/>
+		<exec dir="${basedir}/pomfiles" executable="cmd.exe" failonerror="true">
+			<arg line="/c mvn compile -U -f iam_dep_pom.xml"/>
+		</exec>
+		
+		<artifact:pom file="${basedir}/pomfiles/iam_dep_pom.xml" id="anyframe.dependencies.pomfile"/>
+		
+		<artifact:dependencies filesetId="anyframe.dependencies">
+			<pom refid="anyframe.dependencies.pomfile"/>
+		</artifact:dependencies>
+		
+		<artifact:dependencies filesetId="anyframe.dependencies.junit">
+			<dependency groupId="junit" artifactId="junit" version="4.7"/>
+		</artifact:dependencies>
+		
+		<copy todir="${basedir}/temp/dist/lib" overwrite="true">
+			<fileset refid="anyframe.dependencies"/>
+			<fileset refid="anyframe.dependencies.junit"/>
+			<mapper type="flatten" />
+		</copy>
+	</target>
+	
+	<!-- ############################### MOVE ################################### -->	
+	<target name="move">
+		<echo message="update Anyframe IAM Core sources from subversion ${src.path.core}, ${subv.username}, ${subv.password}"/>
+
+		<!-- username, password properties를 제대로 못읽어와서 임시로 hard coding 처리함 -->
+		<svn username="youngmin.jo" password="">
+			<checkout url="${src.path.core}" revision="HEAD" destPath="${basedir}/temp/dist/temp/core/src/" />
+		</svn>
+
+		<echo message="update Anyframe IAM Admin sources from subversion ${src.path.admin}"/>
+		<svn username="${subv.username}" password="${subv.password}">
+			<checkout url="${src.path.admin}" revision="HEAD" destPath="${basedir}/temp/dist/temp/admin/src/" />
+		</svn>
+
+		<echo message="update Anyframe IAM Sample sources from subversion ${src.path.sample}"/>
+		<svn username="${subv.username}" password="${subv.password}">
+			<checkout url="${src.path.sample}" revision="HEAD" destPath="${basedir}/temp/dist/temp/sample/src/" />
+		</svn>
+		<delete includeemptydirs="true">
+			<fileset dir="${basedir}/temp/dist/temp/sample/src/" includes="**/.svn" defaultexcludes="false"/>
+		</delete>
+
+		<echo message="update Anyframe IAM Sample DB from subversion ${src.path.db}"/>
+		<svn username="${subv.username}" password="${subv.password}">
+			<checkout url="${src.path.db}" revision="HEAD" destPath="${basedir}/temp/dist/DATABASE/" />
+		</svn>
+		<delete includeemptydirs="true">
+			<fileset dir="${basedir}/temp/dist/DATABASE" includes="**/.svn" defaultexcludes="false"/>
+		</delete>
+		
+		<!-- 
+		<echo message="update Anyframe IAM Sample sources from subversion ${src.path.sample}"/>
+		<svn username="${subv.username}" password="${subv.password}">
+			<checkout url="${src.path.sample}" revision="HEAD" destPath="${basedir}/temp/dist/sample/src" />
+		</svn>
+		<delete includeemptydirs="true">
+			<fileset dir="${basedir}/temp/dist/sample/src" includes="**/.svn" defaultexcludes="false"/>
+		</delete>
+ 		-->
+
+		<echo message="Move Anyframe IAM Core sources from [${basedir}/temp/dist/temp/core/src] to [${basedir}/temp/dist/core/src]"/>
+		<copy todir="${basedir}/temp/dist/core/src">
+			<fileset dir="${basedir}/temp/dist/temp/core/src/"
+				excludes="**/.svn/*" >
+			</fileset>
+		</copy>
+
+		<echo message="Move Anyframe IAM Admin sources from [${basedir}/temp/dist/temp/admin/src] to [${basedir}/temp/dist/admin/src]"/>
+		<copy todir="${basedir}/temp/dist/admin/src">
+			<fileset dir="${basedir}/temp/dist/temp/admin/src/"
+				excludes="**/.svn/*,anyframe.core.query.ria.nitobi/,anyframe.core.adaptormanager/,anyframe.core.process/" >
+			</fileset>
+		</copy>
+
+		<echo message="Move Anyframe IAM Sample sources from [${basedir}/temp/dist/temp/sample/src] to [${basedir}/temp/dist/sample/src]"/>
+		<copy todir="${basedir}/temp/dist/sample/src">
+			<fileset dir="${basedir}/temp/dist/temp/sample/src/"
+				excludes="**/.svn/*,**/dist, **/target" >
+			</fileset>
+		</copy>
+		
+		 				
+		<echo message="Anyframe IAM Sample sources Compile"/>
+		<path id="compile.classpath">
+			<fileset dir="${basedir}/temp/dist/sample/src/anyframe-iam-sample/src/main/webapp/WEB-INF/lib">
+				<include name="**/*.jar" />
+			</fileset>	
+		</path>
+		<mkdir dir="${basedir}/temp/dist/sample/src/anyframe-iam-sample/src/main/webapp/WEB-INF/classes"/>
+		<javac encoding="UTF-8" debug="true" srcdir="${basedir}/temp/dist/sample/src/anyframe-iam-sample/src/main/java" 
+			destdir="${basedir}/temp/dist/sample/src/anyframe-iam-sample/src/main/webapp/WEB-INF/classes" fork="yes" memoryMaximumSize="256m">
+			<classpath>
+				<path refid="compile.classpath" />
+			</classpath>
+		</javac>
+		<copy todir="${basedir}/temp/dist/sample/src/anyframe-iam-sample/src/main/webapp/WEB-INF/classes">
+			<fileset dir="${basedir}/temp/dist/sample/src/anyframe-iam-sample/src/main/resources"/>
+		</copy>
+		
+		<echo message="Make anyframe-iam-sample.war file"/>
+		<war basedir="${basedir}/temp/dist/sample/src/anyframe-iam-sample/src/main/webapp" destfile="${basedir}/temp/dist/sample/anyframe-iam-sample-${core.version}.war" webxml="${basedir}/temp/dist/sample/src/anyframe-iam-sample/src/main/webapp/WEB-INF/web.xml"/>
+
+		<copy todir="${basedir}/temp/dist/admin" overwrite="true">
+			<fileset dir="${basedir}/temp/dist/temp/admin/src/anyframe-iam-admin-web">
+				<include name="license.txt"/>
+				<include name="changelog.txt"/>
+				<include name="readme.txt"/>
+			</fileset>
+		</copy>
+
+<!-- 
+		<copy todir="${basedir}/temp/dist/temp/core" overwrite="true">
+			<fileset dir="${basedir}/deployfiles/core/">
+				<include name="license.txt"/>
+				<include name="changelog.txt"/>
+				<include name="readme.txt"/>
+			</fileset>
+		</copy>
+-->
+	
+		<copy todir="${basedir}/temp/dist/admin/licenses/admin/" overwrite="true">
+			<fileset dir="${basedir}/temp/dist/temp/admin/src/anyframe-iam-admin-web/licenses">
+				<include name="*.txt"/>
+			</fileset>
+		</copy>
+	
+		<copy todir="${basedir}/temp/dist/admin/licenses/admin/" overwrite="true">
+			<fileset dir="${basedir}/temp/dist/temp/admin/src/anyframe-iam-admin-services/licenses">
+				<include name="*.txt"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${basedir}/temp/dist/core/licenses/core/" overwrite="true">
+			<fileset dir="${basedir}/temp/dist/temp/core/src/anyframe-iam-core/licenses">
+				<include name="*.txt"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${basedir}/temp/dist/sample/licenses/sample/" overwrite="true">
+			<fileset dir="${basedir}/temp/dist/temp/sample/src/anyframe-iam-sample/licenses">
+				<include name="*.txt"/>
+			</fileset>
+		</copy>
+
+<!--		
+		<move file="${basedir}/temp/dist/temp/admin/license.txt" tofile="${basedir}/temp/dist/admin/license.txt"/>
+		<move file="${basedir}/temp/dist/temp/admin/changelog.txt" tofile="${basedir}/temp/dist/admin/changelog.txt"/>
+		<move file="${basedir}/temp/dist/temp/admin/readme.txt" tofile="${basedir}/temp/dist/admin/readme.txt"/>
+
+		<move file="${basedir}/temp/dist/temp/core/license.txt" tofile="${basedir}/temp/dist/core/license.txt"/>
+		<move file="${basedir}/temp/dist/temp/core/changelog.txt" tofile="${basedir}/temp/dist/core/changelog.txt"/>
+		<move file="${basedir}/temp/dist/temp/core/readme.txt" tofile="${basedir}/temp/dist/core/readme.txt"/>
+ -->
+ 
+		<delete dir="${basedir}/temp/dist/temp/core/src/"/>
+		<delete dir="${basedir}/temp/dist/temp/admin/src/"/>
+		<delete dir="${basedir}/temp/dist/temp/sample/src/"/>
+	</target>
+	
+	<path id="javadoc.path.admin">
+		<pathelement path="${basedir}/temp/dist/admin/src/anyframe-iam-admin-services/src/main/java"/>
+	</path>
+
+	<path id="javadoc.path.core">
+		<pathelement path="${basedir}/temp/dist/core/src/anyframe-iam-core/src/main/java"/>
+	</path>
+
+	<path id="javadoc.classpath.admin">
+		<fileset dir="${basedir}/temp/dist/admin/lib">
+			<include name="*.jar"/>
+		</fileset>
+
+		<fileset dir="${basedir}/temp/dist/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
+	<path id="javadoc.classpath.core">
+		<fileset dir="${basedir}/temp/dist/core/lib">
+			<include name="*.jar"/>
+		</fileset>
+
+		<fileset dir="${basedir}/temp/dist/lib">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
+	<target name="javadoc.admin">
+		<echo message="Make Javadoc API"/>
+		<javadoc packagenames="org.anyframe.iam.admin.*"
+			sourcepathref="javadoc.path.admin"
+			excludepackagenames="org.anyframe.iam.admin.*.*.impl.*"
+			destdir="${basedir}/temp/dist/admin/docs/api/admin"
+			author="true"
+			version="true"
+			use="true"
+			encoding="UTF-8"
+			charset="UTF-8"
+			docencoding="UTF-8"
+			classpathref="javadoc.classpath.admin"
+			windowtitle="Anyframe API ${core.version}">
+			<doctitle><![CDATA[<h1>Anyframe IAM Admin API ${core.version}</h1>]]></doctitle>
+			<bottom><![CDATA[<i>Copyright &#169; 2008, www.anyframe.org, All Rights Reserved.</i>]]></bottom>
+			<tag name="todo" scope="all" description="TODO:"/>
+			<group title="Anyframe IAM Admin" packages="org.anyframe.iam.admin.*"/>
+			<link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+			<link href="http://static.springframework.org/spring/docs/2.5.x/api/"/>
+		</javadoc>
+	</target>
+
+	<target name="javadoc.core">
+		<echo message="Make Javadoc API"/>
+		<javadoc packagenames="org.anyframe.iam.core.*,org.springframework.security.vote.*,org.springframework.security.intercept.web.*"
+			sourcepathref="javadoc.path.core"
+			excludepackagenames="org.anyframe.iam.core.*.impl.*"
+			destdir="${basedir}/temp/dist/core/docs/api/core"
+			author="true"
+			version="true"
+			use="true"
+			encoding="UTF-8"
+			charset="UTF-8"
+			docencoding="UTF-8"
+			classpathref="javadoc.classpath.core"
+			windowtitle="Anyframe API ${version}">
+			<doctitle><![CDATA[<h1>Anyframe IAM Core API ${core.version}</h1>]]></doctitle>
+			<bottom><![CDATA[<i>Copyright &#169; 2008, www.anyframe.org, All Rights Reserved.</i>]]></bottom>
+			<tag name="todo" scope="all" description="TODO:"/>
+			<group title="Anyframe IAM Core" packages="org.anyframe.iam.core.*"/>
+			<link href="http://java.sun.com/j2se/1.5.0/docs/api/"/>
+			<link href="http://static.springframework.org/spring/docs/2.5.x/api/"/>
+			<link href="http://static.springsource.org/spring-security/site/docs/2.0.x/apidocs/"/>
+		</javadoc>
+	</target>
+	
+	<target name="destroy">
+		<echo message="Delete ${basedir}/temp/dist/temp"/>
+		<delete dir="${basedir}/temp/dist/temp"/>
+		<delete dir="${basedir}/temp/dist/admin/lib/iam/"/>
+	</target>
+
+	<!-- ############################# EXCECUTABLE TARGETS #################################### -->
+	<target name="updateIAM" depends="initIAM,updateIAMLibs,updateIAMDepLibs,move,destroy,javadoc.admin,javadoc.core"/>
+</project>

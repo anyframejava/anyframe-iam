@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2008. 9. 1 ???? 1:00:43 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+	<!-- reference schema attribute when hbm2ddl tool create table. so, remove schema definition. (schema=DEFULAT)-->
+		
+	<sql-query name="findsecuredResourceswithlevel">
+		<return class="org.anyframe.iam.admin.domain.IamResourceResult"/>
+		<![CDATA[
+				SELECT c.lv as lev,b.role_id as roleId, d.role_name as roleName, a.resource_id as resourceId, a.sort_order as sortOrder, MAX(a.resource_name) as resourceName,MAX(a.resource_pattern ) as resourcePattern, MAX(a.resource_type ) as resourceType
+				FROM secured_resources a,secured_resources_roles b, (
+					SELECT :roleId AS role_id,0 AS lv, -1 AS is_leaf
+					FROM dual
+					UNION ALL
+						SELECT role_id,lv,is_leaf
+						FROM (  
+							SELECT parent_role AS role_id,level AS lv,CONNECT_BY_ISLEAF AS is_leaf
+							FROM (
+								SELECT child_role,parent_role
+								FROM roles_hierarchy
+								UNION ALL
+									SELECT 'ROOT' AS child_role, 'ROLE_ADMIN' AS parent_role
+									FROM dual )
+							START WITH child_role = :roleId
+							CONNECT BY prior parent_role = child_role
+						) ) c, roles d
+	 			WHERE a.resource_id = b.resource_id
+				AND b.role_id = c.role_id
+				AND c.role_id = d.role_id
+				--replaceSQL1
+	 			GROUP BY c.lv,b.role_id,d.role_name, a.resource_id, a.sort_order
+	 			--replaceSQL2
+		]]>
+	</sql-query>
+	
+	<sql-query name="countsecuredResourceswithlevel">
+		<![CDATA[
+			SELECT count(*)
+			FROM (
+				SELECT distinct c.lv,b.role_id, d.role_name, a.resource_id,MAX (a.resource_name),MAX (a.resource_pattern ), MAX (a.resource_type )
+				FROM secured_resources a,secured_resources_roles b, (
+					SELECT :roleId AS role_id,0 AS lv, -1 AS is_leaf
+					FROM dual
+					UNION ALL
+						SELECT role_id,lv,is_leaf
+						FROM (  
+							SELECT parent_role AS role_id,level AS lv,CONNECT_BY_ISLEAF AS is_leaf
+							FROM (
+								SELECT child_role,parent_role
+								FROM roles_hierarchy
+								UNION ALL
+									SELECT 'ROOT' AS child_role, 'ROLE_ADMIN' AS parent_role
+									FROM dual )
+							START WITH child_role = :roleId
+							CONNECT BY prior parent_role = child_role
+						) ) c, roles d
+	 			WHERE a.resource_id = b.resource_id
+				AND b.role_id = c.role_id
+				AND c.role_id = d.role_id
+				--replaceSQL
+	 			GROUP BY c.lv,b.role_id,d.role_name, a.resource_id
+	 			ORDER BY c.lv,b.role_id,d.role_name, a.resource_id 
+ 			)
+		]]>
+	</sql-query>
+	
+	<sql-query name="makeAllTempResourcesList">
+		<return class="org.anyframe.iam.admin.domain.TempSecuredResources"/>
+		<![CDATA[	
+			SELECT  A.RESOURCE_ID||NVL(B.ROLE_ID, '') compKey,
+			     	A.RESOURCE_ID		resourceId, 
+					A.RESOURCE_NAME		resourceName,
+					A.RESOURCE_PATTERN	resourcePattern,
+					A.RESOURCE_TYPE		resourceType,
+					A.DESCRIPTION		description,
+					A.SORT_ORDER		sortorder,
+					A.SYSTEM_NAME		systemName,
+					A.CREATE_DATE		createDate,
+					A.MODIFY_DATE		modifyDate,
+					B.ROLE_ID 			roleId
+			FROM		SECURED_RESOURCES		A
+			LEFT OUTER JOIN	SECURED_RESOURCES_ROLES	B
+			ON	A.RESOURCE_ID = B.RESOURCE_ID
+		]]>
+	</sql-query>
+	
+	<sql-query name="removeAllSecuredResources">
+		<![CDATA[
+			DELETE FROM SECURED_RESOURCES
+		]]>
+	</sql-query>
+</hibernate-mapping>

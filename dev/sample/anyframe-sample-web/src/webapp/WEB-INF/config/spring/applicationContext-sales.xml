@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans     
+                        http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+	<bean id="categoryService"
+		class="com.sds.emp.sale.services.impl.CategoryServiceImpl">
+		<property name="categoryDAO" ref="categoryDAO" />
+		<property name="idGenerationService" ref="idGenerationServiceCategory" />
+		<property name="productService" ref="productService" />
+	</bean>
+
+	<bean id="categoryDAO"
+		class="com.sds.emp.sale.services.impl.CategoryDAO">
+		<property name="propertiesService" ref="propertiesService" />
+		<property name="queryService" ref="queryService" />
+	</bean>
+	
+	<bean id="productService"
+		class="com.sds.emp.sale.services.impl.ProductServiceImpl">
+		<property name="productDAO" ref="productDAO" />
+		<property name="idGenerationService" ref="idGenerationServiceProduct" />
+	</bean>
+	
+	<bean id="productDAO"
+		class="com.sds.emp.sale.services.impl.ProductDAO">
+		<property name="queryService" ref="queryService" />
+		<property name="propertiesService" ref="propertiesService" />
+	</bean>
+	
+	<bean id="saleService"
+		class="com.sds.emp.sale.services.impl.SaleServiceImpl">
+		<property name="saleDAO" ref="saleDAO" />
+	</bean>
+	
+	<bean id="saleDAO"
+		class="com.sds.emp.sale.services.impl.SaleDAO">
+		<property name="propertiesService" ref="propertiesService" />
+		<property name="queryService" ref="queryService" />
+	</bean>
+	
+</beans>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE queryservice PUBLIC "-//ANYFRAME//DTD QUERYSERVICE//EN" "http://www.anyframejava.org/dtd/anyframe-core-query-mapping-3.2.dtd">
+<queryservice>
+  <queries>
+	<query id="createCategory">
+		<statement>
+		<![CDATA[
+			INSERT INTO CATEGORY ( 			
+				CATEGORY_NO, 
+				CATEGORY_DESC, 
+				CATEGORY_NAME, 
+				MODIFY_DATE, 
+				MODIFY_ID, 
+				REG_DATE, 
+				REG_ID, 
+				USE_YN) 
+			VALUES (:vo.categoryNo, 
+				:vo.categoryDesc, 
+				:vo.categoryName, 
+				:vo.modifyDate, 
+				:vo.modifyId, 
+				:vo.regDate, 
+				:vo.regId, 
+				:vo.useYn)
+		]]>
+		</statement>
+	</query>
+		
+	<query id="updateCategory">
+		<statement>
+		<![CDATA[
+			UPDATE CATEGORY
+			SET 
+				CATEGORY_DESC = :vo.categoryDesc, 
+				CATEGORY_NAME = :vo.categoryName, 
+				MODIFY_DATE = :vo.modifyDate, 
+				MODIFY_ID = :vo.modifyId, 
+				REG_DATE = :vo.regDate, 
+				REG_ID = :vo.regId, 
+				USE_YN = :vo.useYn
+			WHERE
+				CATEGORY_NO = :vo.categoryNo 
+		]]>
+		</statement>
+	</query>
+	
+	<query id="removeCategory">
+		<statement>
+		<![CDATA[
+			DELETE FROM CATEGORY 
+			WHERE 
+				CATEGORY_NO = :vo.categoryNo
+		]]>
+		</statement>
+	</query>
+	
+	<query id="findCategoryByPk">
+		<statement>
+		<![CDATA[
+			SELECT 
+				category.CATEGORY_NO, category.CATEGORY_DESC, category.CATEGORY_NAME, category.MODIFY_DATE, category.MODIFY_ID, category.REG_DATE, category.REG_ID, category.USE_YN
+			FROM CATEGORY category
+			WHERE 
+				category.CATEGORY_NO = :vo.categoryNo
+		]]>
+		</statement>
+		<result class="org.anyframe.iam.sample.domain.Category">		
+		</result>											
+	</query>
+
+	<query id="findCategoryList" isDynamic="true">
+		<statement>
+		<![CDATA[
+			SELECT 
+				category.CATEGORY_NO, category.CATEGORY_DESC, category.CATEGORY_NAME, category.MODIFY_DATE, category.MODIFY_ID, category.REG_DATE, category.REG_ID, category.USE_YN 
+			FROM CATEGORY category
+			#if ($keywordNum != "")			
+				WHERE 		
+				#if ($condition == "All" || $condition == "")
+					(
+					  category.CATEGORY_NO like :keywordStr or  category.CATEGORY_NAME like :keywordStr
+					)	
+				#elseif($condition == "categoryNo")
+					category.CATEGORY_NO like :keywordStr			
+				#elseif($condition == "categoryName")
+					category.CATEGORY_NAME like :keywordStr			
+				#end
+			#end			
+				order by							
+								category.CATEGORY_NO
+		]]>
+		</statement>
+		<result class="org.anyframe.iam.sample.domain.Category">		
+		</result>				
+	</query>
+  </queries>
+</queryservice>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:config="http://www.anyframejava.org/schema/service"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.anyframejava.org/schema/service
+	http://www.anyframejava.org/schema/service/anyframe-core-service-2.0.xsd">
+
+	<bean name="queryService"
+		class="anyframe.core.query.impl.QueryServiceImpl">
+		<property name="jdbcTemplate">
+			<ref bean="jdbcTemplate" />
+		</property>
+		<property name="lobHandler">
+			<ref bean="lobHandler" />
+		</property>
+		<config:configuration>
+			<nullcheck type="VARCHAR" default-value="" />
+			<sqlload dynamic="false" frequency="5" />
+			<filename>
+				classpath:sql/mapping-user-userservice.xml
+			</filename>
+			<filename>
+				classpath:sql/mapping-purchase-deliverycompanyservice.xml
+			</filename>
+			<filename>
+				classpath:sql/mapping-purchase-purchaseservice.xml
+			</filename>
+			<filename>
+				classpath:sql/mapping-code-codeservice.xml
+			</filename>
+			<filename> 
+				classpath:sql/mapping-sale-saleservice.xml
+			</filename>
+			<filename>
+				classpath:sql/mapping-sale-categoryservice.xml
+			</filename>
+			<filename>
+				classpath:sql/mapping-sale-productservice.xml
+			</filename>
+			<skiperror>true</skiperror>
+		</config:configuration>
+	</bean>
+
+	<!-- The original JdbcTemplate definition -->
+	<bean id="jdbcTemplate"
+		class="anyframe.core.query.impl.util.PagingJdbcTemplate">
+		<!-- property name="dataSource" ref="dataSourceSpy" /-->
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<bean id="pagingSQLGenerator"
+		class="anyframe.core.query.impl.util.OraclePagingSQLGenerator">
+	</bean>
+
+	<!-- NativeJdbcExtractor -->
+	<bean id="nativeJdbcExtractor"
+		class="org.springframework.jdbc.support.nativejdbc.CommonsDbcpNativeJdbcExtractor"
+		lazy-init="true" />
+
+	<!-- LobHandler for Oracle JDBC drivers -->
+	<bean id="lobHandler"
+		class="org.springframework.jdbc.support.lob.OracleLobHandler"
+		lazy-init="true">
+		<property name="nativeJdbcExtractor">
+			<ref local="nativeJdbcExtractor" />
+		</property>
+	</bean>
+
+</beans>

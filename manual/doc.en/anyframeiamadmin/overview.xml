@@ -1,0 +1,200 @@
+<chapter id="anyframeiamadmin_overview">
+	<title>Anyframe IAM Admin</title>
+
+	<para>
+	    IAM Admin is provided in special web application format that provides console function, 
+		and is deployed in WAR format within Web Application Server when IAM Core is installed and set. 
+		IAM Admin View section is implemented with jQuery and JSP technology. 
+		Controller section consists of Anyframe Web, and Model section consists of HibernateJPA and Anyframe Core.
+	</para>
+
+	<para>
+	    IAM Core provides functions that control target application authorization based on DB setting. 
+		IAM Admin makes it easier for manager to manipulate DB setting that Core relies on, 
+		and transfers control signal so that Core can recognize changed contents. 
+	</para>
+
+	<figure>
+		<title>Anyframe IAM Architecture</title>
+		<imagedata scalefit="1" width="100%" contentdepth="100%" align="center"
+			fileref="../image/anyframeiam/iamadmin_architecture.jpg" />
+	</figure>
+
+	<para>IAM Admin uses jQuery, which is JavaScript Framework, to control UI. 
+		Request and response with server while minimizing view refresh can be done using jQuery. 
+		Plugins are provided in jQuery, and among them, jQuery plugins used in Anyframe IAM are as follows. 
+		(Explanations on jQuery are not included in the manual scope so refer to the link below.)
+	</para>
+
+	<itemizedlist>
+
+		<listitem>
+			<para><ulink url="http://www.trirand.com/blog/">jqGrid Plugin</ulink></para>
+		</listitem>
+
+		<listitem>
+			<para><ulink url="http://www.jstree.com/">jsTree Plugin</ulink></para>
+		</listitem>
+
+		<listitem>
+			<para><ulink
+				url="http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete/">jQuery Autocomplete plugin</ulink></para>
+		</listitem>
+
+		<listitem>
+			<para><ulink url="http://jqueryui.com/">jQuery UI : DatePicker and some sections</ulink></para>
+		</listitem>
+
+	</itemizedlist>
+
+	<section id="anyframeiamadmin_characteristic">
+		<title>Anyframe IAM Admin Characteristics</title>
+		<para>IAM Admin provides the following characteristics to enhance user convenience and functions 
+			by adding functions provided by IAM Core that is based on Spring Security. 
+			(Authorization and application information collection developed based on HttpInvoker 
+			and is run without being limited by firewall.)
+				</para>
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">Cross Browser Support</emphasis>
+				</para>
+				<para>IAM Admin supports Cross Browser and is implemented so that it runs in the same way in 
+					browsers other than Internet Explorer such as Firefox, Chrome, and Safari.
+				</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata width="60%" scalefit="1" scale="60" align="center" fileref="../image/anyframeiam/browsers.jpg" />
+					</imageobject>
+				</mediaobject>
+			</listitem>
+
+			<listitem>
+				<para>
+					<emphasis role="bold">Target Application Authorization Reload</emphasis>
+				</para>
+				<para>
+					Authorization information changed in IAM Admin is not committed until authorization reload is clearly requested, 
+					and target application (generally business application) authorization information is renewed 
+					when executing authorization reload function after manager finishes authorization change. 
+					</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata width="60%" scalefit="1" scale="60" align="center" fileref="../image/anyframeiam/auth_reload.jpg" />
+					</imageobject>
+				</mediaobject>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">Target Application Information Collection</emphasis>
+				</para>
+				<para>
+					New functions can be added or changed when continuing maintenance of target application. 
+					IAM Admin provides function that collects target application information so that 
+					protection resource can be easily registered.
+					</para>
+				<mediaobject>
+					<imageobject>
+						<imagedata width="60%" scalefit="1" scale="60" align="center"
+							fileref="../image/anyframeiam/resource_gathering.jpg" />
+					</imageobject>
+				</mediaobject>
+			</listitem>
+			<listitem>
+				<para>
+					<emphasis role="bold">Time Limit Authorization Management</emphasis>
+				</para>
+				<para>
+					After setting time limit for specific resource or role in IAM Admin, 
+					resource access during allowed time and role access can be controlled, 
+					and roles that are exceptions to these rules (manager that has access permission, etc.) can be defined.  
+					</para>
+			</listitem>
+
+			<listitem>
+				<para>
+					<emphasis role="bold">Auto Complete Support </emphasis>
+				</para>
+				<para>
+					It is difficult to register protected resources of target application for authorization management. 
+					IAM Admin uses auto complete function to provide hints based on target application information 
+					so that user can easily register protected resources. 
+				</para>
+			</listitem>
+			
+			<listitem>
+				<para>
+					<emphasis role="bold">Integrated Application Management</emphasis>
+				</para>
+				<para>
+					Multiple applications can be managed through one Admin Console.
+				</para>
+			</listitem>
+			
+			<listitem>
+				<para>
+					<emphasis role="bold">Excel Data Import/Export</emphasis>
+				</para>
+				<para>
+					Use Import/Export function of Excel file to easily perform initial data building or current status backup. 
+				</para>
+			</listitem>
+		</itemizedlist>
+	</section>
+
+	<section id="anyframeiamadmin_services">
+		<title>Anyframe IAM Admin Service</title>
+
+		<para>
+		    IAM Admin can manage DB-based information through Service. 
+			The following diagram and explanations show IAM Admin service. 
+			DAO in the below diagram is formed based on Hibernate-JPA. 
+			For information on using related services to form authorization, refer to the instructions. 
+			</para>
+
+		<figure>
+			<title>Core Service #1</title>
+			<imagedata scalefit="1" width="100%" align="center" fileref="../image/anyframeiam/svc_auth_group.jpg" />
+		</figure>
+
+		<para>
+		    This is the first list of Services that are mainly used in IAM Admin. 
+			It manages information that are mainly looked into in IAM Core 
+			such as user group-user relationship (groupsUsers), users (users), authorization (authorities), 
+			roles (roles), and role-resource relationship (securedResourceRoles).
+		</para>
+
+		<figure>
+			<title>Core Service #2</title>
+			<imagedata scalefit="1" width="100%" align="center"
+				fileref="../image/anyframeiam/svc_group_candidate.jpg" />
+		</figure>
+
+		<para>
+            This is the second list of Services mainly used in IAM Admin. 
+			It manages information such as user groups (groups), resources (securedResource), 
+			and resource candidate (candidateSecuredResources).
+		</para>
+
+		<figure>
+			<title>Authorization Control Service based on Time Setting</title>
+			<imagedata scalefit="1" width="100%" align="center" fileref="../image/anyframeiam/svc_restricted.jpg" />
+		</figure>
+
+		<para>
+		     After setting time limit for specific resource or role in IAM Admin, 
+			 resource access during allowed time and role access can be controlled, 
+			 and roles that are exceptions to these rules (manager that has access permission, etc.) can be defined. 
+			</para>
+
+		<figure>
+			<title>Service for View Control</title>
+			<imagedata align="center" scalefit="1" width="60%" scale="100" 
+				fileref="../image/anyframeiam/svc_viewresource.jpg" />
+		</figure>
+
+		<para>When developing business application, there are times when view display is controlled according to the authorization of use, 
+		and when menu display has to be controlled. In this case, service to check authorization should be provided. 
+		</para>
+	</section>
+</chapter>

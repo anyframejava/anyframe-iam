@@ -1,0 +1,1158 @@
+<chapter id="anyframeiamadmin_usage">
+	<title>IAM Admin 사용방법 Overview</title>
+
+	<para>IAM Admin은 크게 아래의 5개의 메뉴로 구성되어 있다.</para>
+
+	<itemizedlist>
+		<listitem>
+			<para>
+				<link linkend="anyframeiamadmin_usage_user_management">User Management</link>
+				: 사용자와 사용자 그룹을 관리하는 메뉴
+			</para>
+		</listitem>
+
+		<listitem>
+			<para>
+				<link linkend="anyframeiamadmin_usage_roles_management">Roles Management</link>
+				: ROLE(역할)을 관리하는 메뉴. 역할에 자원이나 사용자, 사용자그룹을 등록할 수 있다.
+			</para>
+		</listitem>
+
+		<listitem>
+			<para>
+				<link linkend="anyframeiamadmin_usage_resource_management">Resource Management</link>
+				: 자원을 관리하는 메뉴. 새로운 자원을 등록, 삭제하거나 화면제어 기능을 설정할 수 있다.
+			</para>
+		</listitem>
+
+		<listitem>
+			<para>
+				<link linkend="anyframeiamadmin_usage_restriction_management">Restriction Management</link>
+				: 시간에 따른 제한을 관리하는 메뉴. 사용자, 역할, 자원에 시간 제한 설정을 관리할 수 있다.
+			</para>
+		</listitem>
+
+		<listitem>
+			<para>
+				<link linkend="anyframeiamadmin_usage_system_management">System Management</link>
+				: 엔터프라이즈 어플리케이션을 관리하는 메뉴. IAM Admin을 통해 변경된 내용을 적용시키기 위한 Reload 기능과
+				자원 정보를 수집하는 기능을 제공한다. 그 외에도 다량의 Data를 Excel File로 관리할 수 있는 메뉴를 제공한다.
+			</para>
+		</listitem>
+
+	</itemizedlist>
+
+	<section id="anyframeiamadmin_usage_user_management">
+		<title>User Management</title>
+
+		<para>
+			User Management 메뉴에서는 사용자와 그룹에 대한 전반적인 관리 메뉴를 제공한다.
+			최초 User List
+			항목을
+			클릭하면 다음 그림과 유사한 화면을 볼 수 있다.
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="../image/anyframeiam/iam_useage_usermanagement_01.jpg" />
+				</imageobject>
+				<textobject>
+					<phrase>
+						위 그림은 사용자 관리 화면 중 그룹 계층 목록 화면에서의 Context menu 사용 예제 화면이다.
+						트리 화면에서 우클릭을 이용해서 그룹을 추가/수정/삭제 할 수 있고, 그룹을 클릭하여 우측 탭화면에
+						그룹 상세 정보를 확인할 수 있다.
+					</phrase>
+				</textobject>
+			</mediaobject>
+		</para>
+
+		<para>
+			화면 좌측의 메뉴는 사용자 그룹의 계층 구조를 나타내고, 우측의 입력창은 선택된 그룹에 대한 상세 정보를 나타낸다.
+			상단의 버튼을 이용해서 전체 펼치기, 접기 기능을 사용할 수
+			있고,
+			그룹의 생성, 수정, 삭제 기능은 메뉴에서 우클릭을 함으로써 사용할 수 있다.
+			또한 화면 상단의 입력창을 이용해서 그룹 이름 검색 기능을 사용할 수 있는데, 
+			사용자의 편의를 위해서 입력 자동 완성 기능 또한 제공되어진다. 트리 검색 기능은 IAM Admin이 제공하는
+			모든 Tree UI 화면에서 사용 가능한 메뉴이다. 그룹 검색 기능을 사용하면 
+			아래의 그림과 같은 화면을 볼 수 있다.
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="../image/anyframeiam/iam_useage_usermanagement_02.jpg" />
+				</imageobject>
+				<textobject>
+					<phrase>
+						위 그림은 그룹명 검색시 IAM Admin에서 제공하는 자동완성 기능에 예시 화면이다.
+					</phrase>
+				</textobject>
+			</mediaobject>
+		</para>
+		<para>
+			Users 탭에서는 사용자 목록을 확인할 수 있다.
+			좌측 그룹 메뉴에서 특정 그룹을 선택했을 경우, 해당 그룹에 속한
+			사용자들이 표시된다.
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="../image/anyframeiam/iam_useage_usermanagement_03.jpg" />
+				</imageobject>
+				<textobject>
+					<phrase>
+						위 그림은 특정 그룹을 클릭했을 때 User 탭에서 해당 그룹에 속하는 
+						사용자 목록이 출력되는 예시 화면이다.
+					</phrase>
+				</textobject>
+			</mediaobject>
+		</para>
+
+		<para>
+			사용자 목록에서 특정 사용자를 더블클릭하면 사용자 상세 화면으로 이동한다.
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="../image/anyframeiam/iam_useage_usermanagement_04.jpg" />
+				</imageobject>
+				<textobject>
+					<phrase>
+						위 그림은 사용자 상세 화면이다. 상세 화면에서 특정 사용자의 정보를 수정하고
+						역할을 등록/삭제 할 수 있다.
+					</phrase>
+				</textobject>
+			</mediaobject>
+		</para>
+
+		<para>
+			상세 화면에서는 사용자의 정보를 수정할 수 있다.
+			하단의 ROLE LIST 화면에서는 사용자에게 특정한 역할을 등록하거나
+			삭제할 수 있다.
+			역할의 등록, 삭제는
+			<link linkend="anyframeiamadmin_usage_roles_management">Roles Management</link>
+			에서 사용할 수 있다.
+		</para>
+	</section>
+
+	<section id="anyframeiamadmin_usage_roles_management">
+		<title>Roles Management</title>
+		<para>
+			Roles Management 메뉴에서는 사용자 혹은 자원을 등록할 역할들을 관리한다.
+			최초 Role List 메뉴를
+			클릭하면
+			사용자 그룹 메뉴와 동일하게 계층 구조를 나타내는 트리 구조의 메뉴가 보여진다.
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="../image/anyframeiam/iam_useage_rolesmanagement_01.jpg" />
+				</imageobject>
+				<textobject>
+					<phrase>
+						위 그림은 역할의 계층구조를 나타내는 트리 화면이다. 그룹 관리 화면과 마찬가지로 마우스 우클릭을 이용해서
+						역할을 등록/수정/삭제 할 수 있고, 역할을 클릭하여 우측 화면에 역할 상세 정보를 확인할 수 있다.
+					</phrase>
+				</textobject>
+			</mediaobject>
+		</para>
+
+		<para>
+			Roles Management 메뉴에는 Role, Resource List, User Group, Users, 총
+			4개의 탭 메뉴가 존재한다.
+			각각의 메뉴는 좌측의 역할 트리에서 특정 역할을 선택 했을 때, 해당 역할에 등록 된 자원, 그룹
+			혹은 사용자를
+			나타내는 화면이다.
+		</para>
+
+		<para>
+			Resource List 화면에서는 좌측에 선택된 역할에 할당 되어 있는 자원들의 목록을 보여준다.
+			역할에 자원을
+			할당 시킬때 한가지 유의 해야 할 사항은 역할의 계층구조이다.
+			하위의 역할에 자원을 할당 시켰을 경우, 상위 역할은 하위
+			역할이 가지는 자원을 잠재적으로 내재한다.
+			따라서 상위 역할에 따로 자원을 등록하지 않더라도 하위 역할의 자원에 대한 접근
+			권한을 가진다고 보면 된다.
+		</para>
+		<para>
+			아래의 그림은 좌측의 특정 Role을 선택한 경우 해당 Role에 할당된 자원들의 목록을 보여주는 화면이다.
+			그림의 상단에 "Nested"라고 적혀진 Select Box는 Oracle DB를 사용하는 사용자에게만 보여지는 메뉴이다. 
+			(Oracle이 아닌 다른 DB를 사용하는 사용자는 Select box가 화면에 나타나지 않는다.)
+			Select box 값을 "Nested"로 선택하면 현재 선택된 역할의 자원 뿐 아니라 해당 역할의 하위 역할이 가지는 자원들의 목록을 
+			모두 볼 수 있게 된다. "Self"를 선택하게 되면 해당 역할에 할당된 자원만이 출력된다.
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="../image/anyframeiam/iam_useage_rolesmanagement_02.jpg" />
+				</imageobject>
+				<textobject>
+					<phrase>
+						위 그림은 역할에 등록된 자원 목록 예시 화면이다. 좌측의 역할 계층 구조 영역에서 특정 역할을 선택하면
+						우측의 목록 영역에서 해당 역할에 등록된 자원의 목록을 확인할 수 있다.
+					</phrase>
+				</textobject>
+			</mediaobject>
+		</para>
+
+		<para>
+			다음으로 확인할 메뉴는 User Group 탭메뉴 이다. User Group 탭 메뉴를 선택하면 다음과 같은 화면을
+			볼 수
+			있다. 이 화면에서는 사용자에게 일일이 역할을 등록하는 번거로운 작업을 개선하기 위해 해당 그룹에 속하는 모든
+			사용자에게 특정
+			역할을 할당하는 일을 기능을 수행한다. 우측의 Multi-Select Box 내의 그룹들은 좌측 역할
+			메뉴에서
+			선택 된 역할을
+			할당받은 그룹들의 목록이다.
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="../image/anyframeiam/iam_useage_rolesmanagement_03.jpg" />
+				</imageobject>
+				<textobject>
+					<phrase>
+						위 그림은 특정 역할에 그룹을 등록/삭제 하는 예시 화면이다. 좌측의 트리에서 그룹을 선택한 후
+						우측 화살표 버튼을 클릭하여 해당 그룹을 역할에 등록 할 수 있다.
+					</phrase>
+				</textobject>
+			</mediaobject>
+			<warning><title>유의사항</title>
+			<para>역할과 사용자 그룹 둘 다 계층 관계를 가지기 때문에 혼동 될 수 있기 때문에 주의해야 한다.
+				역할 메뉴에서 설명	한 것처럼 하위 역할에 등록된 자원에 대한 접근은 상위 역할의 사용자에게 허용된다.
+				하지만 사용자 그룹은 동일하게 동작하지않음을 명심해야 한다.
+				사용자 그룹 메뉴에서 하위 그룹이 가지는 접근 권한을 상위 그룹이 반드시 가지는 것은 아니다.
+				상위 그룹이 접근 권한을 가지기 위해서는 그 자원에 대한 역할을 할당 해야 한다.
+				역할 메뉴의 계층 구조와 혼동되어 사용하는 일이 없도록 해야 한다.</para></warning>
+		</para>
+
+		<para>
+			Users 탭 메뉴를 클릭하면 아래와 같이 두 개의 목록이 나타난다. 좌측의 메뉴는 어떠한 역할에도 할당되어 있지
+			않은
+			사용자의 목록이고,
+			우측의 메뉴는 선택된 역할에 이미 할당 된 사용자의 목록이다.
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="../image/anyframeiam/iam_useage_rolesmanagement_04.jpg" />
+				</imageobject>
+				<textobject>
+					<phrase>
+						위 그림은 특정 역할에 사용자를 등록/삭제 하는 예시 화면이다.
+						좌측의 목록에서 사용자를 선택한 후 오른쪽 방향 화살표 버튼을 클릭하는 것으로
+						특정 역할에 사용자를 등록할 수 있다.
+					</phrase>
+				</textobject>
+			</mediaobject>
+		</para>
+
+		<para>
+			이 메뉴는 사용자 개개인에 역할을 등록하는 것으로, 앞서 설명한 역할-그룹 할당과는 별개로 동작한다.
+			예를 들어
+			특정한 사용자 A가 속한 그룹 GROUP_A 에 ROLE_A를 할당 한 후,
+			A 사용자에게 또 다른 역할 ROLE_B를 할당
+			했을 경우,
+			사용자 A는 ROLE_A와 ROLE_B에 해당하는 자원의 접근
+			권한을 모두 가지게 된다.
+			따라서 사용자 개인에게
+			역할을 할당할 경우나 사용자 그룹에 역할을 할당할 경우에는 중복적인 자원
+			할당을 반드시 유념해야한다.
+		</para>
+
+	</section>
+
+	<section id="anyframeiamadmin_usage_resource_management">
+		<title>Resource Management</title>
+		<para>
+			Resource Management 메뉴에서는 접근 권한을 통제 할 자원에 대한 메뉴를 제공한다.
+			Resource
+			Management 메뉴에는 Resource List, View List, View Mapping의 3가지 상세 메뉴가
+			존재한다.
+		</para>
+		<sect2 id="anyframeiam_usage_resource_management_sec001">
+			<title>Resource List</title>
+			<para>
+				먼저 Resource List 메뉴를 살펴보자. Resource List 메뉴에서는 현재 등록 된 자원들의 목록을
+				확인 할 수 있다.
+				자원의 종류에는 URL, Method, PointCut의 3가지가 있고 각각 특별한 패턴의 형태로
+				등록된다.
+				URL 자원은 정규식의
+				형태로 등록 가능하고, POINT CUT 자원은 AspectJ 에서 지원하는 형태의 패턴을
+				사용하여 등록 할 수 있다.
+				Method 형태의 자원은 현재 특정 패턴을 지원하지는 않고 있다.
+				추후 새로운
+				버전에서 정규식 이외의 패턴
+				사용, Method 자원의 패턴 적용 등을 검토 할 예정이다.
+		</para>
+			<para>
+				아래의 화면은 Resource List를 선택했을 때 보여지는 자원 목록이다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_resourcemanagement_01.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 보호 대상 자원으로 등록한 자원 목록 예시 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+
+			<para>
+				원하는 자원을 더블클릭 하면 자원에 대한 상세화면을 확인할 수 있다.
+				상세 화면은 아래의 자원명, 자원의 종류,
+				패턴, 세부설명, 우선권 등을 입력하도록 되어있다.
+				여기서 우선권이란,
+				중복적으로 등록된 자원 패턴들 사이에서의 우선적인 매칭
+				비교 순위를 의미한다. 즉, 우선권이 높은 자원에 대한 매칭 후 권한 부여가
+				먼저 이루어지는 것이다.
+				<para>
+					예를 들어, URL 형태의 자원 product/*.do 자원에 5라는 우선권을 부여 한 후,  product/add.do 자원에는 11, product/getProduct.do 에는 12, 
+					product/updateProduct.do 자원에는 13의 우선권을 부여하였다. 사용자는 관리자에게는 제품에 대한 CRUD, 즉 생성, 조회, 수정, 삭제에 대한 권한을 
+					모두 부여할 예정이고, 일반 이용 고객에게는 생성, 조회, 수정 권한만 허용하고 삭제 권한은 허용하지 않을 예정이다. 따라서 사용자는 
+					ROLE_ADMIN 에게 product/*.do 자원을 할당하고, ROLE_USER 에게 product/add.do, product/getProduct.do, product/updateProduct.do 자원을 
+					할당 하였다. 하지만 이런 방법으로 자원을 할당 하였을 때는 다음과 같은 문제가 발생한다. 
+					먼저 관리자 역할에 할당 되어있는 사용자는 CRUD 모든 기능에 대해 제한 없이 사용할 수 있을 것이다. 하지만 일반 사용자가 product/getProduct.do URL 자원을 
+					호출 했을 경우, product/getProduct.do 자원이 DB상의 어떤 자원 패턴과 매칭 되는지 우선권을 바탕으로 비교 작업을 하게 된다. 
+					따라서 우선권이 높게 설정되어 있는 product/*.do 패턴에 우선적으로 매칭 되어져서 product/*.do 자원이 할당되어 있는 ROLE_ADMIN 권한과 현재 사용자의 권한을 
+					비교하게 된다. 결과적으로 일반 사용자는 ROLE_ADMIN 권한을 가지고 있지 않기 때문에 product/getProduct.do 요청은 접근 거부 당하게 된다.     
+				</para>
+				<para>
+					위와 같은 오류를 범하지 않기 위해서는 다음의 사항을 준수해야한다.
+					<warning><title>유의사항</title>
+						<para>
+							<itemizedlist>
+								<listitem>
+									<para>
+										일반화 된 자원(예를 들면 *.do와 같은)의 우선 순위는 되도록 낮게 준다(즉, 큰 숫자로 등록한다).
+									</para>
+								</listitem>
+								<listitem>
+									<para>
+										빈번하게 참조되어지는 자원의 경우 우선권을 높게 설정하는 것이 성능 향상에 도움이 된다.
+									</para>
+								</listitem>
+								<listitem>
+									<para>
+										보호되는 자원으로 등록 할 필요성이 없는 자원에 대해서는 Spring Security의 기본 설정 파일의 http namespace 태그 내 
+										intercept-url 에 해당 패턴에 대해 filters="none" 으로 등록하도록 한다.
+									</para>
+								</listitem>
+							</itemizedlist>
+						</para>
+					</warning>
+				</para>
+				<para>
+				아래의 그림은 특정 자원을 더블 클릭해서 상세 정보 화면으로 이동한 모습이다. 자원 패턴을 등록 할 때 자동 완성 기능을 사용하고 있는 것을 확인할 수 있다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_resourcemanagement_02.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 자원 상세 정보 예시 화면이다. 자원을 등록할 때 패턴에 대한 자동완성 기능을 제공한다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+				</para>
+				사용자는 기본적으로 자원 패턴 란을 작성하면 된다. 작성의 편의를 돕고 실수를 막기 위해서 자원 패턴 입력할 때 자동 완성
+				기능을 지원한다.
+				자동 완성 기능을 이용하여 패턴을 등록했을 때에는 정규식 등을 이용하여 유사한 이름의 자원을 묶음으로 등록
+				할 수 없다.
+				그런 경우에는 상세 자원 패턴 란의 직접입력 체크박스를 클릭한 후, 사용자가 직접 자원을 등록할 수 있다.
+				이
+				경우에는 사용자의 실수에 의한 어플리케이션 오동작의 소지가 있기 때문에, 패턴 정규식 사용에 능통한 사용자가 아니면 이
+				방법을 쓰지 않을 것을 추천한다.
+			</para>
+
+			<para>
+				아래의 그림은 URL 형태의 자원 패턴을 입력할 때 볼 수 있는 화면이다. URL 패턴은 왼쪽의 URL Request
+				주소와 오른쪽의 파라메터로 이루어진다.
+				파라메터는 필수 입력 사항이 아니므로 선택적으로 사용하면 된다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_resourcemanagement_03.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 URL 형태의 자원을 입력하는 예시 화면이다. 자동 완성 기능을 이용하여
+							패턴 입력시 실수를 방지할 수 있다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+
+			<para>
+				아래에 있는 세 개의그림은 Method 형태의 자원 패턴을 입력할 때의 화면이다. Method 패턴은 총 3개의 입력창을
+				가지며 이들은 좌측에서부터 차례로
+				패키지, 클래스, 메소드를 입력하는 곳이다.
+				<link linkend="anyframeiamadmin_usage_system_management">System Management</link>
+				메뉴의
+				<link linkend="anyframeiam_usage_system_management_sec002">Resource Gathering</link>
+				을 이용하면 엔터프라이즈 어플리케이션의
+				자원을 수집해서 보관해 두기 때문에 패턴을 입력할 때 자동 완성 기능을 사용하여
+				수월하게 패턴을 입력 할 수 있다.
+				좌측의 패키지
+				정보부터 클래스, 메소드 순으로 작성하면 아래의 세부 자원 패턴 항목에서 세
+				개의 입력 내용을 결합시킨 형태로 표현해준다.
+				결합된 이 정보가
+				최종적으로 저장될 패턴의 형태이다.
+				<para>
+					먼저 패키지를 입력한다.
+					<mediaobject>
+						<imageobject>
+							<imagedata align="center"
+								fileref="../image/anyframeiam/iam_useage_resourcemanagement_04.jpg" />
+						</imageobject>
+						<textobject>
+							<phrase>
+								위 그림은 Method 형태의 자원 패턴 입력 화면 중 패키지 정보를 입력할 때 자동 완성을 이용하는 예시 화면이다. 
+							</phrase>
+						</textobject>
+					</mediaobject>
+				</para>
+				<para>
+					다음으로 클래스를 입력한다.
+					<mediaobject>
+						<imageobject>
+							<imagedata align="center"
+								fileref="../image/anyframeiam/iam_useage_resourcemanagement_05.jpg" />
+						</imageobject>
+						<textobject>
+							<phrase>
+								위 그림은 Method 형태의 자원 패턴 입력 화면 중 클래스 정보를 입력하는 예시이다.
+							</phrase>
+						</textobject>
+					</mediaobject>
+				</para>
+				<para>
+					마지막으로 메소드를 입력한다.
+					<mediaobject>
+						<imageobject>
+							<imagedata align="center"
+								fileref="../image/anyframeiam/iam_useage_resourcemanagement_06.jpg" />
+						</imageobject>
+						<textobject>
+							<phrase>
+								위 그림은 Methdo 형태의 자원 패턴 입력 화면 중 메소드 정보를 입력하는 예시이다.
+							</phrase>
+						</textobject>
+					</mediaobject>
+				</para>
+				혹시 자원명이 기억나지 않으면 입력창에 스페이스바를 입력하면 모든 자원 목록이 나타난다. 이 결과를 바탕으로 자원 패턴을
+				입력하면 더욱 간단하게 입력할 수 있을 것이다.
+			</para>
+
+			<para>
+				마지막으로 POINTCUT 형태이 자원 패턴 입력에 대해서 알아보자. POINTCUT 패턴은 단 하나의 입력창을 가지며
+				사용자가 자동완성 기능을 이용해
+				입력창을 작성하면, 아래의 상세 자원 패턴 란에서 포인트컷 패턴에서 사용되는 AspectJ
+				지원 패턴 형태로 완성시켜준다. 만약 AspectJ에서 지원하는
+				PointCut 형태의 패턴에 능숙하다면 Self Input
+				체크 박스를 클릭한 다음 상세 자원 패턴 란을 직접 수정하여서 여러개의 패턴을 묶음으로 등록 할 수도 있다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_resourcemanagement_07.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 포인트컷 형태의 자원 패턴 입력시 자동 완성 기능을 이용하여 패턴을 입력하는 예시 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+				<para>
+					<mediaobject>
+						<imageobject>
+							<imagedata align="center"
+								fileref="../image/anyframeiam/iam_useage_resourcemanagement_08.jpg" />
+						</imageobject>
+						<textobject>
+							<phrase>
+								위 그림은 AspectJ에서 지원하는 Pointcut 형태의 패턴을 직접 입력한 예시 화면이다.
+							</phrase>
+						</textobject>
+					</mediaobject>
+				</para>
+			</para>
+		</sect2>
+
+		<sect2 id="anyframeiam_usage_resource_management_sec002">
+			<title>View List</title>
+			<para>
+				View List 메뉴 에서는 권한에 따른 화면 제어를 위해 View Resource를 등록하고 수정/삭제 하는
+				기능을
+				제공한다.권한에 따라서 화면을 제어 하기 위해서는 해당 페이지에 다음과 같이 iam:access 태그를 이용해서
+				제어하고자
+				하는 내용을 감싸주면 된다.
+				<programlisting language="xml">
+<![CDATA[<iam:access hasPermission="${iam:getPermissionMask(\"]]><emphasis role="bold">CREATE</emphasis><![CDATA[\")}" viewName="]]><emphasis role="bold">listCategory</emphasis><![CDATA[">
+	<td><input type="button" name="addCategory" onClick="javascript:fncAddCategoryView();"></td>
+</iam:access>]]></programlisting>
+				태그 내에 있는 viewName에 해당하는 자원을 등록, 수정, 삭제 하는 화면이 바로 View List 메뉴이다.
+			</para>
+			<para>
+				아래의 화면은 View List 화면의 예시이다. 화면의 좌측에 계층구조를 가지는 View Resource 목록이 있고, 오른쪽에 탭메뉴로 구성된 
+				상세화면, 리스트, 매핑 화면을 볼 수 있다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_view_management_01.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 화면 제어를 위한 계층 구조를 가지는 View Resource 관리 예시 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+			<para>
+				좌측의 Tree 화면에서 마우스 우클릭으로 View Resource 등록, 삭제, 수정 등의 동작을 할 수 있다. 
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_view_management_02.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 화면 제어 계층 구조에서 마우스 오른쪽 버튼을 클릭하여 View Resource를 등록/수정/삭제 하는
+							예시 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+			<para>
+				다음은 View 자원의 상세 정보 페이지 이다. View Name은 모든 View Resource 가운데 유일한 값을 가져야 한다. 
+				우측의 Check Name 버튼을 이용해서 중복 확인을 통과 해야 View Resource를 등록/수정 할 수 있다.
+				또한 System Name 필드는 화면 우측 상단의 System Name select Box의 내용이 자동으로 설정되므로 이를 유념하자.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_view_management_03.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 View Resource의 상세 정보 페이지이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+			<para>
+				다음으로 확인할 메뉴는 View List 탭 메뉴 이다. 좌측의 Tree 메뉴에서 선택한 View Resource의 계층 구조상
+				한 단계 하위에 속해있는 View Resource들의 List를 나타낸다. Tree 메뉴에서 아무런 View Resource도 선택하지 
+				않았다면 전체 View Resource List를 확인할 수 있다. 
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_view_management_04.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 좌측의 트리에서 특정 View Resource를 클릭 했을때 오른쪽 View List 탭에서 나타나는
+							화면 제어 목록 예시 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+
+			<para>
+				마지막으로 View Mapping 탭 메뉴를 알아보자.
+				View Mapping 메뉴에서는 사용자가 입력한 View 자원과 사용자, 그룹, 역할 간의 할당을 관리한다.
+				기본적으로 관리자가 iam:access내에 지정한 Permission을
+				가지는 사용자만이 태그 내의 내용에 대한 권한을
+				가지기 때문에, 해당 Permission을 View Mapping 화면에서 쉽게 관리하도록 편리한 UI를 제공한다.
+			</para>
+			<para>
+				최초 View Mapping 메뉴를 선택하면 View 자원에 Permission을 가지고 있는 사용자들에 대한
+				리스트가 보여진다. Reference Type 항목은 해당 Permission이
+				할당 된 곳이 사용자 개인인지, 그룹인지
+				혹은 역할인지를 나타내는 항목이다. 여기서 주의할 점은 역할 보다는 사용자 그룹이, 그룹 보다는 사용자에게 할당된
+				Permission이 우선권을 가진다는 점이다. 예를 들어 Update Category 라는 카테고리 수정에 대한 View
+				자원에 대한 권한을 'ROLE_ADMIN' 역할과 'STAFF' 그룹에게
+				부여했다고 가정해보자. STAFF 그룹은
+				'ROLE_ADMIN'보다 하위 계층인 'ROLE_STAFF' 역할에 할당 되어있다. 따라서 STAFF 그룹을 제외한
+				나머지 'ROLE_STAFF'에
+				할당 된 사용자들은 Update Category라는 ID를 가지는 View 자원에 대해서
+				권한이 없지만, STAFF 그룹만은 해당 자원에 대한 권한을 가지게 되는 것이다. 마찬가지로
+				그룹에게는 자원이 할당되지
+				않았다 하더라도 개인 사용자에게 View 자원에 대한 권한을 줄 수 있다. 이는 그룹 내의 모든 사용자 가운데 예외
+				케이스를 설정하기 위해
+				해당 룰을 이렇게 정의한 것이므로, 혹시 그룹 내의 다수의 사용자에게 이와 같이 권한을 줘야 되는
+				상황이라면 새로운 역할을
+				만들어서 해당 역할에 권한을 할당하는
+				방법을 추천한다.
+			</para>
+			<para>
+				아래의 그림은 View Mapping 메뉴를 선택했을 때 보여지는 할당 목록에 대한 예시 화면이다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_resourcemanagement_11.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 View Mapping 탭에서 매핑 정보 목록을 나타내는 예시 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+
+			<para>
+				다음에 보여지는 그림은 View 자원에 역할과 그룹, 사용자를 할당하는 예시 화면이다. 최초 관리 하고자 하는
+				View
+				자원의 ID를 화면 상단에 입력한 후,
+				아래의 Add Role, Add Group, Add User 버튼을 이용하여
+				할당하고자 하는 대상에게 권한을 부여하면 된다.
+				Permission 목록은 아래의 그림처럼 READ, WRITE,
+				CREATE, DELETE, ADMINISTRATION, LIST, PRINT 등으로 초기 설정 되어 있고,
+				설정 파일을
+				통해서 사용자가 원하는 대로 변경할 수 있다. 사용자 설정 변경은 다음의 <link linkend="anyframeiaminstall_customerconfiguration_sec008">링크</link>를 참고한다. 
+				<link linkend="anyframeiaminstall_customerconfiguration_sec008">IAM Core Configuration</link>
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_resourcemanagement_12.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 View Resource에 역할과 그룹, 사용자를 할당하는 예시 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+		</sect2>
+	</section>
+
+	<section id="anyframeiamadmin_usage_restriction_management">
+		<title>Restriction Management</title>
+		<para>
+			Restriction Management 메뉴에서는 자원을 시간에 따라 관리할 수 있도록 다양한 메뉴를 제공한다.
+			세부 메뉴으로는 Restricted Times List와 Times Mapping 메뉴가 있다. 
+		</para>
+		<sect2 id="anyframeiam_usage_restriction_management_sec001">
+			<title>Restricted Times List</title>
+			<para>
+				먼저 Restricted Times List 화면을 살펴보자. 아래의 그림은 Restricted Times List 메뉴을
+				클릭 했을 때 나타나는 화면의 예시이다.
+				이 화면은 자원을 제한하고자 하는 날짜와 시간들을 등록/수정/삭제 하는 화면이다.
+				세부 항목으로는 Time Type과 시작/종료 시간, 시작/종료 날짜,
+				상세 설명 등이 있다. Time Type에는
+				improve, daily, weekend, holiday, crash의 다섯가지 종류가 존재한다.
+				이는 각각 시스템 개선,
+				매일, 주말, 휴일, 장애발생을 나타낸다. 여기서 주의할 점은 Time Type의 weekend를 선택했을 경우이다.
+				weekly로 설정 했을 경우 사용자들은 시작 시간과 종료 시간 사이의 매 주말에 대한 시간 제어 설정이 가능하다고 생각할
+				수 있는데,
+				<emphasis role="bold">실제로는 그렇게 동작하지 않는다.</emphasis>
+				Time Type 항목은 시간 자원을 쉽게 구분하기 위해 text 형태로 저장하는
+				필드일 뿐이고, 사용자가 입력할 시작
+				날짜와 종료 날짜에 대한 제한을 직접 설정해야한다. 따라서 사용자가 10월  매 주말에
+				대한 권한 제어를 하기 위해서
+				시작
+				날짜를 091001(09년 10월 1일), 종료 날짜를 091031(09년 10월
+				31일)로 설정 하였다면, 실제 동작은
+				사용자의 기대와는 다르게 10월 한달 내내
+				권한이 통제될 것이다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_restrictionmanagement_01.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 시간별 접근 제한 기능을 사용하기 위해 등록한 시간 목록 예시 화면이다. 
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+
+			<para>
+				Time List 화면에서 특정 시간을 더블 클릭하면 상세 화면으로 이동한다. 상세 화면에서는 해당 시간 자원에 대해
+				수정을 가할 수 있다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_restrictionmanagement_02.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 등록된 특정 시간에 대한 상세 정보 예시 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+		</sect2>
+
+
+		<sect2 id="anyframeiam_usage_restriction_management_sec002">
+			<title>Times Mapping</title>
+			<para>
+				다음으로 살펴볼 화면은 Times Mapping 메뉴이다. Times Mapping 화면은 Time-Role,
+				Time-Resource, Time-Exclusion 총 3개의 탭 메뉴로 구성되어 있다.
+			</para>
+
+			<para>
+				먼저 Time-Role 메뉴에 대해 살펴보자. Time-Role 메뉴는 앞서 Restricted Times List
+				화면에서 생성한 시간 자원에 역할을 할당 시켜서,
+				특정 역할을 가지는 사용자들을 특정 시간동안 제한하는 메뉴이다.
+				Time-Role 메뉴를 클릭하면 아래와 같은 화면을 볼 수
+				있다. 아래의 리스트 화면은 사용자가 정한 시간과 그에 할당된
+				역할이 한 줄씩 나열되어 있다. 특정 할당 내용을 더블 클릭 하면 상세 화면으로
+				이동 한다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_restrictionmanagement_03.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 시간에 대한 접근 제한 기능 중에서 현재 등록된 시간별 역할 제한 목록 예시 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+
+			<para>
+				아래의 화면은 time-00004 과 ROLE_MANAGER 간의 할당 정보를 보여주는 상세 정보 페이지 이다.
+				우선 상단의
+				Time ID 란에서 사용자가 원하는 시간 제한 ID를 찾아서 입력한 후, 아래의 ROLES LIST 에서
+				제한되기를 원하는
+				역할을 찾아서
+				더블 클릭 하면 오른쪽에 해당 역할의 리스트가 나타나는 것을 볼 수 있을 것이다.
+				여기서 한 가지 알아둘 것은
+				사용자가 특정
+				역할에 대해 시간 제한을 설정 했다면, 해당 역할의 하위에 속해있는 역할들 또한 시간 제한이 설정된다는
+				것이다. 예를 들어
+				아래의 그림과 같이
+				ROLE_MANAGER 역할에 장애 처리의 목적으로 시간 000000 부터 235959
+				까지 제한 했다고
+				가정하면, ROLE_MANAGER역할의 하위에 있는
+				ROLE_USER,
+				ISAUTHENTICATED_ANONYMOUSLY 두
+				개의 역할에 속하는 사용자들 또한 000000 시간부터 235959
+				시간까지 사용이 제한는 것이다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_restrictionmanagement_07.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 특정 시간에 특정 역할 사용자들의 접근을 제한하기 위한 등록 예시 화면이다. 
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+
+			<para>
+				다음으로 Time-Resource 메뉴에 대해 살펴보자. Time-Resource 메뉴에서는 특정 시간동안 특정 자원에
+				대한 접근 권한을 제어하기 위한 메뉴이다. 
+				Time-Resource 메뉴를 클릭하면 아래 그림과 같은 특정 시간에 대해 할당 되어있는 자원의 목록을 볼 수 있다. 
+				Time ID를 더블클릭 하면 해당 시간에 할당되어 있는 자원 목록과 상세 내용을 확인할 수 있는 상세 화면 페이지가 보여진다. 
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_restrictionmanagement_08.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 특정 시간동안 특정 자원에 대한 접근을 제한하기 위해 등록된 시간-자원 매핑 목록 예시화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+			<para>
+
+				아래의 그림은 시간-자원 목록의 상세 내용 페이지이다. 시간에 따른
+				자원 제한을 설정 하기
+				위해서는
+				우선 상단의 Time ID 란에서 원하는 시간의 Time ID를 선택한 후, 하단의 Add Resource 버튼을
+				클릭해서
+				팝업이 나타나는 것을 확인한다. 팝업창에서
+				원하는 자원을 클릭 한 이후 Add 버튼을 클릭하면 상세 화면 페이지에
+				자원이 할당 되는 것을 볼 수 있다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_restrictionmanagement_04.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 특정 시간에 특정 자원에 대한 접근을 제한하기 위한 등록 예시 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+
+			<para>
+				마지막으로 살펴볼 메뉴는 Time-Exclusion이다. 이 메뉴에서는 Time-Resource 메뉴에서 설정한 시간에
+				따른 접근 제한에 대해 예외 케이스를 설정할 수 있다.
+				쉽게 말해 장애 복구를 위해서 전체 시스템에 대한 접근을 막은 후,
+				관리자 권한을 가진 사용자에게만 예외적으로 시스템을 개방해서 시스템 복구를 하도록 예외 상황을
+				적용 시키는 것이다.
+				Time-Exclusion 메뉴를 클릭 하면 아래의 그림과 같은 목록을 볼 수 있다. 특정 항목을 더블
+				클릭 해서 상세 목록
+				페이지로 이동할 수 있다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_restrictionmanagement_05.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 특정 시간에 대한 접근 제한 기능 중 등록된 예외 케이스의 목록 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+
+			<para>
+				아래의 그림은 Time-Exclusion의 상세 화면 페이지이다. 시간 제한에 대해 예외 조건을 주기 위해서는 우선 상단의
+				Resource ID 란 우측에 있는 검색 버튼을 이용해서
+				시간-자원 간의 할당 내역이 존재 하는지를 확인 해야한다. 검색
+				버튼을 클릭하면 존재하는 시간-자원 할당 목록이 나타나는데 이
+				중에서 예외 조건을 설정하기 위한
+				자원을 더블 클릭한다. 그러면
+				아래의 상세 항목들이 자동으로 완성 되고, 그 이후에 하단의 Role Tree를 열어서 예외로
+				설정되기를 원하는 역할을 더블
+				클릭 하면
+				해당 역할이 우측의 목록으로 나타나게 된다. 여기서 유의할 점은 사용자가 예외로 설정한 역할의 상위에 존재하는
+				역할들 또한
+				접근 제한이 해제된다는 것이다.
+				예를 들어 아래의 그림과 같이 web-000009 자원의 제한 설정에
+				ROLE_MANAGER 역할의 사용자를 예외로 설정하게
+				되면, ROLE_MANAGER의 상위에 존재하는 ROLE_ADMIN
+				에 속하는
+				사용자들 또한 web-000009 자원에 대한
+				제한 설정이 해제 된다. 따라서 역할에 대한 예외를 설정할 때 해당
+				역할의 상위 역할의 사용자들 또한 제한이 해제 된다는
+				것을 유념하고
+				예외 설정 해야 될 것이다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_restrictionmanagement_06.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 특정 시간에 특정 자원에 대해 등록된 접근 제한 설정에 예외 케이스를 입력하는 예시 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+		</sect2>
+	</section>
+
+	<section id="anyframeiamadmin_usage_system_management">
+		<title>System Management</title>
+		<para>
+			System Management 메뉴에서는 비지니스 어플리케이션에 대한 간단한 제어 기능을 제공한다.
+			System
+			Management 메뉴에는 Resource Reload와 Resource Gathering, Data Upload 총 세 개의 서브메뉴가 존재한다.
+		</para>
+
+		<sect2 id="anyframeiam_usage_system_management_sec001">
+			<title>Resource Reload</title>
+			<para>
+				Resource Reload 메뉴에서는 앞서 설명한 4 개의 메뉴들에서 설정한 내용들을 적용하기 위한 기능을 제공한다.
+				기본적으로 변경된 내용들을 적용시키기 위해서는 비지니스 어플리케이션의 서버를 재시작 해야 하지만 본 기능을 이용하면
+				서버의 재시작 없이 설정을 변경 시킬 수 있다.
+				Resource Reload 메뉴를 클릭하면 아래의 그림과 같은 화면이 나타난다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_systemmanagement_01.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 Resource Reload 기능을 사용할 수 있는 화면 예시이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+			<para>
+				타겟 어플리케이션 서버를 선택한 후, 사용자/역할/자원에 대한 정보를 Reload 할지, 시간 관리 메뉴에 대한
+				정보를 Reload 할 지를
+				Select Box에서 선택 한 후, 하단의 Reload 버튼을 클릭하면 잠시 로딩 시간을 가진 후 완료 메세지가 나타난다.
+			</para>
+			<para>
+				이 동작은 반드시 타겟 어플리케이션 서버가 동작하고 있을 때 수행 해야 한다. 그렇지 않은 경우에는 아래와 같은 오류
+				메세지가 나타날 것이다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_systemmanagement_02.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 Target Application 서버가 동작하지 않고 있는 상황에서 Reload 기능을 수행 했을 때
+							발생하는 오류 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+		</sect2>
+
+		<sect2 id="anyframeiam_usage_system_management_sec002">
+			<title>Resource Gathering</title>
+			<para>
+				Resource Gathering 메뉴는 타겟 어플리케이션의 정보를 수집하는 기능을 제공한다. 이 기능을 사용하면 타겟
+				어플리케이션의 bean 설정과
+				Request URL 주소 등을 수집해서 임시로 저장하게 된다. 저장된 정보는 Resource Management 메뉴에서 자원을
+				등록할 때 자동 완성 기능을 통해
+				더 쉽게 자원을 등록 하도록 사용자에게 편의를 제공한다. Resource Gathering 메뉴를 클릭하게 되면 아래의
+				그림과 같은 화면을 볼 수 있다. 화면에서
+				자원 수집을 원하는 어플리케이션 서버를 선택한 후 Reload 버튼을 클릭하면 잠시 로딩 시간을 가진 후, 완료 메세지가
+				나타나게 된다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_systemmanagement_03.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 Resource Gathering 기능을 사용할 수 있는 예시 화면이다. 
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+		</sect2>
+		
+		<sect2 id="anyframeiam_usage_system_management_sec003">
+			<title>Data Upload</title>
+			<para>
+				Data Upload 메뉴는 다량의 초기 Data를 직접 입력하는 번거로움을 덜기 위하여 다량의 데이터를 
+				Excel 파일로 등록 / 관리 하는 기능을 제공한다. 
+			</para>
+			<para>
+				사용에 앞서 Excel File을 저장할 저장 공간의 위치를 
+				/anyframe-iam-admin-web/src/main/resources/systemname.properties 에 적절하게 등록한다.
+				(디렉토리의 경로는 절대 경로로 인식된다.) 
+			</para>
+			<programlisting language="xml"><![CDATA[DESTINATION_DIR=D:\\anyframe-iam-admmin-web\\src\\main\\webapp\\excel]]></programlisting>	
+			
+			<para>
+				Data Upload 메뉴의 최초 화면은 아래와 같이 검색창과 3 개의 버튼, 화면 중앙의 File 목록으로 구성 되어있다.
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_systemmanagement_04.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 엑셀 파일 업로드 기능을 이용할 수 있는 목록 화면 예시이다.
+						</phrase>
+					</textobject>
+				</mediaobject>
+			</para>
+			<itemizedlist>
+				<listitem>
+					<para>
+						Upload : 원하는 Excel File을 Upload 하는 화면으로 이동한다.
+					</para>
+				</listitem>
+	
+				<listitem>
+					<para>
+						SnapShot : 현재 DB에 저장된 데이터를 바탕으로 엑셀 파일을 생성하여 저장한다.
+						SNAPSHOT-xxxx-workDate-yyyymmdd.xls 의 파일명으로 생성된다.
+					</para>
+				</listitem>
+		
+				<listitem>
+					<para>
+						Apply : 선택한 엑셀 파일의 내용을 DB에 반영한다. 이 때 기존에 DB에 존재하던 데이터는
+						SNAPSHOT 파일로 저장 후 삭제되어 새로운 엑셀 파일로 대체된다.
+						FILE-xxxxxx-OriginalFileName.xls 의 파일명으로 생성된다.
+					</para>
+				</listitem>
+		
+				<listitem>
+					<para>
+						File 목록 : File 목록의 Bold체로 표시된 File name을 클릭하면 해당 파일을 다운 받을 수 있다.
+					</para>
+				</listitem>
+		
+			</itemizedlist>
+			
+			<warning><title>유의사항</title>
+				<para>
+					새로운 데이터를 추가 하기 위해서 파일을 업로드 할 경우 기존의 데이터가 모두 삭제 되므로 주의 해야 한다.
+					예를 들어 기존의 USERS 테이블에 200명의 사용자가 이미 입력 되어 있었고, 추가로 50명에 해당하는 데이터를 
+					삽입 하기 위해서 엑셀 파일을 업로드 하여 Apply 버튼을 누르게 되면, 기존의 200명에 해당하는 데이터는
+					SNAPSHOT 파일에 저장 후 삭제 되고 실제로 DB에는 50명의 데이터만 남게 된다. 그러므로 <emphasis role="bold">신규 데이터를 추가 하기 위해서는
+					기존의 DATA의 SNAPSHOT 파일을 먼저 생성한 후, 생성된 Excel 파일에 원하는 데이터를 추가 하는 형태로 작업을 진행 해야 한다.</emphasis>
+				</para>
+			</warning>
+			
+			<para>
+				Upload 버튼을 클릭하면 아래와 같은 화면으로 이동하게 된다. 화면은 Data Upload용 File Input box와 Submit, Cancel 버튼이 상단에 있고
+				화면 중앙에는 File Upload 후 Validation 결과를 목록으로 보여주는 Grid 화면이 존재한다.
+				
+				<!-- TODO : Data Upload Detail 화면 수정 후 Screenshot 수정 필요 -->
+				<mediaobject>
+					<imageobject>
+						<imagedata align="center"
+							fileref="../image/anyframeiam/iam_useage_systemmanagement_05.jpg" />
+					</imageobject>
+					<textobject>
+						<phrase>
+							위 그림은 특정 엑셀 파일을 업로드 했을 때 유효값 검증 결과 목록 예시 화면이다.
+						</phrase>
+					</textobject>
+				</mediaobject>				
+			</para>
+			<para>
+				화면의 File Upload input box를 통해 Excel File을 업로드 할 수 있다. 현재 IAM은 2003년 이하 버전으로 작성된
+				xls 파일만을 지원한다. 파일 업로드 후 Submit 버튼을 누르면 입력값 검증을 거친 후 성공적으로 저장된 경우 이전 화면으로 돌아가게 된다.
+				하지만 입력값에 문제가 있을 경우, 위 그림처럼 Error Message 란에 오류 메세지가 나타나고, 파일은 저장되지 않는다.
+				파일의 입력값을 오류 메세지에 따라 정상적으로 고친 이후에 다시 파일을 업로드 시켜야지 정상적으로 파일이 저장된다.
+			</para>
+		</sect2>
+	</section>
+	
+	<section id="anyframeiamadmin_usage_multi_system_management">
+		<title>시스템별 권한 관리</title>
+		
+		<sect2 id="anyframeiamadmin_usage_multi_system_management_sec001">
+			<title>IAM Admin 시스템 등록</title>
+			<para>
+				하나의 IAM Admin 관리 화면은 여러 개의 시스템을 통합 관리할 수 있도록 구성되어 있다. 
+				IAM에서 관리되어야 하는 시스템의 이름은 
+				/anyframe-iam-admin-web/src/main/resources/systemname.properties 에 다음과 같이 등록된다. 
+				(구분값은 콤마로 구분한다.)
+			</para>
+			<programlisting language="xml"><![CDATA[SYSTEM_NAMES=IAM_SAMPLE]]></programlisting>
+			<para>
+				만약 관리할 시스템이 여러 개 라면, 아래와 같이 콤마로 구분하여 등록 하면 된다.
+			</para>
+			<programlisting language="xml"><![CDATA[SYSTEM_NAMES=IAM_SAMPLE1,IAM_SAMPLE2]]></programlisting>
+			
+			<para>
+				또한 앞서 설정한 <link linkend="anyframeiamadmin_usage_user_management">remote-invoker-servlet.xml</link> 
+				파일 내에 관리 하고자 하는 모든 시스템의 수집 경로를 지정해 주어야 한다. 이 때 bean id값은 반드시 unique해야 한다.
+				아래의 설정 예시 중 bold체로 강조된 부분을 참고하도록 한다.
+			</para>
+			<programlisting language="xml"><![CDATA[<!-- Remote HttpInvoker Call -->
+	<]]><emphasis role="bold">bean id="gatherServiceClient1"</emphasis><![CDATA[
+		class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">				
+		<property name="serviceUrl"
+			value="]]><emphasis role="bold">http://localhost:8080/anyframe-iam-sample/</emphasis><![CDATA[assist/resourceGatherAssist.do" />
+		<property name="serviceInterface"
+			value="org.anyframe.iam.core.assist.IResourceGatherAssistService" />
+		<property name="httpInvokerRequestExecutor">		
+			<bean
+				class="org.springframework.security.context.httpinvoker.
+									AuthenticationSimpleHttpInvokerRequestExecutor" />
+		</property>
+	</bean>
+	<]]><emphasis role="bold">bean id="gatherServiceClient2"</emphasis><![CDATA[
+		class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">				
+		<property name="serviceUrl"
+			value="]]><emphasis role="bold">http://localhost:8080/anyframe-iam-sample2/</emphasis><![CDATA[assist/resourceGatherAssist.do" />
+		<property name="serviceInterface"
+			value="org.anyframe.iam.core.assist.IResourceGatherAssistService" />
+		<property name="httpInvokerRequestExecutor">		
+			<bean
+				class="org.springframework.security.context.httpinvoker.
+									AuthenticationSimpleHttpInvokerRequestExecutor" />
+		</property>
+	</bean>
+	
+	<]]><emphasis role="bold">bean id="resourceReloadServiceClient1"</emphasis><![CDATA[
+		class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+		<property name="serviceUrl"
+			value="]]><emphasis role="bold">http://localhost:8080/anyframe-iam-sample/</emphasis><![CDATA[reload/resourceReload.do" />			
+		<property name="serviceInterface"
+			value="org.anyframe.iam.core.reload.IResourceReloadService" />
+		<property name="httpInvokerRequestExecutor">
+			<bean
+				class="org.springframework.security.context.httpinvoker.
+									AuthenticationSimpleHttpInvokerRequestExecutor" />
+		</property>
+	</bean>
+	<]]><emphasis role="bold">bean id="resourceReloadServiceClient2"</emphasis><![CDATA[
+		class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+		<property name="serviceUrl"
+			value="]]><emphasis role="bold">http://localhost:8080/anyframe-iam-sample2/</emphasis><![CDATA[reload/resourceReload.do" />			
+		<property name="serviceInterface"
+			value="org.anyframe.iam.core.reload.IResourceReloadService" />
+		<property name="httpInvokerRequestExecutor">
+			<bean
+				class="org.springframework.security.context.httpinvoker.
+									AuthenticationSimpleHttpInvokerRequestExecutor" />
+		</property>
+	</bean>
+]]>
+			</programlisting>
+		</sect2>	
+		
+		<sect2 id="anyframeiamadmin_usage_multi_system_management_sec002">
+			<title>대상 어플리케이션 정보 등록</title>
+			<para>
+				Admin 의 설정이 완료되었다면, 대상 어플리케이션에도 어플리케이션 이름을 지정해 주어야 한다.
+				앞서 설정한 <link linkend="anyframeiamcore_customerconfiguration_sec003">spring-security-servlet.xml</link>
+				파일을 열어서 아래의 bold체로 강조된 강조된 부분을 적절한 시스템명으로 변경한다. 
+			</para>
+			<programlisting language="xml"><![CDATA[<!-- Remote HttpInvoker Call -->
+	<bean id="resourceGatherAssistService"
+		class="org.anyframe.iam.core.assist.impl.ResourceGatherAssistServiceImpl" >
+		<property name="filterPatterns">
+			<list>
+				<value>(?!anyframe\.iam\.sample\..*)anyframe\..*</value>
+				<value>org\..*</value>
+				<value>net\..*</value>
+				<value>java\..*</value>
+			</list>
+		</property>
+		<property name="systemName" value="]]><emphasis role="bold">IAM_SAMPLE1</emphasis><![CDATA[" />
+	</bean>
+]]></programlisting>
+			<para>
+				마찬가지로  <link linkend="anyframeiamcore_customerconfiguration_sec004">context-spring-security.xml</link>
+				파일을 열어 아래의 bold체 부분을 적절한 시스템명으로 변경한다.
+			</para>
+			<programlisting language="xml"><![CDATA[<b:bean id="securedObjectDAO" class="org.anyframe.iam.core.securedobject.impl.SecuredObjectDAO">
+	<b:property name="dataSource" ref="dataSource" />
+	<b:property name="systemName" value="]]><emphasis role="bold">IAM_SAMPLE</emphasis><![CDATA[" />
+</b:bean>
+]]></programlisting>
+			
+			<para>
+				DB 의 SECURED_RESOURCES 에는 최소한 RESOURCE_TYPE이 pointcut 인 데이터가 하나는 존재하여야 한다. 
+				다음과 같이 pointcut 타입의 데이터를 하나 Insert 하여 준다.
+				(select * from secured_resources where RESOURCE_ID like 'PNC%')
+			</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="../image/anyframeiam/iam_useage_multi_system_management_01.jpg" />
+				</imageobject>
+				<textobject>
+					<phrase>
+						위 그림은 RESOURCE_TYPE이 pointcut인 데이터 예시이다. IAM 기동을 위해서 pointcut 형태의 resource가 최소 하나 이상
+						등록되어 있어야 한다.
+					</phrase>
+				</textobject>
+			</mediaobject>
+		</sect2>
+		
+		<sect2 id="anyframeiamadmin_usage_multi_system_management_sec003">
+			<title>IAM Admin시스템 통합 관리</title>
+			<para>
+				IAM에서 시스템을 통합관리하는 방법은 간단하다. 
+				화면의 우측 상단에 존재하는 시스템 콤보박스를 클릭하여 원하는 시스템으로 맞춘 후 작업을 진행하면 된다. 
+				(이 때 콤보박스에 보이는 시스템 목록은 systemname.properties 에 등록된 목록이다.)
+			</para>
+			<mediaobject>
+				<imageobject>
+					<imagedata align="center"
+						fileref="../image/anyframeiam/iam_useage_multi_system_management_02.jpg" />
+				</imageobject>
+				<textobject>
+					<phrase>
+						위 그림은 다중 시스템을 IAM을 이용하여 관리할 때 콤보박스를 이용하여 시스템을 선택하는 예시 화면이다.
+					</phrase>
+				</textobject>
+			</mediaobject>
+			<para>
+				작업 도중 시스템명을 변경하면(콤보 박스를 변경시키면) 초기 화면으로 이동하므로 유의 해야 한다.
+			</para>
+		</sect2>
+	</section>
+
+</chapter>

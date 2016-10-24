@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE queryservice PUBLIC "-//ANYFRAME//DTD QUERYSERVICE//EN"
+"http://www.anyframejava.org/dtd/anyframe-core-query-mapping-3.1.dtd">
+<queryservice>
+	<table-mapping>
+		<!--  코드 테이블과 클래스 UserVO 매핑 -->
+		<table name="CODE"
+			class="com.sds.emp.code.services.CodeVO">
+			<field-mapping>
+				<dbms-column>CODE_TYPE</dbms-column>
+				<class-attribute>codeType</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>CODE</dbms-column>
+				<class-attribute>code</class-attribute>
+			</field-mapping>	
+			<field-mapping>
+				<dbms-column>CODE_NAME</dbms-column>
+				<class-attribute>codeName</class-attribute>
+			</field-mapping>	
+			<field-mapping>
+				<dbms-column>CODE_DESC</dbms-column>
+				<class-attribute>codeDesc</class-attribute>
+			</field-mapping>	
+			<field-mapping>
+				<dbms-column>REG_DATE</dbms-column>
+				<class-attribute>regDate</class-attribute>
+			</field-mapping>	
+			<field-mapping>
+				<dbms-column>REG_ID</dbms-column>
+				<class-attribute>regId</class-attribute>
+			</field-mapping>													
+			<primary-key>
+				<dbms-column>CODE_TYPE</dbms-column>
+				<dbms-column>CODE</dbms-column>
+			</primary-key>
+		</table>
+	</table-mapping>
+	<queries>
+		<!--  Query : 코드 목록 조회 -->
+		<query id="getCodeList" isDynamic="false">
+			<statement>
+				SELECT CODE, CODE_NAME
+				FROM CODE
+				WHERE CODE_TYPE = ?
+			</statement>
+			<param type="VARCHAR" />
+			<result class="com.sds.emp.code.services.CodeVO" />			
+		</query>	
+		
+		<query id="getMaxNo" isDynamic="false">
+			<statement>
+				SELECT LPAD(empSEQUENCE.NEXTVAL, 5, '0') maxNo
+				FROM DUAL
+			</statement>
+		</query>							
+	</queries>
+</queryservice>

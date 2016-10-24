@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:config="http://www.anyframejava.org/schema/service"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.anyframejava.org/schema/service
+	http://www.anyframejava.org/schema/service/anyframe-core-service-2.0.xsd">
+
+	<bean name="idGenerationServiceDeliveryCompany"
+		class="anyframe.core.idgen.impl.TableIdGenerationService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="mixPrefixDeliveryCompany" />
+		<config:configuration block-size="1" table="IDS"
+			key-table="DELIVERY_COMPANY" />
+	</bean>
+	
+	<bean name="idGenerationServiceCategory"
+		class="anyframe.core.idgen.impl.TableIdGenerationService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="mixPrefixCategory" />
+		<config:configuration block-size="1" table="IDS"
+			key-table="CATEGORY" />
+	</bean>
+
+	<bean name="idGenerationServiceProduct"
+		class="anyframe.core.idgen.impl.TableIdGenerationService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="mixPrefixProduct" />
+		<config:configuration block-size="1" table="IDS"
+			key-table="PRODUCT" />
+	</bean>
+
+	<bean name="idGenerationServiceTransaction"
+		class="anyframe.core.idgen.impl.TableIdGenerationService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="mixPrefixTransaction" />
+		<config:configuration block-size="1" table="IDS"
+			key-table="TRANSACTION" />
+	</bean>
+	
+	<bean name="idGenerationServiceUser"
+		class="anyframe.core.idgen.impl.TableIdGenerationService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="mixPrefixUser" />
+		<config:configuration block-size="1" table="IDS"
+			key-table="USERS" />
+	</bean>		
+
+	<bean name="mixPrefixDeliveryCompany"
+		class="anyframe.core.idgen.impl.strategy.MixPrefix">
+		<property name="prefix" value="EMP-DLVY-" />
+		<property name="cipers" value="5" />
+		<property name="fillChar" value="0" />
+	</bean>
+	
+	<bean name="mixPrefixCategory"
+		class="anyframe.core.idgen.impl.strategy.MixPrefix">
+		<property name="prefix" value="EMP-CATE-" />
+		<property name="cipers" value="5" />
+		<property name="fillChar" value="0" />
+	</bean>	
+	
+	<bean name="mixPrefixProduct"
+		class="anyframe.core.idgen.impl.strategy.MixPrefix">
+		<property name="prefix" value="EMP-PRDT-" />
+		<property name="cipers" value="5" />
+		<property name="fillChar" value="0" />
+	</bean>	
+	
+	<bean name="mixPrefixTransaction"
+		class="anyframe.core.idgen.impl.strategy.MixPrefix">
+		<property name="prefix" value="EMP-TRAN-" />
+		<property name="cipers" value="5" />
+		<property name="fillChar" value="0" />
+	</bean>	
+	
+	<bean name="mixPrefixUser"
+		class="anyframe.core.idgen.impl.strategy.MixPrefix">
+		<property name="prefix" value="EMP-USER-" />
+		<property name="cipers" value="5" />
+		<property name="fillChar" value="0" />
+	</bean>					
+</beans>

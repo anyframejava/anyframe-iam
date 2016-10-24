@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+
+	<!--  신규 상품 등록 화면 이동 -->
+	<bean name="/empaddproductview.do"
+		class="com.sds.emp.sale.web.AddProductController">
+		<property name="productService" ref="productService" />
+		<property name="categoryService" ref="categoryService" />
+		<property name="idGenerationServiceProduct" ref="idGenerationServiceProduct" />
+		<property name="formView" value="/sample/sale/addProduct.jsp"/>
+		<property name="sessionForm" value="true" />	
+		<property name="showNewForm" value="true"/>
+	</bean>
+	<!--  신규 상품 등록 -->
+	<bean name="/empaddproduct.do"
+		class="com.sds.emp.sale.web.AddProductController">
+		<property name="productService" ref="productService" />
+		<property name="categoryService" ref="categoryService" />
+		<property name="idGenerationServiceProduct" ref="idGenerationServiceProduct" />
+		<property name="formView" value="/sample/sale/addProduct.jsp"/>
+		<property name="success_add" value="emplistsale.do"/>
+		<property name="sessionForm" value="true" />		
+	</bean>
+	
+	<!-- 상품 상세 조회  -->
+	<bean name="/empgetproduct.do"
+		class="com.sds.emp.sale.web.UpdateProductController">
+		<property name="productService" ref="productService" />
+		<property name="categoryService" ref="categoryService" />
+		<property name="formView" value="/sample/sale/updateProduct.jsp" />
+		<property name="sessionForm" value="true" />
+		<property name="showNewForm" value="true" />
+	</bean>
+	
+	<!-- 상품 정보 수정  -->
+	<bean name="/empupdateproduct.do"
+		class="com.sds.emp.sale.web.UpdateProductController">
+		<property name="productService" ref="productService" />
+		<property name="categoryService" ref="categoryService" />
+		<property name="formView" value="/sample/sale/updateProduct.jsp" />
+		<property name="success_update" value="emplistproductsearch.do" />
+		<property name="sessionForm" value="true" />
+	</bean>
+	
+	<!--  판매 목록 조회 -->
+	<bean name="/emplistsale.do"
+		class="com.sds.emp.sale.web.GetSaleListController">
+		<property name="saleService" ref="saleService" />
+		<property name="propertiesService" ref="propertiesService" />
+		<property name="categoryService" ref="categoryService" />
+		<property name="success_list" value="/sample/sale/listSale.jsp" />
+	</bean>
+	
+	<!--  판매 상세조회  화면 이동 -->	 
+	<bean name="/empgetsale.do"
+		class="com.sds.emp.sale.web.GetSaleController">
+		<property name="saleService" ref="saleService" />
+		<property name="success_get" value="/sample/sale/getSale.jsp" />
+	</bean>
+	
+	<!--  카테고리 목록 조회 -->
+	<bean name="/empListCategory.do"
+		class="com.sds.emp.sale.web.GetCategoryListController">
+		<property name="categoryService" ref="categoryService" />
+		<property name="propertiesService" ref="propertiesService" />
+		<property name="success_list" value="/sample/sale/listCategory.jsp" />
+	</bean>
+
+	<!-- 신규 카테고리 등록 화면 이동 -->
+	<bean name="/empaddcategoryview.do"
+		class="com.sds.emp.sale.web.AddCategoryController">
+		<property name="categoryService" ref="categoryService" />
+		<property name="formView" value="/sample/sale/addCategory.jsp" />
+		<property name="sessionForm" value="true" />
+		<property name="showNewForm" value="true" />
+	</bean>
+	<!--  신규 카테고리 등록 -->	 
+	<bean name="/empaddcategory.do"
+		class="com.sds.emp.sale.web.AddCategoryController">		
+		<property name="categoryService" ref="categoryService" />
+		<property name="formView" value="/sample/sale/addCategory.jsp" />
+		<property name="success_add" value="empListCategory.do"/>
+		<property name="sessionForm" value="true" />
+	</bean>
+	
+	<!--  카테고리 정보 수정 화면 이동 -->	
+	<bean name="/empgetcategory.do"
+		class="com.sds.emp.sale.web.UpdateCategoryController">		
+		<property name="categoryService" ref="categoryService" />
+		<property name="sessionForm" value="true" />
+		<property name="showNewForm" value="true"/>
+		<property name="formView" value="/sample/sale/updateCategory.jsp"/>
+	</bean>
+	
+	<!-- 카테고리 정보 수정  -->
+	<bean name="/empupdatecategory.do"
+		class="com.sds.emp.sale.web.UpdateCategoryController">		
+		<property name="categoryService" ref="categoryService" />
+		<property name="formView" value="/sample/sale/updateCategory.jsp"/>
+		<property name="success_update" value="empListCategory.do" />
+		<property name="sessionForm" value="true" />
+	</bean>
+
+	<!-- 거래상태코드 수정  -->
+	<bean name="/empupdatetranstatuscode.do"
+		class="com.sds.emp.sale.web.UpdateTranStatusCodeController">		
+		<property name="saleService" ref="saleService" />
+		<property name="success_update" value="empgetsale.do" />
+	</bean>
+</beans>

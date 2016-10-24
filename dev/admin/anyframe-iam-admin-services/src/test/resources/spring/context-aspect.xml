@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<bean id="methodLoggingAspect"
+		class="org.anyframe.iam.admin.common.aspect.LoggingAspect" />
+
+	<aop:config>
+		<aop:pointcut id="loggingMethod"
+			expression="execution(* org.anyframe.iam.admin..*Service+.*(..))" />
+		<aop:aspect ref="methodLoggingAspect" >
+			<aop:before method="beforeLogging" pointcut-ref="loggingMethod"/>
+		</aop:aspect>
+	</aop:config>
+
+	<bean id="exceptionTransfer"
+		class="org.anyframe.iam.admin.common.aspect.ExceptionTransfer"/>
+
+	<aop:config>
+		<aop:pointcut id="serviceMethod" 
+			expression="execution(* org.anyframe.iam.admin..*ServiceImpl.*(..))" />
+		<aop:aspect ref="exceptionTransfer" order="1">
+			<aop:after-throwing throwing="exception"
+				pointcut-ref="serviceMethod" method="transfer" /> 
+		</aop:aspect>
+	</aop:config>
+
+</beans>

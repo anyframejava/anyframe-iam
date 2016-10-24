@@ -1,0 +1,172 @@
+<section id="anyframeiamcore_detail_0000">
+	<title>Intro</title>
+	<para>
+	This Appendix consists of in-depth information on Spring Security. 
+	For more details on the below information, refer to the official manual 
+	(<ulink url="http://static.springsource.org/spring-security/site/docs/2.0.x/reference/springsecurity.pdf">http://static.springsource.org/spring-security/site/docs/2.0.x/reference/springsecurity.pdf</ulink>).
+	</para>
+</section>
+
+<section id="anyframeiamcore_detail_0001">
+	<title>Filter Chain</title>
+	<para>
+    Spring Security provides security control for web resource using Servlet Filter technology, 
+	and several Filters are combined into a Filter Chain to apply each security function when necessary. 
+	Filters used in Spring Security are Beans that are managed by Spring container 
+	and they are used in a special Dependency Bean format managed in Spring 
+	by flexibly abstracting detail security functions needed for main security functions 
+	such as user authentication and secured resource authority. 
+    The below Filters (AuthenticationProcessingFilter,
+	HttpSessionContextIntegrationFilter, ExceptionTranslationFilter,
+	FilterSecurityInterceptor) are essential for Spring Security, 
+	and when necessary, various Filters basically implemented in Spring Security can be added/changed. 
+	In case of Anyframe IAM, authority control Filter, etc. according to time limit that extends FilterSecurityInterceptor 
+	can be inserted and handled. 
+	</para>
+
+	<mediaobject>
+		<imageobject>
+			<imagedata scalefit="1" width="100%" contentdepth="100%"
+				align="center" fileref="../image/anyframeiam/filter-chain.gif" />
+		</imageobject>
+	</mediaobject>
+</section>
+
+<section id="anyframeiamcore_detail_0002">
+	<title>Secured Object Saving Structure</title>
+	<para>
+	Spring Security provides secured object that gives security	information according to user authentication 
+	to maintain in the currently running Thread. 
+	According to the basic implementation of Spring Security, it saves SecurityContext 
+	by using ThreadLocal object that is created inside of SecurityContextHolder, 
+	and by using HttpSessionContextIntegrationFilter, SecurityContext information between
+	request is kept in Http Session by synchronization.
+	</para>
+	
+	<mediaobject>
+		<imageobject>
+			<imagedata scalefit="1" width="100%" contentdepth="100%"
+				align="center" fileref="../image/anyframeiam/security_context.jpg" />
+		</imageobject>
+	</mediaobject>
+	<itemizedlist>
+		<listitem>
+			<para>Gets SecurityContext using live information - SecurityContextHoler from Spring Security</para>
+		</listitem>
+
+		<listitem>
+			<para>Saves using ThreadLocal object that creates SecurityContext in SecurityContextHolder 
+				so that it can be used in various environments such as when applications are distributed.</para>
+		</listitem>
+
+		<listitem>
+			<para>ThreadLocal object can contain necessary status information only in the current thread.</para>
+		</listitem>
+
+		<listitem>
+			<para>It is not right to create SecurityContext that has the same role whenever there is a user request in web application 
+				→ use HttpSessionContextIntegrationFilter to record SecurityContext information and get information. 
+				(Save in Session.)</para>
+		</listitem>
+	</itemizedlist>
+</section>
+
+<section id="anyframeiamcore_detail_0003">
+	<title>Main Security Object Model</title>
+	<para>The below shows the relations between the main models related to authority handling 
+	that decides whether to check authority mapping and allow access for secured resources in Spring Security.  
+	</para>
+	<mediaobject>
+		<imageobject>
+			<imagedata scalefit="1" width="100%" contentdepth="100%"
+				align="center" fileref="../image/anyframeiam/security-interception.gif" />
+		</imageobject>
+	</mediaobject>
+	<itemizedlist>
+		<listitem>
+			<para>FilterSecurityInterceptor that handles secured resource authentication control for Web Url 
+				inherits AbstractSecurityInterceptor and checks secured resource-authority mapping data through ObjectDefinitionSource. 
+				It handles whether logged user has authority for matching pattern 
+				through the ACCESS/DENIED combination of AccessDecisionVoters registered in AccessDecisionManager. 
+				AbstractSecurityInterceptor which is parent executes the handling of several security-related events 
+				that inherit ApplicationEvent of authentication through AuthenticationManager 
+				or user representation handling Spring by RunAsManager.
+				</para>
+		</listitem>
+
+		<listitem>
+			<para>
+			    Through the above structure, you can see that secured resource, authorization
+	            mapping, authorization check, etc. are abstracted very flexibly. 
+	            MethodSecurityInterceptor that uses AOP pattern security control 
+	            also inherits AbstractSecurityInterceptor and uses implementation module for method pattern security handling of 
+	            many interfaces.
+			   </para>
+		</listitem>
+	</itemizedlist>
+</section>
+
+<section id="anyframeiamcore_detail_0004">
+	<title>Web Authorization</title>
+	<para>
+	    The above FilterSecurityInterceptor that can be checked on Filter Chain and secured
+		object model is in charge of Web URL authorization handling, 
+		and when set using Namespace tag of Spring Security 2.0 onwards, 
+		mapping authorization is assigned for Web Url resource to be protected in 
+		 <![CDATA[ <intercept-url pattern="antpath/regex expression url pattern"
+		access="accessible Role" />]]> pattern under http tag.
+	</para>
+	<para>
+        url pattern order that is defined as intercept-url is very important. 
+		Spring Security checks authority mapped to pattern that is first matched from top to bottom. 
+		Therefore, detail pattern should be parent, group pattern using wild card should be child,  
+		and mapping for frequently accessed pages should be defined as parent for good performance.
+	</para>
+	<para>
+        Anyframe IAM makes the above secured resources (Url)-Role authorization mapping into DB, 
+		adds one more FilterSecurityInterceptor that handles authority based on DB, 
+		and deploys as custom-filter to use together.
+	</para>
+</section>
+
+<section id="anyframeiamcore_detail_0005">
+	<title>Method Authorization</title>
+	<para>Method security control can be applied even when the Web environment is not based on HttpServletRequest. 
+		It is stronger, more reusable, and provides strong authorization handling.
+	</para>
+	<para>
+	    Like Spring framework, it supports various AOP technologies such as Spring AOP and AspectJ, 
+		and the method authorization handling of Spring Security runs as Around Advice. 
+		Therefore, security logic can be applied before/after executing method, 
+		and the return value can be processed (e.g., Data filtering can be done considering ACL for Domain object.)
+	</para>
+	<para>Method metadata support</para>
+	<itemizedlist>
+		<listitem>
+			<para><![CDATA[@JSR250 – ex.) @RolesAllowed("ROLE_USER")]]></para>
+		</listitem>
+		<listitem>
+			<para><![CDATA[@Secured – ex.) @Secured("ROLE_USER")]]></para>
+		</listitem>
+		<listitem>
+			<para>Instance-based XML
+			<programlisting language="xml"><![CDATA[<bean id="categoryService" class="com.sds.emp.sale.services.impl.CategoryServiceImpl">
+    <security:intercept-methods>
+        <security:protect method="com.sds.emp.sale.services.CategoryService.add*" access="ROLE_ADMIN"/>
+    </security:intercept-methods>
+    ..]]></programlisting>
+			</para>
+		</listitem>
+		<listitem>
+			<para><![CDATA[AspectJ pointcut – ex.) <protect-pointcut expression="execution(* *.get*(..))" access="ROLE_USER" />]]></para>
+		</listitem>
+	</itemizedlist>
+	<para>
+        Anyframe IAM make the above secured resources (Method)-Role and secured resources (Pointcut)-Role 
+		authorization mapping into DB and handle them.
+	</para>
+	<para>
+        Also, from Spring Security 3.0 onwards, a stronger function is provided by using 
+		EL(Expression Language)-@PreAuthorize, @PostAuthorize, @PreFilter, @PostFilter
+	</para>
+</section>

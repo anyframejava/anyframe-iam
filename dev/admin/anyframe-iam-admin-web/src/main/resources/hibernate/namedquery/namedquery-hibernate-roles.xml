@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+	<!-- Generated 2008. 9. 1 ???? 1:00:43 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+	<!--
+		reference schema attribute when hbm2ddl tool create table. so, remove
+		schema definition. (schema=DEFULAT)
+	-->
+
+	<sql-query name="getRoleTreeData">
+		<return alias="roles" class="org.anyframe.iam.admin.domain.IamTree" />
+		<![CDATA[	
+			SELECT	A.ID,
+					A.TITLE,
+					CASE WHEN  B.PARENT_ROLE is null THEN 'closed' ELSE B.PARENT_ROLE END STATE
+					FROM (
+						SELECT	A.PARENT_ROLE	ID,
+								B.ROLE_NAME		TITLE
+								FROM	ROLES_HIERARCHY	A
+								JOIN	ROLES				B
+									ON	A.PARENT_ROLE	= B.ROLE_ID
+						WHERE	A.CHILD_ROLE	= :parentNode
+					)	A
+				LEFT JOIN
+					(
+						SELECT	DISTINCT	A.PARENT_ROLE
+								FROM	ROLES_HIERARCHY	A
+							LEFT JOIN	ROLES_HIERARCHY	B
+									ON	A.PARENT_ROLE	= B.CHILD_ROLE
+						WHERE	B.CHILD_ROLE IS NULL
+					)	B
+						ON	A.ID	= B.PARENT_ROLE
+			ORDER	BY	A.ID
+		]]>
+		<!--
+			<![CDATA[ SELECT A.ID, A.TITLE, CASE WHEN B.CHILD_ROLE is null THEN
+			'closed' ELSE B.CHILD_ROLE END STATE FROM ( SELECT A.CHILD_ROLE ID,
+			B.ROLE_NAME TITLE FROM ROLES_HIERARCHY A JOIN ROLES B ON A.CHILD_ROLE
+			= B.ROLE_ID WHERE A.PARENT_ROLE = :parentNode ) A LEFT JOIN ( SELECT
+			DISTINCT A.CHILD_ROLE FROM ROLES_HIERARCHY A LEFT JOIN
+			ROLES_HIERARCHY B ON A.CHILD_ROLE = B.PARENT_ROLE WHERE B.CHILD_ROLE
+			IS NULL ) B ON A.ID = B.CHILD_ROLE ORDER BY A.ID ]]>
+		-->
+	</sql-query>
+
+	<sql-query name="getRootNodeOfRoles">
+		<return alias="roles" class="org.anyframe.iam.admin.domain.IamTree" />
+		<![CDATA[	
+			SELECT	DISTINCT B.ROLE_ID	ID,
+					B.ROLE_NAME	TITLE,
+					'closed'	STATE
+					FROM	ROLES_HIERARCHY	A
+					JOIN	ROLES				B
+						ON	A.CHILD_ROLE	= B.ROLE_ID
+			WHERE	A.CHILD_ROLE NOT IN (	SELECT	DISTINCT PARENT_ROLE
+													FROM	ROLES_HIERARCHY
+										)
+		]]>
+		<!--
+			<![CDATA[ SELECT B.ROLE_ID ID, B.ROLE_NAME TITLE, 'closed' STATE FROM
+			ROLES_HIERARCHY A JOIN ROLES B ON A.PARENT_ROLE = B.ROLE_ID WHERE
+			A.PARENT_ROLE NOT IN ( SELECT DISTINCT CHILD_ROLE FROM
+			ROLES_HIERARCHY ) ]]>
+		-->
+	</sql-query>
+
+	<sql-query name="countRolesList">
+		<![CDATA[
+			SELECT	PARENT_ROLE
+					FROM ROLES_HIERARCHY
+			WHERE	CHILD_ROLE = :parentRole
+		]]>
+		<!--
+			<![CDATA[ SELECT CHILD_ROLE FROM ROLES_HIERARCHY WHERE PARENT_ROLE =
+			:parentRole ]]>
+		-->
+	</sql-query>
+
+	<sql-query name="makeAllTempRolesList">
+		<return class="org.anyframe.iam.admin.domain.TempRoles" />
+		<![CDATA[	
+			SELECT 	A.ROLE_ID 		roleId, 
+					A.ROLE_NAME 	roleName, 
+					A.CREATE_DATE	createDate,
+					A.MODIFY_DATE	modifyDate,
+					A.DESCRIPTION	description,
+					B.CHILD_ROLE 	parentRoles
+			FROM		ROLES			A
+			LEFT JOIN	ROLES_HIERARCHY	B
+			ON	A.ROLE_ID = B.PARENT_ROLE
+		]]>
+	</sql-query>
+	
+	<sql-query name="removeAllRoles">
+		<![CDATA[
+			DELETE FROM Roles
+		]]>
+	</sql-query>
+
+</hibernate-mapping>

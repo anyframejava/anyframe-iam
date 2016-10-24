@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+
+<project name="Make Distribution Structure for Anyframe IAM" default="updateIAM" basedir="." xmlns:artifact="urn:maven-artifact-ant">
+	<property environment="env"/>
+	<property file="${basedir}/build.properties" />
+	
+	<typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="urn:maven-artifact-ant">
+		<classpath>
+			<pathelement location="${env.ANT_HOME}/lib/maven-artifact-ant-2.0.4-dep.jar" />
+		</classpath>
+	</typedef>
+	
+	<path id="project.classpath">
+		<pathelement location="${env.ANT_HOME}/lib/svnjavahl.jar" />
+		<pathelement location="${env.ANT_HOME}/lib/svnant.jar" />
+		<pathelement location="${env.ANT_HOME}/lib/svnClientAdapter.jar" />
+	</path>
+	
+	<taskdef resource="svntask.properties" classpathref="project.classpath"/>
+	
+	<target name="initIAM">
+		<echo message="initialize distribution structure"/>
+		<delete dir="${basedir}/temp/dist"/>
+
+		<mkdir dir="${basedir}/temp/dist"/>
+			
+		<mkdir dir="${basedir}/temp/dist/admin"/>
+		<mkdir dir="${basedir}/temp/dist/core"/>
+		<mkdir dir="${basedir}/temp/dist/lib"/>
+		<mkdir dir="${basedir}/temp/dist/sample"/>
+		<mkdir dir="${basedir}/temp/dist/temp"/>
+		
+		<mkdir dir="${basedir}/temp/dist/admin/docs"/>
+		<mkdir dir="${basedir}/temp/dist/admin/lib"/>
+		<mkdir dir="${basedir}/temp/dist/admin/licenses"/>
+		<mkdir dir="${basedir}/temp/dist/admin/src"/>
+		
+		<mkdir dir="${basedir}/temp/dist/core/docs"/>
+		<mkdir dir="${basedir}/temp/dist/core/lib"/>
+		<mkdir dir="${basedir}/temp/dist/core/licenses"/>
+		<mkdir dir="${basedir}/temp/dist/core/src"/>
+		
+		<mkdir dir="${basedir}/temp/dist/sample/src"/>
+		<mkdir dir="${basedir}/temp/dist/sample/src/lib"/>
+		
+		<mkdir dir="${basedir}/temp/dist/temp/admin"/>
+		<mkdir dir="${basedir}/temp/dist/temp/core"/>
+		<mkdir dir="${basedir}/temp/dist/temp/sample"/>
+		
+		<!-- 
+		<delete>
+			<fileset dir="${m2.repo}/anyframe" />
+		</delete>
+		 -->
+	</target>
+	
+	
+	<!-- ############################### MOVE ################################### -->	
+	<target name="move">
+		<echo message="update Anyframe IAM Sample DB from subversion ${src.path.db}"/>
+		<svn username="${subv.username}" password="${subv.password}">
+			<checkout url="${src.path.db}" revision="HEAD" destPath="${basedir}/temp/dist/sample/src/lib/" />
+		</svn>
+		
+		<echo message="update Anyframe IAM Sample sources from subversion ${src.path.sample}"/>
+		<svn username="${subv.username}" password="${subv.password}">
+			<checkout url="${src.path.sample}" revision="HEAD" destPath="${basedir}/temp/dist/sample/src" />
+		</svn>
+		<delete includeemptydirs="true">
+			<fileset dir="${basedir}/temp/dist/sample/src" includes="**/.svn" defaultexcludes="false"/>
+		</delete>
+		
+		<echo message="Make anyframe-iam-sample-${core.version}.war file"/>
+		<war basedir="${basedir}/temp/dist/sample/src/" destfile="${basedir}/temp/dist/sample/src/lib/anyframe-iam-sample-${core.version}.war" webxml="${basedir}/temp/dist/sample/src/WEB-INF/web.xml"/>
+
+	</target>
+	<target name="updateIAM" depends="initIAM,move"/>
+</project>

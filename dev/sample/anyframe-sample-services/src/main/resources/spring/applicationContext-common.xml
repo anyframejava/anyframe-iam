@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:config="http://www.anyframejava.org/schema/service"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-2.0.xsd 
+	http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util-2.0.xsd			
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-2.0.xsd 
+	http://www.anyframejava.org/schema/service
+	http://www.anyframejava.org/schema/service/anyframe-core-service-2.0.xsd">
+	<bean id="txConfig" abstract="true"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager" ref="txManager"/>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED,-java.lang.Exception,-anyframe.common.exception.BaseException</prop>
+			</props>
+		</property>
+	</bean>	
+	
+	
+	<!-- bean class="anyframe.common.jmx.MBeanServerFactoryBean"
+		id="mBeanServer">
+		<property name="defaultDomain">
+			<value>anyframe MBean Server Domain</value>
+		</property>
+	</bean>
+	<bean class="anyframe.common.jmx.HtmlAdapterFactoryBean"
+		id="htmlAdapter">
+		<property name="server">
+			<ref bean="mBeanServer" />
+		</property>
+		<property name="port">
+			<value>9092</value>
+		</property>
+	</bean-->
+	<bean
+		class="org.springframework.context.support.ResourceBundleMessageSource"
+		id="messageSource">	
+		<property name="basenames">
+			<list>
+				<value>message/message-purchase</value>
+				<value>message/message-sale</value>
+				<value>message/message-security</value>
+				<value>message/message-user</value>
+				<value>message/message-code</value>			
+				<value>anyframe/core/properties/messages/properties</value>
+				<value>anyframe/core/idgen/messages/idgeneration</value>
+				<value>anyframe/core/process/messages/process</value>
+				<value>anyframe/core/adaptormanager/messages/adaptormanager</value>
+				<value>anyframe/core/query/messages/query</value>
+				<value>anyframe/iam/core/messages/security</value>
+			</list>
+		</property>
+		<!-- property name="cacheSeconds">
+			<value>60</value>
+		</property-->
+	</bean>
+	
+	<bean id="configurableCallBack" scope="prototype"
+		class="anyframe.common.config.ConfigurableCallback" />	
+</beans>

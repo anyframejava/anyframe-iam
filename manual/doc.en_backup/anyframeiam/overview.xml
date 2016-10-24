@@ -1,0 +1,342 @@
+<chapter id="anyframeiam_overview">
+  <title>Anyframe IAM Overview</title>
+
+  <para>Anyframe IAM is Identity and Access Management Framework that provides
+  security solution(user authentication and authorization management) for enterprise
+  application based on JAVA EE. Enterprise application based on JAVA EE has various
+  required item for user authentication and authorization management and developing new
+  functions every time for each enterprise application cost lots of additional
+  money and resources. As the Anyframe IAM based on Spring Security is a
+  framework that provides user authentication and authorization management for enterprise
+  application based on Anyframe or spring Framework, it improves developing
+  productivity, active for user authentication and authorization management and support
+  for developing application of flexible form.</para>
+
+  <mediaobject>
+    <imageobject>
+      <imagedata align="center" contentdepth="100%"
+                 fileref="../image/anyframeiam_en/iam_architecture_en.jpg"
+                 scalefit="1" width="100%" />
+    </imageobject>
+  </mediaobject>
+
+  <itemizedlist>
+    <listitem>
+      <para><link linkend="anyframeiam_whatissecurity">What is Security
+      ?</link></para>
+    </listitem>
+
+    <listitem>
+      <para><link linkend="anyframeiam_whatisspringsecurity">What is Spring
+      Security ?</link></para>
+    </listitem>
+
+    <listitem>
+      <para><link linkend="anyframeiam_characteristic">Main feature of
+      Anyframe IAM</link></para>
+    </listitem>
+
+    <listitem>
+      <para><link linkend="anyframeiam_whyanyframeiam">Why Anyframe IAM
+      ?</link></para>
+    </listitem>
+
+    <listitem>
+      <para><link linkend="anyframeiam_features">Main function of Anyframe
+      IAM</link></para>
+    </listitem>
+
+    <listitem>
+      <para><link linkend="anyframeiam_referencedoss">See
+      opensource</link></para>
+    </listitem>
+  </itemizedlist>
+
+  <section id="anyframeiam_whatissecurity">
+    <title>What is Security ?</title>
+
+    <itemizedlist>
+      <listitem>
+        <para>Security of IT field means avoiding access to unauthorized
+        information asset(system/program/data…) .</para>
+      </listitem>
+
+      <listitem>
+        <para>Generally, It includes the two main functions,<emphasis
+        role="bold">Authentication</emphasis><emphasis role="bold"> and
+        Authorization.</emphasis></para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section id="anyframeiam_whatisspringsecurity">
+    <title>What is Spring Security ?</title>
+
+    <itemizedlist>
+      <listitem>
+        <para>As the strong and flexible security solution for enterprise
+        application, IAM has strength for an application based on Spring.
+        The traditional Servlet specification security has the limited
+        security of considering only the setting for each container,
+        transference issue and web request, but the Spring Security
+        offers service layer and domain object level security. Spring Security is 
+        possible to secure under configuration. And its component is very excel at reusing.
+        It is verified through many site under various environments and also the
+        representative Spring subproject with most active community and fast
+        function improvement</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section id="anyframeiam_characteristic">
+    <title>Main feature of Anyframe IAM</title>
+
+    <itemizedlist>
+      <listitem>
+        <para><emphasis role="bold">IAM Core based on Spring Security
+        :</emphasis> IAM Core that control an authentication and authorization
+        by installing at enterprise application is written based on Spring
+        Security, it is built up based on DB generally. Changing of current
+        application can be minimized when applying to application based on
+        Anyframe or Spring.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">IAM Admin Console as a Independent application
+        :</emphasis> Operation of IAM Core is consisted based on DB data and
+        IAM Admin Console is a tool for control a content of DB. It can be
+        consisted as independent type from application because It runs
+        different from conventional enterprise application.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Succeed to Strong Function of Spring
+        Security : </emphasis> Extension and succeed to strong function of
+        Spring Security, providing the function of authentication,
+        authorization that are flexible and extensible.</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section id="anyframeiam_whyanyframeiam">
+    <title>Why Anyframe IAM ?</title>
+
+    <itemizedlist>
+      <listitem>
+        <para>There is weak point for user,role,secured resource,
+        authorization mapping because Spring Security supports only XML based
+        configuration(simple setting is possible from 2.0.X through Namespace but
+        setting is on XML).</para>
+      </listitem>
+
+      <listitem>
+        <para>
+        Anyframe IAM apply for making authentication and authorization based on DB.
+        It also standardizes/extends function/refines requirement for management. 
+        Through this, IAM Framework is implemented with strength of Spring Security and
+        ease to use at SI project.
+        </para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section id="anyframeiam_features">
+    <title>Main Function of Anyframe IAM</title>
+
+    <sect2 id="anyframeiam_overview_sec001">
+      <title>IAM Core</title>
+
+      <para>Core of Anyframe IAM is based on Spring Security, it is installed
+      at business application based on Anyframe or Spring and
+      authentication,authorization are added by minimizing a previous work
+      code changing. Especially, operating based on extended setting
+      information as DB base is different from Spring Security that save a
+      configuration information as XML file.
+      </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>
+            <emphasis role="bold">Service Layer and Access Control of User
+            Defined Resource(ACL)</emphasis>
+          </para>
+
+          <para>Authorization checking means controlling for web request
+          generally. IAM Core based on Spring Security can treat not only
+          controlling for web request but security through authorization
+          controlling for main object and service layer. And also it provides
+          Tag and API related to view resource access that provides permission
+          check function for frequently requested screen on the scene. </para>
+        </listitem>
+
+        <listitem>
+          <para>
+            <emphasis role="bold">Separation of concerns</emphasis>
+          </para>
+
+          <para>Grant a security by using a Servlet Filter, Interception through 
+          Java AOP and it works by separating from normal operation
+          code section because it works based on Ioc and Lifecycle service of Spring. </para>
+        </listitem>
+
+        <listitem>
+          <para>
+            <emphasis role="bold">Configuration based on Database</emphasis>
+          </para>
+
+          <para>As IAM Core of Anyframe supports a generally used DB based
+          configuration, it is more convenient than XML based configuration and able to
+          control a security related configuration with easy and flexible way.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="anyframeiam_overview_sec002">
+      <title>IAM Admin</title>
+
+      <para>Anyframe provides a IAM Admin web application to control Database
+      setting for operation of IAM Core. IAM Admin is built up based on
+      technology of jQuery, SpringMVC, HibernateJPA and others and user who
+      have admin authorization can handle and control a DB based secured
+      setting through functions provided by UI of IAM Admin. </para>
+
+		<itemizedlist>
+			<listitem>
+				<para>
+					<emphasis role="bold">RIA based UI that support cross browsing.
+					</emphasis>
+				</para>
+				<!-- para>
+					<emphasis role="bold">Cross Browser를 지원하는 RIA 기반의  UI
+					</emphasis>
+				</para-->
+				
+				<para>
+					IAM provides dynamic UI with minimized screen refresh. 
+					Also it support cross browsing not only for Internet Explorer but FireFox, Google Chrome and Safari.
+				</para>
+				<!-- para>
+					jQuery 를 사용하여 화면 Refresh가 최소화된 동적인 UI를 제공하며 , 
+					Internet Explorer 를 포함한 Cross Browser 환경을 지원한다.
+				</para-->
+				
+			</listitem>
+
+			<listitem>
+			
+			
+				<para>
+					<emphasis role="bold">Reloading autherity of target application.</emphasis>
+				</para>
+				<!-- para>
+					<emphasis role="bold">타겟 어플리케이션 권한 리로드 </emphasis>
+				</para-->
+
+				<para>
+					IAM provides authority reload function that will be reflected in target application.
+					IAM also support authority reload function in clusturing system.  
+				</para>
+				<!-- para>
+					명시적인 권한 리로드 기능을 통하여 변경된 권한정보를 타겟 어플리케이션에 반영할 수 있으며,
+					클러스터링 환경에서의 권한 리로드를 지원한다. 
+				</para-->
+			</listitem>
+
+			<listitem>
+
+				<para>
+					<emphasis role="bold">Information gathering for target application</emphasis>
+				</para>
+				<!-- para>
+					<emphasis role="bold">타겟 어플리케이션 정보 수집 </emphasis>
+				</para-->
+				
+
+				<para>
+					IAM provides resource gathering function at target application that will help easy to register resources.
+				</para>
+				<!-- para>
+					관리 대상 어플리케이션의 자원 정보를 수집하는 기능을 제공하여 자원 등록을 손쉽게 할 수 있도록 지원한다.
+				</para-->
+			</listitem>
+			
+			<listitem>
+
+				<para>
+					<emphasis role="bold">Time restriction based authority management</emphasis>
+				</para>
+				<!-- para>
+					<emphasis role="bold">시간 제한 설정 기반의 권한 관리 </emphasis>
+				</para-->
+				
+				
+				<para>
+					IAM provides access control function based on time configuration.
+					It is also available to set exception case.
+				</para>
+				<!-- para>
+					특정 리소스나 역할에 대한 시간 범위를 설정하여 접근을 제어할 수 있으며,
+					이에 대한 예외 규칙도 설정이 가능하다.
+				</para-->
+			</listitem>
+			
+			<listitem>
+			
+				<para>
+					<emphasis role="bold">Easy to register resources by using auto complete function. </emphasis>
+				</para>
+				<!-- para>
+					<emphasis role="bold">Auto Complete 지원을 통한 손쉬운 자원 등록 </emphasis>
+				</para-->
+			
+				<para>
+					IAM support registration guide to user by using gatherd resources of target application.
+				</para>
+				<!-- para>
+					타켓 어플리케이션의 수집된 자원 정보를 바탕으로 
+					 보호된 자원 등록시 사용자에게 동적인 UI 기반의 가이드를 제공한다. 
+				</para-->
+			</listitem>
+		</itemizedlist>      
+      
+    </sect2>
+  </section>
+
+  <section id="anyframeiam_referencedoss">
+    <title>See Open Source</title>
+
+    <para>Main open source that is used at Anyfame IAM is the
+    followings</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><ulink url="http://jquery.com/">jQuery</ulink></para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://www.trirand.com/blog/">jqGrid
+        Plugin</ulink></para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://www.jstree.com/">jsTree Plugin</ulink></para>
+      </listitem>
+
+      <listitem>
+        <para><ulink
+        url="http://static.springsource.org/spring-security/site/index.html">Spring
+        Security</ulink></para>
+      </listitem>
+
+      <listitem>
+        <para><ulink
+        url="http://spring-json.sourceforge.net/">Spring-Json</ulink></para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://www.hibernate.org/">Hibernate</ulink></para>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

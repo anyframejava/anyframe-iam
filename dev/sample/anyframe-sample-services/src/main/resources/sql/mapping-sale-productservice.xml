@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE queryservice PUBLIC "-//ANYFRAME//DTD QUERYSERVICE//EN"
+"http://www.anyframejava.org/dtd/anyframe-core-query-mapping-3.1.dtd">
+<queryservice>
+	<table-mapping>
+		<!--  상품 테이블과 클래스 ProductVO 매핑 -->
+		<table name="PRODUCT"
+			class="com.sds.emp.sale.services.ProductVO">
+			<field-mapping>
+				<dbms-column>PROD_NO</dbms-column>
+				<class-attribute>prodNo</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>PROD_NAME</dbms-column>
+				<class-attribute>prodName</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>SELLER_ID</dbms-column>
+				<class-attribute>sellerId</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>CATEGORY_NO</dbms-column>
+				<class-attribute>categoryNo</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>PROD_DETAIL</dbms-column>
+				<class-attribute>prodDetail</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>MANUFACTURE_DAY</dbms-column>
+				<class-attribute>manufactureDay</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>AS_YN</dbms-column>
+				<class-attribute>asYn</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>SELL_QUANTITY</dbms-column>
+				<class-attribute>sellQuantity</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>SELL_AMOUNT</dbms-column>
+				<class-attribute>sellAmount</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>IMAGE_FILE</dbms-column>
+				<class-attribute>imageFile</class-attribute>
+			</field-mapping>
+			<!-- <field-mapping>
+				<dbms-column>TRAN_STATUS_CODE</dbms-column>
+				<class-attribute>tranStatusCode</class-attribute>
+			</field-mapping> -->
+			<field-mapping>
+				<dbms-column>REG_DATE</dbms-column>
+				<class-attribute>regDate</class-attribute>
+			</field-mapping>			
+			<primary-key>
+				<dbms-column>PROD_NO</dbms-column>
+			</primary-key>
+		</table>
+	</table-mapping>
+	<queries>
+		<!--  Query : 신규 상품 등록 -->
+		<query id="addProduct" isDynamic="false">		    
+			<statement>
+				INSERT INTO PRODUCT 
+				( PROD_NO, PROD_NAME, SELLER_ID, CATEGORY_NO, PROD_DETAIL, MANUFACTURE_DAY, AS_YN, SELL_QUANTITY, 
+				  SELL_AMOUNT, IMAGE_FILE, REG_DATE ) 
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, sysdate)
+			</statement>
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="CHAR" />
+			<param type="NUMERIC" />
+			<param type="NUMERIC" />
+			<param type="VARCHAR" />
+		</query>	
+		<!--  Query : 상품 정보 수정 -->	
+		<query id="updateProduct" isDynamic="false">
+			<statement>
+				UPDATE PRODUCT 
+				SET PROD_NAME = ?,
+					CATEGORY_NO = ?,
+					PROD_DETAIL = ?,
+					MANUFACTURE_DAY = ?,
+					AS_YN = ?,
+					SELL_QUANTITY = ?,
+					SELL_AMOUNT = ?,
+					REG_DATE = sysdate
+				WHERE PROD_NO = ?
+			</statement>
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="CHAR" />
+			<param type="NUMERIC" />
+			<param type="NUMERIC" />
+			<param type="VARCHAR" />
+		</query>	
+		<!--  Query : 상품 상세 정보 조회 -->
+		<query id="getProduct" isDynamic="false">
+			<statement>
+				SELECT	PROD_NO, PROD_NAME, SELLER_ID, CATEGORY_NO, PROD_DETAIL, MANUFACTURE_DAY, AS_YN, 
+						SELL_QUANTITY, SELL_AMOUNT, IMAGE_FILE, REG_DATE 
+				FROM PRODUCT
+				WHERE PROD_NO = ?
+			</statement>
+			<param type="VARCHAR" />
+			<result class="com.sds.emp.sale.services.ProductVO" />			
+		</query>
+		<!--  Query : 카테고리에 속한 상품 개수 정보 조회 -->
+		<query id="countProductListByCategory" isDynamic="false">
+			<statement>
+				SELECT	COUNT(*) as ttotal
+				FROM PRODUCT
+				WHERE CATEGORY_NO = ?
+			</statement>
+			<param type="VARCHAR" />			
+		</query>						
+		<query id="getProductList" isDynamic="true">
+		    <statement>
+				SELECT product.PROD_NO, product.PROD_NAME, product.SELLER_ID, product.CATEGORY_NO, product.PROD_DETAIL, product.MANUFACTURE_DAY, product.AS_YN, product.SELL_QUANTITY, product.SELL_AMOUNT, product.IMAGE_FILE, product.REG_DATE 
+				FROM PRODUCT product left outer join TRANSACTION transaction on product.PROD_NO=transaction.PROD_NO
+				WHERE transaction.PROD_NO is null 
+				#if ($prodNo) 
+					AND product.PROD_NO like :prodNo
+				#else
+					AND product.PROD_NAME like :prodName 
+				#end  
+				#if ($asYn)
+					AND product.AS_YN = :asYn
+				#end
+				ORDER BY product.PROD_NO DESC
+			</statement>
+			<param name="prodNo" type="VARCHAR"/>
+			<param name="prodName" type="VARCHAR"/>			
+			<param name="asYn" type="VARCHAR"/>					
+			<result class="com.sds.emp.sale.services.ProductVO" />			
+		</query>
+	</queries>
+</queryservice>
+

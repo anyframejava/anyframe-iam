@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE queryservice PUBLIC "-//ANYFRAME//DTD QUERYSERVICE//EN"
+"http://www.anyframejava.org/dtd/anyframe-core-query-mapping-3.1.dtd">
+<queryservice>
+	<table-mapping>
+		<table name="DELIVERY_COMPANY"
+			class="com.sds.emp.purchase.services.DeliveryCompanyVO">
+			<field-mapping>
+				<dbms-column>DLVY_COMP_NO</dbms-column>
+				<class-attribute>dlvyCompNo</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>DLVY_COMP_NAME</dbms-column>
+				<class-attribute>dlvyCompName</class-attribute>
+			</field-mapping>	
+			<field-mapping>
+				<dbms-column>BUSINESS_NO</dbms-column>
+				<class-attribute>businessNo</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>DLVY_COMP_DESC</dbms-column>
+				<class-attribute>dlvyCompDesc</class-attribute>
+			</field-mapping> 
+			<field-mapping>
+				<dbms-column>USE_YN</dbms-column>
+				<class-attribute>useYn</class-attribute>
+			</field-mapping>			
+			<field-mapping>
+				<dbms-column>REG_ID</dbms-column>
+				<class-attribute>regId</class-attribute>
+			</field-mapping>										
+			<field-mapping>
+				<dbms-column>REG_DATE</dbms-column>
+				<class-attribute>regDate</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>MODIFY_ID</dbms-column>
+				<class-attribute>modifyId</class-attribute>
+			</field-mapping>		
+			<field-mapping>
+				<dbms-column>MODIFY_DATE</dbms-column>
+				<class-attribute>modifyDate</class-attribute>
+			</field-mapping>																
+			<primary-key>
+				<dbms-column>DLVY_COMP_NO</dbms-column>
+			</primary-key>
+		</table>
+	</table-mapping>
+	<queries>
+		<query id="getDeliveryCompanyList" isDynamic="true">
+			<statement>
+				SELECT DLVY_COMP_NO, DLVY_COMP_NAME, BUSINESS_NO, USE_YN, REG_DATE
+				FROM DELIVERY_COMPANY
+				#if ($dlvyCompNo) 
+					WHERE DLVY_COMP_NO like :dlvyCompNo 
+				#else
+					WHERE DLVY_COMP_NAME like :dlvyCompName 
+				#end  
+				#if ($useYn)
+					AND USE_YN = :useYn
+				#end
+				ORDER BY DLVY_COMP_NO DESC
+			</statement>
+			<param name="dlvyCompNo" type="VARCHAR"/>
+			<param name="dlvyCompName" type="VARCHAR"/>			
+			<param name="useYn" type="VARCHAR"/>					
+			<result class="com.sds.emp.purchase.services.DeliveryCompanyVO" />			
+		</query>
+		<query id="addDeliveryCompany" isDynamic="false">
+			<statement>
+				INSERT INTO DELIVERY_COMPANY 
+				(DLVY_COMP_NO, DLVY_COMP_NAME, BUSINESS_NO, DLVY_COMP_DESC, USE_YN, REG_ID, REG_DATE, MODIFY_ID, MODIFY_DATE) 
+				VALUES (?, ?, ?, ?, ?, ?, sysdate, ?, sysdate)
+			</statement>
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="CHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<result class="com.sds.emp.purchase.services.DeliveryCompanyVO" />			
+		</query>	
+		<query id="updateDeliveryCompany" isDynamic="false">
+			<statement>
+				UPDATE DELIVERY_COMPANY 
+				SET DLVY_COMP_NAME = ?, BUSINESS_NO = ?, DLVY_COMP_DESC = ?, USE_YN =?, MODIFY_ID = ?, MODIFY_DATE = sysdate
+				WHERE DLVY_COMP_NO = ?
+			</statement>
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="CHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<result class="com.sds.emp.purchase.services.DeliveryCompanyVO" />			
+		</query>	
+		<query id="getDeliveryCompany" isDynamic="false">
+			<statement>
+				SELECT DLVY_COMP_NO, DLVY_COMP_NAME, BUSINESS_NO, DLVY_COMP_DESC, USE_YN, REG_ID, REG_DATE, MODIFY_ID, MODIFY_DATE
+				FROM DELIVERY_COMPANY
+				WHERE DLVY_COMP_NO = ?
+			</statement>
+			<param type="VARCHAR" />
+			<result class="com.sds.emp.purchase.services.DeliveryCompanyVO" />			
+		</query>
+		<query id="getDropDownDeliveryCompanyList" isDynamic="false">
+			<statement>
+				SELECT DLVY_COMP_NO, DLVY_COMP_NAME
+				FROM DELIVERY_COMPANY
+				WHERE USE_YN = 'Y'
+				ORDER BY DLVY_COMP_NO
+			</statement>		
+			<result class="com.sds.emp.purchase.services.DeliveryCompanyVO" />			
+		</query>								
+	</queries>
+</queryservice>

@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
+<dynamic-hibernate>
+	<query name="findRestrictedTimesList">
+		<![CDATA[
+		FROM RestrictedTimes restrictedTimes 
+		WHERE 1 = 1
+		#if($keywordStr != "")
+			#if($condition == "timeId")
+				AND restrictedTimes.timeId like :keywordStr 
+			#end
+		#end
+		#if($searchType != "")
+			#if($searchType == "crash" || $searchType == "improve" || $searchType == "daily" || $searchType == "weekend" || $searchType == "holiday")
+				AND restrictedTimes.timeType = :searchType
+			#end			
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND restrictedTimes.systemName = :systemName 
+		#end
+		#if($sidx == "timeId" || $sidx == "")
+			order by	restrictedTimes.timeId
+		#else
+			order by	restrictedTimes.{{sidx}}
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end
+		]]>
+	</query>
+
+	<query name="countRestrictedTimesList">
+		<![CDATA[
+		SELECT count(*) 
+		FROM RestrictedTimes restrictedTimes
+		WHERE 1 = 1
+		#if($keywordStr != "")
+			#if($condition == "timeId")
+				AND restrictedTimes.timeId like :keywordStr 
+			#end
+		#end
+		#if($searchType != "")
+			#if($searchType == "crash" || $searchType == "improve" || $searchType == "daily" || $searchType == "weekend" || $searchType == "holiday")
+				AND restrictedTimes.timeType = :searchType
+			#end			
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND restrictedTimes.systemName = :systemName
+		#end
+		]]>
+	</query>	
+	
+	<query name="findTimeRoleList">
+		<![CDATA[
+		SELECT new Map( 
+						CONCAT(restrictedTimesRoles.id.timeId, restrictedTimesRoles.id.roleId) as compKey,
+						restrictedTimesRoles.id.timeId as timeId, 
+						restrictedTimesRoles.id.roleId as roleId, 
+						restrictedTimes.timeType as timeType, 
+						restrictedTimes.description as description, 
+						restrictedTimes.startDate as startDate, 
+						restrictedTimes.startTime as startTime, 
+						restrictedTimes.endDate as endDate, 
+						restrictedTimes.endTime as endTime,
+						restrictedTimes.systemName as systemName
+						 )
+		FROM RestrictedTimesRoles restrictedTimesRoles, RestrictedTimes restrictedTimes
+		WHERE 
+			restrictedTimesRoles.id.timeId = restrictedTimes.timeId
+		#if($keywordNum != "")
+			AND
+			#if($condition == "timeId")
+				restrictedTimesRoles.id.timeId like :keywordStr 
+			#elseif($condition == "roleId")
+				restrictedTimesRoles.id.roleId like :keywordStr
+			#end
+		#end
+		#if($searchType != "" && $searchType != "all")
+			AND restrictedTimes.timeType like :searchType
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND restrictedTimes.systemName = :systemName
+		#end
+		#if($sidx == "timeId" || $sidx == "")
+			order by restrictedTimesRoles.id.timeId
+		#elseif($sidx == "roleId")
+			order by restrictedTimesRoles.id.roleId
+		#else
+			order by restrictedTimes.{{sidx}}
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end		
+		]]>
+	</query>
+	
+	<query name="countTimeRoleList">
+		<![CDATA[
+		SELECT count(*)
+		FROM RestrictedTimesRoles restrictedTimesRoles, RestrictedTimes restrictedTimes
+		WHERE 
+			restrictedTimesRoles.id.timeId = restrictedTimes.timeId
+		#if($keywordNum != "")
+			AND
+			#if($condition == "timeId")
+				restrictedTimesRoles.id.timeId like :keywordStr 
+			#elseif($condition == "roleId")
+				restrictedTimesRoles.id.roleId like :keywordStr
+			#end
+		#end
+		#if($searchType != "" && $searchType != "all")
+			AND restrictedTimes.timeType like :searchType
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND restrictedTimes.systemName = :systemName
+		#end
+		]]>
+	</query>
+	
+	<query name="findRoleListByTime">
+		<![CDATA[
+		SELECT new Map( 
+						roles.roleId as roleId, 
+						roles.roleName as roleName )
+		FROM RestrictedTimesRoles restrictedTimesRoles, Roles roles
+		WHERE restrictedTimesRoles.id.roleId = roles.roleId
+		  AND restrictedTimesRoles.id.timeId = :timeId
+		]]>
+	</query>
+	
+	<query name="findTimeResourceList">
+		<![CDATA[
+		SELECT new Map( 
+						CONCAT(restrictedTimesResources.id.timeId, restrictedTimesResources.id.resourceId) as compKey,
+						restrictedTimesResources.id.timeId as timeId, 
+						restrictedTimesResources.id.resourceId as resourceId, 
+						restrictedTimes.timeType as timeType, 
+						restrictedTimes.description as description, 
+						restrictedTimes.startDate as startDate, 
+						restrictedTimes.startTime as startTime, 
+						restrictedTimes.endDate as endDate, 
+						restrictedTimes.endTime as endTime,
+						restrictedTimes.systemName as systemName
+						 )
+		FROM RestrictedTimesResources restrictedTimesResources, RestrictedTimes restrictedTimes
+		WHERE 
+			restrictedTimesResources.id.timeId = restrictedTimes.timeId
+		#if($keywordNum != "")
+			AND
+			#if($condition == "timeId")
+				restrictedTimesResources.id.timeId like :keywordStr 
+			#elseif($condition == "resourceId")
+				restrictedTimesResources.id.resourceId like :keywordStr
+			#end
+		#end
+		#if($searchType != "" && $searchType != "all")
+			AND restrictedTimes.timeType like :searchType
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND restrictedTimes.systemName = :systemName
+		#end
+		#if($sidx == "timeId" || $sidx == "")
+			order by restrictedTimesResources.id.timeId
+		#elseif($sidx == "resourceId")
+			order by restrictedTimesResources.id.resourceId
+		#else
+			order by restrictedTimes.{{sidx}}
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end		
+		]]>
+	</query>
+	
+	<query name="countTimeResourceList">
+		<![CDATA[
+		SELECT count(*)
+		FROM RestrictedTimesResources restrictedTimesResources, RestrictedTimes restrictedTimes
+		WHERE 
+			restrictedTimesResources.id.timeId = restrictedTimes.timeId
+		#if($keywordNum != "")
+			AND
+			#if($condition == "timeId")
+				restrictedTimesResources.id.timeId like :keywordStr 
+			#elseif($condition == "resourceId")
+				restrictedTimesResources.id.resourceId like :keywordStr
+			#end
+		#end
+		#if($searchType != "" && $searchType != "all")
+			AND restrictedTimes.timeType like :searchType
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND restrictedTimes.systemName = :systemName
+		#end
+		]]>
+	</query>
+	
+	<query name="findResourceListByTime">
+		<![CDATA[
+		SELECT new Map( 
+		securedResources.resourceId as resourceId, 
+		securedResources.resourceName as resourceName, 
+		securedResources.sortOrder as sortOrder, 
+		securedResources.resourcePattern as resourcePattern, 
+		securedResources.systemName as systemName,
+		securedResources.resourceType as resourceType )
+		FROM SecuredResources securedResources
+		WHERE EXISTS
+			(SELECT restrictedTimesResources.id.resourceId
+				FROM RestrictedTimesResources restrictedTimesResources
+				WHERE restrictedTimesResources.id.timeId = :timeId
+				AND restrictedTimesResources.id.resourceId = securedResources.resourceId
+			)
+		#if($systemName != "ALL" && $systemName != "")
+			AND securedResources.systemName = :systemName
+		#end
+		#if($sidx == "resourceId" || $sidx == "")
+			order by	securedResources.resourceId
+		#else
+			order by	securedResources.{{sidx}}
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end
+		]]>
+	</query>
+	
+	<query name="countResourceListByTime">
+		<![CDATA[
+		SELECT count(*)
+		FROM SecuredResources securedResources
+		WHERE EXISTS
+			(SELECT restrictedTimesResources.id.resourceId
+				FROM RestrictedTimesResources restrictedTimesResources
+				WHERE restrictedTimesResources.id.timeId = :timeId
+				AND restrictedTimesResources.id.resourceId = securedResources.resourceId
+			)
+		#if($systemName != "ALL" && $systemName != "")
+			AND securedResources.systemName = :systemName
+		#end
+		]]>
+	</query>
+	
+	<query name="findUnmappedResourceListByTime">
+		<![CDATA[
+		SELECT new Map( 
+		securedResources.resourceId as resourceId, 
+		securedResources.resourceName as resourceName, 
+		securedResources.sortOrder as sortOrder, 
+		securedResources.systemName as systemName,
+		securedResources.resourcePattern as resourcePattern, 
+		securedResources.resourceType as resourceType )
+		FROM SecuredResources securedResources
+		WHERE NOT EXISTS
+			(SELECT restrictedTimesResources.id.resourceId
+				FROM RestrictedTimesResources restrictedTimesResources
+				WHERE restrictedTimesResources.id.timeId = :timeId
+				AND restrictedTimesResources.id.resourceId = securedResources.resourceId
+			)
+		#if($systemName != "ALL" && $systemName != "")
+			AND securedResources.systemName = :systemName
+		#end
+		#if($keywordNum != "")
+			#if($condition == "resourceId")
+				AND	securedResources.resourceId like :keywordStr 
+			#elseif($condition == "resourcePattern")
+				AND	securedResources.resourcePattern like :keywordStr
+			#elseif($condition == "resourceName")
+				AND	securedResources.resourceName like :keywordStr
+			#end
+		#end
+		#if($searchType == "URL" || $searchType == "Method" || $searchType == "PointCut")
+			AND securedResources.resourceType like :searchType
+		#end
+		#if($sidx == "resourceId" || $sidx == "")
+			order by	securedResources.resourceId
+		#else
+			order by	securedResources.{{sidx}}
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end
+		]]>
+	</query>
+
+	<query name="countUnmappedResourceListByTime">
+		<![CDATA[
+		SELECT count(*)
+		FROM SecuredResources securedResources
+		WHERE NOT EXISTS
+			(SELECT restrictedTimesResources.id.resourceId
+				FROM RestrictedTimesResources restrictedTimesResources
+				WHERE restrictedTimesResources.id.timeId = :timeId
+				AND restrictedTimesResources.id.resourceId = securedResources.resourceId
+			)
+		#if($keywordNum != "")
+			#if($condition == "resourceId")
+				AND	securedResources.resourceId like :keywordStr 
+			#elseif($condition == "resourcePattern")
+				AND	securedResources.resourcePattern like :keywordStr
+			#elseif($condition == "resourceName")
+				AND	securedResources.resourceName like :keywordStr
+			#end
+		#end
+		#if($searchType == "URL" || $searchType == "Method" || $searchType == "PointCut")
+			AND securedResources.resourceType like :searchType
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND securedResources.systemName = :systemName
+		#end
+		]]>
+	</query>	
+
+	<query name="findTimeExclusionList">
+		<![CDATA[
+		SELECT new Map( 
+						CONCAT(timesResourcesExclusion.id.timeId, timesResourcesExclusion.id.resourceId, timesResourcesExclusion.id.roleId) as compKey,
+						timesResourcesExclusion.id.timeId as timeId, 
+						timesResourcesExclusion.id.resourceId as resourceId, 
+						timesResourcesExclusion.id.roleId as roleId, 
+						restrictedTimes.timeType as timeType, 
+						restrictedTimes.description as description, 
+						restrictedTimes.startDate as startDate, 
+						restrictedTimes.startTime as startTime, 
+						restrictedTimes.endDate as endDate, 
+						restrictedTimes.endTime as endTime,
+						restrictedTimes.systemName as systemName
+						 )
+		FROM TimesResourcesExclusion timesResourcesExclusion, RestrictedTimes restrictedTimes
+		WHERE timesResourcesExclusion.id.timeId = restrictedTimes.timeId
+		#if($keywordNum != "")
+			AND
+			#if($condition == "timeId")
+				timesResourcesExclusion.id.timeId like :keywordStr 
+			#elseif($condition == "roleId")
+				timesResourcesExclusion.id.roleId like :keywordStr
+			#elseif($condition == "resourceId")
+				timesResourcesExclusion.id.resourceId like :keywordStr
+			#end
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND restrictedTimes.systemName = :systemName
+		#end
+		#if($searchType != "" && $searchType != "all")
+			AND restrictedTimes.timeType like :searchType
+		#end
+		#if($sidx == "timeId" || $sidx == "")
+			order by timesResourcesExclusion.id.timeId
+		#elseif($sidx == "roleId" || $sidx == "resourceId")
+			order by timesResourcesExclusion.id.{{sidx}}
+		#else
+			order by restrictedTimes.{{sidx}}
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end		
+		]]>
+	</query>
+	
+	<query name="countTimeExclusionList">
+		<![CDATA[
+		SELECT count(*)
+		FROM TimesResourcesExclusion timesResourcesExclusion, RestrictedTimes restrictedTimes
+		WHERE  timesResourcesExclusion.id.timeId = restrictedTimes.timeId
+		#if($keywordNum != "")
+			AND
+			#if($condition == "timeId")
+				timesResourcesExclusion.id.timeId like :keywordStr 
+			#elseif($condition == "roleId")
+				timesResourcesExclusion.id.roleId like :keywordStr
+			#elseif($condition == "resourceId")
+				timesResourcesExclusion.id.resourceId like :keywordStr
+			#end
+		#end
+		#if($searchType != "" && $searchType != "all")
+			AND restrictedTimes.timeType like :searchType
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND restrictedTimes.systemName = :systemName
+		#end
+		]]>
+	</query>
+	
+	<query name="findRoleListByTimeResource">
+		<![CDATA[
+		SELECT new Map( 
+						roles.roleId as roleId, 
+						roles.roleName as roleName )
+		FROM TimesResourcesExclusion timesResourcesExclusion, Roles roles
+		WHERE timesResourcesExclusion.id.roleId = roles.roleId
+		  AND timesResourcesExclusion.id.timeId = :timeId
+		  AND timesResourcesExclusion.id.resourceId = :resourceId
+		]]>
+	</query>
+	
+</dynamic-hibernate>

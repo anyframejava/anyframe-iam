@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+
+<project name="Anyframe 3.1.0 Sample - eMarketPlace Services" default="all" basedir=".">
+	<property environment="env"/>
+	<property name="emma.enabled" value="true" />
+	<property name="anyframelib" value="../anyframe-sample-web/src/webapp/WEB-INF/lib" />
+
+	<path id="compile.classpath">
+		<fileset dir="${anyframelib}">
+			<include name="**/*.jar" />
+			<exclude name="**/anyframe-sample-services.jar" />
+		</fileset>
+		<fileset dir="../anyframe-sample-web/lib">
+			<include name="**/*.jar" />
+		</fileset>		
+	</path>
+
+	<path id="emp.ant.lib" description="define the basic classpath for emma instrumentation">
+		<fileset dir="${basedir}/ant/lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${basedir}/ant/lib/findbugs">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<taskdef resource="emma_ant.properties" classpathref="emp.ant.lib" description="this loads &lt;emma&gt; and &lt;emmajava&gt; custom tasks:" />
+		
+	<target name="init">
+		<delete dir="${basedir}/build/classes" />
+		<mkdir dir="${basedir}/build/classes" />
+		
+		<delete dir="${basedir}/dist" />
+		<mkdir dir="${basedir}/dist" />
+
+		<delete dir="${basedir}/temp" />
+		<mkdir dir="${basedir}/temp" />
+
+		<delete dir="${artifactsDir}" />
+	</target>
+	
+	<target name="compile">
+		<javac encoding="UTF-8" debug="true" srcdir="${basedir}/src/main/java" destdir="${basedir}/build/classes" fork="yes" memoryMaximumSize="256m">
+			<classpath>
+				<path refid="compile.classpath" />
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="package">
+		<mkdir dir="${basedir}/dist" />
+		<jar jarfile="${basedir}/dist/anyframe-sample-services.jar">
+			<fileset dir="${basedir}/build/classes">
+				<include name="**/*.*" />
+				<exclude name="**/spring/*.*" />
+				<exclude name="**/hibernate/*.*" />
+				<exclude name="**/message/*.*" />
+				<exclude name="**/sql/*.*" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="emma-jars" description="Uses Emma to instrument the jar files">
+		<emma enabled="${emma.enabled}">
+			<instr mode="fullcopy" outdir="${basedir}/temp" merge="yes" filter="com.sds.emp.*" metadatafile="${artifactsDir}/test-coverage/coverage.em">
+				<instrpath>
+					<fileset dir="${basedir}/dist/" includes="anyframe-sample-services.jar" />
+				</instrpath>
+			</instr>
+		</emma>
+	</target>
+
+	
+
+	<target name="report">
+		<!-- 1.Junit Test Result Report  -->
+		<junitreport todir="${artifactsDir}/test-results">
+			<fileset dir="${artifactsDir}/test-results/xml">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${artifactsDir}/test-results" />
+		</junitreport>
+
+		<!-- 2.Test Code Coverage Report  -->
+		<move file="${basedir}/coverage.ec" todir="${artifactsDir}/test-coverage" />
+		<emma description="now we can generate the emma report" enabled="${emma.enabled}">
+			<report sourcepath="${basedir}/src/main/java" sort="+name,+method,+class" metrics="method:70,line:80,class:100" depth="method" columns="name,class,method,line" encoding="UTF-8">
+				<infileset dir="${artifactsDir}/test-coverage" includes="*.em, *.ec" />
+				<html outfile="${artifactsDir}/test-coverage/coverage.html" />
+			</report>
+		</emma>
+		<mkdir dir="${artifactsDir}/code-analysis/xml" />
+
+		<!-- 3.CheckStyle Report  -->
+		<taskdef resource="checkstyletask.properties" classpathref="emp.ant.lib"/>
+		<checkstyle config="${basedir}/ant/etc/checkstyle/anyframe_checks.xml" failOnViolation="false">
+			<fileset dir="${basedir}/src/main/java" includes="**/*.java" />
+			<formatter type="xml" toFile="${artifactsDir}/code-analysis/xml/coding-style-check-report.xml" />
+			<classpath>
+				<path refid="compile.classpath" />
+			</classpath>
+		</checkstyle>
+		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="coding-style-check-report.xml" style="${basedir}/ant/etc/checkstyle/checkstyle-simple.xsl" />
+
+		<!-- 4.Architecture Review with JDepend Report  -->
+		<jdepend format="xml" outputfile="${artifactsDir}/code-analysis/xml/code-dependency-analysis-report.xml">
+			<exclude name="java.*" />
+			<exclude name="javax.*" />
+			<exclude name="anyframe.*" />
+			<exclude name="org.*" />
+			<exclude name="com.tagish.*" />
+			<exclude name="com.cortexeb.*" />
+			<exclude name="com.nitobi.*" />
+			<classespath>
+				<pathelement location="${basedir}/build/classes" />
+			</classespath>
+		</jdepend>
+		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="code-dependency-analysis-report.xml" extension=".dot" style="${basedir}/ant/etc/jdepend2dot.xsl" />
+		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="code-dependency-analysis-report.xml" style="${basedir}/ant/etc/jdepend.xsl" />
+
+		<!--
+        <exec executable="dot">
+        	<arg line="-Tpng ${artifactsDir}\code-standard\jdepend-report.dot -o ${artifactsDir}\code-standard\jdepend-report.png"/>
+        </exec>
+		-->
+
+		<!-- 5.JavaNcss Review Report    -->
+		<taskdef name="javancss" classname="javancss.JavancssAntTask" classpathref="emp.ant.lib"/>
+		<javancss srcdir="${basedir}/src/main/java" includes="**/*.java" generateReport="true" abortOnFail="false" outputfile="${artifactsDir}/code-analysis/xml/ncss-report.xml" format="xml" />
+
+		<xslt in="${artifactsDir}/code-analysis/xml/ncss-report.xml" out="${artifactsDir}/code-analysis/ncss-report.html" style="${basedir}/ant/etc/javancss2html.xsl" />
+		<xslt in="${artifactsDir}/code-analysis/xml/ncss-report.xml" out="${artifactsDir}/code-analysis/ncss-graph-report.html" style="${basedir}/ant/etc/javancss_graph.xsl" />
+
+		<!-- 6.Code Duplication Detection Report -->
+		<taskdef name="cpd" classname="net.sourceforge.pmd.cpd.CPDTask" classpathref="emp.ant.lib" />
+		<cpd minimumTokenCount="100" format="xml" encoding="utf-8" outputFile="${artifactsDir}/code-analysis/xml/duplicated-code-analysis-report.xml">
+			<fileset dir="${basedir}/src/main/java">
+				<include name="**/*.java" />
+			</fileset>
+		</cpd>
+		<xslt basedir="${artifactsDir}/code-analysis/xml" destdir="${artifactsDir}/code-analysis" includes="duplicated-code-analysis-report.xml" style="${basedir}/ant/etc/cpdhtml.xslt" />
+		
+		<!-- 7.Find Bugs Report -->
+		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpathref="emp.ant.lib" />
+		<findbugs classpathref="emp.ant.lib" pluginlist="${basedir}/ant/lib/findbugs/coreplugin-1.0.0.jar" output="html" stylesheet="${basedir}/ant/etc/default.xsl" outputFile="${artifactsDir}/code-analysis/findbugs-report.html">
+			<auxClasspath>
+				<path refid="compile.classpath" />
+			</auxClasspath>
+			<sourcePath path="${basedir}/src/main/java" />
+			<class location="${basedir}/build/classes" />
+		</findbugs>
+	</target>
+
+	<target name="deploy">
+		<copy todir="../anyframe-sample-web/src/webapp/WEB-INF/config/spring" overwrite="true">
+			<fileset dir="${basedir}/src/main/resources/spring" />
+		</copy>
+		<copy todir="../anyframe-sample-web/src/main/resources" overwrite="true">
+			<fileset dir="${basedir}/src/main/resources">
+				<include name="**/dynamic/*.*" />
+				<include name="**/hibernate/*.*" />
+				<include name="**/message/*.*" />
+				<include name="**/sql/*.*" />
+				<exclude name="**/spring/*.*" />
+				<exclude name="**/*.class" />
+			</fileset>
+		</copy>
+		<copy todir="../anyframe-sample-web/src/webapp/WEB-INF/classes" overwrite="true">
+			<fileset dir="${basedir}/build/classes">
+				<include name="**/hibernate/*.*" />
+				<include name="**/dynamic/*.*" />
+				<include name="**/message/*.*" />
+				<include name="**/sql/*.*" />
+				<exclude name="**/spring/*.*" />
+				<exclude name="**/*.class" />
+			</fileset>
+		</copy>
+		<copy todir="../anyframe-sample-web/src/webapp/WEB-INF/lib" overwrite="true">
+			<fileset dir="${basedir}/dist" />
+		</copy>
+	</target>
+
+	<target name="fail" if="test.failed">
+		<fail message="Something wrong Junit TestCase." />
+	</target>
+
+	<target name="all" depends="init, compile, package, deploy" />
+
+	
+</project>
+

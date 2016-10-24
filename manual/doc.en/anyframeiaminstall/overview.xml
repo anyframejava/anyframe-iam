@@ -1,0 +1,339 @@
+<chapter id="anyframeiaminstall_overview">
+	<title>Anyframe IAM Core Install</title>
+	
+	<para>This chapter describes how to install IAM Core that is in charge of authentication and authorization. 
+	It is installed in user application.</para>
+	<para>IAM Core installation procedures are as follows.</para>
+	
+	<itemizedlist>
+		<listitem><para>library copy</para></listitem>
+		<listitem><para>Configuration</para></listitem>
+	</itemizedlist>
+	
+	<section id="anyframeiaminstall_corelibrarycopy">
+		<title>library copy</title>
+		<para>jar format library file needs to be copied when installing IAM Core 1.1.3 .</para>
+		<para>The below jar files are located under WEB-INF/lib directory when anyframe-iam-sample-1.1.3.war file 
+		included in Anyframe-iam-1.1.3-bin.zip package is extracted. 
+		Copy jar files to /WEB-INF/lib folder of related Web Application.</para>
+		<itemizedlist>
+			<listitem><para>anyframe-iam-core-1.1.3.jar</para></listitem>
+			<listitem><para>anyframe-core-1.0.1.jar</para></listitem>
+			<listitem><para>spring-security-acl-3.0.2.RELEASE.jar</para></listitem>
+			<listitem><para>spring-security-cas-client-3.0.2.RELEASE.jar</para></listitem> 
+			<listitem><para>spring-security-config-3.0.2.RELEASE.jar</para></listitem> 
+			<listitem><para>spring-security-core-3.0.2.RELEASE.jar</para></listitem> 
+			<listitem><para>spring-security-ldap-3.0.2.RELEASE.jar</para></listitem> 
+			<listitem><para>spring-security-openid-3.0.2.RELEASE.jar</para></listitem> 
+			<listitem><para>spring-security-taglibs-3.0.2.RELEASE.jar</para></listitem> 
+			<listitem><para>spring-security-web-3.0.2.RELEASE.jar</para></listitem> 
+		</itemizedlist>
+	</section>
+	
+	<section id="anyframeiaminstall_customerconfiguration">
+		<title>Configuration</title>
+		
+		<para>Generally, you can use setting provided in sample application. 
+		This document is focused on parts in which main setting and user definition is possible.
+		</para>
+		
+		<sect2 id="anyframeiaminstall_customerconfiguration_sec001">
+			<title>IAM Core Message File Setting</title>
+			<para>Add IAM message file in application messageSource Bean Setting 
+			(Mainly, IAM message file is added to <emphasis role="bold">context-common.xml</emphasis>.) 
+			</para>
+			<programlisting language="xml">
+<![CDATA[<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+    <property name="basenames">
+        <list>
+            ..
+            <value>anyframe/iam/core/messages/security</value>
+        </list>
+    </property>
+</bean>]]></programlisting>
+		</sect2>
+		
+		<sect2 id="anyframeiaminstall_customerconfiguration_sec002">
+			<title>Spring Security Filter Chain Setting</title>
+			<para>Add setting to <emphasis role="bold">web.xml</emphasis> 
+			so that all web requests are transferred to DelegatingFilterProxy of Spring Security.</para>
+			<programlisting language="xml">
+<![CDATA[<filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>
+
+<filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>]]></programlisting>
+		</sect2>
+		
+		<sect2 id="anyframeiaminstall_customerconfiguration_sec003">
+			<title>IAM Admin Remote Integration Setting</title>
+			<para>Add setting, that can handle collection of information on secured resources or runtime renewal as Remote in IAM Admin, 
+			to <emphasis role="bold">spring-security-servlet.xml</emphasis> file.</para>
+			<para>If not an exceptional case, setting provided in sample can be used. 
+			However, set as below when there are more resources you wish to exclude when collecting Resource information.</para>						
+			<para>Below are examples of excluding resources which the package name starts with org, net, java, anyframe 
+			(not resources starting with anyframe.iam.sample).</para>
+			<programlisting language="xml">
+<![CDATA[<bean id="resourceGatherAssistService"
+    class="org.anyframe.iam.core.assist.impl.ResourceGatherAssistServiceImpl" >
+    <property name="filterPatterns">
+        <list>
+            <value>(?!anyframe\.iam\.sample\..*)anyframe\..*</value>
+            <value>org\..*</value>
+            <value>net\..*</value>
+            <value>java\..*</value>
+        </list>
+    </property>
+</bean>]]></programlisting>
+		</sect2>
+		
+		<sect2 id="anyframeiaminstall_customerconfiguration_sec004">
+			<title>Authentication and Authorization Setting</title>
+			<para>Apply the below setting in <emphasis role="bold">context-spring-security.xml</emphasis> file.</para>
+			
+			<para>Define form-login as http child tag to set Form-based authentication, 
+			and define login-page, login-processing-url, authentication-failure-url, and default-target-url.</para>
+			<para>Set login-processing-url as <emphasis role="bold">/j_spring_security_check</emphasis>.</para>
+			<para>Also, use logout tag to define page to move to after logging out successfully.</para>
+			<programlisting language="xml">
+<![CDATA[<http path-type="regex" lowercase-comparisons="false">
+    <form-login login-page="/common/login.do" login-processing-url="/j_spring_security_check"
+        authentication-failure-url="/common/login.do?login_error=1"
+        default-target-url="/index.jsp?flag=L" />
+
+        <anonymous />
+        <logout logout-success-url="/index.jsp" />
+</http>]]></programlisting>
+			<para>Set query for user authentication and authorization (Role) information through setting property of jdbcUserService Bean.</para>
+			<para>In case of usersByUsernameQuery, USER_ID, PASSWORD, ENABLED field should always be in 1,2,3 order.</para>
+		<programlisting language="xml">
+<![CDATA[<b:bean id="jdbcUserService"
+    class="org.anyframe.iam.core.userdetails.jdbc.ExtJdbcUserDetailsManager" >
+    <!-- USER_ID, PASSWORD, ENABLED should always be shown in 1,2,3 order!! -->
+    <b:property name="usersByUsernameQuery" value="SELECT USER_ID, PASSWORD, CASE WHEN ENABLED = 'Y' THEN 1 ELSE 0 END ENABLED, USER_NAME, CREATE_DATE, MODIFY_DATE FROM USERS WHERE USER_ID = ?"/>
+    <b:property name="authoritiesByUsernameQuery">
+        <b:value>
+            SELECT USER_ID,ROLE_ID,GROUP_ID,SUBJECT_ID,TYPE
+            FROM AUTHORITIES C, (
+                SELECT A.USER_ID,B.GROUP_ID
+                FROM USERS A LEFT OUTER JOIN GROUPS_USERS B ON ( A.USER_ID = B.USER_ID )
+                WHERE A.USER_ID = ? ) D
+            WHERE ( C.SUBJECT_ID = D.USER_ID
+                OR C.SUBJECT_ID = D.GROUP_ID )
+        </b:value>
+    </b:property>
+    <b:property name="dataSource" ref="dataSource"/>
+</b:bean>]]></programlisting>
+		</sect2>
+		
+		<sect2 id="anyframeiaminstall_customerconfiguration_sec005">
+			<title>SecuredObject Setting</title>
+			<para>Apply the below setting in <emphasis role="bold">context-spring-security.xml</emphasis> file.</para>
+			<para>IAM handles Spring Security protection resources, RoleHierarchy information, and extended Time-based protection resource information.</para>
+			<para>The basic setting of SecuredObject is as below. When using DB provided in IAM, the below setting is sufficient. 
+			(systemName property is used only when managing multiple applications.)</para>
+			
+			<programlisting language="xml">
+<![CDATA[<b:bean id="securedObjectService" class="org.anyframe.iam.core.securedobject.impl.SecuredObjectServiceImpl">
+    <b:property name="securedObjectDAO" ref="securedObjectDAO" />
+</b:bean>
+
+<b:bean id="securedObjectDAO" class="org.anyframe.iam.core.securedobject.impl.SecuredObjectDAO">
+    <b:property name="dataSource" ref="dataSource" />
+    <!--b:property name="systemName" value="SAMPLE" /-->
+</b:bean>]]></programlisting>
+		</sect2>
+
+		<sect2 id="anyframeiaminstall_customerconfiguration_sec0052">
+			<title>SecuredObject Customization Setting</title>
+			<para>The below setting is applied in <emphasis role="bold">context-spring-security.xml</emphasis> file.</para>
+			<para>When customization is needed because DB Schema provided in IAM cannot be used, 
+			IAM Core can be applied through user setting for SecuredObject. </para>
+			<para>User setting is possible through property setting under securedObjectDAO bean as below. 
+			However, in this case, customizing is needed for using IAM Admin Console.</para>
+						
+			<programlisting language="xml">
+<![CDATA[<b:bean id="securedObjectDAO" class="org.anyframe.iam.core.securedobject.impl.SecuredObjectDAO">
+    <b:property name="dataSource" ref="dataSource" />
+    <b:property name="sqlRolesAndUrl">
+        <b:value>
+            SELECT a.resource_pattern url, b.role_id authority
+            FROM secured_resources a, secured_resources_roles b
+            WHERE a.resource_id = b.resource_id
+                AND a.resource_type = 'url'
+            ORDER BY a.sort_order, a.resource_id
+        </b:value>    	
+    </b:property>
+</b:bean>]]></programlisting>
+
+			<para>Secured Object item and basic query, in which user setting is possible, are as follows.</para>
+			
+			<itemizedlist>
+				<listitem><para>sqlRolesAndUrl : url format secured resources - Role mapping
+					<programlisting>
+<![CDATA[SELECT a.resource_pattern url, b.role_id authority
+FROM secured_resources a, secured_resources_roles b
+WHERE a.resource_id = b.resource_id
+    AND a.resource_type = 'url'
+ORDER BY a.sort_order, a.resource_id]]></programlisting></para>
+				</listitem>
+				<listitem><para>sqlRolesAndMethod : method secured resources - Role mapping
+					<programlisting>
+<![CDATA[SELECT a.resource_pattern url, b.role_id authority
+FROM secured_resources a, secured_resources_roles b
+WHERE a.resource_id = b.resource_id
+    AND a.resource_type = 'method'
+ORDER BY a.sort_order, a.resource_id]]></programlisting></para>
+				</listitem> 
+				<listitem><para>sqlRolesAndPointcut : pointcut format secured resources - Role mapping
+					<programlisting>
+<![CDATA[SELECT a.resource_pattern url, b.role_id authority
+FROM secured_resources a, secured_resources_roles b
+WHERE a.resource_id = b.resource_id
+    AND a.resource_type = 'pointcut'
+ORDER BY a.sort_order, a.resource_id]]></programlisting></para>
+				</listitem> 
+				<listitem><para>sqlRegexMatchedRequestMapping : request best matching url secured resources - Role mapping
+					<programlisting>
+<![CDATA[SELECT a.resource_pattern uri, b.role_id authority
+FROM secured_resources a, secured_resources_roles b
+WHERE a.resource_id = b.resource_id
+    AND a.resource_id =
+        ( SELECT resource_id FROM
+            ( SELECT resource_id, ROW_NUMBER() OVER (ORDER BY sort_order) resource_order FROM secured_resources c
+            WHERE REGEXP_LIKE ( :url, c.resource_pattern )
+                AND c.resource_type = 'url'
+            ORDER BY c.sort_order )
+        WHERE resource_order = 1 )]]></programlisting></para>
+        		</listitem> 
+				<listitem><para>sqlHierarchicalRoles : Role hierarchy
+					<programlisting>
+<![CDATA[SELECT a.child_role child, a.parent_role parent
+FROM roles_hierarchy a LEFT JOIN roles_hierarchy b on (a.child_role = b.parent_role)]]></programlisting></para>
+				</listitem> 
+				<listitem><para>sqlRestrictedTimesRoles : runtime authority control restricted times roles mapping
+					<programlisting>
+<![CDATA[SELECT time_type, a.time_id as time_id, start_date, start_time, end_date, end_time, role_id
+FROM restricted_times a, restricted_times_roles b
+WHERE a.time_id = b.time_id
+ORDER BY time_type, start_date, start_time, end_date, end_time]]></programlisting></para>
+				</listitem> 
+				<listitem><para>sqlRestrictedTimesResources : runtime authority control restricted times resources mapping
+					<programlisting>
+<![CDATA[SELECT time_type, a.time_id as time_id, start_date, start_time, end_date, end_time, b.resource_id as resource_id, resource_pattern, role_id as exclusion_role_id
+FROM restricted_times a,
+    restricted_times_resources b left outer join times_resources_exclusion c
+    on (b.time_id = c.time_id and b.resource_id = c.resource_id)
+    , secured_resources d
+WHERE a.time_id = b.time_id
+    AND b.resource_id = d.resource_id
+    AND d.resource_type = 'url'
+ORDER BY d.sort_order, time_type, start_date, start_time, end_date, end_time]]></programlisting></para>
+				</listitem>
+				<listitem><para>sqlViewResourceMapping : conditions-based (ROLE list, user id) view resource mapping (sqlViewResourceMapping)
+					<programlisting>
+<![CDATA[SELECT view_resource_id, ref_type, ref_id, mask, permissions
+FROM view_resources_mapping
+WHERE view_resource_id = :viewResourceId
+    AND (
+        ( ref_id IN ( {{userRoleList}} ) AND ref_type = 'ROLE' )
+        OR ( ref_id = :userId AND ref_type = 'USER' )
+        OR ( ref_id = :groupId AND ref_type = 'GROUP' )
+    )
+ORDER BY CASE ref_type WHEN 'USER' THEN 1 WHEN 'GROUP' THEN 2 WHEN 'ROLE' THEN 3 ELSE 10 END, ref_id]]></programlisting></para>
+				</listitem>
+			</itemizedlist>
+		</sect2>
+		
+		<sect2 id="anyframeiaminstall_customerconfiguration_sec006">
+			<title>Protection Exception Target Resources Setting</title>
+			<para>Apply the below setting in <emphasis role="bold">context-spring-security.xml</emphasis> file.</para>
+			<para>All requests are handled through Spring Security Filter Chain, 
+			but in case it is registered as exception target, resources are provided without going through Filter Chain. 
+			(Generally set for image, css, js, etc. files.)</para>
+			<para>Define protection exception target resources, with intercept-url tag under http, as filters="none"</para>
+			<programlisting language="xml">
+<![CDATA[<http path-type="regex" lowercase-comparisons="false">
+    <intercept-url pattern="\A/sample/images/.*\Z" filters="none" />
+    <intercept-url pattern="\A/sample/css/.*\Z" filters="none" />
+    <intercept-url pattern="\A/sample/javascript/.*\Z" filters="none" />
+</http>]]></programlisting>
+		</sect2>
+		
+		<sect2 id="anyframeiaminstall_customerconfiguration_sec007">
+			<title>Role Setting</title>
+			<para>The below setting is applied in <emphasis role="bold">context-spring-security.xml</emphasis> file.</para>
+			<para>When using Role information of a hierarchical structure, set as the below. 
+			IAM is set to basically use Hierarchical Role information. 
+			(For how to get Role information, refer to Secured Object setting.) 
+			Do not set if hierarchical Role structure is not used.</para>
+			<programlisting language="xml">
+<![CDATA[<b:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+    <b:property name="hierarchy" ref="hierarchyStrings" />
+</b:bean>
+
+<b:bean id="hierarchyStrings" class="org.anyframe.iam.core.userdetails.hierarchicalroles.HierarchyStringsFactoryBean" init-method="init">
+    <b:property name="securedObjectService" ref="securedObjectService" />
+</b:bean>]]></programlisting>			
+		</sect2>
+		
+		<sect2 id="anyframeiaminstall_customerconfiguration_sec008">
+			<title>ACL Setting for View Resource</title>
+			<para>Apply the below setting in <emphasis role="bold">context-spring-security.xml</emphasis> file.</para>
+			<para>Provides function that checks Permission that is mapped for View Resources defined by user. 
+			Authorization needed for target system can be selectively applied.</para>
+			<itemizedlist>
+				<listitem><para>Basic authorizations : READ, WRITE, CREATE, DELETE, ADMINISTRATION</para></listitem>
+				<listitem><para>Additional authorizations : LIST, PRINT, REPORT, POPUP, DOWNLOAD, UPLOAD, HELP</para></listitem>
+				<listitem><para>Other reserved authorizations : FNC0, FNC1, FNC2, FNC3, FNC4, FNC5, FNC6, FNC7, FNC8, FNC9</para></listitem>
+			</itemizedlist>
+			<para>The following are examples of setting only READ, WRITE, CREATE, DELETE, DOWNLOAD authority.</para>
+			<programlisting language="xml">
+<![CDATA[<b:bean id="viewResourceAccessService"
+    class="org.anyframe.iam.core.acl.impl.ViewResourceAccessServiceImpl">
+    <b:property name="securedObjectService" ref="securedObjectService" />
+    <b:property name="registeredPermissions">
+        <b:list>
+            <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.READ" />
+            <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.WRITE" />
+            <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.CREATE" />
+            <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.DELETE" />
+            <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.DOWNLOAD" />
+        </b:list>
+    </b:property>
+</b:bean>
+
+<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.READ"
+    class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+    <b:property name="staticField"
+        value="org.anyframe.iam.core.acl.ExtBasePermission.READ" />
+</b:bean>
+<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.WRITE"
+    class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+    <b:property name="staticField"
+        value="org.anyframe.iam.core.acl.ExtBasePermission.WRITE" />
+</b:bean>
+<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.CREATE"
+    class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+    <b:property name="staticField"
+        value="org.anyframe.iam.core.acl.ExtBasePermission.CREATE" />
+</b:bean>
+<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.DELETE"
+    class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+    <b:property name="staticField"
+        value="org.anyframe.iam.core.acl.ExtBasePermission.DELETE" />
+</b:bean>
+<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.DOWNLOAD"
+    class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+    <b:property name="staticField"
+        value="org.anyframe.iam.core.acl.ExtBasePermission.DOWNLOAD" />
+</b:bean>]]></programlisting>
+			
+		</sect2>
+		
+	</section>
+</chapter>

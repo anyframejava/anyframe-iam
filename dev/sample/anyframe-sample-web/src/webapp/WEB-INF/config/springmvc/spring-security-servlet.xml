@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+    
+	<!-- Remote HttpInvoker Call -->
+	<bean id="resourceGatherAssistService"
+		class="anyframe.iam.core.assist.impl.ResourceGatherAssistServiceImpl" />
+	
+	<bean id="gatherService" 
+		class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+		<property name="service" ref="resourceGatherAssistService" />
+		<property name="serviceInterface"
+			value="anyframe.iam.core.assist.IResourceGatherAssistService" />
+	</bean>
+	
+	<bean id="reloadService" 
+		class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+		<property name="service" ref="resourceReloadService" />
+		<property name="serviceInterface"
+			value="anyframe.iam.core.reload.IResourceReloadService" />
+	</bean>
+
+    <bean id="urlMappingResourceAssist" 
+		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+        	<props>
+        		<prop key="/assist/resourceGatherAssist.do">gatherService</prop>
+				<prop key="/reload/resourceReload.do">reloadService</prop>
+			</props>
+        </property>
+    </bean>
+    
+</beans>

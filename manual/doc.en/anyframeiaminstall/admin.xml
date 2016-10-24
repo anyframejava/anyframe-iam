@@ -1,0 +1,128 @@
+<chapter id="anyframeiaminstall_admin">
+	<title>Anyframe IAM Admin Install</title>
+	<para>In this chapter, let's lake a look at the installation process of Anyframe IAM ADmin 
+	which enables users to easily control the DB setting which IAM Core uses.	</para>
+	<para>Installation process of IAM Admin is as the following.</para>
+	<itemizedlist>
+		<listitem><para>Deploy anyframe-iam-admin-web-1.1.3.war to WAS</para></listitem>
+		<listitem><para>Setting remote-invoker-servlet.xml file</para></listitem>
+	</itemizedlist>
+	
+	<section id="anyframeiaminstall_adminwardeploy">
+		<title>war file deploy</title>		
+		<para>Deploy anyframe-iam-admin-web-1.1.3.war which comes from extraction of the downloaded Anyframe-iam-1.1.3-bin.zip file to WAS.</para>
+		<para>This chapter will not cover how to deploy by WAS as it is outside the category of this manual. </para>
+	</section>
+	
+	<section id="anyframeiaminstall_admincustomerconfiguration">
+		<title>Configuration</title>
+		<para>Open /WEB-INF/config/springmvc/remote-invoker-servlet.xml file after deploying war file,
+		then set serverUrl Property value of gatherServiceClient, resourceReloadServiceClient Bean as the url of the target system.</para>
+		<para>Bold characters in serviceUrl property are modification target.</para>
+		<programlisting language="xml">
+<![CDATA[<bean id="gatherServiceClient"
+    class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">				
+    <property name="serviceUrl"
+        value="]]>
+        <emphasis role="bold">http://localhost:8080/anyframe-iam-sample</emphasis><![CDATA[/assist/resourceGatherAssist.do" />
+    <property name="serviceInterface"
+        value="org.anyframe.iam.core.assist.IResourceGatherAssistService" />
+    <property name="httpInvokerRequestExecutor">		
+        <bean class="org.springframework.security.context.httpinvoker.
+        					AuthenticationSimpleHttpInvokerRequestExecutor" />
+    </property>
+</bean>
+
+<bean id="resourceReloadServiceClient"
+    class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+    <property name="serviceUrl"
+        value="]]>
+        <emphasis role="bold">http://localhost:8080/anyframe-iam-sample</emphasis><![CDATA[/reload/resourceReload.do" />
+    <property name="serviceInterface"
+        value="org.anyframe.iam.core.reload.IResourceReloadService" />
+    <property name="httpInvokerRequestExecutor">
+        <bean class="org.springframework.security.context.httpinvoker.
+        					AuthenticationSimpleHttpInvokerRequestExecutor" />
+    </property>
+</bean>]]></programlisting>
+	</section>
+	
+	<warning>
+		<title>Note for WebLogic deploy 1</title>
+		<para>When deploying Anyframe IAM by WAS, ClassNotFoundException of org.hibernate.hql.ast.HqlToken occurs with Hibernate in WebLogic.</para>
+		<para>Officially, the library conflict issue between Hibernate and WebLogic is released as the following link.</para>
+		<para><ulink url="https://www.hibernate.org/250.html">https://www.hibernate.org/250.html</ulink></para>
+		<para>In WebLogic, this issue can be avoided through the following three ways.
+		Anyframe IAM uses the third way, and the following is a common measures when applying Hibernate to WebLogic.</para>
+		<para>First : WAR</para>
+		<para>Set WEB-INF/classes/weblogic.xml as the following.</para>
+		<programlisting language="xml">
+<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<wls:weblogic-web-app xmlns:wls="http://www.bea.com/ns/weblogic/90"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+        http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd 
+        http://www.bea.com/ns/weblogic/90 
+        http://www.bea.com/ns/weblogic/90/weblogic-web-app.xsd">
+    <wls:weblogic-version>10.0</wls:weblogic-version>
+    <wls:jsp-descriptor>
+        <wls:page-check-seconds>3</wls:page-check-seconds>
+        <wls:precompile>false</wls:precompile>
+    </wls:jsp-descriptor>
+    <wls:container-descriptor>
+        <wls:servlet-reload-check-secs>3</wls:servlet-reload-check-secs>
+        <wls:resource-reload-check-secs>-1</wls:resource-reload-check-secs>
+        <wls:prefer-web-inf-classes>true</wls:prefer-web-inf-classes>
+    </wls:container-descriptor>
+    <wls:context-root>anyframe-iam-admin-web</wls:context-root>
+    <wls:charset-params>
+        <wls:input-charset>
+            <wls:resource-path>/*</wls:resource-path>
+            <wls:java-charset-name>utf-8</wls:java-charset-name>
+        </wls:input-charset>
+    </wls:charset-params>
+</wls:weblogic-web-app>]]></programlisting>
+		<para>Second : EAR</para>
+		<para>Set META-INF/weblogic-application.xml  of EAR package as the following.</para>
+		<programlisting language="xml">
+<![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<wls:weblogic-application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:wls="http://www.bea.com/ns/weblogic/90"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+        http://java.sun.com/xml/ns/j2ee/j2ee_1_4.xsd
+        http://www.bea.com/ns/weblogic/90
+        http://www.bea.com/ns/weblogic/90/weblogic-application.xsd">
+    <wls:prefer-application-packages>
+        <wls:package-name>antlr.*</wls:package-name>
+    </wls:prefer-application-packages>
+</wls:weblogic-application>]]></programlisting>
+		<para>Third: Adding antlr to classpath</para>
+		<para>Copy antlr-2.7.6.jar to %WL_HOME%\common\lib directory then to setDomainEnv.cmd file(or .sh file)</para>
+		<para>add set PRE_CLASSPATH=%WL_HOME%\common\lib\antlr-2.7.6.jar(UNIX sh : set PRE_CLASSPATH="${WL_HOME}/common/lib/antlr-2.7.6.jar".</para>
+	</warning>
+	
+	<warning>
+		<title>Note for WebLogic 2</title>
+		<para>In addition, on WebLogic, NoSuchMethodException of javax.persistence.OneToMany.orphanRemoval() occurs with Hibernate 3.5.3, jpa 2.0.</para>
+		<para>In this case, adjusting  prefer-web-inf-classes  of weblogic.xml doesn't work.</para>
+		<para>In JEUS 6.0, this issues can be avoided by the following way.</para>
+		<para>The issue can be avoided by above-mentioned way.</para>
+		<para>&nbsp;</para>
+		<para>Add hibernate-jpa-2.0-api-1.0.0.Final to classpath. (added to previously set -antlr-.)</para>
+		<para>Copy  hibernate-jpa-2.0-api-1.0.0.Final.jar to %WL_HOME%\common\lib directory, then to setDomainEnv.cmd file (or .sh file)</para>
+		<para>set PRE_CLASSPATH=%WL_HOME%\common\lib\antlr-2.7.6.jar;%WL_HOME%\common\lib\hibernate-jpa-2.0-api-1.0.0.Final.jar</para>
+		<para>add (UNIX sh : set PRE_CLASSPATH="${WL_HOME}/common/lib/antlr-2.7.6.jar:${WL_HOME}/common/lib/hibernate-jpa-2.0-api-1.0.0.Final.jar").</para>
+	</warning>
+	
+	<warning>
+		<title>Note for JEUS 6.0 </title>
+		<para>When deploying Anyframne IAM by WAS, in JEUS 6.0 runtime error related to JAP library occurs.</para>
+		<para>JEUS 6.0 contains JPA 1.0-range library arbitrarily, but when running JPA 2.0-range application, it does not properly run due to library conflict.</para>
+		<para>In JEUS 6.0, this issues can be avoided by the following way.</para>
+		<para>&nbsp;</para>
+		<para>1. Extract %JEUS_HOME%/lib/system/javaee.jar and delete javax.persistence  package then repackage (jar cf javaee.jar javaee).</para>
+		<para>2. Delete  toplink-essentials.jar of %JEUS_HOME%/lib/system/ and toplink-essentials-agent.jar or change the extension of the files to org.		
+		</para>
+		<para>3.Deploy hibernate-jpa-2.0-api-1.0.0.Final.jar to %JEUS_HOME%/lib/system/.</para>
+	</warning>
+</chapter>

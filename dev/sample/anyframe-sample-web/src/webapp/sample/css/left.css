@@ -1,0 +1,85 @@
+/********************************************************************/
+/*										*/
+/*  SamsnugSDS Design Part    */
+/*      								*/
+/********************************************************************/
+
+/***************************BODY*********************************/
+
+
+IMG {  border-style: none}
+
+BODY {
+scrollbar-3dlight-color: #ffffff;
+scrollbar-highlight-color: #ffffff;
+scrollbar-face-color: #DEE7EB;
+scrollbar-arrow-color: #6F9BAA;
+scrollbar-track-color: #F7F7F7;
+scrollbar-darkshadow-color: #ffffff;
+scrollbar-shadow-color: #B8C4C5;}
+
+
+a.menu		{ font-size: 9pt; font-family: ����ü; color: #ff0000; text-decoration: none; }
+
+A.:link {  color: #333333 ; text-decoration: none; cursor:hand}
+A.:hover {  color: #347BD9 ;text-decoration: none; }
+A.:active {  color: #347BD9 ; text-decoration: none;}
+A.:visited {  color: #333333 ; text-decoration: none;}
+A.: { onfocus : "this.blur();" }
+
+
+BODY, TABLE, TR, TD, SELECT,INPUT,DIV,SPAN,FORM,TEXTAREA
+{ font-family: "MS Gothic"; font-size: 12px; color: #333333; }
+
+ .Depth01 { 
+		font-size: 14px; 
+	color: #ffffff;
+	font-weight:bold;
+	line-height: 26px;
+	text-indent: 15px;
+	background-image: url(/sample/images/left/leftMenuDep01Bg.gif);
+	background-repeat:no-repeat;
+   	}
+ 
+	.Depth02on { 
+	font-size: 12px; 
+	line-height: 25px;
+	color: #505050;
+	font-weight:normal;
+	text-indent: 19px;
+	background-image: url(/sample/images/left/leftMenuDep02_on.gif);
+	background-repeat:no-repeat;
+  	}
+  
+	.Depth02off { 
+	 font-size: 12px; 
+	line-height: 25px;
+	color: #505050;
+	font-weight:normal;
+	text-indent: 19px;
+	background-image: url(/sample/images/left/leftMenuDep02_off.gif);
+	background-repeat:no-repeat;
+  	}
+
+
+	.Depth03 { 
+	font-size: 12px; 
+	line-height: 20px;
+	color: #505050;
+	font-weight:normal;
+	text-indent: 14px;
+	background-image: url(/sample/images/left/leftMenuDep03Bg.gif);
+	background-repeat:no-repeat;
+ 	}
+
+	.DepthEnd {
+background-image: url(/sample/images/left/space_line.gif);
+line-height: 5px;
+background-repeat:no-repeat;
+	}
+	
+.layer_submenu_bg {
+	background-image:  url(/sample/images/left/menuLayerBg.gif);
+	background-position: right;
+	background-repeat: repeat;
+	text-align: center;

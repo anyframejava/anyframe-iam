@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	
+	
+	<!--  사용자 회원 정보 수정 화면(사용자 상세조회) 이동 -->
+	<bean name="/empgetuser.do"
+		class="com.sds.emp.user.web.UpdateUserController">
+		<property name="codeService" ref="codeService" />
+		<property name="userService" ref="userService" />
+		<property name="role" value="admin" />
+		<property name="formView" value="/sample/user/updateUser.jsp"/>
+		<property name="sessionForm" value="true" />
+		<property name="showNewForm" value="true" />
+	</bean>
+	
+	<!--  관리자 회원 정보 수정 화면(사용자 상세조회) 이동 -->
+	<bean name="/empgetadminuser.do"
+		class="com.sds.emp.user.web.UpdateUserController">
+		<property name="userService" ref="userService" />
+		<property name="codeService" ref="codeService" />
+		<property name="role" value="admin" />
+		<property name="formView" value="/sample/user/updateUser.jsp"/>
+		<property name="sessionForm" value="true" />
+		<property name="showNewForm" value="true" />
+	</bean>
+	
+	<!-- 회원 정보 수정  -->
+	<bean name="/empupdateuser.do"
+		class="com.sds.emp.user.web.UpdateUserController">
+		<property name="userService" ref="userService" />	
+		<property name="codeService" ref="codeService" />	
+		<property name="role" value="" />
+		<property name="formView" value="/sample/user/updateUser.jsp"/>
+		<property name="success_update" value="emplistuser.do"/>
+		<property name="sessionForm" value="true" />
+	</bean>
+
+	<!--  회원 목록 조회 -->
+	<bean name="/emplistuser.do"
+		class="com.sds.emp.user.web.GetUserListController">
+		<property name="userService" ref="userService" />
+		<property name="propertiesService" ref="propertiesService" />
+		<property name="success_list" value="/sample/user/listUser.jsp"/>
+	</bean>
+
+	<!--  신규 회원 등록 화면 이동 -->
+	<bean name="/empadduserview.do"
+		class="com.sds.emp.user.web.AddUserController">
+		<property name="codeService" ref="codeService" />
+		<property name="userService" ref="userService" />
+		<property name="formView" value="/sample/user/addUser.jsp" />
+		<property name="sessionForm" value="true" />
+		<property name="showNewForm" value="true" />
+	</bean>
+	<!--  신규 회원 등록 -->
+	<bean name="/empadduser.do"
+		class="com.sds.emp.user.web.AddUserController">
+		<property name="codeService" ref="codeService" />
+		<property name="userService" ref="userService" />
+		<property name="formView" value="/sample/user/addUser.jsp" />
+		<property name="success_add" value="login.do" />
+		<property name="sessionForm" value="true" />
+	</bean>
+
+	<!--
+	anyframe.web.springmvc.common.controller.ForwardController
+	org.springframework.web.servlet.mvc.ParameterizableViewController
+	-->
+	<!-- 로그인 화면 이동  -->
+	<bean name="/login.do" 
+		class="anyframe.web.springmvc.common.controller.ForwardController">
+		<property name="viewName" value="sample/system/login.jsp" />
+	</bean>
+	<bean name="/welcome.do"
+		class="anyframe.web.springmvc.common.controller.ForwardController">
+		<property name="viewName" value="sample/layouts/welcome.jsp" />
+	</bean>
+	<bean name="/index.do"
+		class="anyframe.web.springmvc.common.controller.ForwardController">
+		<property name="viewName" value="sample/index.jsp"/>
+	</bean>
+
+	<!--  ID 중복 확인 뷰 이동 -->
+	<bean name="/emppopcheckduplication.do"
+		class="anyframe.web.springmvc.common.controller.ForwardController">
+		<property name="viewName" value="sample/user/checkDuplication.jsp" />
+	</bean>
+
+	<!--  ID 중복 확인 -->
+	<bean name="/empcheckduplication.do"
+		class="com.sds.emp.user.web.CheckDuplicationController">
+		<property name="userService" ref="userService" />
+	</bean>
+	
+</beans>

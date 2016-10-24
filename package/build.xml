@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<project name="Make a Install File for Anyframe IAM" default="all" basedir=".">
+	<property file="${basedir}/build.properties" />
+	
+	<target name="updateIAM">
+		<echo message="Update Anyframe IAM Libraries and Sources"/>
+		<exec dir="${basedir}" executable="cmd.exe" failonerror="true">
+			<arg line="/c ant -f build_iam.xml updateIAM -Dversion=${core.version}"/>
+		</exec>
+	</target>
+
+	<target name="zip_iam" depends="updateIAM">
+		<echo message="Make zip files (binaries) based on Anyframe IAM"/>
+
+		<zip destfile="./dist/Anyframe-iam-${core.version}-bin.zip">
+			<fileset dir="${basedir}/temp/dist/admin">
+				<exclude name="**/src/**"/>
+				<exclude name="**/docs/**"/>
+				<exclude name="**/lib/**"/>
+				<exclude name="**/*.jar" />
+			</fileset>
+			<fileset dir="${basedir}/temp/dist/core">
+				<exclude name="**/src/**"/>
+				<exclude name="**/docs/**"/>
+				<exclude name="**/lib/**"/>
+			</fileset>
+			<fileset dir="${basedir}/temp/dist/sample">
+				<exclude name="**/src/**"/>
+				<exclude name="**/docs/**"/>
+			</fileset>
+			
+			<!-- 
+			<fileset dir="${basedir}/temp/dist/sample/src/war">
+				<include name="**/*.war"/>
+			</fileset>
+			 -->
+			 
+			<fileset dir="${basedir}/temp/dist/DATABASE">
+				<exclude name="**/hsqldb-1.9.0.rc4.jar" />
+				<exclude name="**/hsqlmanager190.cmd" />
+				<exclude name="**/runHsqlDB190.cmd" />
+				<include name="**/db/**"/>
+			</fileset>
+		</zip>
+		
+		<echo message="Make zip files (docs,src) based on Anyframe IAM"/>
+		<zip destfile="./dist/Anyframe-iam-${core.version}-src.zip">
+			<fileset dir="${basedir}/temp/dist/admin">
+				<exclude name="/lib/**"/>				
+				<exclude name="**/*.war" />
+			</fileset>
+			<fileset dir="${basedir}/temp/dist/core">
+				<exclude name="/lib/**"/>				
+			</fileset>
+			<fileset dir="${basedir}/temp/dist/sample">
+				<exclude name="/lib/**"/>				
+				<exclude name="**/*.war" />
+			</fileset>
+		</zip>
+	</target>
+	
+	<target name="all" depends="zip_iam"/>
+</project>

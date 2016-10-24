@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:config="http://www.sds.samsung.com/schema/service"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-2.0.xsd 
+	http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util-2.0.xsd			
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-2.0.1.xsd">
+
+	<!-- deliveryCompanyService bean definition-->
+	<bean id="deliveryCompanyService" lazy-init="true"
+		class="com.sds.emp.purchase.services.impl.DeliveryCompanyServiceImpl">
+		<property name="deliveryCompanyDAO" ref="deliveryCompanyDAO" />
+		<property name="idGenerationService"
+			ref="idGenerationServiceDeliveryCompany" />
+	</bean>
+
+	<bean id="deliveryCompanyDAO"
+		class="com.sds.emp.purchase.services.impl.DeliveryCompanyDAO">
+		<property name="propertiesService" ref="propertiesService" />
+		<property name="queryService" ref="queryService" />
+	</bean>
+
+	<!-- PurchaseService Service bean definition -->
+	<bean id="purchaseService"
+		class="com.sds.emp.purchase.services.impl.PurchaseServiceImpl">
+		<property name="purchaseDAO" ref="purchaseDAO" />
+		<!-- Spring Security bean method intercept -->
+		<security:intercept-methods>
+			<security:protect method="com.sds.emp.purchase.services.PurchaseService.get*" access="ROLE_USER"/> <!-- hierarchical role ROLE_ADMIN > ROLE_USER -->
+		</security:intercept-methods>
+	</bean>
+
+	<bean id="purchaseDAO"
+		class="com.sds.emp.purchase.services.impl.PurchaseDAO">
+		<property name="propertiesService" ref="propertiesService" />
+		<property name="queryService" ref="queryService" />
+	</bean>
+</beans>

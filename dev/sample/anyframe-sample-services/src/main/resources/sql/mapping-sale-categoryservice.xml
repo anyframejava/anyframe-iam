@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE queryservice PUBLIC "-//ANYFRAME//DTD QUERYSERVICE//EN"
+"http://www.anyframejava.org/dtd/anyframe-core-query-mapping-3.1.dtd">
+<queryservice>
+	<table-mapping>
+		<!--  카테고리 테이블과 클래스 CategoryVO 매핑 -->
+		<table name="CATEGORY"
+			class="com.sds.emp.sale.services.CategoryVO">
+			<field-mapping>
+				<dbms-column>CATEGORY_NO</dbms-column>
+				<class-attribute>categoryNo</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>CATEGORY_NAME</dbms-column>
+				<class-attribute>categoryName</class-attribute>
+			</field-mapping>			
+			<field-mapping>
+				<dbms-column>CATEGORY_DESC</dbms-column>
+				<class-attribute>categoryDesc</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>USE_YN</dbms-column>
+				<class-attribute>useYn</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>REG_ID</dbms-column>
+				<class-attribute>regId</class-attribute>
+			</field-mapping>										
+			<field-mapping>
+				<dbms-column>REG_DATE</dbms-column>
+				<class-attribute>regDate</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>MODIFY_ID</dbms-column>
+				<class-attribute>modifyId</class-attribute>
+			</field-mapping>	
+			<field-mapping>
+				<dbms-column>MODIFY_DATE</dbms-column>
+				<class-attribute>modifyDate</class-attribute>
+			</field-mapping>											
+			<primary-key>
+				<dbms-column>CATEGORY_NO</dbms-column>
+			</primary-key>
+		</table>
+	</table-mapping>
+	<queries>
+		<!--  Query : 검색 조건에 기반하여 카테고리 목록 조회 -->
+		<query id="getCategoryList" isDynamic="true">
+			<statement>
+				SELECT CATEGORY_NO, CATEGORY_NAME, USE_YN, REG_DATE
+						, CATEGORY_DESC
+				FROM CATEGORY
+				#if ($categoryNo) 
+					WHERE CATEGORY_NO like :categoryNo 
+				#else
+					WHERE CATEGORY_NAME like :categoryName 
+				#end  
+				#if ($useYn)
+					AND USE_YN = :useYn
+				#end
+				ORDER BY CATEGORY_NO
+			</statement>
+			<param name="categoryNo" type="VARCHAR"/>
+			<param name="categoryName" type="VARCHAR"/>			
+			<param name="useYn" type="VARCHAR"/>					
+			<result class="com.sds.emp.sale.services.CategoryVO" />			
+		</query>
+		<!--  Query : dropdown 리스트용 카테고리 목록 조회 -->
+		<query id="getDropDownCategoryList" isDynamic="false">
+			<statement>
+				SELECT CATEGORY_NO, CATEGORY_NAME
+				FROM CATEGORY
+				WHERE USE_YN = 'Y'
+				ORDER BY CATEGORY_NO
+			</statement>		
+			<result class="com.sds.emp.sale.services.CategoryVO" />			
+		</query>
+		<!--  Query : 신규 카테고리 등록 -->
+		<query id="addCategory" isDynamic="false">
+			<statement>
+				INSERT INTO CATEGORY 
+				(CATEGORY_NO, CATEGORY_NAME, CATEGORY_DESC, USE_YN, REG_ID, REG_DATE, MODIFY_ID, MODIFY_DATE) 
+				VALUES (?, ?, ?, ?, ?, sysdate, ?, sysdate)
+			</statement>
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="CHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+		</query>	
+		<!--  Query : 카테고리 정보 수정 -->	
+		<query id="updateCategory" isDynamic="false">
+			<statement>
+				UPDATE CATEGORY 
+				SET CATEGORY_NAME = ?, CATEGORY_DESC = ?, USE_YN =?, MODIFY_ID = ?, MODIFY_DATE = sysdate
+				WHERE CATEGORY_NO = ?
+			</statement>
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="CHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+		</query>
+		
+		<!--  Query : 카테고리 정보 삭제 -->	
+		<query id="removeCategory" isDynamic="false">
+			<statement>
+				DELETE FROM CATEGORY 
+				WHERE CATEGORY_NO = ?
+			</statement>
+			<param type="VARCHAR" />
+		</query>
+		
+		<!--  Query : 카테고리 상세 정보 조회 -->
+		<query id="getCategory" isDynamic="false">
+			<statement>
+				SELECT CATEGORY_NO, CATEGORY_NAME, CATEGORY_DESC, USE_YN, REG_ID
+				FROM CATEGORY
+				WHERE CATEGORY_NO = ?
+			</statement>
+			<param type="VARCHAR" />
+			<result class="com.sds.emp.sale.services.CategoryVO" />			
+		</query>						
+	</queries>
+</queryservice>

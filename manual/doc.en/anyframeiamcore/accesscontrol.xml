@@ -1,0 +1,37 @@
+<chapter id="anyframeiamcore_accesscontrol">
+  <title>Access Control</title>
+
+  <para>A DB-based permission can be defined (IAM Admin provides Data management) 
+  	for user definition resource (view resource), and IAM Core offers API (service) and tag library using the service 
+  	to confirm if the logged user has permission for view resource.</para>
+  <para>Handle permission for Bit Masking like the one used in ACL of Spring Security.</para>
+  <para>Use as function to check permission for READ, WRITE, CREATE, DELETE, ADMINISTRATION .. of view that is generally requested in SI project.</para>
+  
+  <para>Check if there is authorization through the below viewResourceAccessService in java code you wish to check permission. 
+  (Apply AOP to commonize permission check logic. - guidelines will be provided later) </para>
+		<programlisting language="java">
+<![CDATA[boolean result = viewResourceAccessService.isGranted("updateCategory", Arrays.asList(new Integer[] { 3 }))]]></programlisting>  
+<para>On the above, 3 is 0..00011 in bit mask, and this shows READ and WRITE authorization. 
+To get the bit mask for 3, it can be used as ExtBasePermission.getPermissionMask("READ,WRITE").</para>
+
+<para></para>
+		
+  <para>Apply so that HTML is drawn only when service call function section or button section is wrapped with tag and has authorization 
+  in jsp view as the below.</para>
+		<programlisting language="java">
+<![CDATA[<%@ taglib uri="/WEB-INF/anyframe-iam.tld" prefix="iam" %>
+..
+<iam:access hasPermission="${iam:getPermissionMask(\"CREATE\")}" viewResourceId="listCategory">
+ function fncAddCategoryView() {
+  ..
+ }
+</iam:access>
+..
+<iam:access hasPermission="${iam:getPermissionMask(\"CREATE\")}" viewResourceId="listCategory">
+  Add button section
+</iam:access>]]></programlisting>
+<para>Even if view is controlled as the above, note that authorization handling has not been done. 
+Real defense (Web request authorization, method authorization, view resource ACL, domain object ACL ..) is needed for security server layer. 
+</para>
+
+</chapter>

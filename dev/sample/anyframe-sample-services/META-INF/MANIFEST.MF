@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: anyframe_sample_services
+Bundle-SymbolicName: anyframe_sample_services
+Bundle-Version: 2.0.0
+Bundle-Localization: plugin
+Export-Package: com.sds.emp.code.services,
+ com.sds.emp.common,
+ com.sds.emp.purchase.services,
+ com.sds.emp.sale.services,
+ com.sds.emp.security.services,
+ com.sds.emp.user.services

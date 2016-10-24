@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<project name="Anyframe 3.0.1 Sample - eMarketPlace Web" default="all" basedir=".">
+	<property name="webpjtlib" value="../anyframe-sample-web/lib" />
+	<property name="anyframelib" value="../anyframe-sample-web/src/webapp/WEB-INF/lib" />
+
+	<path id="server.compile.classpath">
+		<fileset dir="${webpjtlib}">
+			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${anyframelib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="init">
+		<delete dir="${basedir}/build/classes" />
+		<delete dir="${basedir}/dist" />
+		<delete dir="${basedir}/src/webapp/WEB-INF/classes" />
+		<mkdir dir="${basedir}/build/classes" />
+		<mkdir dir="${basedir}/dist" />
+		<mkdir dir="${basedir}/src/webapp/WEB-INF/classes" />
+	</target>
+
+	<target name="services-build">
+			<ant antfile="../anyframe-sample-services/build.xml" dir="../anyframe-sample-services" /> 
+	</target>
+	
+	<target name="compile">
+		<javac encoding="UTF-8" srcdir="${basedir}/src/main/java" destdir="${basedir}/src/webapp/WEB-INF/classes" fork="yes" memoryMaximumSize="256m">
+			<classpath>
+				<path refid="server.compile.classpath" />
+			</classpath>
+		</javac>
+		<copy todir="${basedir}/src/webapp/WEB-INF/classes">
+			<fileset dir="${basedir}/src/main/resources" />
+			<fileset dir="${basedir}/src/main/java">
+				<include name="**/*.properties" />
+				<exclude name="**/.svn/*.*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="package">
+		<copyfile src="../anyframe-sample-services/DATABASE/db/runHsqlDB.cmd" dest="../anyframe-sample-services/DATABASE/db/runHsqlDBforWAS.cmd" />
+		<replace file="../anyframe-sample-services/DATABASE/db/runHsqlDBforWAS.cmd" value="">
+			<replacefilter token="./../../../anyframe-sample-web/src/webapp/WEB-INF/lib" value="./../WEB-INF/lib" />
+		</replace>
+		<war destfile="${basedir}/dist/anyframe-sample-web.war" webxml="${basedir}/src/webapp/WEB-INF/web.xml">
+			<fileset dir="${basedir}/src/webapp">
+				<include name="**/*.*" />
+				<exclude name="**/jsp-api-*.*" />
+				<exclude name="**/servlet-api-*.*" />
+			</fileset>
+			<fileset dir="../anyframe-sample-services/DATABASE">
+				<include name="**/runHsqlDBforWAS.cmd" />
+				<include name="**/sampledb.properties" />
+				<include name="**/sampledb.script" />
+				<exclude name="**/runHsqlDB.cmd" />
+			</fileset>
+		</war>
+	</target>
+
+	<target name="all" depends="init, compile, package" />
+	<target name="war" depends="init, services-build, compile, package"/>
+</project>

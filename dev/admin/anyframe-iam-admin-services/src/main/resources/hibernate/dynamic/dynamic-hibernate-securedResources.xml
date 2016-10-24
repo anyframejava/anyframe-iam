@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
+<dynamic-hibernate>
+	<query name="findSecuredResourcesList">
+		<![CDATA[
+		FROM SecuredResources securedResources 
+		#if($keywordNum != "")
+			WHERE
+			#if($condition == "resourceId")
+				securedResources.resourceId like :keywordStr 
+			#elseif($condition == "resourcePattern")
+				securedResources.resourcePattern like :keywordStr
+			#elseif($condition == "resourceName")
+				securedResources.resourceName like :keywordStr
+			#end
+			#if($searchType == "url" || $searchType == "method" || $searchType == "pointcut")
+				AND securedResources.resourceType like :searchType
+			#end
+			#if($systemName != "ALL" && $systemName != "")
+				AND securedResources.systemName like :systemName
+			#end
+		#elseif($keywordNum == "")
+			#if($searchType == "url" || $searchType == "method" || $searchType == "pointcut")
+				WHERE securedResources.resourceType like :searchType
+				#if($systemName != "ALL" && $systemName != "")
+					AND securedResources.systemName like :systemName
+				#end
+			#elseif($searchType == "All" || $searchType == "")
+				#if($systemName != "ALL" && $systemName != "")
+					WHERE securedResources.systemName like :systemName
+				#end				
+			#end		
+		#end
+		#if($sidx == "resourceId" || $sidx == "")
+			order by	securedResources.resourceId
+		#elseif($sidx == "resourceName")
+			order by	securedResources.resourceName
+		#elseif($sidx == "resourcePattern")
+			order by	securedResources.resourcePattern
+		#elseif($sidx == "resourceType")
+			order by	securedResources.resourceType
+		#elseif($sidx == "sortOrder")
+			order by	securedResources.sortOrder
+		#elseif($sidx == "systemName")
+			order by	securedResources.systemName
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end
+				
+		]]>
+	</query>
+
+	<query name="countSecuredResourcesList">
+		<![CDATA[
+		SELECT count(*) 
+		FROM SecuredResources securedResources 
+		#if($keywordNum != "")
+			WHERE
+			#if($condition == "resourceId")
+				securedResources.resourceId like :keywordStr 
+			#elseif($condition == "resourcePattern")
+				securedResources.resourcePattern like :keywordStr
+			#elseif($condition == "resourceName")
+				securedResources.resourceName like :keywordStr
+			#end
+			#if($searchType == "url" || $searchType == "method" || $searchType == "pointcut")
+				AND securedResources.resourceType like :searchType
+			#end
+			#if($systemName != "ALL" && $systemName != "")
+				AND securedResources.systemName like :systemName
+			#end			
+		#elseif($keywordNum == "")
+			#if($searchType == "url" || $searchType == "method" || $searchType == "pointcut")
+				WHERE securedResources.resourceType like :searchType
+				#if($systemName != "ALL" && $systemName != "")
+					AND securedResources.systemName like :systemName
+				#end
+			#elseif($searchType == "All" || $searchType)
+				#if($systemName != "ALL" && $systemName != "")
+					WHERE securedResources.systemName like :systemName
+				#end
+			#end
+		#end			
+		]]>
+	</query>	
+	
+	<query name="findMappedResourcesList">
+		<![CDATA[
+		SELECT new Map( securedResources.resourceId as resourceId, securedResources.resourceName as resourceName, securedResources.sortOrder as sortOrder, securedResources.resourcePattern as resourcePattern, securedResources.resourceType as resourceType, roles.roleId as roleId, roles.roleName as roleName, securedResources.systemName as systemName )
+		FROM SecuredResources securedResources, SecuredResourcesRoles securedResourcesRoles, Roles roles
+		WHERE 
+			securedResources.resourceId = securedResourcesRoles.securedResources.resourceId
+			AND securedResourcesRoles.roles.roleId = roles.roleId
+		#if($roleId != "")
+			AND securedResourcesRoles.roles.roleId = :roleId
+		#end
+		#if($keywordNum != "")
+			#if($condition == "resourceId")
+				AND securedResources.resourceId like :keywordStr 
+			#elseif($condition == "resourcePattern")
+				AND securedResources.resourcePattern like :keywordStr
+			#elseif($condition == "resourceName")
+				AND securedResources.resourceName like :keywordStr
+			#end
+		#end
+		#if($searchType == "url" || $searchType == "method" || $searchType == "pointcut")
+			AND securedResources.resourceType like :searchType
+		#end	
+		#if($systemName != "ALL" && $systemName != "")
+			AND securedResources.systemName = :systemName
+		#end
+		#if($sidx == "resourceId" || $sidx == "")
+			order by	securedResources.resourceId
+		#elseif($sidx == "resourceName")
+			order by	securedResources.resourceName
+		#elseif($sidx == "roleId")
+			order by	securedResourcesRoles.roles.roleId
+		#elseif($sidx == "roleName")
+			order by	roles.roleName
+		#elseif($sidx == "resourcePattern")
+			order by	securedResources.resourcePattern
+		#elseif($sidx == "resourceType")
+			order by	securedResources.resourceType
+		#elseif($sidx == "sortOrder")
+			order by	securedResources.sortOrder
+		#elseif($sidx == "systemName")
+			order by 	securedResources.systemName
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end
+		]]>
+	</query>
+
+	<query name="countMappedResourcesList">
+		<![CDATA[
+		SELECT count(*) 
+		FROM SecuredResources securedResources, SecuredResourcesRoles securedResourcesRoles 
+		WHERE
+			securedResources.resourceId = securedResourcesRoles.securedResources.resourceId
+			AND securedResourcesRoles.roles.roleId = :roleId
+		#if($keywordNum != "")
+			#if($condition == "resourceId")
+				AND securedResources.resourceId like :keywordStr 
+			#elseif($condition == "resourcePattern")
+				AND securedResources.resourcePattern like :keywordStr
+			#elseif($condition == "resourceName")
+				AND securedResources.resourceName like :keywordStr
+			#end
+		#end	
+		#if($searchType == "url" || $searchType == "method" || $searchType == "pointcut")
+			AND securedResources.resourceType like :searchType
+		#end	
+		#if($systemName != "ALL" && $systemName != "")
+			AND securedResources.systemName = :systemName
+		#end	
+		]]>
+	</query>	
+	
+	<query name="findUnmappedResourcesList">
+		<![CDATA[
+		FROM SecuredResources securedResources 
+		WHERE NOT EXISTS
+			(SELECT securedResourcesRoles.securedResources.resourceId
+				FROM SecuredResourcesRoles securedResourcesRoles
+				WHERE securedResourcesRoles.roles.roleId = :roleId
+				AND   securedResources.resourceId = securedResourcesRoles.securedResources.resourceId
+			)
+		#if($keywordNum != "")
+			#if($condition == "resourceId")
+				AND securedResources.resourceId like :keywordStr 
+			#elseif($condition == "resourcePattern")
+				AND securedResources.resourcePattern like :keywordStr
+			#elseif($condition == "resourceName")
+				AND securedResources.resourceName like :keywordStr
+			#end
+		#end
+		#if($searchType == "url" || $searchType == "method" || $searchType == "pointcut")
+			AND securedResources.resourceType like :searchType
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND securedResources.systemName = :systemName
+		#end	
+		#if($sidx == "resourceId" || $sidx == "")
+			order by	securedResources.resourceId
+		#elseif($sidx == "resourceName")
+			order by	securedResources.resourceName
+		#elseif($sidx == "roleId")
+			order by	securedResourcesRoles.roles.roleId
+		#elseif($sidx == "roleName")
+			order by	roles.roleName
+		#elseif($sidx == "resourcePattern")
+			order by	securedResources.resourcePattern
+		#elseif($sidx == "resourceType")
+			order by	securedResources.resourceType
+		#elseif($sidx == "sortOrder")
+			order by	securedResources.sortOrder
+		#elseif($sidx == "systemName")
+			order by 	securedResources.systemName
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end
+		]]>
+	</query>
+
+	<query name="countUnmappedResourcesList">
+		<![CDATA[
+		SELECT count(*) 
+		FROM SecuredResources securedResources 
+		WHERE NOT EXISTS
+			(SELECT securedResourcesRoles.securedResources.resourceId
+				FROM SecuredResourcesRoles securedResourcesRoles
+				WHERE securedResourcesRoles.roles.roleId = :roleId
+				AND   securedResources.resourceId = securedResourcesRoles.securedResources.resourceId
+			)
+		#if($keywordNum != "")
+			#if($condition == "resourceId")
+				AND securedResources.resourceId like :keywordStr 
+			#elseif($condition == "resourcePattern")
+				AND securedResources.resourcePattern like :keywordStr
+			#elseif($condition == "resourceName")
+				AND securedResources.resourceName like :keywordStr
+			#end
+		#end	
+		#if($searchType == "url" || $searchType == "method" || $searchType == "pointcut")
+			AND securedResources.resourceType like :searchType
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND securedResources.systemName = :systemName
+		#end
+		]]>
+	</query>	
+	
+	<query name="findUnmappedAnyRoleList">
+		<![CDATA[
+		FROM SecuredResources securedResources 
+		WHERE NOT EXISTS
+			(SELECT securedResourcesRoles.securedResources.resourceId
+				FROM SecuredResourcesRoles securedResourcesRoles
+				WHERE securedResources.resourceId = securedResourcesRoles.securedResources.resourceId
+			)
+		#if($keywordNum != "")
+			#if($condition == "resourceId")
+				AND securedResources.resourceId like :keywordStr 
+			#elseif($condition == "resourcePattern")
+				AND securedResources.resourcePattern like :keywordStr
+			#elseif($condition == "resourceName")
+				AND securedResources.resourceName like :keywordStr
+			#end
+		#end
+		#if($searchType == "url" || $searchType == "method" || $searchType == "pointcut")
+			AND securedResources.resourceType like :searchType
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND securedResources.systemName = :systemName
+		#end	
+		#if($sidx == "resourceId" || $sidx == "")
+			order by	securedResources.resourceId
+		#elseif($sidx == "resourceName")
+			order by	securedResources.resourceName
+		#elseif($sidx == "roleId")
+			order by	securedResourcesRoles.roles.roleId
+		#elseif($sidx == "roleName")
+			order by	roles.roleName
+		#elseif($sidx == "resourcePattern")
+			order by	securedResources.resourcePattern
+		#elseif($sidx == "resourceType")
+			order by	securedResources.resourceType
+		#elseif($sidx == "sortOrder")
+			order by	securedResources.sortOrder
+		#elseif($sidx == "systemName")
+			order by 	securedResources.systemName
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end
+		]]>
+	</query>
+	
+	<query name="countUnmappedAnyRoleList">
+		<![CDATA[
+		SELECT count(*) 
+		FROM SecuredResources securedResources 
+		WHERE NOT EXISTS
+			(SELECT securedResourcesRoles.securedResources.resourceId
+				FROM SecuredResourcesRoles securedResourcesRoles
+				WHERE securedResources.resourceId = securedResourcesRoles.securedResources.resourceId
+			)
+		#if($keywordNum != "")
+			#if($condition == "resourceId")
+				AND securedResources.resourceId like :keywordStr 
+			#elseif($condition == "resourcePattern")
+				AND securedResources.resourcePattern like :keywordStr
+			#elseif($condition == "resourceName")
+				AND securedResources.resourceName like :keywordStr
+			#end
+		#end	
+		#if($searchType == "url" || $searchType == "method" || $searchType == "pointcut")
+			AND securedResources.resourceType like :searchType
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND securedResources.systemName = :systemName
+		#end
+		]]>
+	</query>	
+	
+	<query name="removesecuredResourcesRoles">
+		<![CDATA[
+			DELETE SecuredResourcesRoles securedResourcesRoles WHERE securedResourcesRoles.roles.roleId = :roleId
+		]]>
+	</query>
+	
+	
+	<query name="findUnmappedResourcesListForWS">
+		<![CDATA[
+		FROM SecuredResources securedResources 
+		WHERE NOT EXISTS
+			(SELECT securedResourcesRoles.securedResources.resourceId
+				FROM SecuredResourcesRoles securedResourcesRoles
+				WHERE securedResources.resourceId = securedResourcesRoles.securedResources.resourceId
+			)
+		#if($keywordNum != "")
+			#if($condition == "resourceId")
+				AND securedResources.resourceId like :keywordStr 
+			#elseif($condition == "resourcePattern")
+				AND securedResources.resourcePattern like :keywordStr
+			#elseif($condition == "resourceName")
+				AND securedResources.resourceName like :keywordStr
+			#end
+		#end
+		#if($searchType == "url" || $searchType == "method" || $searchType == "pointcut")
+			AND securedResources.resourceType like :searchType
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND securedResources.systemName = :systemName
+		#end	
+		#if($sidx == "resourceId" || $sidx == "")
+			order by	securedResources.resourceId
+		#elseif($sidx == "resourceName")
+			order by	securedResources.resourceName
+		#elseif($sidx == "roleId")
+			order by	securedResourcesRoles.roles.roleId
+		#elseif($sidx == "roleName")
+			order by	roles.roleName
+		#elseif($sidx == "resourcePattern")
+			order by	securedResources.resourcePattern
+		#elseif($sidx == "resourceType")
+			order by	securedResources.resourceType
+		#elseif($sidx == "sortOrder")
+			order by	securedResources.sortOrder
+		#elseif($sidx == "systemName")
+			order by 	securedResources.systemName
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end
+		]]>
+	</query>
+	
+	<query name="countUnmappedResourcesTestListForWS">
+		<![CDATA[
+		SELECT count(*) 
+		FROM SecuredResources securedResources 
+		WHERE NOT EXISTS
+			(SELECT securedResourcesRoles.securedResources.resourceId
+				FROM SecuredResourcesRoles securedResourcesRoles
+				WHERE securedResources.resourceId = securedResourcesRoles.securedResources.resourceId
+			)
+		#if($keywordNum != "")
+			#if($condition == "resourceId")
+				AND securedResources.resourceId like :keywordStr 
+			#elseif($condition == "resourcePattern")
+				AND securedResources.resourcePattern like :keywordStr
+			#elseif($condition == "resourceName")
+				AND securedResources.resourceName like :keywordStr
+			#end
+		#end	
+		#if($searchType == "url" || $searchType == "method" || $searchType == "pointcut")
+			AND securedResources.resourceType like :searchType
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND securedResources.systemName = :systemName
+		#end
+		]]>
+	</query>	
+
+</dynamic-hibernate>
+
+
+

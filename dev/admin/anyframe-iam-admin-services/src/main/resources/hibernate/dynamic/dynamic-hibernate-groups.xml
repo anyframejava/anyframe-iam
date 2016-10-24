@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
+<dynamic-hibernate>
+	<query name="findGroupsList">
+		<![CDATA[
+		FROM Groups groups 
+		#if ($keywordNum != "")			
+			WHERE 		
+			#if ($condition == "All" || $condition == "")
+				(
+				  groups.groupId like :keywordStr or  groups.groupName like :keywordStr
+				)	
+			#elseif($condition == "groupId" || $condition == "groupName")
+				groups.{{condition}} like :keywordStr			
+			#end
+		#end			
+			order by							
+				groups.groupId
+		]]>
+	</query>
+
+	<query name="countGroupsList">
+		<![CDATA[
+		SELECT count(*) 
+		FROM Groups groups 
+		#if ($keywordNum != "")			
+			WHERE 		
+			#if ($condition == "All" || $condition == "")
+				(
+				  groups.groupId like :keywordStr or  groups.groupName like :keywordStr
+				)	
+			#elseif($condition == "groupId" || $condition == "groupName")
+				groups.{{condition}} like :keywordStr			
+			#end
+		#end					
+		]]>
+	</query>
+	
+	<query name="findAllGroupsList">
+		<![CDATA[
+		FROM Groups groups 
+		WHERE groups.groupId like :keywordStr
+		order by							
+				groups.groupId
+		]]>
+	</query>
+	
+	<query name="findGroupNameList">
+		<![CDATA[
+			SELECT distinct new Map(groups.groupName as groupName)
+			FROM Groups groups
+			WHERE LOWER(groups.groupName) like :keyword			
+			ORDER BY groups.groupName
+		]]>
+	</query>
+	
+	<query name="findGroupIdByGroupName">
+		<![CDATA[
+			FROM Groups groups
+			WHERE LOWER(groups.groupName) = :groupName
+		]]>
+	</query>
+
+</dynamic-hibernate>
+
+
+

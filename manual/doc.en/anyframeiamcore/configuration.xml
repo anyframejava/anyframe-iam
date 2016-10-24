@@ -1,0 +1,1074 @@
+<chapter id="anyframeiamcore_configuration">
+	<title>IAM Core Configuration</title>
+
+	<para>Spring Security, the basis of Anyframe IAM Core, basically supports XML setting only.
+  Supporting xml setting only, however, cost financial burden and delay in system maintenance due to huge and complicated 
+  attribute files and is not a setting way preferred in general enterprise application.	
+	</para>
+	<para>
+		To solve this problem, Anyframe IAM Core was developed extending Spring Security and based on DB-based setting information.
+		In this chapter, let's take a close look at how to set IAM core.		
+	</para>
+
+	<section id="anyframeiamcore_securityconfiguration">
+		<title>Security Configuration</title>
+		<itemizedlist>
+			<para>Essential libraries for applying Spring Security basic function are as the following.			
+			</para>
+			<listitem>
+				<para>spring-security-core-3.0.2.RELEASE.jar</para>
+			</listitem>
+
+			<listitem>
+				<para>spring-security-taglibs-3.0.2.RELEASE.jar</para>
+			</listitem>
+			
+			<listitem>
+				<para>spring-security-web-3.0.2.RELEASE.jar</para>
+			</listitem>
+		</itemizedlist>
+		<para>IAM Core provides functions extending spring-security-core, spring-security-acl,
+			spring-security-taglibs, spring-web. In addition, AOP-related libraries such as Spring, AspectJ,etc. and part of Apache Commons library
+			are used as well.		
+			</para>
+
+		<itemizedlist>
+			<para>
+				<emphasis role="bold">web.xml registration</emphasis>
+			</para>
+			<listitem>
+				<para>org.springframework.web.filter.DelegatingFilterProxy registration :
+					Spring Framework class representing filter implementation registered as Spring bean at Application Context.
+					</para>
+			</listitem>
+
+			<listitem>
+				<para>Make all web requests to be returned to DelegatingFilterProxy of Spring Security.</para>
+			</listitem>
+
+			<listitem>
+				<para>DelegatingFilterProxy is a general-purpose class used when transferring web requests to different filter 
+				based on different url pattern.</para>
+			</listitem>
+
+			<listitem>
+				<para>These mandated filters are managed in application context, hence enjoying the benefits of Dependency Injection.</para>
+			</listitem>
+		</itemizedlist>
+		
+		<programlisting language="xml">
+<![CDATA[<filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>
+
+<filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+
+..
+<!-- if you wish to use Concurrent Session Control
+<listener>
+	<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+</listener>
+ -->]]>
+		</programlisting>
+
+		<itemizedlist>
+			<para>
+				<emphasis role="bold">Security Namespace</emphasis>
+			</para>
+			<listitem>
+				<para>since Spring Security 2.0.x </para>
+			</listitem>
+			<listitem>
+				<para>Much simpler setting compared with previous and complicated Security bean setting</para>
+			</listitem>
+			<listitem>
+				<para>Providing most used case in advance without the understanding of sub-implementation</para>
+			</listitem>
+			<listitem>
+				<para>Not containing all Security functions. Some parts are difficult to modify/extend.</para>
+			</listitem>
+		</itemizedlist>
+
+		<itemizedlist>
+			<para>Core Tags of Namespace-based Spring Security setting file</para>
+			<listitem>
+				<para><![CDATA[<http>]]></para>
+			</listitem>
+			<listitem>
+				<para><![CDATA[<intercept-url … />]]></para>
+			</listitem>
+			<listitem>
+				<para><![CDATA[<global-method-security />]]></para>
+			</listitem>
+			<listitem>
+				<para><![CDATA[<jdbc-user-service />]]></para>
+			</listitem>
+		</itemizedlist>
+
+		<para>Example of Namespace-based Spring Security setting</para>
+		<programlisting language="xml">
+<![CDATA[<b:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:b="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd">
+                        
+    <http path-type="regex" lowercase-comparisons="false">
+        <intercept-url pattern="\A/sample/images/.*\Z" filters="none" />
+        <intercept-url pattern="\A/sample/css/.*\Z" filters="none" />
+        <intercept-url pattern="\A/sample/javascript/.*\Z" filters="none" />
+
+        <intercept-url pattern="\A/login\.do.*\Z" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        <intercept-url pattern="\A/security/users/list\.do.*\Z" access="ROLE_USER" />
+        <intercept-url pattern="\A/.*\.do.*\Z" access="ROLE_RESTRICTED" />
+        <intercept-url pattern="\A/.*\Z" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        
+        <custom-filter after="FILTER_SECURITY_INTERCEPTOR" ref="filterSecurityInterceptor"/>
+        <custom-filter after="EXCEPTION_TRANSLATION_FILTER"
+                        ref="restrictedTimesFilterSecurityInterceptor"/>
+
+        <form-login login-page="/login.do" login-processing-url="/j_spring_security_check"
+            authentication-failure-url="/login.do?login_error=1"
+            default-target-url="/plugins.do" />
+
+        <anonymous />
+        <logout logout-success-url="/plugins.do" />
+
+        <!--
+            if you wish to use Concurrent Session Control - see also listener
+            configuration of web.xml - HttpSessionEventPublisher
+        -->
+        <session-management>
+            <concurrency-control max-sessions="1" error-if-maximum-exceeded="true"/>
+        </session-management>
+    </http>
+    
+	<authentication-manager alias="authenticationManager"> 
+	    <authentication-provider>
+	        <password-encoder hash="md5"/>
+	        <jdbc-user-service data-source-ref="dataSource"
+	            users-by-username-query="SELECT USER_ID, PASSWORD, ENABLED FROM USERS WHERE USER_ID = ?"
+	            authorities-by-username-query="SELECT SUBJECT_ID AS USER_ID, ROLE_ID FROM AUTHORITIES WHERE SUBJECT_ID = ?"
+	        />
+	    </authentication-provider>
+	</authentication-manager>
+
+    <global-method-security secured-annotations="enabled" jsr250-annotations="enabled">
+        <protect-pointcut expression="execution(* security..UsersService.remove(..))" access="ROLE_ADMIN" />
+    </global-method-security>
+    
+</b:beans>]]>
+		</programlisting>
+		<para>Above is the example of Namespace tag-based authentication/authorization of Spring Security.</para>
+		<itemizedlist>
+			<listitem>
+				<para>Core security functions of Spring Security are set through http tag. In the case above,regular expression url pattern matcher
+				is used through path-type attribute, and the example is compared with lowercase-comparisons false 
+				and leaving upper and lower case as it is.</para>
+			</listitem>
+			<listitem>
+				<para>By setting  filters="none" for static web resources relevant to images, css, javascript 
+				at the top of with intercept-url tag under http, it was defined to provide unconditionally
+				without Filter Chain of Spring Security.</para>
+			</listitem>
+			<listitem>
+				<para>It is possible to set authorization to intercept-url tag through access attribute, and login.do pattern for above-mentioned 
+				moving to login page is open to access. In addition, for /security/users/list.do, ROLE_USER authorization is set, 
+				and for all other .do patterns, ROLE_RESTRICTED is set. All other patterns are accessible.</para>
+			</listitem>
+			<listitem>
+				<para> By setting form-login, HTML Form-based authentication was set. Defines login page of a page to go back when authentication failed,
+				and also page to go when authentication succeeded.</para>
+			</listitem>
+			<listitem>
+				<para>Adding anonymous tag automatically adds AnonymousProcessingFilter, and access by unauthenticated user will be handed 
+				in basic role named ROLE_ANONYMOUS.</para>
+			</listitem>
+			<listitem>
+				<para>Defines a page to return when logout was made successfully through logout tag.</para>
+			</listitem>
+			<listitem>
+				<para>Can define the number of simultaneous access by one user through session-management tag.
+				Make sure to set Listener for HttpSessionEventPublisher in web.xml along with this tag.</para>
+			</listitem>
+			<listitem>
+				<para>If you use authentication-provider tag as a default, it is set DaoAuthenticationProvider 
+				and JDBC-based UserDetailsService is used for user information search with id and password.
+				In the example above, One-way hash algorithm was set md5 to make double encryption impossible 
+				by setting password-encoder for encryption of user password.
+				At user authentication, encrypted password will be compared and handled.
+				(Not mentioned above is that when developing service for modifying user password data, encryption is needed through password
+				encoder bean as same. For details, see Security Sample of Anyframe.)</para>
+			</listitem>
+			<listitem>
+				<para>Through global-method-security tag, security control for Method execution is set.
+				In the example above, it was set to be possible to use @RolesAllowed annotation of jsr250 
+				 and @Secured annotation of Spring Security. And as an expression of Pointcut of Aspect J, ROLE_ADMIN 
+				 authorization is set for user service remove.
+				 Note that for application of Spring AOP, writing service in interface - implementation format is recommended, 
+				 and if interface does not exist, CGLib application is needed for AOP application. </para>
+			</listitem>
+		</itemizedlist>
+
+	</section>
+
+	<section id="anyframeiamcore_databaseconfiguration">
+		<title>Database Configuration</title>
+		<para>Table related user authorization is user table and user authorization
+    table and there are tables related user authorization such as role, resource,
+    role hierarchy. </para>
+			
+		<table frame="all">
+			<title>IAM Table</title>
+			<tgroup cols="3">
+				<thead>
+					<row>
+						<entry></entry>
+						<entry>Table Name</entry>
+						<entry>Description</entry>					
+					</row>
+				</thead>
+				<tbody>
+					<row>
+						<entry>User Info.</entry>
+						<entry>USERS</entry>
+						<entry>Application User Info.</entry>
+					</row>
+					<row>
+						<entry morerows="2" valign="center">Group Info.</entry>
+						<entry>GROUPS</entry>
+						<entry>User Group Info.</entry>
+					</row>
+					<row>
+						<entry>GROUPS_HIERARCHY</entry>
+						<entry>Hierarchical info among user groups</entry>
+					</row>
+					<row>
+						<entry>GROUPS_USERS</entry>
+						<entry>Mapping info between user group and user</entry>
+					</row>
+					<row>
+						<entry morerows="2" valign="middle">Role Info.</entry>
+						<entry>ROLES</entry>
+						<entry>ROLE Info.</entry>
+					</row>
+					<row>
+						<entry>ROLES_HIERARCHY</entry>
+						<entry>Hierarchical info. between Roles</entry>
+					</row>
+					<row>
+						<entry>AUTHORITIES</entry>
+						<entry>Mapping info. between ROLE and Group/User</entry>
+					</row>
+					<row>
+						<entry morerows="2" valign="middle">Secured Resource Info.</entry>
+						<entry>SECURED_RESOURCES</entry>
+						<entry>Information of Secured resource</entry>
+					</row>
+					<row>
+						<entry>SECURED_RESOURCES_ROLES</entry>
+						<entry>Mapping info between secured resources and ROLE</entry>
+					</row>
+					<row>
+						<entry>CANDIDATE_SECURED_RESOURCES</entry>
+						<entry>Candidate Secured Resources Info.</entry>
+					</row>
+					<row>
+						<entry morerows="2" valign="middle">View Info.</entry>
+						<entry>VIEW_RESOURCES</entry>
+						<entry>Application view info.</entry>
+					</row>
+					<row>
+						<entry>VIEW_RESOURCES_MAPPING</entry>
+						<entry>Mapping between application view info and Role info.</entry>
+					</row>
+					<row>
+						<entry>VIEW_HIERARCHY</entry>
+						<entry>Hierarchical info between view info. </entry>
+					</row>
+					<row>
+						<entry morerows="3" valign="middle">Restrict Time Info.</entry>
+						<entry>RESTRICTED_TIMES</entry>
+						<entry>Info on restricted time of system usage </entry>
+					</row>
+					<row>
+						<entry>RESTRICTED_TIMES_RESOURCES</entry>
+						<entry>Mapping info between restricted time of system usage and resources
+					</entry>
+					</row>
+					<row>
+						<entry>RESTRICTED_TIMES_ROLES</entry>
+						<entry>Mapping info between restricted time on system usage and Role 
+						</entry>
+					</row>
+					<row>
+						<entry>TIME_RESOURCES_EXCLUSION</entry>
+						<entry>Info on exclusion of system usage</entry>
+					</row>
+					<row>
+						<entry morerows="1" valign="middle">Others</entry>
+						<entry>IDS</entry>
+						<entry>ID auto creation info</entry>
+					</row>
+					<row>
+						<entry>DATA_UPLOAD</entry>
+						<entry>Excel Import/Export info</entry>
+					</row>
+				</tbody>
+			</tgroup>
+		</table>
+		
+		<para>ERD of the table is as the following, for DDL sentence for each table, 
+		see <link linkend="appendix_schema">Appendix B. IAM Database Schema</link>.</para>
+				
+		<mediaobject>
+			<imageobject>
+				<title>DaoAuthenticationProvidor</title>
+				<imagedata scalefit="1" width="100%" align="center"
+					fileref="../image/anyframeiam/db_schema.png" />
+			</imageobject>
+		</mediaobject>
+
+<!--
+		<para>IAM DB Schema DDL</para>
+		<programlisting>
+<![CDATA[CREATE TABLE GROUPS ( 
+    GROUP_ID    VARCHAR(20)    NOT NULL, 
+    GROUP_NAME  VARCHAR(50)    NOT NULL, 
+    CREATE_DATE VARCHAR(8), 
+    MODIFY_DATE VARCHAR(8), 
+    CONSTRAINT PK_GROUPS
+    PRIMARY KEY ( GROUP_ID )
+); 
+
+CREATE TABLE GROUPS_HIERARCHY ( 
+    PARENT_GROUP VARCHAR(50) NOT NULL, 
+    CHILD_GROUP  VARCHAR(50) NOT NULL, 
+    CREATE_DATE  VARCHAR(8), 
+    MODIFY_DATE  VARCHAR(8), 
+    CONSTRAINT PK_GROUPS_HIERARCHY PRIMARY KEY ( PARENT_GROUP, CHILD_GROUP ),
+    CONSTRAINT FK_GROUPS1 FOREIGN KEY (PARENT_GROUP) REFERENCES GROUPS (GROUP_ID),
+    CONSTRAINT FK_GROUPS2 FOREIGN KEY (CHILD_GROUP) REFERENCES GROUPS (GROUP_ID) 
+); 
+
+CREATE TABLE USERS ( 
+    USER_ID        VARCHAR(20)    NOT NULL,
+    USER_NAME      VARCHAR(50)    NOT NULL,
+    PASSWORD       VARCHAR(50)    NOT NULL,
+    ENABLED        CHAR(1),
+    CREATE_DATE    VARCHAR(8),
+    MODIFY_DATE    VARCHAR(8),
+    CONSTRAINT PK_USERS
+    PRIMARY KEY ( USER_ID )
+);
+
+CREATE TABLE GROUPS_USERS ( 
+    GROUP_ID    VARCHAR(20)    NOT NULL, 
+    USER_ID     VARCHAR(20)    NOT NULL, 
+    CREATE_DATE VARCHAR(8), 
+    MODIFY_DATE VARCHAR(8), 
+    CONSTRAINT PK_GROUPS_USERS PRIMARY KEY ( GROUP_ID, USER_ID ),
+    CONSTRAINT FK_GROUPS_USERS_GROUP_ID FOREIGN KEY (GROUP_ID) REFERENCES GROUPS (GROUP_ID),
+    CONSTRAINT FK_GROUPS_USERS_USER_ID FOREIGN KEY (USER_ID) REFERENCES USERS (USER_ID)
+); 
+
+CREATE TABLE ROLES ( 
+    ROLE_ID        VARCHAR(50)    NOT NULL, 
+    ROLE_NAME      VARCHAR(50), 
+    DESCRIPTION    VARCHAR(100), 
+    CREATE_DATE    VARCHAR(8), 
+    MODIFY_DATE    VARCHAR(8), 
+    CONSTRAINT PK_ROLES PRIMARY KEY ( ROLE_ID )
+); 
+
+CREATE TABLE ROLES_HIERARCHY ( 
+    PARENT_ROLE    VARCHAR(50)    NOT NULL, 
+    CHILD_ROLE     VARCHAR(50)    NOT NULL, 
+    CREATE_DATE    VARCHAR(8), 
+    MODIFY_DATE    VARCHAR(8), 
+    CONSTRAINT PK_ROLES_HIERARCHY PRIMARY KEY ( PARENT_ROLE, CHILD_ROLE ),
+    CONSTRAINT FK_ROLES1 FOREIGN KEY(PARENT_ROLE) REFERENCES ROLES(ROLE_ID),
+    CONSTRAINT FK_ROLES2 FOREIGN KEY(CHILD_ROLE) REFERENCES ROLES (ROLE_ID)
+); 
+
+CREATE TABLE SECURED_RESOURCES ( 
+    RESOURCE_ID          VARCHAR(10)    NOT NULL,
+    RESOURCE_NAME        VARCHAR(50), 
+    RESOURCE_PATTERN     VARCHAR(300)   NOT NULL,
+    DESCRIPTION          VARCHAR(100),
+    RESOURCE_TYPE        VARCHAR(10)    NOT NULL,
+    SORT_ORDER           NUMERIC,
+    CREATE_DATE          VARCHAR(8),
+    MODIFY_DATE          VARCHAR(8),
+    CONSTRAINT PK_RECURED_RESOURCES
+    PRIMARY KEY ( RESOURCE_ID )
+); 
+
+CREATE TABLE SECURED_RESOURCES_ROLES ( 
+    RESOURCE_ID    VARCHAR(10)    NOT NULL, 
+    ROLE_ID        VARCHAR(50)    NOT NULL, 
+    CREATE_DATE    VARCHAR(8), 
+    MODIFY_DATE    VARCHAR(8), 
+    CONSTRAINT PK_SECURED_RESOURCES_ROLES PRIMARY KEY ( RESOURCE_ID, ROLE_ID ),
+    CONSTRAINT FK_SECURED_RESOURCES FOREIGN KEY(RESOURCE_ID) REFERENCES SECURED_RESOURCES(RESOURCE_ID),
+    CONSTRAINT FK_ROLES4 FOREIGN KEY (ROLE_ID) REFERENCES ROLES(ROLE_ID)
+);
+  
+CREATE TABLE AUTHORITIES ( 
+    ROLE_ID        VARCHAR(50)   NOT NULL,
+    SUBJECT_ID     VARCHAR(20)   NOT NULL,
+    TYPE           VARCHAR(2)    NOT NULL,
+    CREATE_DATE    VARCHAR(8),
+    MODIFY_DATE    VARCHAR(8),
+    CONSTRAINT PK_AUTHORITIES PRIMARY KEY ( ROLE_ID, SUBJECT_ID ),
+    CONSTRAINT FK_ROLES3 FOREIGN KEY(ROLE_ID) REFERENCES ROLES(ROLE_ID)
+); 
+  
+CREATE TABLE RESTRICTED_TIMES (
+    TIME_ID     VARCHAR(10)    NOT NULL,
+    TIME_TYPE   VARCHAR(10)    NOT NULL,    crash, holiday, weekend, improve, daily
+    START_DATE  VARCHAR(8),
+    START_TIME  VARCHAR(6)     NOT NULL,
+    END_DATE    VARCHAR(8),
+    END_TIME    VARCHAR(6)     NOT NULL,
+    DESCRIPTION	VARCHAR(100),
+    CONSTRAINT PK_RESTRICTED_TIMES PRIMARY KEY(TIME_ID)
+);
+
+CREATE TABLE RESTRICTED_TIMES_RESOURCES (
+    TIME_ID        VARCHAR(10)    NOT NULL,
+    RESOURCE_ID    VARCHAR(10)    NOT NULL,
+    CONSTRAINT PK_RESTRICTED_TIMES_RESOURCES  PRIMARY KEY(TIME_ID, RESOURCE_ID),
+    CONSTRAINT FK_TIMES_RESOURCES_TIME_ID FOREIGN KEY (TIME_ID) REFERENCES RESTRICTED_TIMES(TIME_ID),
+    CONSTRAINT FK_TIMES_RESOURCES_RESOURCE_ID FOREIGN KEY(RESOURCE_ID) REFERENCES SECURED_RESOURCES(RESOURCE_ID)
+);
+
+CREATE TABLE TIMES_RESOURCES_EXCLUSION (
+    TIME_ID        VARCHAR(10)    NOT NULL,
+    RESOURCE_ID    VARCHAR(10)    NOT NULL,
+    ROLE_ID        VARCHAR(50)    NOT NULL,
+    CONSTRAINT PK_EXCLUSION  PRIMARY KEY(TIME_ID, RESOURCE_ID, ROLE_ID),
+    CONSTRAINT FK_EXCLUSION_TIME_ID FOREIGN KEY (TIME_ID) REFERENCES RESTRICTED_TIMES(TIME_ID),
+    CONSTRAINT FK_EXCLUSION_RESOURCE_ID FOREIGN KEY(RESOURCE_ID) REFERENCES SECURED_RESOURCES(RESOURCE_ID),
+    CONSTRAINT FK_EXCLUSION_ROLE_ID FOREIGN KEY(ROLE_ID) REFERENCES ROLES(ROLE_ID)
+);
+
+CREATE TABLE RESTRICTED_TIMES_ROLES (
+    TIME_ID    VARCHAR(10)    NOT NULL,
+    ROLE_ID    VARCHAR(50)    NOT NULL,
+    CONSTRAINT PK_RESTRICTED_TIMES_ROLES  PRIMARY KEY(TIME_ID, ROLE_ID),
+    CONSTRAINT FK_TIMES_ROLES_TIME_ID FOREIGN KEY (TIME_ID) REFERENCES RESTRICTED_TIMES(TIME_ID),
+    CONSTRAINT FK_TIMES_ROLES_ROLE_ID FOREIGN KEY(ROLE_ID) REFERENCES ROLES(ROLE_ID)
+);
+
+CREATE TABLE VIEW_RESOURCES  (
+    VIEW_RESOURCE_ID    VARCHAR(50)    NOT NULL,     ex.) LOGI_001
+    CATEGORY            VARCHAR(255),                ex.) Logistics물류 > stock management 입고관리
+    VIEW_NAME           VARCHAR(50)    NOT NULL,     ex.) Non-stock status 미입고현황
+    DESCRIPTION         VARCHAR(255)   NOT NULL,     ex.) Non-stock order list 입고되지 않은 주문 리스트
+    VIEW_INFO           VARCHAR(255),                ex.) Addition info on page 화면에 대한 추가 정보
+    CONSTRAINT PK_VIEW_RESOURCES  PRIMARY KEY(VIEW_RESOURCE_ID)
+);
+
+CREATE TABLE VIEW_RESOURCES_MAPPING  (
+    VIEW_RESOURCE_ID    VARCHAR(50)    NOT NULL,
+    REF_ID              VARCHAR(50)    NOT NULL,     ex.) ROLE_ID or USER_ID
+    MASK                INTEGER        NOT NULL,     ex.) 1(R), 2(W), 4(C), 8(D), 16(A)
+    PERMISSIONS         VARCHAR(255)   NOT NULL,     ex.) READ, WRITE, CREATE, DELETE, ADMINISTRATION
+    REF_TYPE            VARCHAR(10)    NOT NULL,     ex.) ROLE or USER [todo:// or GROUP]
+    CONSTRAINT PK_VIEW_RESOURCES_MAPPING  PRIMARY KEY(VIEW_RESOURCE_ID, REF_ID),
+    CONSTRAINT FK_MAPPING_VIEW_RESOURCE_ID  FOREIGN KEY (VIEW_RESOURCE_ID) REFERENCES VIEW_RESOURCES (VIEW_RESOURCE_ID)
+);
+
+CREATE TABLE IDS ( 
+    TABLE_NAME    VARCHAR(16)    NOT NULL, 
+    NEXT_ID       NUMERIC(30)    NOT NULL, 
+    PRIMARY KEY ( TABLE_NAME ) ) ;
+  
+CREATE TABLE CANDIDATE_SECURED_RESOURCES (
+    CANDIDATE_RESOURCE_ID      NUMERIC(10)     NOT NULL,
+    BEANID                     VARCHAR(128),
+    PACKAGES                   VARCHAR(128)    NOT NULL,
+    CLASSES                    VARCHAR(128),
+    METHOD                     VARCHAR(128),
+    PARAMETER                  VARCHAR(128),
+    REQUESTMAPPING             VARCHAR(128),
+    POINTCUT                   VARCHAR(128),
+    CANDIDATE_RESOURCE_TYPE    VARCHAR(10)     NOT NULL,
+    CONSTRAINT	CANDIDATE_SECURED_RESOURCES_PK	PRIMARY KEY(CANDIDATE_RESOURCE_ID)
+);]]>
+</programlisting>
+-->
+	</section>
+
+	<section id="anyframeiamcore_extensionconfiguration">
+		<title>IAM Core Extensions Configuration</title>
+		<para>Let's take a look at mainly extension function used in Anyframe IAM Core.
+		As the sample application setting provided with IAM is used as it is.
+		In this chapter, the focus will be made on understanding the definition of each setting. </para>
+
+		<sect2 id="anyframeiamcore_extensionconfiguration_sec001">
+			<title>IAM message file setting</title>
+			<para>Add IAM message file to target application messageSource bean setting(usually existing in context-common.xml)as the following. </para>
+			<programlisting language="xml">
+<![CDATA[    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+            <list>
+                ..
+                <value>anyframe/iam/core/messages/security</value>
+            </list>
+        </property>
+    </bean>]]>
+    </programlisting>
+		</sect2>
+
+		<sect2 id="anyframeiamcore_extensionconfiguration_sec002">
+			<title>Extension of JDBC-based authentication and additional application of group authorization at login</title>
+			<para>Apply ExtJdbcUserDetailsManager of IAM instead of <![CDATA[<jdbc-user-service />]]> of Spring Security.
+			</para>
+			<programlisting language="xml">
+<![CDATA[    <b:bean id="jdbcUserService"
+            class="org.anyframe.iam.core.userdetails.jdbc.ExtJdbcUserDetailsManager" >
+        <!-- Set the property name when searching user group at usersByUsernameQuery -->
+        <b:property name="userGroupPropertyName" value="GROUP_ID"/>
+        <!-- USER_ID, PASSWORD, ENABLED must be shown in the order of the first, second and third! -->
+        <b:property name="usersByUsernameQuery">
+            <b:value>
+              SELECT A.USER_ID AS USER_ID, PASSWORD, CASE WHEN ENABLED = 'Y' THEN 1 ELSE 0 END ENABLED, 
+                     B.GROUP_ID AS GROUP_ID, USER_NAME, USER_NAME, CREATE_DATE, MODIFY_DATE
+              FROM USERS A LEFT OUTER JOIN GROUPS_USERS B 
+                   ON ( A.USER_ID = B.USER_ID ) 
+              WHERE A.USER_ID = ?
+            </b:value>
+        </b:property>
+        <b:property name="authoritiesByUsernameQuery">
+            <b:value>
+            SELECT USER_ID,ROLE_ID,GROUP_ID,SUBJECT_ID,TYPE
+              FROM AUTHORITIES C, (
+                      SELECT A.USER_ID,B.GROUP_ID
+                        FROM USERS A LEFT OUTER JOIN GROUPS_USERS B ON ( A.USER_ID = B.USER_ID )
+                       WHERE A.USER_ID = ? ) D
+             WHERE ( C.SUBJECT_ID = D.USER_ID
+                          OR C.SUBJECT_ID = D.GROUP_ID )
+            </b:value>
+        </b:property>
+        <b:property name="dataSource" ref="dataSource"/>
+        <!-- If you want to use user-defined CustomUserVO, extend ExtUsersByUsernameMapping and regirst MappingSqlQuery 
+        that contains the logic at makeCustomUser(). -->
+        <!-- <b:property name="mapClass" value="org.anyframe.iam.core.userdetails.jdbc.CustomUsersByUsernameMapping"/> -->
+    </b:bean>
+    
+    ..
+    <authentication-manager alias="authenticationManager"> 
+        <authentication-provider user-service-ref="jdbcUserService" />
+    </authentication-manager>]]>
+    </programlisting>
+			<para>This is an example of saving the custom user information as UserDetails extension object of Spring Security,
+			and authority on group was loaded as user authority along with user log-in.
+			 If mapClass is  not assigned, custom user information is handled as Map type, ExtUsersByUsernameMapping of IAM, 
+			 but if user writes mapping object extending this, it is also possible to hand user-defined JavaBeans object.
+			 (For example, see javadoc of ExtUsersByUsernameMapping). In addition, note that property name of above user group can be set.
+			 Default value is userGroup.
+   		  </para>
+			<para>The following is an example of getting custom user object by using CustomUserDetailsHelper.
+			User information object below is accessible not only in web but also from entire application layer in same way.</para>
+			<programlisting language="java">
+<![CDATA[    ExtUser extUser = CustomUserDetailsHelper.getAuthenticatedUser();
+    Map customUserMap = (Map) extUser.getCustomUser();
+    // When writing and appliging maClass maiing with JavaBeans called CustomUser 
+    // CustomUser customUser = (CustomUser) extUser.getCustomUser();]]>
+    </programlisting>
+		</sect2>
+
+		<sect2 id="anyframeiamcore_extensionconfiguration_sec003">
+			<title>DB based data controlling for SecuredObject</title>
+			<para>IAM handles secured resources of Spring Security, RoleHierarchy, and
+      extended time-based secured resources based on DB. This is a structure searched and handled once at running container (or when requesting reload)
+			</para>
+			<programlisting language="xml">
+<![CDATA[    <b:bean id="securedObjectService" class="org.anyframe.iam.core.securedobject.impl.SecuredObjectServiceImpl">
+        <b:property name="securedObjectDAO" ref="securedObjectDAO" />
+    </b:bean>
+
+    <b:bean id="securedObjectDAO" class="org.anyframe.iam.core.securedobject.impl.SecuredObjectDAO">
+        <b:property name="dataSource" ref="dataSource" />
+        <!--b:property name="systemName" ref="SAMPLE" /-->
+    </b:bean>]]>
+    </programlisting>
+    		<para>systemName attribute defines the application when there are multiple business applications.</para>
+			<para>Just in case of applying IAM Core only not using DB Schema of IAM or modifying queries when some tales are different,
+			securedObjectDAO makes it possible to set user definition of sqlRolesAndUrl, sqlRolesAndMethod, sqlRolesAndPointcut,
+				sqlRegexMatchedRequestMapping, sqlHierarchicalRoles,
+				sqlRestrictedTimesRoles, sqlRestrictedTimesResources,
+				sqlViewResourceMapping.
+				For details, see <link linkend="anyframeiaminstall_customerconfiguration_sec0052">SecuredObject user definition</link> or 
+				SecuredObjectDAO source.
+			
+   		  </para>
+		</sect2>
+
+		<sect2 id="anyframeiamcore_extensionconfiguration_sec004">
+			<title>Applying Hierarchical Role DB</title>
+			<para>RoleHierarchy handling of Spring Security is used as it is, and DB-based loading Hierachy data of Role is added. </para>
+			<programlisting language="xml">
+<![CDATA[    <b:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+        <b:property name="hierarchy" ref="hierarchyStrings" />
+    </b:bean>
+
+    <b:bean id="hierarchyStrings" class="org.anyframe.iam.core.userdetails.hierarchicalroles.HierarchyStringsFactoryBean"
+            init-method="init">
+        <b:property name="securedObjectService" ref="securedObjectService" />
+    </b:bean>
+
+    <b:bean id="userDetailsServiceWrapper" class="org.springframework.security.access.hierarchicalroles.UserDetailsServiceWrapper">
+        <b:property name="roleHierarchy" ref="roleHierarchy" />
+        <b:property name="userDetailsService" ref="jdbcUserService" />
+    </b:bean>
+    ..
+    <authentication-manager alias="authenticationManager"> 
+        <authentication-provider user-service-ref="userDetailsServiceWrapper" />
+    </authentication-manager>]]></programlisting>
+			<programlisting language="xml"><![CDATA[    <b:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+        <b:property name="hierarchy" ref="hierarchyStrings" />
+    </b:bean>
+
+    <b:bean id="hierarchyStrings" class="org.anyframe.iam.core.userdetails.hierarchicalroles.HierarchyStringsFactoryBean"
+            init-method="init">
+        <b:property name="securedObjectService" ref="securedObjectService" />
+    </b:bean>
+
+    <b:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <b:property name="allowIfAllAbstainDecisions" value="false" />
+        <b:property name="decisionVoters">
+            <b:list>
+                <!-- RoleHierarchyVoter -->
+                <b:bean class="org.springframework.security.access.vote.RoleHierarchyVoter">
+                    <b:constructor-arg ref="roleHierarchy" />
+                </b:bean>
+                <b:bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+            </b:list>
+        </b:property>
+    </b:bean>]]>
+    </programlisting>
+			<para>Spring Security provides two ways of handling RoleHierarchy.
+			One is using UserDetailsServiceWrapper and wrapping original jdbcUserService,
+			the other not wrapping but setting RoleHierarchyVoter
+				(utilizing roleHierarchy internally) instead of RoleVoter when handling AccessDecisionVoter.
+				(Note that UserDetailsServiceWrapper runs properly in 3.0 version, but currently deprecated.)
+			</para>
+		</sect2>
+
+		<sect2 id="anyframeiamcore_extensionconfiguration_sec005">
+			<title>Applying secured resources(Url) - Role mapping DB</title>
+			<para>In addition to FilterSecurityInterceptor and DefaultFilterInvocationDefinitionSource which are basically included in Namespace,
+			to apply DB-based secured resources(Url)-authorization mapping, add the following setting.</para>
+			<programlisting language="xml">
+<![CDATA[    <b:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <b:property name="allowIfAllAbstainDecisions" value="false" />
+        <b:property name="decisionVoters">
+            <b:list>
+                <b:bean class="org.springframework.security.access.vote.RoleVoter">
+                    <b:property name="rolePrefix" value="" />
+                </b:bean>
+                <b:bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+            </b:list>
+        </b:property>
+    </b:bean>
+
+    <b:bean id="filterSecurityInterceptor" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+        <!--  FilterSecurityInterceptor is basically included in Namespace.
+         Note that if observeOncePerRequest is not set, it is not executed in case of basically same filter type.-->
+        <b:property name="observeOncePerRequest" value="false" />
+        <b:property name="authenticationManager" ref="authenticationManager" />
+        <b:property name="accessDecisionManager" ref="accessDecisionManager" />
+        <b:property name="securityMetadataSource" ref="databaseSecurityMetadataSource" />
+    </b:bean>
+
+    <b:bean id="databaseSecurityMetadataSource"
+        class="org.springframework.security.web.access.intercept.AnyframeReloadableDefaultFilterInvocationDefinitionSource">
+        <b:constructor-arg ref="regexUrlPathMatcher" />
+        <b:constructor-arg ref="requestMap" />
+        <b:property name="securedObjectService" ref="securedObjectService" />
+    </b:bean>
+
+    <b:bean id="regexUrlPathMatcher" class="org.springframework.security.web.util.RegexUrlPathMatcher" />
+
+    <b:bean id="requestMap" class="org.anyframe.iam.core.intercept.ResourcesMapFactoryBean" init-method="init">
+        <b:property name="securedObjectService" ref="securedObjectService" />
+        <b:property name="resourceType" value="url" />
+    </b:bean>]]></programlisting>
+			<para>In this example, to provide an authorization handling function for URL secured
+      resource at Namespace of Spring Security, add it to
+      FilterSecurityInterceptor automatically added and by adding
+      FilterSecurityInterceptor, add custom-filter, DB based secured
+      resource-authorization mapping data based handling is added.
+      It is recommended that it is located just next to basic
+      FILTER_SECURITY_INTERCEPTOR, and note that because it operates only once
+      when requesting for same filter type, assign observeOncePerRequest to
+      false to release it.
+      Bean that is registered as
+      databaseObjectDefinitionSource extend
+      Bean registered as databaseSecurityMetadataSource extends DefaultFilterInvocationDefinitionSource of Spring Security 
+      and added DB-based initial data loading and runtime reload function.
+      Through FactoryBean extension class defined as requestMap, securedObjectService-using DB data
+      is provided as initial data of databaseSecurityMetadataSource.
+      In this example, PatternMatcher which checks Url pattern matching is assigned as regular expression-based RegexUrlPathMatcher.
+      Using regular expression helps very strong pattern matching check and checking total url including URL parameter.
+      In addition, AntUrlPathMatcher can be set and expression is simpler than regular expression.
+      Basically, remove URL parameter and compare pattern matching.
+   		  </para>
+		</sect2>
+
+		<sect2 id="anyframeiamcore_extensionconfiguration_sec006">
+			<title>Applying secured resources(Method, Pointcut) - Role mapping DB</title>
+			<para>This example is applying Method Authorization utilizing 
+			DB-based  Method/Pointcut  protected resources.</para>
+			<programlisting language="xml">
+<![CDATA[    <!-- customizing method security start -->
+    <b:bean id="methodMap" class="org.anyframe.iam.core.intercept.ResourcesMapFactoryBean" init-method="init">
+        <b:property name="securedObjectService" ref="securedObjectService" />
+        <b:property name="resourceType" value="method" />
+    </b:bean>
+
+    <b:bean id="methodSecurityMetadataSources" class="org.springframework.security.access.method.MapBasedMethodSecurityMetadataSource">
+        <b:constructor-arg ref="methodMap" />
+    </b:bean>
+
+    <b:bean id="_delegatingMethodSecurityMetadataSource" class="org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource">
+        <b:property name="methodSecurityMetadataSources">
+            <b:list>
+                <b:ref bean="methodSecurityMetadataSources" />
+                <b:bean class="org.springframework.security.access.annotation.SecuredAnnotationSecurityMetadataSource" />
+                <b:bean class="org.springframework.security.access.annotation.Jsr250MethodSecurityMetadataSource" />
+            </b:list>
+        </b:property>
+    </b:bean>
+
+    <b:bean id="_methodSecurityMetadataSourceAdvisor" class="org.springframework.security.access.intercept.aopalliance.MethodSecurityMetadataSourceAdvisor">
+        <b:constructor-arg value="_methodSecurityInterceptor" />
+        <b:constructor-arg ref="_delegatingMethodSecurityMetadataSource" />
+        <b:constructor-arg value="_delegatingMethodSecurityMetadataSource" />
+    </b:bean>
+
+    <b:bean id="_methodSecurityInterceptor" class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
+        <b:property name="validateConfigAttributes" value="false" />
+        <b:property name="authenticationManager" ref="authenticationManager" />
+        <b:property name="accessDecisionManager" ref="accessDecisionManager" />
+        <!--
+        <b:property name="afterInvocationManager" ref="afterInvocationManager" />
+        -->
+        <b:property name="securityMetadataSource" ref="_delegatingMethodSecurityMetadataSource" />
+    </b:bean>
+
+    <b:bean id="pointcutMap" class="org.anyframe.iam.core.intercept.ResourcesMapFactoryBean" init-method="init">
+        <b:property name="securedObjectService" ref="securedObjectService" />
+        <b:property name="resourceType" value="pointcut" />
+    </b:bean>
+
+    <b:bean id="_protectPointcutPostProcessor" class="org.springframework.security.config.method.ProtectPointcutPostProcessor">
+        <b:constructor-arg ref="methodSecurityMetadataSources" />
+        <b:property name="pointcutMap" ref="pointcutMap" />
+    </b:bean>
+
+    <!-- customizing method security end -->]]></programlisting>
+			<para>
+				Note that defintition must be made in traditional bean setting format replacing <![CDATA[<global-method-security>]]> of Namespace.
+				And note the multi-layered methodSecurityMetadataSource (SecurityMetadataSource) reference setting 
+				for same support of secured annotation-based method security.
+				Bean registered as methodSecurityMetadataSources uses MapBasedMethodSecurityMetadataSource of 
+				Spring Security as it is, and through FactoryBean extension class fined methodMap as constructor parameter,
+				secured resources (method)-role mapping data using securedObjectService is provided as an initial data.
+				Likewise, through FactoryBean extension class defined as pointcutMap,
+				secured resources(pointcut)-authorization mapping DB data using securedObjectService 
+				and by reading DB-based Pointcut expression formula of AspectJ, it provides pointcut dynamically when creating each bean
+                and applies adviser for secured process of method for target method of
+                matched bean expression formula at ProtectPointcutPonstProcessor.
+			</para>
+		</sect2>
+
+		<sect2 id="anyframeiamcore_extensionconfiguration_sec007">
+			<title>Resource/Role restriction handling according to execution time</title>
+			<para>The following is an example of applying access control function on resource/Role restriction handling.
+			.
+			</para>
+			<programlisting language="xml">
+<![CDATA[    <b:bean id="restrictedTimesAccessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+        <b:property name="allowIfAllAbstainDecisions" value="false" />
+        <b:property name="decisionVoters">
+            <b:list>
+                <b:bean
+                    class="org.springframework.security.access.vote.AnyframeRoleHierarchyRestrictedVoter">
+                    <b:property name="rolePrefix" value="" />
+                    <b:property name="roleHierarchy" ref="roleHierarchy" />
+                </b:bean>
+                <b:bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+            </b:list>
+        </b:property>
+    </b:bean>
+
+    <b:bean id="restrictedTimesFilterSecurityInterceptor"
+        class="org.anyframe.iam.core.intercept.web.RestrictedTimesFilterSecurityInterceptor">
+        <b:property name="authenticationManager" ref="authenticationManager" />
+        <b:property name="accessDecisionManager" ref="restrictedTimesAccessDecisionManager" />
+        <b:property name="securityMetadataSource" ref="restrictedTimesSecurityMetadataSource" />
+    </b:bean>
+
+    <b:bean id="restrictedTimesSecurityMetadataSource"
+        class="org.anyframe.iam.core.intercept.web.ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource">
+        <b:property name="urlMatcher" ref="regexUrlPathMatcher" />
+        <b:property name="securedObjectService" ref="securedObjectService" />
+    </b:bean>]]></programlisting>
+			<para>RestrictedTimesFilterSecurityInterceptor provides access restricted
+      function according to the execution time by extending a
+      FilterSecurityInterceptor of Spring Security and
+      ReloadableRestrictedTimesFilterInvocationDefinitionSource obtains
+      restriction/permission Role by judging a matching from DB based
+      execution time-Resource/Role restricted data, and also setting an
+      AnyframeRoleHierarchyRestrictedVoter that extended implementation of
+      AccessDecisionVoter for judging final ACCESS/DENY access restriction
+      according to time restricted Resource/Role, it make apply freely. Three
+      beans for setting of restricted time have to be used in pair,
+      RestrictedTimesFilterSecurityInterceptor as a custom-filter should be located
+      just in front of FILTER_SECURITY_INTERCEPTOR automatically added to
+      Namespace.(see http tag.) Data management section is provided at IAM Admin for
+      execution time restriction type that can assign a restricted type such as
+      crash, daily that are applied everyday and weekend, holiday, improve type
+      user assign from start to finish.
+   		  </para>
+		</sect2>
+
+		<sect2 id="anyframeiamcore_extensionconfiguration_sec008">
+			<title>Secured resources(Url, Service Method) Registration Assist function</title>
+			<para>This is an example of setting for Assist(auto complete) based on UrlMapping  running at actual application or service method
+			 info when registering secured resources in IAM Admin.</para>
+<!--  
+			<programlisting language="xml">
+<![CDATA[    <b:bean id="resourceCreationAssistService"
+        class="org.anyframe.iam.core.assist.impl.ResourceCreationAssistServiceImpl">
+        <b:property name="resourceAssistDAO" ref="resourceAssistDAO" />
+    </b:bean>
+    
+    <b:bean id="resourceAssistDAO" 
+        class="org.anyframe.iam.core.assist.impl.ResourceAssistDAO">
+        <b:property name="dataSource" ref="dataSource" />
+    </b:bean>]]></programlisting>
+-->
+			<para>Through resourceGatherAssistService and resourceCreationAssistService, secured resources of the application
+			can be collected and saved to temporary DB table.
+			These services are exposed to IAM Admin in remote and will execute their function when called by Admin.
+   		  </para>
+			<programlisting language="xml">
+<![CDATA[    <bean id="resourceGatherAssistService"
+        class="org.anyframe.iam.core.assist.impl.ResourceGatherAssistServiceImpl" />]]></programlisting>
+			<para>resourceGatherAssistService collects information on
+      package/class/method and others of Bean that has postfix 'Service'(other
+      postfix is assigned when assign a candidateBeanPostfix)to assist the registration of secured resources in url, method, pointcut formats.
+      To collect Url info, as url registered in HandlerMapping beans in AbstractUrlHandlerMapping type of  SpringMVC is used,
+      note that you have to register bean setting at <emphasis role="bold">registration at xx-servlet.xml configuration file
+      (same to IAM Admin Remote-integrated configuration file below)</emphasis> through DispatcherServlet.
+			</para>
+		</sect2>
+
+		<sect2 id="anyframeiamcore_extensionconfiguration_sec009">
+			<title>Applying secured resources mapping runtime(Url, Restricted Times)</title>
+			<para>This is an example of reloadService setting which executes restorig secured resources to runtime representatively .
+			</para>
+			<programlisting language="xml">
+<![CDATA[    <b:bean id="resourceReloadService"
+        class="org.anyframe.iam.core.reload.impl.ResourceReloadServiceImpl">
+        <b:property name="databaseSecurityMetadataSource" ref="databaseSecurityMetadataSource" />
+        <b:property name="restrictedTimesSecurityMetadataSource" ref="restrictedTimesSecurityMetadataSource" />
+        <b:property name="restrictedTimesAccessDecisionManager" ref="restrictedTimesAccessDecisionManager" />
+    </b:bean>]]></programlisting>
+			<para>DB-based secured resource(Url)-authority mapping
+      information(requestMap) can be restored at runtime through reloadService and secured resource
+      according to the time restriction, and this
+      service is exposed as remote at IAM Admin and the function will be executed called at Admin.
+   		  </para>
+		</sect2>
+
+		<sect2 id="anyframeiamcore_extensionconfiguration_sec010">
+			<title>IAM Admin Remote Integration</title>
+			<para>This is an example of setting secured resoucres assist and runtime restoration in remote in AIM Admin. </para>
+			<programlisting language="xml">
+<![CDATA[    <!-- Remote HttpInvoker Call -->
+    <bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />
+    
+    <bean id="resourceGatherAssistService"
+        class="org.anyframe.iam.core.assist.impl.ResourceGatherAssistServiceImpl" />
+    
+    <bean id="gatherService" 
+        class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+        <property name="service" ref="resourceGatherAssistService" />
+        <property name="serviceInterface"
+            value="org.anyframe.iam.core.assist.IResourceGatherAssistService" />
+    </bean>
+    
+    <bean id="reloadService" 
+        class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+        <property name="service" ref="resourceReloadService" />
+        <property name="serviceInterface"
+            value="org.anyframe.iam.core.reload.IResourceReloadService" />
+    </bean>
+
+    <bean id="urlMappingResourceAssist" 
+        class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <props>
+                <prop key="/assist/resourceGatherAssist.do">gatherService</prop>
+                <prop key="/reload/resourceReload.do">reloadService</prop>
+            </props>
+        </property>
+    </bean>]]></programlisting>
+			<para>As IAM Admin is also Spring-based application, it is possible
+      to integrate remote simply as Http based through DispatcherServlet of
+      SpringMVC by using HttpInvoker technology that is one of the ways to
+      expose remote service by itself for Spring Bean. Above setting is
+      separated as spring-security-servlet.xml and makes it register on
+      WebApplicationContext by DispatcherServlet.
+   		</para>
+			<programlisting language="xml">
+<![CDATA[    <intercept-url pattern="\A/assist/resourceGatherAssist\.do.*\Z" access="ROLE_ADMIN" />
+    <intercept-url pattern="\A/reload/resourceReload\.do.*\Z" access="ROLE_ADMIN" />]]></programlisting>
+			<para>To make only administrator collect/register above runtime reload
+      and assist information, assigning ROLE_ADMIN for target remote open url
+      as intercept-url setting of http tag is needed. Considering this at
+      IAM Admin, set AuthenticationSimpleHttpInvokerRequestExecutor as
+      httpInvokerRequestExecutor when HttpInvoker remote of logged user(admin)
+      authorization information automatically to return to set HttpInvokerProxyFactoryBean for
+      HttpInvoker client. For example, see the example of remote-invoker-servlet.xml setting of Admin configuration way.
+   		</para>
+
+			<para>When calling remote of HttpInvoker type, as data is not sent by
+      encrypted format but just Base64 encoding format , it has security problem.
+      To solve this issue, https channel security is need and setting is as the followings.
+   		</para>
+			<programlisting language="xml">
+<![CDATA[    <intercept-url pattern="\A/reload/resourceReload\.do.*\Z" access="ROLE_ADMIN" requires-channel="https" />
+    ..]]></programlisting>
+			<para>As applying process for handling
+      SSL, X.509 certificate(or private certificate) for
+      applying https protocol-based channel security is beyond of this document, they are omitted.
+   		</para>
+		</sect2>
+
+		<sect2 id="anyframeiamcore_extensionconfiguration_sec011">
+			<title>Applying ACL to user-defined View Resource</title>
+			<para>Provides a function for checking mapped permission for user
+      defined View Resource(ex. Screen, program).</para>
+			<programlisting language="xml">
+<![CDATA[    <b:bean id="viewResourceAccessService"
+        class="org.anyframe.iam.core.acl.impl.ViewResourceAccessServiceImpl">
+        <b:property name="securedObjectService" ref="securedObjectService" />
+        <b:property name="registeredPermissions">
+            <b:list>
+                <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.READ" />
+                <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.WRITE" />
+                <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.CREATE" />
+                <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.DELETE" />
+                <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.ADMINISTRATION" />                
+                <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.LIST" />                
+                <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.PRINT" />
+                <!--
+                <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.REPORT" />
+                <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.POPUP" />
+                <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.DOWNLOAD" />
+                <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.UPLOAD" />
+                <b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.HELP" />
+                -->
+            </b:list>
+        </b:property>
+    </b:bean>
+    
+    <!-- The definitin of Permission currently used in Application-->
+    <b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.READ"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <b:property name="staticField"
+            value="org.anyframe.iam.core.acl.ExtBasePermission.READ" />
+    </b:bean>
+    <b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.WRITE"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <b:property name="staticField"
+            value="org.anyframe.iam.core.acl.ExtBasePermission.WRITE" />
+    </b:bean>
+    <b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.CREATE"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <b:property name="staticField"
+            value="org.anyframe.iam.core.acl.ExtBasePermission.CREATE" />
+    </b:bean>
+    <b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.DELETE"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <b:property name="staticField"
+            value="org.anyframe.iam.core.acl.ExtBasePermission.DELETE" />
+    </b:bean>
+    <b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.ADMINISTRATION"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <b:property name="staticField"
+            value="org.anyframe.iam.core.acl.ExtBasePermission.ADMINISTRATION" />
+    </b:bean>
+    
+    <b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.LIST"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <b:property name="staticField"
+            value="org.anyframe.iam.core.acl.ExtBasePermission.LIST" />
+    </b:bean>
+    
+    <b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.PRINT"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <b:property name="staticField"
+            value="org.anyframe.iam.core.acl.ExtBasePermission.PRINT" />
+    </b:bean>
+    <!--
+    <b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.REPORT"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <b:property name="staticField"
+            value="org.anyframe.iam.core.acl.ExtBasePermission.REPORT" />
+    </b:bean>
+    <b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.POPUP"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <b:property name="staticField"
+            value="org.anyframe.iam.core.acl.ExtBasePermission.POPUP" />
+    </b:bean>
+    <b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.DOWNLOAD"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <b:property name="staticField"
+            value="org.anyframe.iam.core.acl.ExtBasePermission.DOWNLOAD" />
+    </b:bean>
+    <b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.UPLOAD"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <b:property name="staticField"
+            value="org.anyframe.iam.core.acl.ExtBasePermission.UPLOAD" />
+    </b:bean>
+    <b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.HELP"
+        class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <b:property name="staticField"
+            value="org.anyframe.iam.core.acl.ExtBasePermission.HELP" />
+    </b:bean>
+    -->]]></programlisting>
+			<para>Anyframe pvoides Bit Mask expression and handling like Spring Security through ExtBasePermission which extended BasePermission 
+			and added Permission properties. READ, WRITE, CREATE, DELETE, ADMINISTRATION are basically provided Permissions in Spring Security
+			and this setting above is an example of adding  LIST, PRINT only to the application.
+			As you can see here, it is possible to filter and apply only the permission definition part currently used in Application.
+			<!-- As you can be above, uses can assist the type of permission to apply to current application. -->
+			Although it is not shown above, but ExtBasePermission has addition reservation Permission property from FNC0 to FNC9 ,
+			it can be used by assigning property definition if more permission items are needed.
+			Note that above viewResourceAccessService-related setting
+      should be same as context-security.xml of IAM Admin for handling
+      Permission item dynamically could be different depending on target
+      application at current IAM Admin.
+   		</para>
+			<para>It provides function checking whether login user(considered
+      priority of user > group > ROLE) has specific Permission for
+      specific viewReousrceId and viewResourceTag, JSP custom tag, and can easily handle a
+      removing section in the screen depending on Permission by using this
+      . See the AccessControl chapter for related using example. And see also
+      user defined ViewResource and Permission mapping data management section
+      as Resource Management - View List / View Mapping items at IAM Admin.
+			</para>
+		</sect2>
+	</section>
+</chapter>

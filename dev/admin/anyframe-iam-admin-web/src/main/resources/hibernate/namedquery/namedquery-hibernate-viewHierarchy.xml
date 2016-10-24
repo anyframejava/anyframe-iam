@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2008. 9. 1 ???? 1:00:43 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+	<!-- reference schema attribute when hbm2ddl tool create table. so, remove schema definition. (schema=DEFULAT)-->
+	
+	<sql-query name="getViewTreeData">
+		<return alias="view" class="org.anyframe.iam.admin.domain.IamTree"/>
+		<![CDATA[	
+			SELECT	A.ID,
+					A.TITLE,
+					CASE WHEN  B.PARENT_VIEW is null THEN 'closed' ELSE B.PARENT_VIEW END STATE
+					FROM 
+						(
+							SELECT	A.PARENT_VIEW	ID,
+									B.VIEW_NAME		TITLE
+							FROM	VIEW_HIERARCHY	A
+							JOIN	VIEW_RESOURCES	B
+							ON	A.PARENT_VIEW	= B.VIEW_RESOURCE_ID
+							WHERE	A.CHILD_VIEW	= :parentNode
+						)	A
+					LEFT JOIN
+						(
+							SELECT	DISTINCT	A.PARENT_VIEW
+							FROM	VIEW_HIERARCHY	A
+							LEFT JOIN	VIEW_HIERARCHY	B
+							ON	A.PARENT_VIEW	= B.CHILD_VIEW
+							WHERE	B.CHILD_VIEW IS NULL
+						)	B
+					ON	A.ID	= B.PARENT_VIEW
+			ORDER	BY	A.ID
+		]]>
+		<!--
+		<![CDATA[	
+			SELECT	A.ID,
+					A.TITLE,
+					CASE WHEN  B.CHILD_ROLE is null THEN 'closed' ELSE B.CHILD_ROLE END STATE
+					FROM (
+						SELECT	A.CHILD_ROLE	ID,
+								B.ROLE_NAME	TITLE
+								FROM	ROLES_HIERARCHY	A
+								JOIN	ROLES				B
+									ON	A.CHILD_ROLE	= B.ROLE_ID
+						WHERE	A.PARENT_ROLE	= :parentNode
+					)	A
+				LEFT JOIN
+					(
+						SELECT	DISTINCT A.CHILD_ROLE
+								FROM	ROLES_HIERARCHY	A
+							LEFT JOIN	ROLES_HIERARCHY	B
+									ON	A.CHILD_ROLE	= B.PARENT_ROLE
+						WHERE	B.CHILD_ROLE IS NULL
+					)	B
+						ON	A.ID	= B.CHILD_ROLE
+			ORDER	BY	A.ID
+		]]>
+		-->
+	</sql-query>
+	
+	<sql-query name="getRootNodeOfView">
+		<return alias="view" class="org.anyframe.iam.admin.domain.IamTree"/>
+		<![CDATA[	
+			SELECT	DISTINCT B.VIEW_RESOURCE_ID	ID,
+					B.VIEW_NAME	TITLE,
+					'closed'	STATE
+			FROM	VIEW_HIERARCHY	A
+			JOIN	VIEW_RESOURCES	B
+			ON	A.CHILD_VIEW	= B.VIEW_RESOURCE_ID
+			WHERE	A.CHILD_VIEW NOT IN (	SELECT	DISTINCT PARENT_VIEW
+													FROM	VIEW_HIERARCHY
+			)
+			--replaceSQL
+		]]>
+		<!--
+		<![CDATA[	
+			SELECT	B.ROLE_ID		ID,
+					B.ROLE_NAME	TITLE,
+					'closed'		STATE
+					FROM	ROLES_HIERARCHY	A
+					JOIN	ROLES				B
+						ON	A.PARENT_ROLE	= B.ROLE_ID
+			WHERE	A.PARENT_ROLE NOT IN (	SELECT	DISTINCT CHILD_ROLE
+													FROM	ROLES_HIERARCHY
+										)
+		]]>
+		-->
+	</sql-query>
+	
+	<sql-query name="countViewList">
+		<![CDATA[
+			SELECT	PARENT_VIEW
+					FROM VIEW_HIERARCHY
+			WHERE	CHILD_VIEW = :parentView
+		]]>
+	</sql-query>
+	
+	<sql-query name="makeAllTempViewList">
+		<return class="org.anyframe.iam.admin.domain.TempViewResources"/>
+		<![CDATA[	
+			SELECT	A.VIEW_RESOURCE_ID||NVL(C.REF_ID, '') compKey, 	
+			 		A.VIEW_RESOURCE_ID 		viewResourceId, 
+					A.VIEW_NAME 			viewName, 
+					A.SYSTEM_NAME			systemName,
+					A.CATEGORY				category,
+					A.DESCRIPTION			description,
+					A.VIEW_INFO				viewInfo,
+					A.VIEW_TYPE				viewType,
+					A.VISIBLE				visible,
+					B.CHILD_VIEW		 	parentView,
+					C.REF_ID				refId,
+					C.REF_TYPE				refType,
+					C.PERMISSIONS			permissions
+			FROM		VIEW_RESOURCES			A
+			LEFT JOIN	VIEW_HIERARCHY			B
+			ON	A.VIEW_RESOURCE_ID = B.PARENT_VIEW
+			LEFT OUTER JOIN	VIEW_RESOURCES_MAPPING	C
+			ON	A.VIEW_RESOURCE_ID = C.VIEW_RESOURCE_ID
+		]]>
+	</sql-query>
+	
+	<sql-query name="removeAllViewResources">
+		<![CDATA[
+			DELETE FROM VIEW_RESOURCES
+		]]>
+	</sql-query>
+	
+	<sql-query name="removeAllViewHierarchy">
+		<![CDATA[
+			DELETE FROM VIEW_HIERARCHY
+		]]>
+	</sql-query>
+</hibernate-mapping>

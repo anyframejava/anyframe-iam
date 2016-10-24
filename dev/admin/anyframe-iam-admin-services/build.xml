@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+
+<project name="Anyframe IAM - Admin Services" default="all" basedir=".">
+	<property name="emma.enabled" value="true" />
+	<property name="anyframe.lib" value="../anyframe.iam.admin.web/src/main/webapp/WEB-INF/lib" />
+
+	<path id="compile.classpath">
+		<fileset dir="${anyframe.lib}">
+			<include name="**/*.jar" />
+			<exclude name="**/anyframe-iam-admin-services-1.1.2.jar" />
+		</fileset>
+	</path>
+
+	<target name="init">
+		<delete dir="${basedir}/build/classes" />
+		<mkdir dir="${basedir}/build/classes" />
+
+		<delete dir="${basedir}/test-build/classes" />
+		<mkdir dir="${basedir}/test-build/classes" />
+
+		<delete dir="${basedir}/dist" />
+		<mkdir dir="${basedir}/dist" />
+
+		<delete dir="${basedir}/temp" />
+		<mkdir dir="${basedir}/temp" />
+
+		<delete dir="${artifactsDir}" />
+	</target>
+
+	<target name="compile">
+		<javac target="1.5" source="1.5" srcdir="${basedir}/src/main/java" destdir="${basedir}/build/classes" encoding="UTF-8" debug="true">
+			<classpath>
+				<path refid="compile.classpath" />
+			</classpath>
+		</javac>
+
+		<javac encoding="UTF-8" debug="true" srcdir="${basedir}/src/test/java" destdir="${basedir}/test-build/classes" fork="yes" memoryMaximumSize="256m">
+			<classpath>
+				<path refid="compile.classpath" />
+				<pathelement location="${basedir}/build/classes" />
+			</classpath>
+		</javac>
+
+		<copy todir="${basedir}/test-build/classes" overwrite="true">
+			<fileset dir="${basedir}/src/main/resources">
+				<exclude name="**/.svn/*.*" />
+			</fileset>
+			<fileset dir="${basedir}/src/test/resources">
+				<exclude name="**/.svn/*.*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="package">
+		<mkdir dir="${basedir}/dist" />
+		<jar jarfile="${basedir}/dist/anyframe-iam-admin-services-1.1.2.jar">
+			<fileset dir="${basedir}/build/classes">
+				<include name="**/*.*" />
+				<exclude name="**/spring/*.*" />
+				<exclude name="**/hibernate/*.*" />
+				<exclude name="**/message/*.*" />
+				<exclude name="**/sql/*.*" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="deploy">
+		<copy todir="../anyframe.iam.admin.web/src/main/webapp/WEB-INF/config/spring" overwrite="true">
+			<fileset dir="${basedir}/src/main/resources/spring" />
+		</copy>
+		<copy todir="../anyframe.iam.admin.web/src/main/resources" overwrite="true">
+			<fileset dir="${basedir}/src/main/resources">
+				<include name="**/dynamic/*.*" />
+				<include name="**/namedquery/*.*" />
+				<include name="**/hibernate/*.*" />
+				<include name="**/message/*.*" />
+				<include name="**/sql/*.*" />
+				<exclude name="**/spring/*.*" />
+				<exclude name="**/*.class" />
+			</fileset>
+		</copy>
+		<copy todir="../anyframe.iam.admin.web/src/main/webapp/WEB-INF/classes" overwrite="true">
+			<fileset dir="${basedir}/build/classes">
+				<include name="**/hibernate/*.*" />
+				<include name="**/namedquery/*.*" />
+				<include name="**/dynamic/*.*" />
+				<include name="**/message/*.*" />
+				<include name="**/sql/*.*" />
+				<exclude name="**/spring/*.*" />
+				<exclude name="**/*.class" />
+			</fileset>
+		</copy>
+		<copy todir="../anyframe.iam.admin.web/src/main/webapp/WEB-INF/lib" overwrite="true">
+			<fileset dir="${basedir}/dist" />
+		</copy>
+	</target>
+
+	<target name="all" depends="init, compile, package, deploy" />
+</project>
+
+

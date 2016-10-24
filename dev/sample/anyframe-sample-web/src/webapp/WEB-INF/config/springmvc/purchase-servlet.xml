@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!--  상품 목록 검색 -->
+	<bean name="/emplistproductsearch.do"
+		class="com.sds.emp.purchase.web.GetProductSearchListController">		
+		<property name="propertiesService" ref="propertiesService" />
+		<property name="productService" ref="productService" />
+		<property name="success_list" value="/sample/purchase/listProductSearch.jsp"/>
+	</bean>
+	
+	<!--  구매 목록 조회 -->
+	<bean name="/emplistpurchase.do"
+		class="com.sds.emp.purchase.web.GetPurchaseListController">		
+		<property name="propertiesService" ref="propertiesService" />
+		<property name="purchaseService" ref="purchaseService" />
+		<property name="success_list" value="/sample/purchase/listPurchase.jsp"/>
+	</bean>
+	
+	<!--  구매(주문) 상세 조회 화면 이동 -->	
+	<bean name="/empgetpurchase.do"
+		class="com.sds.emp.purchase.web.GetPurchaseController">
+		<property name="purchaseService" ref="purchaseService" />
+		<property name="codeService" ref="codeService" />
+		<property name="deliveryCompanyService" ref="deliveryCompanyService" />
+		<property name="success_get" value="/sample/purchase/getPurchase.jsp"/>
+	</bean>
+
+	<!--  구매(주문) 정보 수정 화면 이동 -->
+	<bean name="/empupdatepurchaseview.do"
+		class="com.sds.emp.purchase.web.UpdatePurchaseController">
+		<property name="purchaseService" ref="purchaseService" />
+		<property name="codeService" ref="codeService" />
+		<property name="deliveryCompanyService" ref="deliveryCompanyService" />
+		<property name="formView" value="/sample/purchase/updatePurchase.jsp"/>
+		<property name="sessionForm" value="true" />
+		<property name="showNewForm" value="true" />
+	</bean>
+	<!-- 구매(주문) 정보 수정  -->
+	<bean name="/empupdatepurchase.do"
+		class="com.sds.emp.purchase.web.UpdatePurchaseController">
+		<property name="purchaseService" ref="purchaseService" />
+		<property name="codeService" ref="codeService" />
+		<property name="deliveryCompanyService" ref="deliveryCompanyService" />
+		<property name="formView" value="/sample/purchase/updatePurchase.jsp"/>
+		<property name="success_update" value="emplistpurchase.do"/>
+		<property name="sessionForm" value="true" />
+		
+	</bean>
+	<!--  상품 상세 정보 화면 이동-->	
+	<bean name="/empgetproductsearch.do"
+		class="com.sds.emp.purchase.web.GetProductSearchController">
+		<property name="productService" ref="productService" />
+		<property name="codeService" ref="codeService" />
+		<property name="deliveryCompanyService" ref="deliveryCompanyService" />
+		<property name="success_get" value="/sample/purchase/getProductSearch.jsp"/>
+	</bean> 
+
+	<!--  구매(주문) 등록 화면 이동-->
+	<bean name="/empaddpurchaseview.do"
+		class="com.sds.emp.purchase.web.AddPurchaseController">
+		<property name="purchaseService" ref="purchaseService" />
+		<property name="productService" ref="productService" />
+		<property name="codeService" ref="codeService" />
+		<property name="deliveryCompanyService" ref="deliveryCompanyService" />
+		<property name="formView" value="/sample/purchase/addPurchase.jsp"/>
+		<property name="sessionForm" value="true" />
+		<property name="showNewForm" value="true"/>
+	</bean>
+	<!--  구매(주문) 등록-->
+	<bean name="/empaddpurchase.do"
+		class="com.sds.emp.purchase.web.AddPurchaseController">
+		<property name="purchaseService" ref="purchaseService" />
+		<property name="productService" ref="productService" />
+		<property name="codeService" ref="codeService" />
+		<property name="deliveryCompanyService" ref="deliveryCompanyService" />
+		<property name="formView" value="/sample/purchase/addPurchase.jsp"/>
+		<property name="success_add" value="emplistpurchase.do"/>
+		<property name="sessionForm" value="true" />
+	</bean> 
+</beans>

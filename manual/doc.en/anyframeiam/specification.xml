@@ -1,0 +1,29 @@
+<chapter id="anyframeiam_specification">
+	<title>Anyframe IAM Technical Specification</title>
+
+	<para>Technical specification for applying Anyframe IAM are as the following.</para>
+
+	<itemizedlist>
+		<listitem>
+			<para>Java Versions : JDK 1.5</para>
+		</listitem>
+
+		<listitem>
+			<para>Core Framework : Anyframe Java - Core Framework (or Spring Framework-based Framework)</para>
+		</listitem>
+
+		<listitem>
+			<para>Web Framework : Anyframe Java - Web Framework (or SpringMVC-based Web Framework)</para>
+		</listitem>
+
+		<listitem>
+			<para>Presentation Layer : JSP</para>
+		</listitem>
+	</itemizedlist>
+
+	<para>Currently 1.1.3 version provides tag library for Presentation Layer control with JSP only,
+	and adding function to each UI product will be provided depending on the market condition.
+	Anyframe IAM does not support Struts Framework-based authorization.
+	</para>
+
+</chapter>

@@ -1,0 +1,6 @@
+<aspectj>
+	<aspects>
+		<aspect name="demo.aop.aspect.LoggingAspect"/>
+	</aspects>
+	<weaver option="-verbose -debug"/>
+</aspectj>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE queryservice PUBLIC "-//ANYFRAME//DTD QUERYSERVICE//EN"
+"http://www.anyframejava.org/dtd/anyframe-core-query-mapping-3.1.dtd">
+<queryservice>
+
+	<table-mapping>
+		<table name="PRODUCT"
+			class="com.sds.emp.sale.services.SaleVO">
+			<field-mapping>
+				<dbms-column>PROD_NO</dbms-column>
+				<class-attribute>prodNo</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>PROD_NAME</dbms-column>
+				<class-attribute>prodName</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>SELLER_ID</dbms-column>
+				<class-attribute>sellerId</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>CATEGORY_NO</dbms-column>
+				<class-attribute>categoryNo</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>CATEGORY_NAME</dbms-column>
+				<class-attribute>categoryName</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>PROD_DETAIL</dbms-column>
+				<class-attribute>prodDetail</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>MANUFACTURE_DAY</dbms-column>
+				<class-attribute>manufactureDay</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>AS_YN</dbms-column>
+				<class-attribute>asYn</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>SELL_QUANTITY</dbms-column>
+				<class-attribute>sellQuantity</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>SELL_AMOUNT</dbms-column>
+				<class-attribute>sellAmount</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>IMAGE_FILE</dbms-column>
+				<class-attribute>imageFile</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>TRAN_STATUS_CODE</dbms-column>
+				<class-attribute>tranStatusCode</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>REG_DATE</dbms-column>
+				<class-attribute>regDate</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>PROD_NO</dbms-column>
+				<class-attribute>prodNo</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>BUYER_ID</dbms-column>
+				<class-attribute>buyerId</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>RECEIPT_YN</dbms-column>
+				<class-attribute>receiptYn</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>PAYMENT_OPTION</dbms-column>
+				<class-attribute>paymentOption</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>RECEIVER_ID</dbms-column>
+				<class-attribute>receiverId</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>RECEIVER_PHONE</dbms-column>
+				<class-attribute>receiverPhone</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>DLVY_EXPECT_DAY</dbms-column>
+				<class-attribute>dlvyExpectDay</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>DLVY_ADDR</dbms-column>
+				<class-attribute>dlvyAddr</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>DLVY_COMP_NO</dbms-column>
+				<class-attribute>dlvyCompNo</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>DLVY_REQUEST</dbms-column>
+				<class-attribute>dlvyRequest</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>ORDER_DATE</dbms-column>
+				<class-attribute>orderDate</class-attribute>
+			</field-mapping>
+			<field-mapping>
+				<dbms-column>DLVY_DATE</dbms-column>
+				<class-attribute>dlvyDate</class-attribute>
+			</field-mapping>
+			<primary-key>
+				<dbms-column>PROD_NO</dbms-column>
+			</primary-key>
+		</table>
+	</table-mapping>
+
+
+	<queries>
+		<!--  Query : 검색 조건에 기반하여 판매 목록 조회 -->
+		<query id="getSaleList" isDynamic="true">		    			
+			<statement>
+				SELECT product.PROD_NO 
+					, product.PROD_NAME 
+					, product.SELL_AMOUNT 
+					, category.CATEGORY_NAME 
+					, product.REG_DATE 
+				FROM PRODUCT product inner join CATEGORY category on product.CATEGORY_NO=category.CATEGORY_NO
+				WHERE 
+					#if($prodNo)
+						product.PROD_NO like :prodNo 
+					#else
+						product.PROD_NAME like :prodName 
+					#end
+					#if ($sellerId)
+						AND product.SELLER_ID = :sellerId 
+					#end	
+					#if ($categoryNo)
+						AND category.CATEGORY_NO = :categoryNo 
+					#end		
+			</statement>
+			<param name="prodNo" type="VARCHAR" />
+			<param name="prodName" type="VARCHAR" />
+			<param name="sellerId" type="VARCHAR" />
+			<param name="categoryNo" type="VARCHAR" />
+			<result class="com.sds.emp.sale.services.SaleVO">
+				<result-mapping column="PROD_NO" attribute="prodNo" />
+				<result-mapping column="PROD_NAME" attribute="prodName" />
+				<result-mapping column="SELL_AMOUNT"
+					attribute="sellAmount" />
+				<result-mapping column="CATEGORY_NAME"
+					attribute="categoryName" />
+				<result-mapping column="REG_DATE" attribute="regDate" />
+			</result>
+		</query>
+		<!--  Query : 거래상태코드(거래) 수정 -->		
+		<query id="updateTransactionTranStatusCode" isDynamic="false">
+			<statement>
+				UPDATE TRANSACTION SET TRAN_STATUS_CODE = ? WHERE PROD_NO = ?
+			</statement>
+			<param type="CHAR" />
+			<param type="VARCHAR" />
+		</query>
+		<!--  Query : 판매 상세 정보 조회 -->
+		<query id="getSale" isDynamic="false">
+			<statement>
+				SELECT	A.PROD_NO PROD_NO, 
+						PROD_NAME, 
+						CATEGORY_NO, 
+						(SELECT CATEGORY_NAME FROM CATEGORY WHERE CATEGORY_NO = A.CATEGORY_NO) as CATEGORY_NAME,
+						MANUFACTURE_DAY, 
+						PROD_DETAIL, 
+						SELL_QUANTITY, 
+						SELL_AMOUNT,
+						AS_YN,
+						A.SELLER_ID SELLER_ID,
+						BUYER_ID, 
+						(SELECT USER_NAME FROM USERS WHERE USER_ID = B.BUYER_ID) as BUYER_NAME, 
+						RECEIVER_ID, 
+						(SELECT USER_NAME FROM USERS WHERE USER_ID = B.RECEIVER_ID) as RECEIVER_NAME,
+						RECEIVER_PHONE, 
+						DLVY_EXPECT_DAY, 
+						DLVY_ADDR, 
+						DLVY_COMP_NO, 
+						(SELECT DLVY_COMP_NAME FROM DELIVERY_COMPANY WHERE DLVY_COMP_NO = B.DLVY_COMP_NO) DLVY_COMP_NAME,
+						DLVY_REQUEST, 
+						PAYMENT_OPTION, 
+						D.CODE_NAME PAYMENT_OPTION_NAME,
+						RECEIPT_YN,
+						B.TRAN_STATUS_CODE TRAN_STATUS_CODE,
+						C.CODE_NAME TRAN_STATUS_CODE_NAME,
+						IMAGE_FILE
+				FROM PRODUCT A LEFT OUTER JOIN TRANSACTION B ON (A.PROD_NO = B.PROD_NO)
+					LEFT OUTER JOIN (SELECT CODE_TYPE, CODE, CODE_NAME FROM CODE WHERE CODE_TYPE = 'A03') C ON (B.TRAN_STATUS_CODE = C.CODE)
+					LEFT OUTER JOIN (SELECT CODE_TYPE, CODE, CODE_NAME FROM CODE WHERE CODE_TYPE = 'A04') D ON (B.PAYMENT_OPTION = D.CODE)
+				WHERE A.PROD_NO = ?
+			</statement>
+			<param type="VARCHAR" />
+			<result class="com.sds.emp.sale.services.SaleVO">
+				<result-mapping column="PROD_NO" attribute="prodNo" />
+				<result-mapping column="PROD_NAME" attribute="prodName" />
+				<result-mapping column="CATEGORY_NO"
+					attribute="categoryNo" />
+				<result-mapping column="CATEGORY_NAME"
+					attribute="categoryName" />
+				<result-mapping column="MANUFACTURE_DAY"
+					attribute="manufactureDay" />
+				<result-mapping column="PROD_DETAIL"
+					attribute="prodDetail" />
+				<result-mapping column="SELL_QUANTITY"
+					attribute="sellQuantity" />
+				<result-mapping column="SELL_AMOUNT"
+					attribute="sellAmount" />
+				<result-mapping column="AS_YN" attribute="asYn" />
+				<result-mapping column="SELLER_ID" attribute="sellerId" />
+				<result-mapping column="BUYER_ID" attribute="buyerId" />
+				<result-mapping column="BUYER_NAME"
+					attribute="buyerName" />
+				<result-mapping column="RECEIVER_ID"
+					attribute="receiverId" />
+				<result-mapping column="RECEIVER_NAME"
+					attribute="receiverName" />
+				<result-mapping column="RECEIVER_PHONE"
+					attribute="receiverPhone" />
+				<result-mapping column="DLVY_EXPECT_DAY"
+					attribute="dlvyExpectDay" />
+				<result-mapping column="DLVY_ADDR" attribute="dlvyAddr" />
+				<result-mapping column="DLVY_COMP_NO"
+					attribute="dlvyCompNo" />
+				<result-mapping column="DLVY_COMP_NAME"
+					attribute="dlvyCompName" />
+				<result-mapping column="DLVY_REQUEST"
+					attribute="dlvyRequest" />
+				<result-mapping column="PAYMENT_OPTION"
+					attribute="paymentOption" />
+				<result-mapping column="PAYMENT_OPTION_NAME"
+					attribute="paymentOptionName" />
+				<result-mapping column="RECEIPT_YN"
+					attribute="receiptYn" />
+				<result-mapping column="TRAN_STATUS_CODE"
+					attribute="tranStatusCode" />
+				<result-mapping column="TRAN_STATUS_CODE_NAME"
+					attribute="tranStatusCodeName" />
+				<result-mapping column="IMAGE_FILE"
+					attribute="imageFile" />
+				<result-mapping column="REG_DATE" attribute="regDate" />
+				<result-mapping column="ORDER_DATE"
+					attribute="orderDate" />
+				<result-mapping column="DLVY_DATE" attribute="dlvyDate" />
+			</result>
+		</query>
+		<query id="getAjaxSaleListAll" isDynamic="true">
+			<statement>
+				SELECT product.PROD_NO 
+				, product.PROD_NAME 
+				, product.SELL_AMOUNT 
+				, category.CATEGORY_NAME 
+				, product.REG_DATE 
+				FROM PRODUCT product inner join CATEGORY category on product.CATEGORY_NO=category.CATEGORY_NO
+				WHERE 
+					#if($prodNo)
+						product.PROD_NO like :prodNo 
+					#else
+						product.PROD_NAME like :prodName 
+					#end
+					#if ($categoryNo)
+						AND category.CATEGORY_NO = :categoryNo 
+					#end	
+				ORDER BY {{sortColumn}} {{sortDirection}}
+			</statement>
+			<param name="prodNo" type="VARCHAR"  />
+			<param name="prodName" type="VARCHAR"  />
+			<param name="categoryNo" type="VARCHAR"  />
+			<result class="com.sds.emp.sale.services.SaleVO">
+				<result-mapping column="PROD_NO" attribute="prodNo" />
+				<result-mapping column="PROD_NAME" attribute="prodName" />
+				<result-mapping column="SELL_AMOUNT"
+					attribute="sellAmount" />
+				<result-mapping column="CATEGORY_NAME"
+					attribute="categoryName" />
+				<result-mapping column="REG_DATE" attribute="regDate" />
+			</result>
+		</query>
+	</queries>
+</queryservice>

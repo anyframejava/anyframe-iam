@@ -1,0 +1,182 @@
+<section id="anyframeiamcore_detail_0000">
+	<title>Intro</title>
+	<para>본 Appendix 의 내용은 매뉴얼에서 본문으로 다루기 어려운 Spring Security에 대한 심도 있는 부분에 대한 개략적인 내용으로 구성되어 있다.
+	하기 내용에 대한  더욱 심도있는 내용은 Spring Security 의 공식 매뉴얼 (<ulink url="http://static.springsource.org/spring-security/site/docs/2.0.x/reference/springsecurity.pdf">http://static.springsource.org/spring-security/site/docs/2.0.x/reference/springsecurity.pdf</ulink>)에 다루어져 있으므로
+	해당 매뉴얼을 참고하기 바란다.
+	</para>
+</section>
+
+<section id="anyframeiamcore_detail_0001">
+	<title>Filter Chain</title>
+	<para>Spring Security 는 Servlet Filter 기술을 사용하여 웹 리소스에 대한 보안 제어를 제공하며
+	여러 Filter 를 Filter Chain 으로 엮어 필요에 따른 각 보안 기능을 적용하게 된다.
+	Spring Security 에서 사용하는 Filter 들은 Spring 컨테이너가 관리하는 Bean 이기도 하며 사용자 인증,
+	보호자원 권한 제어 등 주요 보안 기능에 필요한 세부 보안 기능을 매우 유연하게 추상화하여
+	Spring 에서 관리하는 별도의 Dependency Bean 형태로 사용하게 된다.
+	아래에 나타난 Filter (AuthenticationProcessingFilter,
+	HttpSessionContextIntegrationFilter, ExceptionTranslationFilter,
+	FilterSecurityInterceptor) 들은
+	Spring Security 에서 필수적으로 사용되고 있으며 필요에 따라 Spring Security 에서 기본으로 구현하여 제공하는
+	다양한 Filter 들을 추가/변경 할 수 있다.
+	Anyframe IAM 의 경우 FilterSecurityInterceptor 를 확장한 시간 제한에 따른 권한 제어용 Filter 등을
+	추가로 삽입하여 처리 가능하다.
+	</para>
+
+	<mediaobject>
+		<imageobject>
+			<imagedata scalefit="1" width="100%" contentdepth="100%"
+				align="center" fileref="../image/anyframeiam/filter-chain.gif" />
+		</imageobject>
+		<textobject>
+			<phrase>
+				위 그림은 Spring Security에서 제공하는 Filter chain에 대한 설명이다. Spring Security에서 기본적으로 제공하는
+				Filter chain 외에 추가적으로 다양한 Filter들을 추가/변경 할 수 있다.
+			</phrase>
+		</textobject>
+	</mediaobject>
+</section>
+
+<section id="anyframeiamcore_detail_0002">
+	<title>보안 객체(Secured Object)의 저장 구조</title>
+	<para>Spring Security 에서는 사용자 인증에 따른 보안 정보를 제공하는 보안 객체를 기본으로 현재 실행중인	
+	Thread 에 유지할 수 있도록 제공하고 있다.
+	Spring Security 의 기본 구현에 따르면
+	SecurityContext 를 SecurityContextHolder 내부에 생성된 ThreadLocal 객체를 이용하여
+	저장하게 되며 HttpSessionContextIntegrationFilter 를 사용하여
+	request 간 SecurityContext 정보를 Http Session 에 동기화하여 유지하게 된다.
+	</para>
+	
+	<mediaobject>
+		<imageobject>
+			<imagedata scalefit="1" width="100%" contentdepth="100%"
+				align="center" fileref="../image/anyframeiam/security_context.jpg" />
+		</imageobject>
+		<textobject>
+			<phrase>
+				위 그림은 Spring Security에서 사용자 인증에 따른 보안 정보를 제공하기 위한 보안 객체를 저장하는 방법에 대한 설명이다.
+				보안 정보(SecurityContext)를 ThreadLocal 객체를 이용하여 저장하게 되며 HttpSessionContextIntegrationFilter를 사용하여
+				Request간 SecurityContext 정보를 Session에 동기화 하여 유지하게 된다.				
+			</phrase>
+		</textobject>
+	</mediaobject>
+	<itemizedlist>
+		<listitem>
+			<para>Spring Security에서 생성한 정보 - SecurityContextHoler 이용하여
+				SecurityContext 얻음</para>
+		</listitem>
+
+		<listitem>
+			<para>응용프로그램이 분산되어 있는 경우 등 다양한 환경에서 사용 가능토록 SecurityContext를
+				SecurityContextHolder 내부에 생성한 ThreadLocal 객체를 이용하여 저장하고 있음.</para>
+		</listitem>
+
+		<listitem>
+			<para>ThreadLocal 객체는 현 쓰레드에서만 필요한 상태 정보를 담을 수 있음.</para>
+		</listitem>
+
+		<listitem>
+			<para>웹 환경에서 사용자 요청시 마다 동일한 역할을 하는 SecurityContext를 다시 생성하는 것은 맞지
+				않음 → HttpSessionContextIntegrationFilter 를 사용하여 SecurityContext
+				정보를 ThreadLocal에 기록하고 가져오는 작업을 수행함. (Session 에 저장)</para>
+		</listitem>
+	</itemizedlist>
+</section>
+
+<section id="anyframeiamcore_detail_0003">
+	<title>주요 보안 객체 모델</title>
+	<para>아래는 Spring Security 에서 보호된 자원에 대한 권한 맵핑을 검사하여 접근을 허용할지 결정하는 권한
+	처리에 관계된 주요 모듈의 관계를 나타낸다. 
+	</para>
+	<mediaobject>
+		<imageobject>
+			<imagedata scalefit="1" width="100%" contentdepth="100%"
+				align="center" fileref="../image/anyframeiam/security-interception.gif" />
+		</imageobject>
+		<textobject>
+			<phrase>
+				위 그림은 Spring Security에서 보호된 자원에 대한 권한 매핑을 검사하여
+				접근을 허용할지 여부를 결정하는 권한 저리 관련 모듈에 대한 설명이다.
+			</phrase>
+		</textobject>
+	</mediaobject>
+	<itemizedlist>
+		<listitem>
+			<para>Web Url 에 대한 보호자원 보안 제어를 처리하는 FilterSecurityInterceptor 는
+				AbstractSecurityInterceptor 를 상속받고 있으며 ObjectDefinitionSource 를
+				통하여 보호자원-권한맵핑 데이터를 검사하여
+				매칭된 패턴에 해당하는 권한이 실제로 로그인한 사용자가 가지고 있는지를 AccessDecisionManager 에 등록된
+				AccessDecisionVoter 들의 ACCESS/DENIED 조합의 결과로 처리하게 된다. parent 인
+				AbstractSecurityInterceptor 에서는
+				필요에 따라 AuthenticationManager 를 통한 인증 및 RunAsManager 에 의한 사용자 대리 처리
+				Spring 의 ApplicationEvent 를 상속받은 여러 보안 관련 이벤트 처리를 수행하게 된다.</para>
+		</listitem>
+
+		<listitem>
+			<para>위의 구조를 통해 보호자원 및 권한 맵핑, 권한 검사 등의 보안 모듈은 매우 유연하게 추상화되어 있음을 알 수
+				있으며, 메서드에 대한 AOP 형식의 보안 제어를 사용하는 MethodSecurityInterceptor
+				등도 마찬가지로 AbstractSecurityInterceptor 를 상속받고 있으며 동일하게 여러 Interface 에
+				대한 메서드 유형 보안 처리를 위한 구현 모듈을 사용하게 된다.
+			   </para>
+		</listitem>
+	</itemizedlist>
+</section>
+
+<section id="anyframeiamcore_detail_0004">
+	<title>Web Authorization</title>
+	<para>위의
+		Filter Chain 과 보안 객체 모델에서 확인할 수 있는 FilterSecurityInterceptor 가 Web
+		URL 권한 처리를 담당하며 Spring Security 2.0 이후의 Namespace 태그를 사용하여 설정하는 경우
+		http 태그 하위에 <![CDATA[ <intercept-url pattern="antpath/regex 표현식 url 패턴" access="접근 가능한 Role" />]]>
+		형태로 보호하고자 하는 웹 Url 자원에 대해 맵핑 권한을 지정하게 된다.
+	</para>
+	<para>intercept-url 로 지정하는 url 패턴의 순서는 매우 중요하며 Spring Security 에서는
+		나타나는 순서에 따라(Top to Bottom) 제일 먼저 match 된 패턴에 맵핑된 권한만 검사하게 된다.
+		그러므로 일반적으로 상세 패턴을 상위로, 와일드카드를 사용한 그룹 패턴은 하위로 작성하여야 하며 자주 억세스 하는 페이지에 대한
+		맵핑은 상위로 지정하는 것이 성능상 유리하다.
+	</para>
+	<para>Anyframe IAM 에서는 위 보호자원(Url)-Role 권한 맵핑 부분을 DB화 하여 동일하게 DB 기반의
+		권한 처리를 하는 FilterSecurityInterceptor 를 하나 더 추가하여 custom-filter 로 배치하여
+		함께 사용하게 된다.
+	</para>
+</section>
+
+<section id="anyframeiamcore_detail_0005">
+	<title>Method Authorization</title>
+	<para>메서드 보안 제어는 HttpServletRequest 기반의 Web 환경이 아닌 경우에도 적용이 가능하며 더욱
+		견고하고 재사용성이 뛰어나며 강력한 권한 처리를 제공한다. 
+	</para>
+	<para>Spring 프레임워크에서와 마찬가지로 Spring AOP, AspectJ 와 같은 다양한 AOP 기술을
+		지원하며 Spring Security 의 메서드 권한 처리는 Around Advice 로 동작하게 된다.
+		따라서 메서드 실행
+		전/후에 보안 로직을 적용할 수 있으며 결과값을 가공(ex. Domain 객체에 대한 ACL 을 고려한 결과 데이터
+		Filtering)할 수도 있다.
+	</para>
+	<para>Method metadata 지원</para>
+	<itemizedlist>
+		<listitem>
+			<para><![CDATA[@JSR250 – ex.) @RolesAllowed("ROLE_USER")]]></para>
+		</listitem>
+		<listitem>
+			<para><![CDATA[@Secured – ex.) @Secured("ROLE_USER")]]></para>
+		</listitem>
+		<listitem>
+			<para>Instance-based XML
+			<programlisting language="xml"><![CDATA[<bean id="categoryService" class="com.sds.emp.sale.services.impl.CategoryServiceImpl">
+    <security:intercept-methods>
+        <security:protect method="com.sds.emp.sale.services.CategoryService.add*" access="ROLE_ADMIN"/>
+    </security:intercept-methods>
+    ..]]></programlisting>
+			</para>
+		</listitem>
+		<listitem>
+			<para><![CDATA[AspectJ pointcut – ex.) <protect-pointcut expression="execution(* *.get*(..))" access="ROLE_USER" />]]></para>
+		</listitem>
+	</itemizedlist>
+	<para>Anyframe IAM 에서는 위 보호자원(Method)-Role, 보호자원(Pointcut)-Role 권한 맵핑
+		부분을 DB화 하여 처리 가능하다.
+	</para>
+	<para>또한 Spring Security 3.0 이상에서는 EL(Expression Language)-
+		@PreAuthorize, @PostAuthorize, @PreFilter, @PostFilter 을 사용한 보다 강력한
+		보안 기능을 제공한다. 
+	</para>
+</section>

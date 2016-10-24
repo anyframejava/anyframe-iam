@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE queryservice PUBLIC "-//ANYFRAME//DTD QUERYSERVICE//EN"
+"http://www.anyframejava.org/dtd/anyframe-core-query-mapping-3.1.dtd">
+<queryservice>
+	<queries>
+		<query id="getPurchaseListByDeliveryCompany" isDynamic="false">
+			<statement>
+				SELECT PROD_NO FROM TRANSACTION WHERE DLVY_COMP_NO = ?
+			</statement>
+			<param name="dlvyCompNo" type="VARCHAR" />
+			<result class="com.sds.emp.purchase.services.PurchaseVO">
+				<result-mapping column="PROD_NO" attribute="prodNo" />
+			</result>
+		</query>
+
+		<query id="getPurchaseList" isDynamic="true">
+			<statement>
+				SELECT A.PROD_NO, A.PROD_NAME, A.SELL_AMOUNT, 
+				       B.TRAN_STATUS_CODE as TRAN_STATUS_CODE, A.SELLER_ID as SELLER_ID, A.REG_DATE as REG_DATE, C.CODE_NAME as TRAN_STATUS_CODE_NAME
+				FROM PRODUCT A, TRANSACTION B,
+					(SELECT CODE_TYPE, CODE, CODE_NAME FROM CODE WHERE CODE_TYPE = 'A03') C
+				WHERE A.PROD_NO = B.PROD_NO
+				  AND B.TRAN_STATUS_CODE = C.CODE 				
+				#if ($prodNo)   
+				  AND A.PROD_NO like :prodNo
+				#else
+				  AND A.PROD_NAME like :prodName
+				#end
+				#if ($tranStatusCode)
+  				  AND B.TRAN_STATUS_CODE = :tranStatusCode					
+				#end				
+				    AND BUYER_ID like :buyerId
+			</statement>
+			<param name="prodNo" type="VARCHAR" />
+			<param name="prodName" type="VARCHAR" />
+			<param name="tranStatusCode" type="VARCHAR" />
+			<param name="buyerId" type="VARCHAR" />
+			<result class="com.sds.emp.purchase.services.PurchaseVO">
+				<result-mapping column="PROD_NO" attribute="prodNo" />
+				<result-mapping column="PROD_NAME" attribute="prodName" />
+				<result-mapping column="SELL_AMOUNT"
+					attribute="sellAmount" />
+				<result-mapping column="TRAN_STATUS_CODE"
+					attribute="tranStatusCode" />
+				<result-mapping column="SELLER_ID" attribute="sellerId" />
+				<result-mapping column="REG_DATE" attribute="regDate" />
+				<result-mapping column="TRAN_STATUS_CODE_NAME"
+					attribute="tranStatusCodeName" />
+			</result>
+		</query>
+		<query id="updateProdTranStatusCode" isDynamic="false">
+			<statement>
+				UPDATE PRODUCT SET TRAN_STATUS_CODE = ? WHERE PROD_NO =	?
+			</statement>
+			<param type="CHAR" />
+			<param type="VARCHAR" />
+		</query>
+		<query id="updateTranStatusCode" isDynamic="false">
+			<statement>
+				UPDATE TRANSACTION SET TRAN_STATUS_CODE = ? WHERE	PROD_NO = ?
+			</statement>
+			<param type="CHAR" />
+			<param type="VARCHAR" />
+		</query>
+		<query id="getPurchase" isDynamic="false">		
+			<statement>
+				SELECT	A.PROD_NO PROD_NO, 
+						PROD_NAME, 
+						CATEGORY_NO, 
+						(SELECT CATEGORY_NAME FROM CATEGORY WHERE CATEGORY_NO = A.CATEGORY_NO) as CATEGORY_NAME,
+						MANUFACTURE_DAY, 
+						PROD_DETAIL, 
+						SELL_QUANTITY, 
+						SELL_AMOUNT,
+						AS_YN,
+						A.SELLER_ID SELLER_ID,
+						BUYER_ID, 
+						(SELECT USER_NAME FROM USERS WHERE USER_ID = B.BUYER_ID) as BUYER_NAME, 
+						RECEIVER_ID, 
+						(SELECT USER_NAME FROM USERS WHERE USER_ID = B.RECEIVER_ID) as RECEIVER_NAME,
+						RECEIVER_PHONE, 
+						DLVY_EXPECT_DAY, 
+						DLVY_ADDR, 
+						DLVY_COMP_NO, 
+						(SELECT DLVY_COMP_NAME FROM DELIVERY_COMPANY WHERE DLVY_COMP_NO = B.DLVY_COMP_NO) DLVY_COMP_NAME,
+						DLVY_REQUEST, 
+						PAYMENT_OPTION, 
+						(SELECT CODE_NAME FROM CODE WHERE CODE_TYPE='A04' AND CODE = B.PAYMENT_OPTION) PAYMENT_OPTION_NAME,
+						RECEIPT_YN,
+						B.TRAN_STATUS_CODE TRAN_STATUS_CODE,
+						(SELECT CODE_NAME FROM CODE WHERE CODE_TYPE='A03' AND CODE = B.TRAN_STATUS_CODE) TRAN_STATUS_CODE_NAME,
+						IMAGE_FILE
+				FROM PRODUCT A, TRANSACTION B
+				WHERE A.PROD_NO = B.PROD_NO
+				AND B.PROD_NO = ?
+			</statement>
+			<param type="VARCHAR" />
+			<result class="com.sds.emp.purchase.services.PurchaseVO">
+				<result-mapping column="PROD_NO" attribute="prodNo" />
+				<result-mapping column="PROD_NAME" attribute="prodName" />
+				<result-mapping column="CATEGORY_NO"
+					attribute="categoryNo" />
+				<result-mapping column="CATEGORY_NAME"
+					attribute="categoryName" />
+				<result-mapping column="MANUFACTURE_DAY"
+					attribute="manufactureDay" />
+				<result-mapping column="PROD_DETAIL"
+					attribute="prodDetail" />
+				<result-mapping column="SELL_QUANTITY"
+					attribute="sellQuantity" />
+				<result-mapping column="SELL_AMOUNT"
+					attribute="sellAmount" />
+				<result-mapping column="AS_YN" attribute="asYn" />
+				<result-mapping column="SELLER_ID" attribute="sellerId" />
+				<result-mapping column="BUYER_ID" attribute="buyerId" />
+				<result-mapping column="BUYER_NAME"
+					attribute="buyerName" />
+				<result-mapping column="RECEIVER_ID"
+					attribute="receiverId" />
+				<result-mapping column="RECEIVER_NAME"
+					attribute="receiverName" />
+				<result-mapping column="RECEIVER_PHONE"
+					attribute="receiverPhone" />
+				<result-mapping column="DLVY_EXPECT_DAY"
+					attribute="dlvyExpectDay" />
+				<result-mapping column="DLVY_ADDR" attribute="dlvyAddr" />
+				<result-mapping column="DLVY_COMP_NO"
+					attribute="dlvyCompNo" />
+				<result-mapping column="DLVY_COMP_NAME"
+					attribute="dlvyCompName" />
+				<result-mapping column="DLVY_REQUEST"
+					attribute="dlvyRequest" />
+				<result-mapping column="PAYMENT_OPTION"
+					attribute="paymentOption" />
+				<result-mapping column="PAYMENT_OPTION_NAME"
+					attribute="paymentOptionName" />
+				<result-mapping column="RECEIPT_YN"
+					attribute="receiptYn" />
+				<result-mapping column="TRAN_STATUS_CODE"
+					attribute="tranStatusCode" />
+				<result-mapping column="TRAN_STATUS_CODE_NAME"
+					attribute="tranStatusCodeName" />
+				<result-mapping column="IMAGE_FILE"
+					attribute="imageFile" />
+				<result-mapping column="REG_DATE" attribute="regDate" />
+				<result-mapping column="ORDER_DATE"
+					attribute="orderDate" />
+				<result-mapping column="DLVY_DATE" attribute="dlvyDate" />
+			</result>
+		</query>
+
+		<query id="addPurchase" isDynamic="false">		
+			<statement>
+				INSERT INTO TRANSACTION 
+				(PROD_NO, SELLER_ID, BUYER_ID, RECEIPT_YN, PAYMENT_OPTION, RECEIVER_ID, RECEIVER_PHONE, DLVY_EXPECT_DAY, DLVY_ADDR, DLVY_COMP_NO, DLVY_REQUEST, TRAN_STATUS_CODE, ORDER_DATE) 
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, sysdate)
+			</statement>
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="CHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+		</query>
+		<query id="updatePurchase" isDynamic="false">
+			<statement>
+				UPDATE TRANSACTION
+				SET RECEIPT_YN = ?, PAYMENT_OPTION = ?, RECEIVER_ID = ?, RECEIVER_PHONE = ?, DLVY_EXPECT_DAY = ?, DLVY_ADDR = ?, DLVY_COMP_NO = ?, DLVY_REQUEST = ?
+ 				WHERE PROD_NO = ?
+			</statement>
+			<param type="CHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+			<param type="VARCHAR" />
+		</query>
+
+	</queries>
+</queryservice>
