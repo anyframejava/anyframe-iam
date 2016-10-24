@@ -49,6 +49,8 @@ public interface RestrictedTimesResourcesService extends
 	 */
 	@SuppressWarnings("unchecked")
 	List findRoleListByTime(String timeId) throws Exception;
+	
+	RestrictedTimesResources save(RestrictedTimesResources restrictedTimes) throws Exception;
 
 	/**
 	 * find list of Resources that matches the given time ID
@@ -82,4 +84,6 @@ public interface RestrictedTimesResourcesService extends
 	 * @throws Exception fail to delete data
 	 */
 	void delete(List<RestrictedTimesResourcesId> list) throws Exception;
+	
+	void removeAllRestrictedTimesResources() throws Exception;
 }

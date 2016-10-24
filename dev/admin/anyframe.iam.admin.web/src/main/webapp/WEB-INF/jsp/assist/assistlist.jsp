@@ -1,4 +1,4 @@
-<%@ taglib uri='http://www.sds.samsung.com/tags' prefix='anyframe' %>
+<%@ taglib uri='http://www.anyframejava.org/tags' prefix='anyframe' %>
 <%@ include file="/common/taglibs.jsp"%>
 <%@ page language="java" pageEncoding="UTF-8"
 	contentType="text/html;charset=utf-8"%>
@@ -44,7 +44,7 @@ jQuery(document).ready( function() {
 			width : 250
 		} ],
 		width : 787,
-		height : 300,
+		height : 150,
 		pager : jQuery('#pager'),
 		forceFit:true,
 		multiselect : true,
@@ -152,7 +152,7 @@ body {
 	<tr>
 		<td style="padding-left:10px">
 			<form action="<c:url value="/admin/assist/resourceAssist.do"/>" method="post" id="reloadAssist" name="reloadAssist">
-				<div id="documentation" class="demo" style="overflow:auto; height:460px;width:800px;">			
+				<div id="documentation" class="demo" style="overflow:auto; height:300px;width:800px;">			
 					<table width="792" border="0" cellspacing="0" cellpadding="0">
 						<tr height="30">
 						    <td align="right">
@@ -183,10 +183,21 @@ body {
 			</form>
 		</td>
 	</tr>
+ 	<tr valign="top">
+		<td height="50%" colspan="2" valign="top" >
+			<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#E9ECF1">
+				<tr><td height="10" bgcolor="#ffffff"></td></tr>
+				<tr><td height="1" bgcolor="#C9CFDD"></td></tr>
+				<tr><td valign="top" bgcolor="#E9ECF1"><div id="footSub"></div></td></tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<div id="transfer" style="visibility:hidden;">
+<table>
 	<tr>
 		<td width="10">&nbsp;</td>
 	    <td colspan="1" valign="top">
-			<div id="transfer" style="visibility:hidden;">
 			<table width="802" height="100%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td valign="top" style="padding-top:15px">
@@ -213,18 +224,9 @@ body {
 					</td>
 				</tr>
 			</table>
-			</div>
 		</td>
   	</tr>
- 	<tr valign="top">
-		<td height="50%" colspan="2" valign="top" >
-			<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#E9ECF1">
-				<tr><td height="10" bgcolor="#ffffff"></td></tr>
-				<tr><td height="1" bgcolor="#C9CFDD"></td></tr>
-				<tr><td valign="top" bgcolor="#E9ECF1"><div id="footSub"></div></td></tr>
-			</table>
-		</td>
-	</tr>
 </table>
+</div>
 </body>
 </html>

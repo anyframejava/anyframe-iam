@@ -20,6 +20,7 @@ import java.util.List;
 
 import anyframe.common.Page;
 import anyframe.iam.admin.common.IamGenericDao;
+import anyframe.iam.admin.domain.TempUsers;
 import anyframe.iam.admin.domain.Users;
 import anyframe.iam.admin.vo.UserSearchVO;
 
@@ -48,4 +49,8 @@ public interface UsersDao extends IamGenericDao<Users, String> {
 	 */
 	@SuppressWarnings("unchecked")
 	List findUserByName(String userName) throws Exception;
+	
+	List<TempUsers> makeAllTempUsersList() throws Exception;
+	
+	void removeAllUsers() throws Exception;
 }

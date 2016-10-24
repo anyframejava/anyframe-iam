@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -43,6 +44,7 @@ import anyframe.iam.admin.domain.AuthoritiesId;
 import anyframe.iam.admin.domain.Groups;
 import anyframe.iam.admin.domain.GroupsUsers;
 import anyframe.iam.admin.domain.GroupsUsersId;
+import anyframe.iam.admin.domain.TempUsers;
 import anyframe.iam.admin.domain.Users;
 import anyframe.iam.admin.users.service.UsersService;
 import anyframe.iam.admin.vo.UserSearchVO;
@@ -248,4 +250,56 @@ public class UsersServiceTest {
 		Users resultDomain = (Users) resultList.get(0);
 		checkResult(domain, resultDomain);
 	}
+	
+	@Test
+	public void testMakeAllTempUsersList() throws Exception{
+		List<TempUsers> resultList = usersService.makeAllTempUsersList();
+		assertNotNull(resultList);
+		assertTrue(resultList.size() > 0);
+	}
+	
+//	@Test
+//	public void testRemoveAllUsers() throws Exception{
+//		usersService.removeAllUsers();
+//		
+//		UserSearchVO userSearchVO = new UserSearchVO();
+//		Page resultPage = usersService.getList(userSearchVO);
+//		assertTrue(resultPage.getSize() == 0);
+//	}
+	
+//	@Test
+//	public void testSaveList() throws Exception{
+//		usersService.removeAllUsers();
+//		
+//		TempUsers tempUser1 = new TempUsers();
+//		tempUser1.setUserId("tempUser1");
+//		tempUser1.setUserName("tempUser1");
+//		tempUser1.setEnabled("Y");
+//		tempUser1.setPassword("tempUser1");
+//		tempUser1.setGroupId("GRP-0001");
+//		tempUser1.setRoleId("ROLE_ADMIN");
+//		tempUser1.setCreateDate("20100909");
+//		
+//		TempUsers tempUser2 = new TempUsers();
+//		tempUser2.setUserId("tempUser2");
+//		tempUser2.setUserName("tempUser2");
+//		tempUser2.setEnabled("Y");
+//		tempUser2.setPassword("tempUser2");
+//		tempUser2.setGroupId("GRP-0002");
+//		tempUser2.setRoleId("ROLE_USER,ROLE_ADMIN");
+//		tempUser2.setCreateDate("20100909");
+//		
+//		List userList = new ArrayList();
+//		userList.add(tempUser1);
+//		userList.add(tempUser2);
+//		
+//		usersService.save(userList);
+//		
+//		UserSearchVO userSearchVO = new UserSearchVO();
+//		Page resultPage = usersService.getList(userSearchVO);
+//		assertTrue(resultPage.getSize() > 0);
+//		assertEquals(2, resultPage.getSize());
+//		
+//		
+//	}
 }

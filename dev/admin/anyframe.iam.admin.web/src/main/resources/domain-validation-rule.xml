@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<domain-validation>
+	<domain name="Groups">
+		<field name="GroupId" maxlength="20" required="true" key="true"/>
+		<field name="GroupName" maxlength="50" required="true" />
+		<field name="ParentGroup" maxlength="20" />
+		<field name="createDate" maxlength="8" minlength="8" numeric="true" />
+		<field name="modifyDate" maxlength="8" minlength="8" numeric="true" />
+	</domain>
+	
+	<domain name="Roles">
+		<field name="RoleId" maxlength="50" required="true" key="true"/>
+		<field name="RoleName" maxlength="50" required="true" />
+		<field name="Description" maxlength="100" />
+		<field name="ParentRoles" maxlength="50" />
+		<field name="createDate" maxlength="8" minlength="8" numeric="true" />
+		<field name="modifyDate" maxlength="8" minlength="8" numeric="true" />
+	</domain>
+	
+	<domain name="Users">
+		<field name="UserId" maxlength="20" required="true" key="true"/>
+		<field name="UserName" maxlength="50" required="true" minlength="1" />
+		<field name="Enabled" maxlength="1" required="true" option="Y,N" />
+		<field name="Password" maxlength="50" />
+		<field name="GroupId" maxlength="20" foreignKey="GroupId" />
+		<field name="RoleId" maxlength="200" foreignKey="RoleId" />
+		<field name="createDate" maxlength="8" minlength="8" numeric="true" />
+		<field name="modifyDate" maxlength="8" minlength="8" numeric="true" />		
+	</domain>
+	
+	<domain name="RestrictedTimes">
+		<field name="TimeId" maxlength="10" required="true" key="true"/>
+		<field name="TimeType" maxlength="10" required="true" option="crash,improve,daily,weekend,holiday" />
+		<field name="StartDate" maxlength="8" numeric="true" />
+		<field name="StartTime" maxlength="6" numeric="true" />
+		<field name="EndDate" maxlength="8" numeric="true" />
+		<field name="EndTime" maxlength="6" numeric="true" />
+		<field name="Description" maxlength="6" />
+		<field name="SystemName" maxlength="15" required="true" />
+		<field name="RoleId" maxlength="200" foreignKey="RoleId" />
+		<field name="ResourceId" maxlength="10" foreignKey="ResourceId" />
+		<filed name="TimesExclusionRoles" maxlength="200" foreignKey="RoleId" />
+	</domain>
+	
+	<domain name="SecuredResources">
+		<field name="ResourceId" maxlength="10" required="true" key="true"/>
+		<field name="ResourceName" maxlength="50" required="true" />
+		<field name="ResourcePattern" maxlength="300" required="true" />
+		<field name="ResourceType" maxlength="10" required="true" option="method,url,pointcut" />
+		<field name="SortOrder" maxlength="5" required="true" numeric="true" />
+		<field name="Description" maxlength="100" />
+		<field name="SystemName" maxlength="15" required="true" />
+		<field name="RoleId" maxlength="50" foreignKey="RoleId" />
+		<field name="createDate" maxlength="8" minlength="8" numeric="true" />
+		<field name="modifyDate" maxlength="8" minlength="8" numeric="true" />	
+	</domain>
+	
+	<domain name="ViewResources">
+		<field name="ViewId" maxlength="50" required="true" key="true"/>
+		<field name="Category" maxlength="255" />
+		<field name="ViewName" maxlength="50" required="true" />
+		<field name="Description" maxlength="255" required="true" />
+		<field name="ViewInfo" maxlength="255" />
+		<field name="ViewType" maxlength="10" required="true" option="button,menu"/>
+		<field name="Visible" maxlength="1" required="true" option="Y,N" />
+		<field name="SystemName" maxlength="15" required="true" />
+		<field name="ParentView" maxlength="50" />
+		<field name="RefId" maxlength="200" />
+		<field name="RefType" maxlength="5" option="ROLE,GROUP,USER" />
+		<field name="Permissions" maxlength="255" />
+	</domain>
+	
+</domain-validation>

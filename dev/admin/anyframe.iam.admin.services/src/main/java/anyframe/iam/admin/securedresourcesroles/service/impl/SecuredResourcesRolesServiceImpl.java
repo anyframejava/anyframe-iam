@@ -58,6 +58,10 @@ public class SecuredResourcesRolesServiceImpl extends
 			}
 		}
 	}
+	
+	public void removeAllSecuredResourcesRoles() throws Exception{
+		securedResourcesRolesDao.removeAllSecuredResourcesRoles();
+	}
 
 	public SecuredResourcesRoles save(SecuredResourcesRoles securedResourcesRoles) throws Exception {
 		return this.securedResourcesRolesDao.save(securedResourcesRoles);

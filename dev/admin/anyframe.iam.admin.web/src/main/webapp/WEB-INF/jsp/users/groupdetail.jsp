@@ -1,4 +1,4 @@
-<%@ taglib uri='http://www.sds.samsung.com/tags' prefix='anyframe' %>
+<%@ taglib uri='http://www.anyframejava.org/tags' prefix='anyframe' %>
 <%@ include file="/common/taglibs.jsp"%>
 <%@ page language="java" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
 <%@ taglib prefix="validator" uri="http://www.springmodules.org/tags/commons-validator" %>

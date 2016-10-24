@@ -64,4 +64,30 @@
  			)
 		]]>
 	</sql-query>
+	
+	<sql-query name="makeAllTempResourcesList">
+		<return class="anyframe.iam.admin.domain.TempSecuredResources"/>
+		<![CDATA[	
+			SELECT  A.RESOURCE_ID||NVL(B.ROLE_ID, '') compKey,
+			     	A.RESOURCE_ID		resourceId, 
+					A.RESOURCE_NAME		resourceName,
+					A.RESOURCE_PATTERN	resourcePattern,
+					A.RESOURCE_TYPE		resourceType,
+					A.DESCRIPTION		description,
+					A.SORT_ORDER		sortorder,
+					A.SYSTEM_NAME		systemName,
+					A.CREATE_DATE		createDate,
+					A.MODIFY_DATE		modifyDate,
+					B.ROLE_ID 			roleId
+			FROM		SECURED_RESOURCES		A
+			LEFT OUTER JOIN	SECURED_RESOURCES_ROLES	B
+			ON	A.RESOURCE_ID = B.RESOURCE_ID
+		]]>
+	</sql-query>
+	
+	<sql-query name="removeAllSecuredResources">
+		<![CDATA[
+			DELETE FROM SECURED_RESOURCES
+		]]>
+	</sql-query>
 </hibernate-mapping>

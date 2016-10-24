@@ -11,4 +11,11 @@
 	 			WHERE securedResourcesRoles.id.roleId = :roleId
 		]]>
 	</query>
+	
+			
+	<sql-query name="removeAllSecuredResourcesRoles">
+		<![CDATA[
+			DELETE FROM SECURED_RESOURCES_ROLES
+		]]>
+	</sql-query>
 </hibernate-mapping>

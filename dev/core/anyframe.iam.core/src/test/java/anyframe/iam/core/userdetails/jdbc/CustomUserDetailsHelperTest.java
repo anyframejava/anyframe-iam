@@ -15,21 +15,22 @@
  */
 package anyframe.iam.core.userdetails.jdbc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.security.Authentication;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.context.SecurityContextImpl;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
-import org.springframework.security.providers.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -67,11 +68,15 @@ public class CustomUserDetailsHelperTest {
 
 		ExtUser extUser = CustomUserDetailsHelper.getAuthenticatedUser();
 
+		Collection<GrantedAuthority> grantedAuthorities = extUser.getAuthorities();
+		Iterator grantedAuthoritiesIterator = grantedAuthorities.iterator();
+		String authority = (grantedAuthoritiesIterator.hasNext()) ? (String)((GrantedAuthority)grantedAuthoritiesIterator.next()).getAuthority():null;
+
 		// check
 		assertEquals("test", extUser.getUsername());
 		assertEquals("test123", extUser.getPassword());
-		assertTrue(extUser.getAuthorities() instanceof GrantedAuthority[]);
-		assertEquals("ROLE_ADMIN", extUser.getAuthorities()[0].getAuthority());
+		assertTrue(grantedAuthorities instanceof Collection<?>);
+		assertEquals("ROLE_ADMIN", authority);
 
 		assertTrue(extUser.getCustomUser() instanceof CustomUser);
 

@@ -95,4 +95,39 @@
 		]]>
 	</sql-query>
 	
+	<sql-query name="makeAllTempViewList">
+		<return class="anyframe.iam.admin.domain.TempViewResources"/>
+		<![CDATA[	
+			SELECT	A.VIEW_RESOURCE_ID||NVL(C.REF_ID, '') compKey, 	
+			 		A.VIEW_RESOURCE_ID 		viewResourceId, 
+					A.VIEW_NAME 			viewName, 
+					A.SYSTEM_NAME			systemName,
+					A.CATEGORY				category,
+					A.DESCRIPTION			description,
+					A.VIEW_INFO				viewInfo,
+					A.VIEW_TYPE				viewType,
+					A.VISIBLE				visible,
+					B.CHILD_VIEW		 	parentView,
+					C.REF_ID				refId,
+					C.REF_TYPE				refType,
+					C.PERMISSIONS			permissions
+			FROM		VIEW_RESOURCES			A
+			LEFT JOIN	VIEW_HIERARCHY			B
+			ON	A.VIEW_RESOURCE_ID = B.PARENT_VIEW
+			LEFT OUTER JOIN	VIEW_RESOURCES_MAPPING	C
+			ON	A.VIEW_RESOURCE_ID = C.VIEW_RESOURCE_ID
+		]]>
+	</sql-query>
+	
+	<sql-query name="removeAllViewResources">
+		<![CDATA[
+			DELETE FROM VIEW_RESOURCES
+		]]>
+	</sql-query>
+	
+	<sql-query name="removeAllViewHierarchy">
+		<![CDATA[
+			DELETE FROM VIEW_HIERARCHY
+		]]>
+	</sql-query>
 </hibernate-mapping>

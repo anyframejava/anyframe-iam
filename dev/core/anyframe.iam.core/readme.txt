@@ -1,4 +1,4 @@
-﻿Anyframe IAM, release 1.0.1 (2010.02)
+﻿Anyframe IAM, release 1.1.0 (2010.10)
 ---------------------------------------------------------
 http://www.anyframejava.org
 

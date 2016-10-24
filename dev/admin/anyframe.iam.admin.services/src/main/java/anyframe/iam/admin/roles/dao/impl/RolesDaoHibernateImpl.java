@@ -26,6 +26,7 @@ import anyframe.common.util.StringUtil;
 import anyframe.iam.admin.common.IamGenericDaoHibernate;
 import anyframe.iam.admin.domain.IamTree;
 import anyframe.iam.admin.domain.Roles;
+import anyframe.iam.admin.domain.TempRoles;
 import anyframe.iam.admin.roles.dao.RolesDao;
 
 @Repository("rolesDao")
@@ -105,5 +106,17 @@ public class RolesDaoHibernateImpl extends IamGenericDaoHibernate<Roles, String>
 		}
 		
 		return list.get(0).getRoleId();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TempRoles> makeAllTempRolesList() throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("makeAllTempRolesList");
+
+		return query.list();
+	}
+	
+	public void removeAllRoles() throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeAllRoles");
+		query.executeUpdate();	
 	}
 }

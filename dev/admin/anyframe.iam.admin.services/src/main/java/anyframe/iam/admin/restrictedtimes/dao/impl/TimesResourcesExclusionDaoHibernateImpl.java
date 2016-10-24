@@ -85,4 +85,10 @@ public class TimesResourcesExclusionDaoHibernateImpl extends
 		query.setParameter("resourceId", resourceId);
 		query.executeUpdate();
 	}
+	
+	public void removeAllTimesResourcesExclusion() throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery(
+		"removeAllTimesResourcesExclusion");
+		query.executeUpdate();
+	}
 }

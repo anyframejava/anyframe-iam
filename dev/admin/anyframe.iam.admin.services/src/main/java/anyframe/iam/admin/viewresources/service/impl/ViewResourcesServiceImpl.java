@@ -17,30 +17,49 @@
 package anyframe.iam.admin.viewresources.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import anyframe.common.Page;
 import anyframe.core.generic.service.impl.GenericServiceImpl;
 import anyframe.iam.admin.domain.IamTree;
+import anyframe.iam.admin.domain.TempViewResources;
 import anyframe.iam.admin.domain.ViewHierarchy;
 import anyframe.iam.admin.domain.ViewHierarchyId;
 import anyframe.iam.admin.domain.ViewResource;
+import anyframe.iam.admin.domain.ViewResourcesMapping;
+import anyframe.iam.admin.domain.ViewResourcesMappingPK;
+import anyframe.iam.admin.viewhierarchy.service.ViewHierarchyService;
 import anyframe.iam.admin.viewresources.dao.ViewResourcesDao;
+import anyframe.iam.admin.viewresources.service.ViewMappingService;
 import anyframe.iam.admin.viewresources.service.ViewResourcesService;
 import anyframe.iam.admin.vo.ViewResourceSearchVO;
+import anyframe.iam.core.acl.ExtBasePermission;
 
 public class ViewResourcesServiceImpl extends GenericServiceImpl<ViewResource, String> implements ViewResourcesService {
-	ViewResourcesDao viewResourcesDao;
-	
+	private ViewResourcesDao viewResourcesDao;
+	private ViewHierarchyService viewHierarchyService;
+	private ViewMappingService viewMappingService;
+
 	private static List<String> viewIds = new ArrayList<String>();
 
 	public ViewResourcesServiceImpl(ViewResourcesDao viewResourcesDao) {
 		super(viewResourcesDao);
 		this.viewResourcesDao = viewResourcesDao;
 	}
+	
+	public void setViewHierarchyService(ViewHierarchyService viewHierarchyService) {
+		this.viewHierarchyService = viewHierarchyService;
+	}
+
+	public void setViewMappingService(ViewMappingService viewMappingService) {
+		this.viewMappingService = viewMappingService;
+	}
+
 
 	public Page getList(ViewResourceSearchVO viewResourceSearchVO) throws Exception {
 		return viewResourcesDao.getList(viewResourceSearchVO);
@@ -104,6 +123,99 @@ public class ViewResourcesServiceImpl extends GenericServiceImpl<ViewResource, S
 		return this.viewResourcesDao.save(viewResource);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List save(List tempViewList) throws Exception{
+		List resultList = new ArrayList();
+		List viewList = new ArrayList();
+		List permissionList = new ArrayList();
+		
+		for(int i = 0 ; i < tempViewList.size() ; i++ ){
+			TempViewResources tempView = (TempViewResources) tempViewList.get(i);
+			ViewResource view = saveTempViewResourcesToViewResources(tempView);
+			resultList.add(view);
+			
+			String parentView = tempView.getParentView();
+			
+			if(!"".equals(parentView) && parentView != null){
+				Map viewMap = new HashMap();
+				viewMap.put("parentView", parentView);
+				viewMap.put("viewResourceId", tempView.getViewResourceId());
+				
+				viewList.add(viewMap);
+			}
+			
+			String permissionName = tempView.getPermissions();
+			
+			if(!"".equals(permissionName) && permissionName != null){
+				Map permissionMap = new HashMap();
+				permissionMap.put("permission", permissionName);
+				permissionMap.put("viewResourceId", tempView.getViewResourceId());
+				permissionMap.put("refId", tempView.getRefId());
+				permissionMap.put("refType", tempView.getRefType());
+				
+				permissionList.add(permissionMap);
+			}
+		}
+		
+		for(int i = 0 ; i < viewList.size() ; i++){
+			Map viewMap = (Map) viewList.get(i);
+			String parentView = (String) viewMap.get("parentView");
+			String viewResourceId = (String) viewMap.get("viewResourceId");
+			
+			ViewHierarchy viewHierarchy = new ViewHierarchy();
+			ViewHierarchyId id = new ViewHierarchyId();
+			
+			id.setParentView(viewResourceId);
+			id.setChildView(parentView);
+			
+			viewHierarchy.setId(id);
+			
+			viewHierarchyService.save(viewHierarchy);
+		}
+		
+		for(int i = 0 ; i < permissionList.size() ; i++){
+			Map permissionMap = (Map) permissionList.get(i);
+			String permission = (String) permissionMap.get("permission");
+			String viewResourceId = (String) permissionMap.get("viewResourceId");
+			String refId = (String) permissionMap.get("refId");
+			String refType = (String) permissionMap.get("refType");
+			int mask = ExtBasePermission.getPermissionMask(permission);
+			
+			ViewResourcesMapping viewResourceMapping = new ViewResourcesMapping();
+			ViewResourcesMappingPK id = new ViewResourcesMappingPK();
+			id.setRefId(refId);
+			id.setViewResourceId(viewResourceId);
+			
+			viewResourceMapping.setId(id);
+			viewResourceMapping.setPermissions(permission);
+			viewResourceMapping.setRefType(refType);
+			viewResourceMapping.setMask(mask);
+			
+			viewMappingService.save(viewResourceMapping);
+		}
+	
+		return resultList;
+	}
+	
+	public ViewResource saveTempViewResourcesToViewResources(TempViewResources tempView) throws Exception{
+		ViewResource view = new ViewResource();
+		
+		view.setViewResourceId(tempView.getViewResourceId());
+		view.setViewInfo(tempView.getViewInfo());
+		view.setViewName(tempView.getViewName());
+		view.setViewType(tempView.getViewType());
+		view.setVisible(tempView.getVisible());
+		view.setDescription(tempView.getDescription());
+		view.setCategory(tempView.getCategory());
+		view.setSystemName(tempView.getSystemName());
+		
+		return saveWithoutHierarchy(view);
+	}
+	
+	public ViewResource saveWithoutHierarchy(ViewResource viewResource) throws Exception{
+		return viewResourcesDao.save(viewResource);
+	}
+	
 	public List<IamTree> getViewTree(String parentNode) throws Exception{
 		return viewResourcesDao.getViewTree(parentNode);
 	}
@@ -146,5 +258,15 @@ public class ViewResourcesServiceImpl extends GenericServiceImpl<ViewResource, S
 	
 	public List<IamTree> getRootNodeOfViewsWithSystemName(String systemName) throws Exception{
 		return viewResourcesDao.getRootNodeOfViewsWithSystemName(systemName);
+	}
+	
+	public List<TempViewResources> makeAllTempViewList() throws Exception{
+		return viewResourcesDao.makeAllTempViewList();
+	}
+	
+	public void removeAllViewResources() throws Exception{
+		viewMappingService.removeAllViewResourceMapping();
+		viewHierarchyService.removeAllViewHierarchy();
+		viewResourcesDao.removeAllViewResources();
 	}
 }

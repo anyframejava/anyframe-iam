@@ -16,15 +16,16 @@
 package anyframe.iam.core.acl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.security.Authentication;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.userdetails.UserDetails;
-import org.springframework.security.userdetails.hierarchicalroles.UserDetailsWrapper;
+import org.springframework.security.access.hierarchicalroles.UserDetailsWrapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import anyframe.iam.core.userdetails.ExtUser;
 
@@ -80,11 +81,9 @@ public class ViewResourceHelper {
 				paramMap.put("groupId", groupId);
 		}
 
-		GrantedAuthority[] authorities = authentication.getAuthorities();
+		Collection<GrantedAuthority> authorities = authentication.getAuthorities();
 		List authoritiesList = new ArrayList();
-		for (int i = 0; i < authorities.length; i++) {
-			authoritiesList.add(authorities[i].getAuthority());
-		}
+		authoritiesList.addAll(authorities);
 
 		paramMap.put("authorities", authoritiesList);
 

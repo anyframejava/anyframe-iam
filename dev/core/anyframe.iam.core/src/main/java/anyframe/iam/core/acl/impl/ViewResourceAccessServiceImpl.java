@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.security.acls.Permission;
+import org.springframework.security.acls.model.Permission;
 
 import anyframe.iam.core.acl.ExtBasePermission;
 import anyframe.iam.core.acl.IViewResourceAccessService;

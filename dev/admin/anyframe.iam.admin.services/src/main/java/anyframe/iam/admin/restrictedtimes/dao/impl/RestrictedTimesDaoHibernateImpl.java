@@ -18,10 +18,14 @@ package anyframe.iam.admin.restrictedtimes.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Query;
+
 import anyframe.common.Page;
 import anyframe.common.util.StringUtil;
 import anyframe.iam.admin.common.IamGenericDaoHibernate;
 import anyframe.iam.admin.domain.RestrictedTimes;
+import anyframe.iam.admin.domain.TempGroups;
+import anyframe.iam.admin.domain.TempRestrictedTimes;
 import anyframe.iam.admin.restrictedtimes.dao.RestrictedTimesDao;
 import anyframe.iam.admin.vo.RestrictedTimesSearchVO;
 
@@ -61,5 +65,18 @@ public class RestrictedTimesDaoHibernateImpl extends IamGenericDaoHibernate<Rest
 
 		Page resultPage = new Page(resultList, pageIndex, totalSize.intValue(), pageUnit, pageSize);
 		return resultPage;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TempRestrictedTimes> makeAllTempRestrictedTimesList() throws Exception {
+		
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("makeAllTempTimesList");
+
+		return query.list();
+	}
+	
+	public void removeAllRestrictedTimes() throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeAllRestrictedTimes");
+		query.executeUpdate();	
 	}
 }

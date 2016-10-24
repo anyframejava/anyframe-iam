@@ -11,4 +11,10 @@
 		]]>
 	</query>
 	
+	<sql-query name="removeAllGroupsUsers">
+		<![CDATA[
+			DELETE FROM GROUPS_USERS
+		]]>
+	</sql-query>
+	
 </hibernate-mapping>

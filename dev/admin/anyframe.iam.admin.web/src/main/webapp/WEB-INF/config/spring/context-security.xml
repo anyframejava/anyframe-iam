@@ -2,9 +2,9 @@
 <b:beans xmlns="http://www.springframework.org/schema/security"
     xmlns:b="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.4.xsd
-                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
     <b:bean id="securedObjectService" class="anyframe.iam.core.securedobject.impl.SecuredObjectServiceImpl" >
         <b:property name="securedObjectDAO" ref="securedObjectDAO" />
@@ -14,7 +14,7 @@
         <b:property name="dataSource" ref="dataSource" />
     </b:bean>
 
-    <b:bean id="roleHierarchy" class="org.springframework.security.userdetails.hierarchicalroles.RoleHierarchyImpl">
+    <b:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
         <b:property name="hierarchy" ref="hierarchyStrings" />
     </b:bean>
 
@@ -23,14 +23,14 @@
         <b:property name="securedObjectService" ref="securedObjectService" />
     </b:bean>
 
-    <b:bean id="userDetailsServiceWrapper" class="org.springframework.security.userdetails.hierarchicalroles.UserDetailsServiceWrapper">
+    <b:bean id="userDetailsServiceWrapper" class="org.springframework.security.access.hierarchicalroles.UserDetailsServiceWrapper">
         <b:property name="roleHierarchy" ref="roleHierarchy" />
         <b:property name="userDetailsService" ref="jdbcUserService" />
     </b:bean>
     
   	<!-- path matcher -->
-	<b:bean id="antUrlPathMatcher" class="org.springframework.security.util.AntUrlPathMatcher" />
-	<b:bean id="regexUrlPathMatcher" class="org.springframework.security.util.RegexUrlPathMatcher" />
+	<b:bean id="antUrlPathMatcher" class="org.springframework.security.web.util.AntUrlPathMatcher" />
+	<b:bean id="regexUrlPathMatcher" class="org.springframework.security.web.util.RegexUrlPathMatcher" />
 
     <http access-denied-page="/common/accessDenied.do" path-type="regex" lowercase-comparisons="false">
         <intercept-url pattern="\A/images/.*\Z" filters="none" />
@@ -39,6 +39,7 @@
 		<intercept-url pattern="\A/jquery/.*\Z" filters="none" />
 		<intercept-url pattern="\A/js/.*\Z" filters="none" />
 		<intercept-url pattern="\A/layouts/.*\Z" filters="none" />
+		<intercept-url pattern="\A/excel/.*\Z" filters="none" />
 		<intercept-url pattern="\A/.*\.do.*\Z" access="ROLE_ADMIN" />
 
         <form-login login-page="/common/login.do" login-processing-url="/j_spring_security_check"
@@ -52,9 +53,11 @@
         -->
     </http>
 
-    <authentication-manager alias="authenticationManager" />
-
-    <authentication-provider user-service-ref="userDetailsServiceWrapper" />
+	<authentication-manager alias="authenticationManager"> 
+		<authentication-provider user-service-ref="userDetailsServiceWrapper">
+			<!-- password-encoder hash="md5" / -->
+		</authentication-provider>
+	</authentication-manager>
 
     <b:bean id="jdbcUserService"
             class="anyframe.iam.core.userdetails.jdbc.ExtJdbcUserDetailsManager" >
@@ -168,5 +171,5 @@
 			value="anyframe.iam.core.acl.ExtBasePermission.HELP" />
 	</b:bean>
 	-->
-	
+
 </b:beans>

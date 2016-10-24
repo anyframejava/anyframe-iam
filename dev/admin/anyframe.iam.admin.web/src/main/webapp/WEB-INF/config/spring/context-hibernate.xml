@@ -32,10 +32,12 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.sprin
                 <value>anyframe.iam.admin.domain.GroupsUsers</value>
                 <value>anyframe.iam.admin.domain.GroupsHierarchy</value>
                 <value>anyframe.iam.admin.domain.Groups</value>
+                <value>anyframe.iam.admin.domain.TempGroups</value>
                 <value>anyframe.iam.admin.domain.ViewResource</value>
                 <value>anyframe.iam.admin.domain.ViewHierarchy</value>
                 <value>anyframe.iam.admin.domain.ViewResourcesMapping</value>
                 <value>anyframe.iam.admin.domain.Authorities</value>
+				<value>anyframe.iam.admin.domain.DataUpload</value>
                 <value>anyframe.iam.admin.domain.IamResourceResult</value>
                 <value>anyframe.iam.admin.domain.CandidateSecuredResources</value>
                 <value>anyframe.iam.admin.domain.RestrictedTimes</value>
@@ -54,8 +56,11 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.sprin
 			<list>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-authorities.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-groups.xml</value>
+				<value>classpath:hibernate/namedquery/namedquery-hibernate-groupshierarchy.xml</value>
+				<value>classpath:hibernate/namedquery/namedquery-hibernate-roleshierarchy.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-groupsUsers.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-roles.xml</value>
+				<value>classpath:hibernate/namedquery/namedquery-hibernate-users.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-securedResourcesRoles.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-securedResources.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-restrictedTimes.xml</value>
@@ -74,6 +79,7 @@ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.sprin
                 <value>classpath:hibernate/dynamic/dynamic-hibernate-viewMapping.xml</value>
                 <value>classpath:hibernate/dynamic/dynamic-hibernate-viewResources.xml</value>                
                 <value>classpath:hibernate/dynamic/dynamic-hibernate-securedResourcesRoles.xml</value>
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-dataupload.xml</value>
                 <value>classpath:hibernate/dynamic/dynamic-hibernate-securedResources.xml</value>
                 <value>classpath:hibernate/dynamic/dynamic-hibernate-roles.xml</value>
                 <value>classpath:hibernate/dynamic/dynamic-hibernate-groupsUsers.xml</value>

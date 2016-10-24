@@ -58,6 +58,8 @@ public interface TimesResourcesExclusionService extends
 	 */
 	void saveTimeExclusion(List<TimesResourcesExclusion> list) throws Exception;
 
+	TimesResourcesExclusion save(TimesResourcesExclusion timesResourcesExclusion) throws Exception;
+	
 	/**
 	 * delete time-exclusion data that matches the given
 	 * TimeResourcesExclusionId
@@ -72,5 +74,7 @@ public interface TimesResourcesExclusionService extends
 	 * @param resourceId Resource ID
 	 * @throws Exception fail to remove data
 	 */
-	public void removeTimesExclusionByTimeResource(String timeId, String resourceId) throws Exception;
+	void removeTimesExclusionByTimeResource(String timeId, String resourceId) throws Exception;
+	
+	void removeAllTimesResourcesExclusion() throws Exception;
 }

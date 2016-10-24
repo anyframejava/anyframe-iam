@@ -14,7 +14,7 @@
         <b:property name="dataSource" ref="dataSource" />
     </b:bean>
 
-    <b:bean id="roleHierarchy" class="org.springframework.security.userdetails.hierarchicalroles.RoleHierarchyImpl">
+    <b:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
         <b:property name="hierarchy" ref="hierarchyStrings" />
     </b:bean>
 
@@ -23,13 +23,13 @@
         <b:property name="securedObjectService" ref="securedObjectService" />
     </b:bean>
 
-    <b:bean id="userDetailsServiceWrapper" class="org.springframework.security.userdetails.hierarchicalroles.UserDetailsServiceWrapper">
+    <b:bean id="userDetailsServiceWrapper" class="org.springframework.security.access.hierarchicalroles.UserDetailsServiceWrapper">
         <b:property name="roleHierarchy" ref="roleHierarchy" />
         <b:property name="userDetailsService" ref="jdbcUserService" />
     </b:bean>
     
   	<!-- path matcher -->
-	<b:bean id="antUrlPathMatcher" class="org.springframework.security.util.AntUrlPathMatcher" />
+	<b:bean id="antUrlPathMatcher" class="org.springframework.security.web.util.AntUrlPathMatcher" />
 	<b:bean id="regexUrlPathMatcher" class="org.springframework.security.util.RegexUrlPathMatcher" />
 
     <http access-denied-page="/common/accessDenied.do" path-type="regex" lowercase-comparisons="false">
@@ -39,6 +39,7 @@
 		<intercept-url pattern="\A/jquery/.*\Z" filters="none" />
 		<intercept-url pattern="\A/js/.*\Z" filters="none" />
 		<intercept-url pattern="\A/layouts/.*\Z" filters="none" />
+		<intercept-url pattern="\A/excel/.*\Z" filters="none" />
 		<intercept-url pattern="\A/.*\.do.*\Z" access="ROLE_ADMIN" />
 
         <form-login login-page="/common/login.do" login-processing-url="/j_spring_security_check"

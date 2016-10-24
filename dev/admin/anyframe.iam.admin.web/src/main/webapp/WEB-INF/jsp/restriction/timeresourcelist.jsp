@@ -1,4 +1,4 @@
-<%@ taglib uri='http://www.sds.samsung.com/tags' prefix='anyframe' %>
+<%@ taglib uri='http://www.anyframejava.org/tags' prefix='anyframe' %>
 <%@ include file="/common/taglibs.jsp"%> 
 <%@ page language="java" contentType="text/html;charset=utf-8"
 	pageEncoding="utf-8"%>
@@ -82,7 +82,7 @@ jQuery(document).ready( function() {
 			width : 60
 		} ],
 		width : 790,
-		height : 350,
+		height : 300,
 		forceFit:true,
 		multiselect : true,
 		pager : jQuery('#pager'),

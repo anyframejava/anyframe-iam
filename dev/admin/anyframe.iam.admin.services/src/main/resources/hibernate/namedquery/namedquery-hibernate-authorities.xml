@@ -17,4 +17,11 @@
 		]]>
 	</query>
 	
+	
+	<sql-query name="removeAllAuthorities">
+		<![CDATA[
+			DELETE FROM AUTHORITIES
+		]]>
+	</sql-query>
+	
 </hibernate-mapping>

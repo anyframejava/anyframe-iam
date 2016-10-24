@@ -80,4 +80,9 @@ public class RestrictedTimesRolesDaoHibernateImpl extends
 		query.setParameter("timeId", timeId);
 		query.executeUpdate();
 	}
+	
+	public void removeAllRestrictedTimesRoles() throws Exception{
+		Query query = this.getSessionFactory().getCurrentSession().getNamedQuery("removeAllRestrictedTimesRoles");
+		query.executeUpdate();
+	}
 }

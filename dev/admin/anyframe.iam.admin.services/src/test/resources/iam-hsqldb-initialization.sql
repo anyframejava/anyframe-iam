@@ -102,7 +102,7 @@ CREATE TABLE RESTRICTED_TIMES (
   PRIMARY KEY ( TIME_ID ) ) ; 
   
 CREATE TABLE CANDIDATE_SECURED_RESOURCES ( 
-  CANDIDATE_RESOURCE_ID    VARCHAR (20)   NOT NULL, 
+  CANDIDATE_RESOURCE_ID    NUMERIC (10)   NOT NULL, 
   BEANID                   VARCHAR (128), 
   PACKAGES                 VARCHAR (128)  NOT NULL, 
   CLASSES                  VARCHAR (128), 
@@ -164,6 +164,15 @@ CREATE TABLE VIEW_RESOURCES_MAPPING  (
 	REF_TYPE VARCHAR(10) NOT NULL,		
 	CONSTRAINT PK_VIEW_RESOURCES_MAPPING  PRIMARY KEY(VIEW_RESOURCE_ID, REF_ID),
 	CONSTRAINT FK_MAPPING_VIEW_RESOURCE_ID  FOREIGN KEY (VIEW_RESOURCE_ID) REFERENCES VIEW_RESOURCES (VIEW_RESOURCE_ID)
+);
+
+CREATE TABLE DATA_UPLOAD (
+	FILE_ID VARCHAR(10) NOT NULL, 
+	PATH VARCHAR(255) NOT NULL, 
+	FILE_NAME VARCHAR(255) NOT NULL, 
+	CREATE_DATE VARCHAR(8) NOT NULL, 
+	WORK_DATE VARCHAR(8), 
+	CONSTRAINT PK_DATA_UPLOAD PRIMARY KEY(FILE_ID)
 );
   
 ALTER TABLE GROUPS_HIERARCHY ADD  CONSTRAINT FK_GROUPS1
@@ -249,6 +258,7 @@ insert into GROUPS values ('GRP-0039','TA',null,'20090722');
 insert into GROUPS values ('GRP-0014','ITP','20090701',null);
 insert into GROUPS values ('GRP-0015','fw','20090701',null);
 insert into GROUPS values ('GRP-0016','IE','20090701','20090714');
+insert into GROUPS values ('testGroup','IE','20090701','20090714');
 
 insert into GROUPS_HIERARCHY values ('GRP-0004','GRP-0041','20090806',null);
 insert into GROUPS_HIERARCHY values ('GRP-0001','GRP-0002','20090701',null);
@@ -407,6 +417,8 @@ insert into ROLES values ('ROLE_A','A STAFF','A STAFF','20090701',null);
 insert into ROLES values ('ROLE_B','C USER','B STAFF','20090701','20090722');
 insert into ROLES values ('ROLE_USER','USER','USER','20090701',null);
 insert into ROLES values ('ROLE_ADMIN','ADMIN','ADMIN','20090701',null);
+insert into ROLES values ('ROLE_TEST', 'TEST', 'TEST CASE', '20100813', null);
+
 insert into ROLES_HIERARCHY values ('ROLE-00002','IS_AUTHENTICATED_REMEMBERED','20090722',null);
 insert into ROLES_HIERARCHY values ('IS_AUTHENTICATED_FULLY','ROLE_RESTRICTED','20090714',null);
 insert into ROLES_HIERARCHY values ('IS_AUTHENTICATED_REMEMBERED','IS_AUTHENTICATED_FULLY','20090714',null);
@@ -461,32 +473,32 @@ insert into AUTHORITIES values ('ROLE_USER','GRP-0013','G','20090810',null);
 insert into AUTHORITIES values ('ROLE_A','GRP-0010','G','20090811',null);
 insert into AUTHORITIES values ('ROLE_ADMIN','GRP-0003','G','20090811',null);
 
-insert into SECURED_RESOURCES values ('web-000001','web_resource_1','\A/emplistuser\.do.*\Z','all web address like emplistuser','url',0, '20090714','20090812','SAMPLE');
-insert into SECURED_RESOURCES values ('web-000002','*.do','\A/.*\.do.*\Z','All web address with ".do"','url',0, '20090714','20090812','SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000005','test_resource_5','com.sds.emp.purchase.service.PurchaseService.deletePurchase','delete purchase','method',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000006','test_resource_6','com.sds.emp.purchase.service.PurchaseService.PurchaseList','purchase List','method',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000007','test_resource_7','com.sds.emp.purchase.service.PurchaseService.*','All Purchase service method','method',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000004','method_resource_test_04','test_patterns','this is description','url',0, '20090714','20090728','SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000010','test_resource_11','com.sds.emp.user.service.UserService.userList','get user List method','method',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000011','test_resource_12','com.sds.emp.user.service.UserService.*','All user service method','method',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000012','test_resource_13','excution(* com.sds.emp.sale..*Service.delete*(..))','all delete service method','pointcut',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000013','test_resource_14','excution(* com.sds.emp.sale..*Service.update*(..))','all update service method','pointcut',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000014','test_resource_15','excction(* com.sds.emp.sale..*Service.*list(..))','all list service method','pointcut',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000015','test_resource_16','excution(* com.sds.emp.sale..*Serivice.*(..))','all sale service excution','pointcut',0, '20090714','20090727','SAMPLE');
-insert into SECURED_RESOURCES values ('web-000005','web_resource_5','\A/emplistsale\.do.*\Z','all web address like emplistsale','url',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('web-000006','web_resource_6','\A/emplistproduct\.do.*\Z','all web address like emplistproduct','url',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('web-000007','web_resource_7','\A/emplistpurchase\.do.*\Z','all web address like emplistpurchase','url',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000016','test_resource_17','com.sds.emp.sale.service.SaleService.saleList','sale List method','method',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000017','test_resource_18','com.sds.emp.sale.service.SaleService.addSale','add sale method','method',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000018','test_resource_19','com.sds.emp.sale.service.SaleService.deleteSale','delete sale method','method',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000019','test_resource_20','com.sds.emp.sale.service.SaleService.updateSale','update Sale method','method',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('mtd_000020','test_resource_21','com.sds.emp.sale.service.SaleService.*','All sale service method','method',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('web-000008','web_resource_8','\A/empaddviewproduct\.do.*\Z','add view product page','url',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('web-000009','web_resource_9','\A/empaddviewsale\.do.*\Z','add view sale page','url',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('web-000010','web_resource_10','\A/empaddviewuser\.do.*\Z','add view user page','url',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('web-000011','web_resource_11','\A/empaddviewcategory\.do.*\Z','add view category page','url',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('web-000003','Etc_all','\A/.*\Z','Etc all web address','url',0, '20090714',null,'SAMPLE');
-insert into SECURED_RESOURCES values ('web-000004','reloadAuthMapping','\A/reloadAuthMapping\.do.*\Z','reloadAuthMapping URL address','url',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000001','web_resource_1','\A/emplistuser\.do.*\Z','all web address like emplistuser','URL',0, '20090714','20090812','SAMPLE');
+insert into SECURED_RESOURCES values ('web-000002','*.do','\A/.*\.do.*\Z','All web address with ".do"','URL',0, '20090714','20090812','SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000005','test_resource_5','com.sds.emp.purchase.service.PurchaseService.deletePurchase','delete purchase','Method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000006','test_resource_6','com.sds.emp.purchase.service.PurchaseService.PurchaseList','purchase List','Method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000007','test_resource_7','com.sds.emp.purchase.service.PurchaseService.*','All Purchase service method','Method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000004','method_resource_test_04','test_patterns','this is description','URL',0, '20090714','20090728','SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000010','test_resource_11','com.sds.emp.user.service.UserService.userList','get user List method','Method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000011','test_resource_12','com.sds.emp.user.service.UserService.*','All user service method','Method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000012','test_resource_13','excution(* com.sds.emp.sale..*Service.delete*(..))','all delete service method','PointCut',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000013','test_resource_14','excution(* com.sds.emp.sale..*Service.update*(..))','all update service method','PointCut',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000014','test_resource_15','excction(* com.sds.emp.sale..*Service.*list(..))','all list service method','PointCut',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000015','test_resource_16','excution(* com.sds.emp.sale..*Serivice.*(..))','all sale service excution','PointCut',0, '20090714','20090727','SAMPLE');
+insert into SECURED_RESOURCES values ('web-000005','web_resource_5','\A/emplistsale\.do.*\Z','all web address like emplistsale','URL',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000006','web_resource_6','\A/emplistproduct\.do.*\Z','all web address like emplistproduct','URL',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000007','web_resource_7','\A/emplistpurchase\.do.*\Z','all web address like emplistpurchase','URL',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000016','test_resource_17','com.sds.emp.sale.service.SaleService.saleList','sale List method','Method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000017','test_resource_18','com.sds.emp.sale.service.SaleService.addSale','add sale method','Method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000018','test_resource_19','com.sds.emp.sale.service.SaleService.deleteSale','delete sale method','Method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000019','test_resource_20','com.sds.emp.sale.service.SaleService.updateSale','update Sale method','Method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('mtd_000020','test_resource_21','com.sds.emp.sale.service.SaleService.*','All sale service method','Method',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000008','web_resource_8','\A/empaddviewproduct\.do.*\Z','add view product page','URL',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000009','web_resource_9','\A/empaddviewsale\.do.*\Z','add view sale page','URL',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000010','web_resource_10','\A/empaddviewuser\.do.*\Z','add view user page','URL',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000011','web_resource_11','\A/empaddviewcategory\.do.*\Z','add view category page','URL',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000003','Etc_all','\A/.*\Z','Etc all web address','URL',0, '20090714',null,'SAMPLE');
+insert into SECURED_RESOURCES values ('web-000004','reloadAuthMapping','\A/reloadAuthMapping\.do.*\Z','reloadAuthMapping URL address','URL',0, '20090714',null,'SAMPLE');
 
 insert into SECURED_RESOURCES_ROLES values ('web-000001','ROLE_ADMIN','20090811',null);
 insert into SECURED_RESOURCES_ROLES values ('mtd_000017','ROLE_ADMIN','20090806',null);
@@ -515,6 +527,8 @@ insert into IDS values ('RESOURCE_METHOD',31);
 insert into IDS values ('RESOURCE_URL',31);
 insert into IDS values ('RESOURCE_PNC',31);
 insert into IDS values ('TIMES',31);
+INSERT INTO IDS VALUES('DATA_UPLOAD',1);
+INSERT INTO IDS VALUES('SNAPSHOT',1);
 
 INSERT INTO CANDIDATE_SECURED_RESOURCES ( CANDIDATE_RESOURCE_ID, BEANID, PACKAGES, CLASSES, METHOD, PARAMETER, REQUESTMAPPING, POINTCUT, CANDIDATE_RESOURCE_TYPE , system_name) VALUES ( 
 1, 'codeService', 'com.sds.emp.code.service', 'CodeService', 'findCodeList', 'String'
@@ -744,6 +758,7 @@ insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, v
 insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible, system_name) values ('listTransaction', 'Purchase Mgmt.', 'Search List of Purchase', '거래 목록조회 화면', '', 'button', 'Y','SAMPLE');
 insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible, system_name) values ('listUser', 'User Mgmt.', 'Search List of Users', '사용자 목록조회 화면', '', 'button', 'Y','SAMPLE');
 insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible, system_name) values ('updateUser', 'User Mgmt.', 'Update Product', '사용자 수정 화면', '', 'button', 'Y','SAMPLE');
+insert into VIEW_RESOURCES(view_resource_id, category, view_name, description, view_info, view_type, visible, system_name) values ('testUser', 'User Mgmt.', 'test Product', '사용자 테스트 화면', '', 'button', 'Y','SAMPLE');
 
 insert into VIEW_HIERARCHY(parent_view, child_view, create_date, modify_date) values('listProduct', 'addProduct', '20100418', null);
 insert into VIEW_HIERARCHY(parent_view, child_view, create_date, modify_date) values('listCategory', 'listProduct', '20100418', null);

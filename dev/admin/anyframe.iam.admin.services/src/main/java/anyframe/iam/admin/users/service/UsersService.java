@@ -22,6 +22,7 @@ import anyframe.common.Page;
 import anyframe.core.generic.service.GenericService;
 import anyframe.iam.admin.domain.Authorities;
 import anyframe.iam.admin.domain.GroupsUsers;
+import anyframe.iam.admin.domain.TempUsers;
 import anyframe.iam.admin.domain.Users;
 import anyframe.iam.admin.vo.UserSearchVO;
 
@@ -87,4 +88,11 @@ public interface UsersService extends GenericService<Users, String> {
 	 */
 	@SuppressWarnings("unchecked")
 	List findUserByName(String userName) throws Exception;
+	
+	List<TempUsers> makeAllTempUsersList() throws Exception;
+	
+	void removeAllUsers() throws Exception;
+	
+	List save(List tempUsers) throws Exception;
+	
 }

@@ -18,11 +18,13 @@ package anyframe.iam.admin.users.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 import anyframe.common.Page;
 import anyframe.common.util.StringUtil;
 import anyframe.iam.admin.common.IamGenericDaoHibernate;
+import anyframe.iam.admin.domain.TempUsers;
 import anyframe.iam.admin.domain.Users;
 import anyframe.iam.admin.users.dao.UsersDao;
 import anyframe.iam.admin.vo.UserSearchVO;
@@ -70,5 +72,17 @@ public class UsersDaoHibernateImpl extends IamGenericDaoHibernate<Users, String>
 		arg[0] = "userName=%" + userName + "%";
 
 		return this.getDynamicHibernateService().findList("findUserByName", arg);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TempUsers> makeAllTempUsersList() throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("makeAllTempUsersList");
+
+		return query.list();
+	}
+	
+	public void removeAllUsers() throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeAllUsers");
+		query.executeUpdate();	
 	}
 }

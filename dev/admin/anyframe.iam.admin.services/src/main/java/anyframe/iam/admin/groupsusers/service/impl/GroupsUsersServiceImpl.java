@@ -30,4 +30,8 @@ public class GroupsUsersServiceImpl extends GenericServiceImpl<GroupsUsers, Grou
 		super(groupsUsersDao);
 		this.groupsUsersDao = groupsUsersDao;
 	}
+	
+	public void removeAllGroupsUsers() throws Exception{
+		groupsUsersDao.removeAllGroupsUsers();
+	}
 }

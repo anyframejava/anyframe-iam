@@ -47,6 +47,7 @@
 				<value>anyframe.iam.admin.domain.ViewResourcesMapping</value>
 				<value>anyframe.iam.admin.domain.ViewHierarchy</value>
 				<value>anyframe.iam.admin.domain.IamResourceResult</value>
+				<value>anyframe.iam.admin.domain.DataUpload</value>
 				<value>anyframe.iam.admin.domain.CandidateSecuredResources</value>
 				<value>anyframe.iam.admin.domain.RestrictedTimes</value>
 				<value>anyframe.iam.admin.domain.RestrictedTimesRoles</value>
@@ -64,8 +65,11 @@
 			<list>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-authorities.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-groups.xml</value>
+				<value>classpath:hibernate/namedquery/namedquery-hibernate-groupshierarchy.xml</value>
+				<value>classpath:hibernate/namedquery/namedquery-hibernate-roleshierarchy.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-groupsUsers.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-roles.xml</value>
+				<value>classpath:hibernate/namedquery/namedquery-hibernate-users.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-securedResourcesRoles.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-securedResources.xml</value>
 				<value>classpath:hibernate/namedquery/namedquery-hibernate-restrictedTimes.xml</value>
@@ -80,18 +84,19 @@
 		<property name="fileNames">
 			<list>
 				<!-- Add new file name here -->
-				<value>classpath:hibernate/dynamic/dynamic-hibernate-users.xml</value>
-				<value>classpath:hibernate/dynamic/dynamic-hibernate-viewMapping.xml</value>
-				<value>classpath:hibernate/dynamic/dynamic-hibernate-viewResources.xml</value>
-				<value>classpath:hibernate/dynamic/dynamic-hibernate-securedResourcesRoles.xml</value>
-				<value>classpath:hibernate/dynamic/dynamic-hibernate-securedResources.xml</value>
-				<value>classpath:hibernate/dynamic/dynamic-hibernate-roles.xml</value>
-				<value>classpath:hibernate/dynamic/dynamic-hibernate-groups.xml</value>
-				<value>classpath:hibernate/dynamic/dynamic-hibernate-groupsUsers.xml</value>
-				<value>classpath:hibernate/dynamic/dynamic-hibernate-category.xml</value>
-				<value>classpath:hibernate/dynamic/dynamic-hibernate-authorities.xml</value>
-				<value>classpath:hibernate/dynamic/dynamic-hibernate-candidateSecuredResources.xml</value>
-				<value>classpath:hibernate/dynamic/dynamic-hibernate-restrictedTimes.xml</value>
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-users.xml</value>
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-viewMapping.xml</value>
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-viewResources.xml</value>                
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-securedResourcesRoles.xml</value>
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-dataupload.xml</value>
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-securedResources.xml</value>
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-roles.xml</value>
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-groupsUsers.xml</value>
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-groups.xml</value>
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-category.xml</value>
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-authorities.xml</value>
+                <value>classpath:hibernate/dynamic/dynamic-hibernate-candidateSecuredResources.xml</value>
+            	<value>classpath:hibernate/dynamic/dynamic-hibernate-restrictedTimes.xml</value>
 			</list>
 		</property>
 	</bean>

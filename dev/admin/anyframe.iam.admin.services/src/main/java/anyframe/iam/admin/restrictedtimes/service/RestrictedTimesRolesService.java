@@ -56,6 +56,8 @@ public interface RestrictedTimesRolesService extends GenericService<RestrictedTi
 	 * @throws Exception fail to save data
 	 */
 	void saveTimeRoles(List<RestrictedTimesRoles> list) throws Exception;
+	
+	RestrictedTimesRoles save(RestrictedTimesRoles restrictedTimesRoles) throws Exception;
 
 	/**
 	 * delete Time-Role Mapping data that matches the given TimeID and RoleID
@@ -69,5 +71,9 @@ public interface RestrictedTimesRolesService extends GenericService<RestrictedTi
 	 * @param timeId time ID
 	 * @throws Exception fail to remove data
 	 */
-	public void removeTimesRolesByTime(String timeId) throws Exception;
+	void removeTimesRolesByTime(String timeId) throws Exception;
+	
+	void removeAllRestrictedTimesRoles() throws Exception;
+	
+	
 }

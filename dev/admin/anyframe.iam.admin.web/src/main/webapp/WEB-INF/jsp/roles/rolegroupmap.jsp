@@ -1,4 +1,4 @@
-<%@ taglib uri='http://www.sds.samsung.com/tags' prefix='anyframe' %>
+<%@ taglib uri='http://www.anyframejava.org/tags' prefix='anyframe' %>
 <%@ page language="java" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
 <%@ include file="/common/taglibs.jsp"%> 
 <html>

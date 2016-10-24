@@ -26,6 +26,7 @@ import anyframe.common.util.StringUtil;
 import anyframe.iam.admin.common.IamGenericDaoHibernate;
 import anyframe.iam.admin.domain.Groups;
 import anyframe.iam.admin.domain.IamTree;
+import anyframe.iam.admin.domain.TempGroups;
 import anyframe.iam.admin.groups.dao.GroupsDao;
 
 @Repository("groupsDao")
@@ -125,5 +126,18 @@ public class GroupsDaoHibernateImpl extends IamGenericDaoHibernate<Groups, Strin
 			return "";
 		}
 		return list.get(0).getGroupId();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<TempGroups> makeAllTempGroupsList() throws Exception {
+		
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("makeAllTempGroupsList");
+
+		return query.list();
+	}
+	
+	public void removeAllGroups() throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeAllGroups");
+		query.executeUpdate();	
 	}
 }

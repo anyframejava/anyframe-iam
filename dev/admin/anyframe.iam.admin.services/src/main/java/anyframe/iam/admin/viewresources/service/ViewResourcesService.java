@@ -21,6 +21,7 @@ import java.util.List;
 import anyframe.common.Page;
 import anyframe.core.generic.service.GenericService;
 import anyframe.iam.admin.domain.IamTree;
+import anyframe.iam.admin.domain.TempViewResources;
 import anyframe.iam.admin.domain.ViewResource;
 import anyframe.iam.admin.vo.ViewResourceSearchVO;
 
@@ -62,67 +63,26 @@ public interface ViewResourcesService extends GenericService<ViewResource, Strin
 	 */
 	ViewResource save(ViewResource viewResource) throws Exception;
 	
-	/**
-	 * find child nodes that extend the given node in one level
-	 * @param parentNode parent node
-	 * @return List<IamTree> all child node that extend the given node on one level
-	 * @throws Exception fail to find node
-	 */
 	List<IamTree> getViewTree(String parentNode) throws Exception;
 	
-	/**
-	 * find root node in VIEW_HIERARCHY table
-	 * @return List<IamTree> root node of View table
-	 * @throws Exception
-	 */
 	List<IamTree> getRootNodeOfViews() throws Exception;
 	
-	/**
-	 * delete the given row from View table
-	 * @param viewResourceId view resource id that want to delete
-	 * @return void
-	 * @throws Exception fail to delete the row
-	 */
 	void remove(String viewResourceId) throws Exception;
 	
-	/**
-	 * find list of view name that have the given keyword
-	 * @param keyword
-	 * @return list of view name
-	 * @throws Exception fail to find list	 
-	 */
 	String getViewNameList(String keyword) throws Exception;
 
-	/**
-	 * find list of view name that have the given keyword and system name
-	 * @param keyword
-	 * @param systemName
-	 * @return list of view name
-	 * @throws Exception fail to find list
-	 */
 	String getViewNameListWithSystemName(String keyword, String systemName) throws Exception;
 	
-	/**
-	 * find viewResourceId that matches the given view name
-	 * @param viewName
-	 * @return view resource id
-	 * @throws Exception fail to find view resource id
-	 */
 	String getViewResourceIdByViewName(String viewName) throws Exception;
 	
-	/**
-	 * find all ancestor for the given view resource id
-	 * @param viewResourceId
-	 * @return list of view resource id
-	 * @throws Exception fail to find list
-	 */
 	List<String> getParentsViewIds(String viewResourceId) throws Exception;
 	
-	/**
-	 * find root node that matches the given system name in VIEW_HIERARCHY table
-	 * @param systemName
-	 * @return List<IamTree> root node of View table
-	 * @throws Exception fail to find root node
-	 */
 	List<IamTree> getRootNodeOfViewsWithSystemName(String systemName) throws Exception;
+	
+	List<TempViewResources> makeAllTempViewList() throws Exception;
+	
+	void removeAllViewResources() throws Exception;
+	
+	@SuppressWarnings("unchecked")
+	List save(List tempViewResource) throws Exception;
 }

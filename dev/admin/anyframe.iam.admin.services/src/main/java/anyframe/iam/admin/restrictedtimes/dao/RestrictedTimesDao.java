@@ -16,9 +16,12 @@
 
 package anyframe.iam.admin.restrictedtimes.dao;
 
+import java.util.List;
+
 import anyframe.common.Page;
 import anyframe.iam.admin.common.IamGenericDao;
 import anyframe.iam.admin.domain.RestrictedTimes;
+import anyframe.iam.admin.domain.TempRestrictedTimes;
 import anyframe.iam.admin.vo.RestrictedTimesSearchVO;
 
 /**
@@ -37,4 +40,8 @@ public interface RestrictedTimesDao extends IamGenericDao<RestrictedTimes, Strin
 	 * @throws Exception fail to find list
 	 */
 	Page getList(RestrictedTimesSearchVO restrictedTimesSearchVO) throws Exception;
+	
+	List<TempRestrictedTimes> makeAllTempRestrictedTimesList() throws Exception;
+	
+	void removeAllRestrictedTimes() throws Exception;
 }

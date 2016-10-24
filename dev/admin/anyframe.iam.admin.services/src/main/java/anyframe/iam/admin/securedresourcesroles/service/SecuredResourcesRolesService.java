@@ -43,6 +43,8 @@ public interface SecuredResourcesRolesService extends GenericService<SecuredReso
 	 * @throws Exception fail to delete rows
 	 */
 	void deleteSecuredResourceRoles(String[] resourceIds, String roleId) throws Exception;
+	
+	void removeAllSecuredResourcesRoles() throws Exception;
 
 	/**
 	 * save rows in Secured_Resources_Roles table

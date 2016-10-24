@@ -18,11 +18,11 @@ function fncLogOut() {
 }
 
 function changeSystemName(frm) {
-	alert("change select box value to" + frm.value);
 
 	var systemName = frm.value;
 	$.post("<c:url value='/common/changeSystemName.do'/>", {systemName:systemName}, function(data){
 	});
+	parent.frames['rightFrame'].document.location.href="<c:url value='/layouts/welcome.jsp'/>";
 	
 }
 //-->
@@ -53,9 +53,10 @@ margin:0;
       <tr>
         <td align="right" style="padding-right:8px">
         	IAM에 오신것을 환영합니다!
-        	<select name="systemName" onchange="javascript:changeSystemName(this);">
-        		<option value="sample">SAMPLE</option>
-        		<option value="sample2">SAMPLE2</option>
+        	<select name="systemName" onchange="javascript:changeSystemName(this);"  class="ct_input_g">
+        		<c:forEach var="item" items="${systemNames }">
+					<option value="${item }">${item }</option>
+        		</c:forEach>	
         	</select>
         </td>
         <td width="62" colspan="2" align="right" style="padding-right:18px"><a href="javascript:fncLogOut();"> <img src="<c:url value='/images/btn_logout.gif'/>" alt="로그아웃" width="62" height="16" border="0" ></a></td>

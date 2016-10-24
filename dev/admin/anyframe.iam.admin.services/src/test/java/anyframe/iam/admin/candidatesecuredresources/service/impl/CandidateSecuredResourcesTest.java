@@ -52,31 +52,12 @@ public class CandidateSecuredResourcesTest {
 		String expect = "com.sds.emp.user.service\n";
 		assertEquals(expect, result);
 	}
-	
-	@Test
-	public void testGetPackagesListWithSystemName() throws Exception {
-		String keyword = "com.sds.emp.user";
-		String systemName = "SAMPLE";
-		String result = candidateSecuredResourcesService.getPackagesList(keyword, systemName);
-		String expect = "com.sds.emp.user.service\n";
-		assertEquals(expect, result);
-	}
 
 	@Test
 	public void testGetClassesList() throws Exception {
 		String keyword = "User";
 		String packages = "com.sds.emp.user.service";
 		String result = candidateSecuredResourcesService.getClassesList(keyword, packages);
-		String expect = "UserService\n";
-		assertEquals(expect, result);
-	}
-	
-	@Test
-	public void testGetClassesListWithSystemName() throws Exception {
-		String keyword = "User";
-		String systemName = "SAMPLE";
-		String packages = "com.sds.emp.user.service";
-		String result = candidateSecuredResourcesService.getClassesList(keyword, packages, systemName);
 		String expect = "UserService\n";
 		assertEquals(expect, result);
 	}
@@ -87,17 +68,6 @@ public class CandidateSecuredResourcesTest {
 		String packages = "com.sds.emp.user.service";
 		String classes = "UserService";
 		String result = candidateSecuredResourcesService.getMethodList(keyword, packages, classes);
-		String expected = "findUser\n" + "findUserList\n";
-		assertEquals(expected, result);
-	}
-	
-	@Test
-	public void testMethodListWithSystemName() throws Exception {
-		String keyword = "find";
-		String systemName = "SAMPLE";
-		String packages = "com.sds.emp.user.service";
-		String classes = "UserService";
-		String result = candidateSecuredResourcesService.getMethodList(keyword, packages, classes, systemName);
 		String expected = "findUser\n" + "findUserList\n";
 		assertEquals(expected, result);
 	}
@@ -117,37 +87,11 @@ public class CandidateSecuredResourcesTest {
 		assertEquals(expected, result);
 
 	}
-	
-	@Test
-	public void testPointCutListWithSystemName() throws Exception {
-		String keyword = "com.sds.emp.sales.service.CategoryService";
-		String systemName = "SAMPLE";
-		String result = candidateSecuredResourcesService.getPointCutList(keyword, systemName);
-		String expected = "com.sds.emp.sales.service.CategoryService.createCategory\n"
-			+ "com.sds.emp.sales.service.CategoryService.findCategory\n"
-			+ "com.sds.emp.sales.service.CategoryService.findCategoryList\n"
-			+ "com.sds.emp.sales.service.CategoryService.findCategoryListAll\n"
-			+ "com.sds.emp.sales.service.CategoryService.findDropDownCategoryList\n"
-			+ "com.sds.emp.sales.service.CategoryService.processAll\n"
-			+ "com.sds.emp.sales.service.CategoryService.removeCategory\n"
-			+ "com.sds.emp.sales.service.CategoryService.updateCategory\n";
-		assertEquals(expected, result);
-		
-	}
 
 	@Test
 	public void testGetRequestMappingList() throws Exception {
 		String keyword = "/empadduser";
 		String result = candidateSecuredResourcesService.getRequestMappingList(keyword);
-		String expected = "/empadduser.do\n" + "/empadduserview.do\n";
-		assertEquals(expected, result);
-	}
-	
-	@Test
-	public void testGetRequestMappingListWithSystemName() throws Exception {
-		String keyword = "/empadduser";
-		String systemName = "SAMPLE";
-		String result = candidateSecuredResourcesService.getRequestMappingList(keyword, systemName);
 		String expected = "/empadduser.do\n" + "/empadduserview.do\n";
 		assertEquals(expected, result);
 	}
@@ -157,16 +101,6 @@ public class CandidateSecuredResourcesTest {
 		String keyword = "abc";
 		String url = "/empadduser";
 		String result = candidateSecuredResourcesService.getParameterList(keyword, url);
-		String expected = "";
-		assertEquals(expected, result);
-	}
-	
-	@Test
-	public void testGetParameterListWithSystemName() throws Exception {
-		String keyword = "abc";
-		String systemName = "SAMPLE";
-		String url = "/empadduser";
-		String result = candidateSecuredResourcesService.getParameterList(keyword, url, systemName);
 		String expected = "";
 		assertEquals(expected, result);
 	}
@@ -222,15 +156,8 @@ public class CandidateSecuredResourcesTest {
 	}
 	
 	@Test
-	public void testFindMethodParam() throws Exception{
+	public void estFindMethodParam() throws Exception{
 		String beanid = candidateSecuredResourcesService.findMethodParam();
-		assertEquals("", beanid);
-	}
-	
-	@Test
-	public void testFindMethodParamWithSystemName() throws Exception{
-		String systemName = "SAMPLE";
-		String beanid = candidateSecuredResourcesService.findMethodParam(systemName);
 		assertEquals("", beanid);
 	}
 }

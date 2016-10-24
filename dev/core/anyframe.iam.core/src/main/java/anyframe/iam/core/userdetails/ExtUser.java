@@ -16,11 +16,12 @@
 package anyframe.iam.core.userdetails;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.userdetails.User;
-import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.util.FieldUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -55,7 +56,7 @@ public class ExtUser extends User implements UserDetails {
 	 * boolean, boolean, boolean, boolean, GrantedAuthority[])
 	 */
 	public ExtUser(String username, String password, boolean enabled, boolean accountNonExpired,
-			boolean credentialsNonExpired, boolean accountNonLocked, GrantedAuthority[] authorities, Object customUser)
+			boolean credentialsNonExpired, boolean accountNonLocked, List<GrantedAuthority> authorities, Object customUser)
 			throws IllegalArgumentException {
 
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);

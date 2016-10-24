@@ -17,30 +17,30 @@ package anyframe.iam.core.reload.impl;
 
 import java.util.List;
 
-import org.springframework.security.intercept.web.AnyframeReloadableDefaultFilterInvocationDefinitionSource;
-import org.springframework.security.vote.AccessDecisionVoter;
-import org.springframework.security.vote.AffirmativeBased;
-import org.springframework.security.vote.AnyframeRoleHierarchyRestrictedVoter;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.AnyframeRoleHierarchyRestrictedVoter;
+import org.springframework.security.web.access.intercept.AnyframeReloadableDefaultFilterInvocationSecurityMetadataSource;
 
-import anyframe.iam.core.intercept.web.ReloadableRestrictedTimesFilterInvocationDefinitionSource;
+import anyframe.iam.core.intercept.web.ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource;
 import anyframe.iam.core.reload.IResourceReloadService;
 
 public class ResourceReloadServiceImpl implements IResourceReloadService {
 
-	private AnyframeReloadableDefaultFilterInvocationDefinitionSource databaseObjectDefinitionSource;
+	private AnyframeReloadableDefaultFilterInvocationSecurityMetadataSource databaseSecurityMetadataSource;
 
-	private ReloadableRestrictedTimesFilterInvocationDefinitionSource restrictedTimesObjectDefinitionSource;
+	private ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource restrictedTimesSecurityMetadataSource;
 
 	private AffirmativeBased restrictedTimesAccessDecisionManager;
 
-	public void setDatabaseObjectDefinitionSource(
-			AnyframeReloadableDefaultFilterInvocationDefinitionSource databaseObjectDefinitionSource) {
-		this.databaseObjectDefinitionSource = databaseObjectDefinitionSource;
+	public void setDatabaseSecurityMetadataSource(
+			AnyframeReloadableDefaultFilterInvocationSecurityMetadataSource databaseSecurityMetadataSource) {
+		this.databaseSecurityMetadataSource = databaseSecurityMetadataSource;
 	}
 
-	public void setRestrictedTimesObjectDefinitionSource(
-			ReloadableRestrictedTimesFilterInvocationDefinitionSource restrictedTimesObjectDefinitionSource) {
-		this.restrictedTimesObjectDefinitionSource = restrictedTimesObjectDefinitionSource;
+	public void setRestrictedTimesSecurityMetadataSource(
+			ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource restrictedTimesSecurityMetadataSource) {
+		this.restrictedTimesSecurityMetadataSource = restrictedTimesSecurityMetadataSource;
 	}
 
 	public void setRestrictedTimesAccessDecisionManager(AffirmativeBased restrictedTimesAccessDecisionManager) {
@@ -49,14 +49,14 @@ public class ResourceReloadServiceImpl implements IResourceReloadService {
 
 	public boolean resourceReload(String reloadmaps, String reloadtimes) throws Exception {
 		if ("maps".equals(reloadmaps)) {
-			if (databaseObjectDefinitionSource != null) {
-				databaseObjectDefinitionSource.reloadRequestMap();
+			if (databaseSecurityMetadataSource != null) {
+				databaseSecurityMetadataSource.reloadRequestMap();
 			}
 		}
 
 		if ("times".equals(reloadtimes)) {
-			if (restrictedTimesObjectDefinitionSource != null) {
-				restrictedTimesObjectDefinitionSource.reloadRestrictedTimes();
+			if (restrictedTimesSecurityMetadataSource != null) {
+				restrictedTimesSecurityMetadataSource.reloadRestrictedTimes();
 			}
 
 			if (restrictedTimesAccessDecisionManager != null) {

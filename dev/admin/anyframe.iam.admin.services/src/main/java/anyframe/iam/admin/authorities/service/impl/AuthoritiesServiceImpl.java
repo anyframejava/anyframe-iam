@@ -82,6 +82,10 @@ public class AuthoritiesServiceImpl extends GenericServiceImpl<Authorities, Auth
 			}
 		}
 	}
+	
+	public void removeAllAuthorities() throws Exception{
+		authoritiesDao.removeAllAuthorities();
+	}
 
 	public void addUser(String[] userIds, String roleId) throws Exception {
 		String currentTime = anyframe.common.util.DateUtil.getCurrentTime("yyyyMMdd");

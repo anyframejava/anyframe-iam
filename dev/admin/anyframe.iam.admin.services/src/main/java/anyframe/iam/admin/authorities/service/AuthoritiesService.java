@@ -82,6 +82,9 @@ public interface AuthoritiesService extends GenericService<Authorities, Authorit
 	 */
 	void removeAndSaveList(String[] groupId, String roleId) throws Exception;
 
+	
+	void removeAllAuthorities() throws Exception;
+	
 	/**
 	 * add users which have the given roleId in authorities table
 	 * @param userIds an array of user ids

@@ -44,6 +44,10 @@ public class TimesResourcesExclusionServiceImpl extends
 	public List findRoleListByTimeResource(String timeId, String resourceId) throws Exception {
 		return timesResourcesExclusionDao.findRoleListByTimeResource(timeId, resourceId);
 	}
+	
+	public TimesResourcesExclusion save(TimesResourcesExclusion timesResourcesExclusion) throws Exception{
+		return timesResourcesExclusionDao.save(timesResourcesExclusion);
+	}
 
 	public void saveTimeExclusion(List<TimesResourcesExclusion> list) throws Exception {
 		String timeId = ((TimesResourcesExclusion) list.get(0)).getId().getTimeId();
@@ -66,5 +70,9 @@ public class TimesResourcesExclusionServiceImpl extends
 
 	public void removeTimesExclusionByTimeResource(String timeId, String resourceId) throws Exception {
 		timesResourcesExclusionDao.removeTimesExclusionByTimeResource(timeId, resourceId);
+	}
+	
+	public void removeAllTimesResourcesExclusion() throws Exception{
+		timesResourcesExclusionDao.removeAllTimesResourcesExclusion();
 	}
 }

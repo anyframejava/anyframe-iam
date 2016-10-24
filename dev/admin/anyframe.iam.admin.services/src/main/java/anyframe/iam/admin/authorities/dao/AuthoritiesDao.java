@@ -80,4 +80,6 @@ public interface AuthoritiesDao extends IamGenericDao<Authorities, AuthoritiesId
 	 */
 	@SuppressWarnings("unchecked")
 	List getGroupIdList(AuthoritySearchVO authorituSearchVO) throws Exception;
+	
+	void removeAllAuthorities() throws Exception;
 }

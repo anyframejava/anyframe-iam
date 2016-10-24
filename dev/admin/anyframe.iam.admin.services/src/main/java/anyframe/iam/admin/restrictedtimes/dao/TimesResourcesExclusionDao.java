@@ -56,4 +56,6 @@ public interface TimesResourcesExclusionDao extends IamGenericDao<TimesResources
 	 * @throws Exception fail to remove data
 	 */
 	void removeTimesExclusionByTimeResource(String timeId, String resourceId) throws Exception;
+	
+	void removeAllTimesResourcesExclusion() throws Exception;
 }

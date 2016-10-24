@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
 
 import org.aspectj.weaver.tools.PointcutExpression;
 import org.aspectj.weaver.tools.PointcutParser;
-import org.springframework.security.util.RegexUrlPathMatcher;
-import org.springframework.security.util.UrlMatcher;
+import org.springframework.security.web.util.RegexUrlPathMatcher;
+import org.springframework.security.web.util.UrlMatcher;
 
 import anyframe.core.generic.service.impl.GenericServiceImpl;
 import anyframe.iam.admin.candidatesecuredresources.dao.CandidateSecuredResourcesDao;

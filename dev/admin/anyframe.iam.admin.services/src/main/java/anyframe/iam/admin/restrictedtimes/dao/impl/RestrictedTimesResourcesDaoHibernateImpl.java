@@ -18,6 +18,8 @@ package anyframe.iam.admin.restrictedtimes.dao.impl;
 
 import java.util.List;
 
+import org.hibernate.Query;
+
 import anyframe.common.Page;
 import anyframe.common.util.StringUtil;
 import anyframe.iam.admin.common.IamGenericDaoHibernate;
@@ -132,5 +134,10 @@ public class RestrictedTimesResourcesDaoHibernateImpl extends
 
 		Page resultPage = new Page(resultList, pageIndex, totalSize.intValue(), pageUnit, pageSize);
 		return resultPage;
+	}
+	
+	public void removeAllRestrictedTimesResources() throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeAllRestrictedTimesResources");
+		query.executeUpdate();	
 	}
 }

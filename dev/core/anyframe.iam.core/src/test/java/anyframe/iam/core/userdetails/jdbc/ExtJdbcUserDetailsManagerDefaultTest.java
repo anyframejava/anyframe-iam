@@ -15,19 +15,20 @@
  */
 package anyframe.iam.core.userdetails.jdbc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -64,11 +65,15 @@ public class ExtJdbcUserDetailsManagerDefaultTest {
 
 		ExtUser extUser = (ExtUser) selectedUser;
 
+		Collection<GrantedAuthority> grantedAuthorities = extUser.getAuthorities();
+		Iterator grantedAuthoritiesIterator = grantedAuthorities.iterator();
+		String authority = (grantedAuthoritiesIterator.hasNext()) ? (String)((GrantedAuthority)grantedAuthoritiesIterator.next()).getAuthority():null;
+
 		// check
 		assertEquals("test", extUser.getUsername());
 		assertEquals("test123", extUser.getPassword());
-		assertTrue(extUser.getAuthorities() instanceof GrantedAuthority[]);
-		assertEquals("ROLE_ADMIN", extUser.getAuthorities()[0].getAuthority());
+		assertTrue(grantedAuthorities instanceof Collection<?>);
+		assertEquals("ROLE_ADMIN", authority);
 
 		// mapClass 를 작성/설정하지 않은 경우 default 는 Map (ListOrderedMap) 으로 custom 사용자
 		// 정보 객체를 되돌려 줌
@@ -92,11 +97,15 @@ public class ExtJdbcUserDetailsManagerDefaultTest {
 		UserDetails selectedUser2 = extJdbcUserDetailsManager.loadUserByUsername(username2);
 		ExtUser extUser2 = (ExtUser) selectedUser2;
 
+		Collection<GrantedAuthority> grantedAuthorities2 = extUser2.getAuthorities();
+		Iterator grantedAuthoritiesIterator2 = grantedAuthorities2.iterator();
+		String authority2 = (grantedAuthoritiesIterator2.hasNext()) ? (String)((GrantedAuthority)grantedAuthoritiesIterator2.next()).getAuthority():null;
+
 		// check
 		assertEquals("buyer", extUser2.getUsername());
 		assertEquals("buyer123", extUser2.getPassword());
-		assertTrue(extUser2.getAuthorities() instanceof GrantedAuthority[]);
-		assertEquals("ROLE_RESTRICTED", extUser2.getAuthorities()[0].getAuthority());
+		assertTrue(grantedAuthorities2 instanceof Collection<?>);
+		assertEquals("ROLE_RESTRICTED", authority2);
 
 		assertTrue(extUser2.getCustomUser() instanceof Map);
 

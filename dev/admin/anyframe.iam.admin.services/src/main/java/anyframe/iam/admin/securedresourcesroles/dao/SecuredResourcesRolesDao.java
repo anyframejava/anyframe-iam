@@ -34,4 +34,6 @@ public interface SecuredResourcesRolesDao extends IamGenericDao<SecuredResources
 	 * @throws Exception fail to delete the row
 	 */
 	void remove(String roleId) throws Exception;
+	
+	void removeAllSecuredResourcesRoles() throws Exception;
 }

@@ -19,6 +19,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -26,9 +28,9 @@ import javax.sql.DataSource;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.GrantedAuthorityImpl;
-import org.springframework.security.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import anyframe.iam.core.userdetails.ExtUser;
 
@@ -100,9 +102,10 @@ public class ExtUsersByUsernameMapping extends MappingSqlQuery {
 		if (!metaExists) {
 			setColumnNames(rs);
 		}
-
+		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		authorities.add(new GrantedAuthorityImpl("HOLDER"));
 		UserDetails user = new ExtUser(username, password, enabled, true, true, true,
-				new GrantedAuthority[] { new GrantedAuthorityImpl("HOLDER") }, makeCustomUser(rs));
+				authorities, makeCustomUser(rs));
 
 		return user;
 	}

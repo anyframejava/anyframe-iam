@@ -21,8 +21,8 @@ import javax.servlet.ServletException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.security.intercept.web.FilterInvocation;
-import org.springframework.security.intercept.web.FilterSecurityInterceptor;
+import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
 /**
  * This class extends FilterSecurityInterceptor of Spring Security.
@@ -44,9 +44,9 @@ public class RestrictedTimesFilterSecurityInterceptor extends FilterSecurityInte
 	 */
 	private static final String FILTER_APPLIED = "__anyframe_iam_restrictedTimesFilterSecurityInterceptor_filterApplied";
 
-	public int getOrder() {
-		return super.getOrder() - 60;
-	}
+//	public int getOrder() {
+//		return super.getOrder() - 60;
+//	}
 
 	/**
 	 * Main method of filter to check restricted times

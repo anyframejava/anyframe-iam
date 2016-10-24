@@ -19,7 +19,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.springframework.security.intercept.web.FilterInvocation;
+import org.springframework.security.web.FilterInvocation;
 
 /**
  * This class extends FilterInvocation of Spring Security.

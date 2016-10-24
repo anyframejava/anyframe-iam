@@ -22,9 +22,9 @@ import javax.sql.DataSource;
 
 import org.springframework.context.ApplicationContextException;
 import org.springframework.jdbc.object.MappingSqlQuery;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.userdetails.UserDetails;
-import org.springframework.security.userdetails.jdbc.JdbcUserDetailsManager;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import anyframe.iam.core.userdetails.ExtUser;
 
@@ -119,7 +119,7 @@ public class ExtJdbcUserDetailsManager extends JdbcUserDetailsManager {
 	 * Setting UserDetails treated by Spring Security to ExtUSer 
 	 */
 	protected UserDetails createUserDetails(String username, UserDetails userFromUserQuery,
-			GrantedAuthority[] combinedAuthorities) {
+			List<GrantedAuthority> combinedAuthorities) {
 
 		String returnUsername = userFromUserQuery.getUsername();
 

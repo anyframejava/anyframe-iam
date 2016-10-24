@@ -21,6 +21,7 @@ import java.util.List;
 import anyframe.core.generic.service.GenericService;
 import anyframe.iam.admin.domain.Groups;
 import anyframe.iam.admin.domain.IamTree;
+import anyframe.iam.admin.domain.TempGroups;
 
 /**
  * An interface that provides services about Groups table
@@ -52,7 +53,14 @@ public interface GroupsService extends GenericService<Groups, String> {
 	 * @throws Exception fail to save the row
 	 */
 	Groups save(Groups groups) throws Exception;
+	
+	@SuppressWarnings("unchecked")
+	List save(List tempGroupList) throws Exception;
+	
+	Groups saveTempGroupsToGroups(TempGroups tempGroups) throws Exception;
 
+	Groups saveWithoutHierarchy(Groups groups) throws Exception;
+	
 	/**
 	 * update the given row from Groups table
 	 * @param groups a row that want to update
@@ -67,6 +75,8 @@ public interface GroupsService extends GenericService<Groups, String> {
 	 * @throws Exception fail to delete the row
 	 */
 	void remove(String currentNode) throws Exception;
+	
+	void removeAllGroups() throws Exception;
 
 	/**
 	 * find all Groups domains
@@ -95,7 +105,9 @@ public interface GroupsService extends GenericService<Groups, String> {
 	 * find all ancestor for the given group ID
 	 * @param groupId
 	 * @return List of group ID
-	 * @throws Exception fail to find list
+	 * @throws Exception
 	 */
 	List<String> getParentsGroupIds(String groupId) throws Exception;
+	
+	List<TempGroups> makeAllTempGroupsList() throws Exception;
 }

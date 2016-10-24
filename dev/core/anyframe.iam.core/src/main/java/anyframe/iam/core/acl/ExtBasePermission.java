@@ -21,8 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.security.acls.Permission;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.acls.domain.DefaultPermissionFactory;
+import org.springframework.security.acls.model.Permission;
 
 /**
  * An object that extends BasePermission in Spring Security
@@ -32,6 +33,7 @@ import org.springframework.security.acls.domain.BasePermission;
  * @author Byunghun Woo
  */
 public class ExtBasePermission extends BasePermission {
+	protected static DefaultPermissionFactory defaultPermissionFactory;
 
 	// 기본 권한 - BasePermission 참고
 	// READ('R'), WRITE('W'), CREATE('C'), DELETE('D'), ADMINISTRATION('A')
@@ -75,8 +77,7 @@ public class ExtBasePermission extends BasePermission {
 	private static final Map registeredPermissionNames = new HashMap();
 
 	static {
-
-		registerPermissionsFor(ExtBasePermission.class);
+		defaultPermissionFactory = new DefaultPermissionFactory(ExtBasePermission.class);
 
 		registeredPermissionNames.put(new Integer(1 << 0), new String[] { "READ", "R" });
 		registeredPermissionNames.put(new Integer(1 << 1), new String[] { "WRITE", "W" });
@@ -250,5 +251,12 @@ public class ExtBasePermission extends BasePermission {
 		}
 		return mask;
 	}
+	
+    public final static Permission buildFromName(String name) {
+    	return defaultPermissionFactory.buildFromName(name);
+    }
 
+    public final static Permission buildFromMask(int mask) {
+        return defaultPermissionFactory.buildFromMask(mask);
+    }
 }

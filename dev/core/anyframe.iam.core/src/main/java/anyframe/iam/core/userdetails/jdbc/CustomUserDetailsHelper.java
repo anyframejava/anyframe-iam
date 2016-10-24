@@ -17,8 +17,8 @@ package anyframe.iam.core.userdetails.jdbc;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.userdetails.hierarchicalroles.UserDetailsWrapper;
+import org.springframework.security.access.hierarchicalroles.UserDetailsWrapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import anyframe.iam.core.userdetails.ExtUser;
 

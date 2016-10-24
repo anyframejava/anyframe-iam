@@ -15,33 +15,37 @@
  */
 package anyframe.iam.core.userdetails.jdbc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.security.Authentication;
-import org.springframework.security.ConfigAttributeDefinition;
-import org.springframework.security.GrantedAuthority;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.context.SecurityContextImpl;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
-import org.springframework.security.providers.dao.DaoAuthenticationProvider;
-import org.springframework.security.vote.AbstractAccessDecisionManager;
-import org.springframework.security.vote.AccessDecisionVoter;
-import org.springframework.security.vote.RoleHierarchyVoter;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.access.vote.AbstractAccessDecisionManager;
+import org.springframework.security.access.vote.RoleHierarchyVoter;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import anyframe.iam.core.intercept.web.RestrictedResourceHolder;
 import anyframe.iam.core.userdetails.ExtUser;
 
 /**
@@ -79,21 +83,27 @@ public class RoleHierarchyVoterTest {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		try {
+			List<ConfigAttribute> list = new ArrayList<ConfigAttribute>();
+			list.add(new SecurityConfig("ROLE_USER"));
+			
 			assertEquals(RoleHierarchyVoter.ACCESS_GRANTED, ((AccessDecisionVoter) accessDecisionManager
-					.getDecisionVoters().get(0)).vote(auth, new Object(), new ConfigAttributeDefinition("ROLE_USER")));
+					.getDecisionVoters().get(0)).vote(auth, new Object(), list));//new ConfigAttributeDefinition("ROLE_USER")));
 		}
 		catch (Exception e) {
 			fail("RoleHierarchyVoter test failed!");
 		}
 
 		ExtUser extUser = CustomUserDetailsHelper.getAuthenticatedUser();
-		;
+
+		Collection<GrantedAuthority> grantedAuthorities = extUser.getAuthorities();
+		Iterator grantedAuthoritiesIterator = grantedAuthorities.iterator();
+		String authority = (grantedAuthoritiesIterator.hasNext()) ? (String)((GrantedAuthority)grantedAuthoritiesIterator.next()).getAuthority():null;
 
 		// check
 		assertEquals("test", extUser.getUsername());
 		assertEquals("test123", extUser.getPassword());
-		assertTrue(extUser.getAuthorities() instanceof GrantedAuthority[]);
-		assertEquals("ROLE_ADMIN", extUser.getAuthorities()[0].getAuthority());
+		assertTrue(grantedAuthorities instanceof Collection<?>);
+		assertEquals("ROLE_ADMIN", authority);
 
 		// mapClass 를 작성/설정하지 않은 경우 default 는 Map (ListOrderedMap) 으로 custom 사용자
 		// 정보 객체를 되돌려 줌

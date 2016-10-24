@@ -16,9 +16,10 @@
 package anyframe.iam.core.intercept;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import org.springframework.beans.factory.support.MethodReplacer;
-import org.springframework.security.ConfigAttributeDefinition;
+import org.springframework.security.access.ConfigAttribute;
 
 import anyframe.iam.core.securedobject.ISecuredObjectService;
 
@@ -43,7 +44,7 @@ public class LookupAttributesMethodReplacer implements MethodReplacer {
 	 * #reimplement(java.lang.Object, java.lang.reflect.Method,java.lang.Object[])
 	 */
 	public Object reimplement(Object target, Method method, Object[] args) throws Exception {
-		ConfigAttributeDefinition attributes = null;
+		List<ConfigAttribute> attributes = null;
 
 		// DB 검색
 		attributes = securedObjectService.getMatchedRequestMapping((String) args[0]);

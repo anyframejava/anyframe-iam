@@ -21,6 +21,7 @@ import java.util.List;
 import anyframe.iam.admin.common.IamGenericDao;
 import anyframe.iam.admin.domain.IamTree;
 import anyframe.iam.admin.domain.Roles;
+import anyframe.iam.admin.domain.TempRoles;
 
 /**
  * An interface that provides a data management interface to the Roles table.
@@ -91,4 +92,9 @@ public interface RolesDao extends IamGenericDao<Roles, String> {
 	 * @throws Exception fail to find role ID
 	 */
 	String getRoleIdByRoleName(String roleName) throws Exception;
+	
+	List<TempRoles> makeAllTempRolesList() throws Exception;
+	
+	void removeAllRoles() throws Exception;
+	
 }

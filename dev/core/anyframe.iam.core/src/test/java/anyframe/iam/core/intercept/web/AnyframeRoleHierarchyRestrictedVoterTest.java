@@ -31,6 +31,9 @@ package anyframe.iam.core.intercept.web;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -38,15 +41,16 @@ import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.Authentication;
-import org.springframework.security.ConfigAttributeDefinition;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.context.SecurityContextImpl;
-import org.springframework.security.intercept.web.FilterInvocation;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
-import org.springframework.security.providers.dao.DaoAuthenticationProvider;
-import org.springframework.security.vote.AbstractAccessDecisionManager;
-import org.springframework.security.vote.AnyframeRoleHierarchyRestrictedVoter;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.access.vote.AbstractAccessDecisionManager;
+import org.springframework.security.access.vote.AnyframeRoleHierarchyRestrictedVoter;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.web.FilterInvocation;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -91,17 +95,21 @@ public class AnyframeRoleHierarchyRestrictedVoterTest {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 		// exclusion role 을 등록하지 않은 경우 - deny
+		List<ConfigAttribute> list = new ArrayList<ConfigAttribute>();
+		list.add(new SecurityConfig(RestrictedResourceHolder.RESTRICTED_TIMES_RESERVED_ROLE_NAME));
 		assertEquals(AnyframeRoleHierarchyRestrictedVoter.ACCESS_DENIED,
 				((AnyframeRoleHierarchyRestrictedVoter) accessDecisionManager.getDecisionVoters().get(0)).vote(auth,
-						createFilterInvocation("/test.do", "GET"), new ConfigAttributeDefinition(
-								RestrictedResourceHolder.RESTRICTED_TIMES_RESERVED_ROLE_NAME)));
+						createFilterInvocation("/test.do", "GET"), list ));//new ConfigAttributeDefinition(
+								//RestrictedResourceHolder.RESTRICTED_TIMES_RESERVED_ROLE_NAME)));
 
 		// exclusion role 을 등록한 경우 - access
 		String[] accessRole = { RestrictedResourceHolder.RESTRICTED_TIMES_RESERVED_ROLE_NAME, "ROLE_ADMIN" };
-
+		list = new ArrayList<ConfigAttribute>();
+		list.add(new SecurityConfig(accessRole[0]));
+		list.add(new SecurityConfig(accessRole[1]));
 		assertEquals(AnyframeRoleHierarchyRestrictedVoter.ACCESS_GRANTED,
 				((AnyframeRoleHierarchyRestrictedVoter) accessDecisionManager.getDecisionVoters().get(0)).vote(auth,
-						createFilterInvocation("/test.do", "GET"), new ConfigAttributeDefinition(accessRole)));
+						createFilterInvocation("/test.do", "GET"), list )); //new ConfigAttributeDefinition(accessRole)));
 	}
 
 	@Test
@@ -113,48 +121,64 @@ public class AnyframeRoleHierarchyRestrictedVoterTest {
 		setAuthenticatedUser("test", "test123");
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
+		List<ConfigAttribute> list = new ArrayList<ConfigAttribute>();
+		list.add(new SecurityConfig("ROLE_USER"));
 		// ROLE_USER 가 restricted 인 경우 - access
 		assertEquals(AnyframeRoleHierarchyRestrictedVoter.ACCESS_GRANTED,
 				((AnyframeRoleHierarchyRestrictedVoter) accessDecisionManager.getDecisionVoters().get(0)).vote(auth,
-						createFilterInvocationWrapper(), new ConfigAttributeDefinition("ROLE_USER")));
+						createFilterInvocationWrapper(), list)); //new ConfigAttributeDefinition("ROLE_USER")));
 
+		list = new ArrayList<ConfigAttribute>();
+		list.add(new SecurityConfig("ROLE_ADMIN"));
 		// ROLE_ADMIN 이 restricted 인 경우 - deny
 		assertEquals(AnyframeRoleHierarchyRestrictedVoter.ACCESS_DENIED,
 				((AnyframeRoleHierarchyRestrictedVoter) accessDecisionManager.getDecisionVoters().get(0)).vote(auth,
-						createFilterInvocationWrapper(), new ConfigAttributeDefinition("ROLE_ADMIN")));
+						createFilterInvocationWrapper(), list)); //new ConfigAttributeDefinition("ROLE_ADMIN")));
 
 		// ROLE_USER, ROLE_RESTRICTED 가 restricted 인 경우 (실제로는
 		// AnyframeRoleHierarchyRestrictedVoter 에서 RoleHierarchy 를 따라 비교 대상
 		// restricted Role 의 하위 권한까지 비교하기 때문에 ROLE_USER 만 설정하는 것과 같음.
+		list = new ArrayList<ConfigAttribute>();
+		list.add(new SecurityConfig("ROLE_USER"));
+		list.add(new SecurityConfig("ROLE_RESTRICTED"));
 		assertEquals(AnyframeRoleHierarchyRestrictedVoter.ACCESS_GRANTED,
 				((AnyframeRoleHierarchyRestrictedVoter) accessDecisionManager.getDecisionVoters().get(0)).vote(auth,
-						createFilterInvocationWrapper(), new ConfigAttributeDefinition(new String[] { "ROLE_USER",
-								"ROLE_RESTRICTED" })));
+						createFilterInvocationWrapper(), list)); //new ConfigAttributeDefinition(new String[] { "ROLE_USER",
+								//"ROLE_RESTRICTED" })));
 
 		// 아래는 결국 ROLE_ADMIN 까지 restricted 이므로 - deny
+		list = new ArrayList<ConfigAttribute>();
+		list.add(new SecurityConfig("ROLE_USER"));
+		list.add(new SecurityConfig("ROLE_ADMIN"));
 		assertEquals(AnyframeRoleHierarchyRestrictedVoter.ACCESS_DENIED,
 				((AnyframeRoleHierarchyRestrictedVoter) accessDecisionManager.getDecisionVoters().get(0)).vote(auth,
-						createFilterInvocationWrapper(), new ConfigAttributeDefinition(new String[] { "ROLE_USER",
-								"ROLE_ADMIN" })));
+						createFilterInvocationWrapper(), list)); //new ConfigAttributeDefinition(new String[] { "ROLE_USER",
+								//"ROLE_ADMIN" })));
 
 		// ROLE_A
 		setAuthenticatedUser("taeyoung.kim", "taeyoung0");
 		auth = SecurityContextHolder.getContext().getAuthentication();
 
 		// ROLE_USER 가 restricted 인 경우 - ROLE_A 와는 hierarchy 관계가 없으므로 access
+		list = new ArrayList<ConfigAttribute>();
+		list.add(new SecurityConfig("ROLE_USER"));
 		assertEquals(AnyframeRoleHierarchyRestrictedVoter.ACCESS_GRANTED,
 				((AnyframeRoleHierarchyRestrictedVoter) accessDecisionManager.getDecisionVoters().get(0)).vote(auth,
-						createFilterInvocationWrapper(), new ConfigAttributeDefinition("ROLE_USER")));
+						createFilterInvocationWrapper(), list)); //new ConfigAttributeDefinition("ROLE_USER")));
 
 		// ROLE_ADMIN 가 restricted 인 경우 - ROLE_A 의 상위 Role 이므로 deny
+		list = new ArrayList<ConfigAttribute>();
+		list.add(new SecurityConfig("ROLE_ADMIN"));
 		assertEquals(AnyframeRoleHierarchyRestrictedVoter.ACCESS_DENIED,
 				((AnyframeRoleHierarchyRestrictedVoter) accessDecisionManager.getDecisionVoters().get(0)).vote(auth,
-						createFilterInvocationWrapper(), new ConfigAttributeDefinition("ROLE_ADMIN")));
+						createFilterInvocationWrapper(), list)); //new ConfigAttributeDefinition("ROLE_ADMIN")));
 
 		// ROLE_RESTRICTED 가 restricted 인 경우 - ROLE_A 가 상위 Role 이므로 access
+		list = new ArrayList<ConfigAttribute>();
+		list.add(new SecurityConfig("ROLE_RESTRICTED"));
 		assertEquals(AnyframeRoleHierarchyRestrictedVoter.ACCESS_GRANTED,
 				((AnyframeRoleHierarchyRestrictedVoter) accessDecisionManager.getDecisionVoters().get(0)).vote(auth,
-						createFilterInvocationWrapper(), new ConfigAttributeDefinition("ROLE_RESTRICTED")));
+						createFilterInvocationWrapper(), list)); //new ConfigAttributeDefinition("ROLE_RESTRICTED")));
 
 	}
 

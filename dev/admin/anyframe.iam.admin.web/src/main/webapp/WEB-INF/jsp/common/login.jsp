@@ -37,7 +37,7 @@ body {
 		<!-- begin of title -->    
 		<tr>
       		<td height="95%" align="center" valign="middle">
-      			<form name="loginForm"  action="<c:url value='/j_spring_security_check'/>">
+      			<form name="loginForm" method="POST" action="<c:url value='/j_spring_security_check'/>">
 		  			<div id="wrapper" align="center">
 			  			<div id="main">
 						  	<div id="main_img"></div>

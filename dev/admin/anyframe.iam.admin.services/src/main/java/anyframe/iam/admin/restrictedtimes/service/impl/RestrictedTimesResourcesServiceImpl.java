@@ -44,6 +44,10 @@ public class RestrictedTimesResourcesServiceImpl extends
 	public List findRoleListByTime(String timeId) throws Exception {
 		return restrictedTimesResourcesDao.findRoleListByTime(timeId);
 	}
+	
+	public RestrictedTimesResources save(RestrictedTimesResources restrictedTimes) throws Exception{
+		return restrictedTimesResourcesDao.save(restrictedTimes);
+	}
 
 	public Page findResourceListByTime(RestrictedTimesSearchVO searchVO) throws Exception {
 		return this.restrictedTimesResourcesDao.findResourceListByTime(searchVO);
@@ -65,5 +69,9 @@ public class RestrictedTimesResourcesServiceImpl extends
 			RestrictedTimesResourcesId restrictedTimesResourcesId = (RestrictedTimesResourcesId) list.get(i);
 			super.remove(restrictedTimesResourcesId);
 		}
+	}
+	
+	public void removeAllRestrictedTimesResources() throws Exception{
+		restrictedTimesResourcesDao.removeAllRestrictedTimesResources();
 	}
 }

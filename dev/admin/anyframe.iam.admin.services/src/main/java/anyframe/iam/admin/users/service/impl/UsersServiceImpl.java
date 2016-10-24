@@ -16,8 +16,11 @@
 
 package anyframe.iam.admin.users.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Hibernate;
@@ -26,8 +29,11 @@ import anyframe.common.Page;
 import anyframe.core.generic.service.impl.GenericServiceImpl;
 import anyframe.iam.admin.authorities.dao.AuthoritiesDao;
 import anyframe.iam.admin.domain.Authorities;
+import anyframe.iam.admin.domain.AuthoritiesId;
 import anyframe.iam.admin.domain.Groups;
 import anyframe.iam.admin.domain.GroupsUsers;
+import anyframe.iam.admin.domain.GroupsUsersId;
+import anyframe.iam.admin.domain.TempUsers;
 import anyframe.iam.admin.domain.Users;
 import anyframe.iam.admin.groupsusers.dao.GroupsUsersDao;
 import anyframe.iam.admin.users.dao.UsersDao;
@@ -99,6 +105,97 @@ public class UsersServiceImpl extends GenericServiceImpl<Users, String> implemen
 		// USERS 테이블의 User 정보 등록 GROUPS_USERS 테이블의 Group / User 매핑 정보 등록
 		return usersDao.save(users);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List save(List tempUsersList) throws Exception{
+		List resultList = new ArrayList();
+		List roleList = new ArrayList();
+		List groupList = new ArrayList();
+		
+		for(int i = 0 ; i < tempUsersList.size() ; i++){
+			TempUsers tempUsers = (TempUsers)tempUsersList.get(i);
+			Users users = saveTempUsersToUsers(tempUsers);
+			resultList.add(users);
+			
+			String roleId = tempUsers.getRoleId();
+			
+			if(!"".equals(roleId) && roleId != null){
+				String[] roleIds = roleId.split(",");
+				
+				for(int j = 0 ; j < roleIds.length ; j++){
+					Map roleMap = new HashMap();
+					roleMap.put("roleId", roleIds[j]);
+					roleMap.put("userId", tempUsers.getUserId());
+					roleMap.put("createDate", tempUsers.getCreateDate());
+					
+					roleList.add(roleMap);
+				}
+			}
+			
+			String groupId = tempUsers.getGroupId();
+
+			if(!"".equals(groupId) && groupId != null){
+				Map groupMap = new HashMap();
+				groupMap.put("groupId", groupId);
+				groupMap.put("userId", tempUsers.getUserId());
+				groupMap.put("createDate", tempUsers.getCreateDate());
+				
+				groupList.add(groupMap);
+			}
+		}
+		
+		for(int i = 0 ; i < roleList.size() ; i++){
+			Map roleMap = (Map) roleList.get(i);
+			String roleId = (String) roleMap.get("roleId");
+			String userId = (String) roleMap.get("userId");
+			String createDate = (String) roleMap.get("createDate");
+			
+			Authorities authorities = new Authorities();
+			AuthoritiesId id = new AuthoritiesId();
+			
+			id.setRoleId(roleId);
+			id.setSubjectId(userId);
+			
+			authorities.setId(id);
+			authorities.setCreateDate(createDate);
+			authorities.setType("U");
+			
+			authoritiesDao.save(authorities);
+		}
+		
+		for(int i = 0 ; i < groupList.size() ; i++){
+			Map groupMap = (Map) groupList.get(i);
+			String groupId = (String) groupMap.get("groupId");
+			String userId = (String) groupMap.get("userId");
+			String createDate = (String) groupMap.get("createDate");
+			
+			GroupsUsers groupsUsers = new GroupsUsers();
+			GroupsUsersId id = new GroupsUsersId();
+			
+			id.setGroupId(groupId);
+			id.setUserId(userId);
+			
+			groupsUsers.setId(id);
+			groupsUsers.setCreateDate(createDate);
+			
+			groupsUsersDao.save(groupsUsers);
+		}
+		
+		return resultList;
+	}
+	
+	public Users saveTempUsersToUsers(TempUsers tempUsers) throws Exception{
+		Users users = new Users();
+		users.setUserId(tempUsers.getUserId());
+		users.setUserName(tempUsers.getUserName());
+		users.setEnabled(tempUsers.getEnabled());
+		users.setPassword(tempUsers.getPassword());
+		users.setCreateDate(tempUsers.getCreateDate());
+		users.setModifyDate(tempUsers.getModifyDate());
+		
+		return usersDao.save(users);
+		
+	}
 
 	// 사용자 정보를 수정한다.
 	public Users update(Users users, GroupsUsers newGroupsUsers, GroupsUsers currentGroupsUsers,
@@ -138,5 +235,14 @@ public class UsersServiceImpl extends GenericServiceImpl<Users, String> implemen
 	@SuppressWarnings("unchecked")
 	public List findUserByName(String userName) throws Exception {
 		return usersDao.findUserByName(userName);
+	}
+	
+	public List<TempUsers> makeAllTempUsersList() throws Exception{
+		return usersDao.makeAllTempUsersList();
+	}
+	
+	public void removeAllUsers() throws Exception{
+		groupsUsersDao.removeAllGroupsUsers();
+		usersDao.removeAllUsers();
 	}
 }

@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.security.ConfigAttributeDefinition;
+import org.springframework.security.access.ConfigAttribute;
 
 import anyframe.common.exception.BaseException;
 
@@ -68,7 +68,7 @@ public interface ISecuredObjectService {
 	 * @return
 	 * @throws BaseException
 	 */
-	public ConfigAttributeDefinition getMatchedRequestMapping(String url) throws BaseException;
+	public List<ConfigAttribute> getMatchedRequestMapping(String url) throws BaseException;
 
 	/**
 	 * Get hierarchy information of Role

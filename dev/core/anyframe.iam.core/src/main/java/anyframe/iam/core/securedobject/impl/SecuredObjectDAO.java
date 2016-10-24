@@ -15,6 +15,7 @@
  */
 package anyframe.iam.core.securedobject.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -25,9 +26,10 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.security.ConfigAttributeDefinition;
-import org.springframework.security.SecurityConfig;
-import org.springframework.security.intercept.web.RequestKey;
+import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.web.access.intercept.RequestKey;
 
 import anyframe.common.util.StringUtil;
 import anyframe.iam.core.securedobject.ISecuredObjectService;
@@ -299,8 +301,7 @@ public class SecuredObjectDAO {
 			// 해당 맵핑 Role List (SecurityConfig) 의 데이터를
 			// 재활용하여 새롭게 데이터 구축
 			if (preResource != null && presentResourceStr.equals(preResource)) {
-				List preAuthList = (List) ((ConfigAttributeDefinition) resourcesMap.get(presentResource))
-						.getConfigAttributes();
+				List preAuthList = (List<ConfigAttribute>) resourcesMap.get(presentResource);
 				Iterator preAuthItr = preAuthList.iterator();
 				while (preAuthItr.hasNext()) {
 					SecurityConfig tempConfig = (SecurityConfig) preAuthItr.next();
@@ -309,7 +310,8 @@ public class SecuredObjectDAO {
 			}
 
 			configList.add(new SecurityConfig((String) tempMap.get("authority")));
-			ConfigAttributeDefinition cad = new ConfigAttributeDefinition(configList);
+			List<ConfigAttribute> cad = new ArrayList<ConfigAttribute>();
+			cad.addAll(configList);
 
 			// 만약 동일한 Resource 에 대해 한개 이상의 Role 맵핑 추가인
 			// 경우 이전 resourceKey 에 현재 새로 계산된 Role 맵핑
@@ -335,9 +337,9 @@ public class SecuredObjectDAO {
 		return getRolesAndResources("pointcut");
 	}
 
-	public ConfigAttributeDefinition getRegexMatchedRequestMapping(String url) throws Exception {
+	public List<ConfigAttribute> getRegexMatchedRequestMapping(String url) throws Exception {
 
-		ConfigAttributeDefinition attributes = null;
+		List<ConfigAttribute> attributes = null;
 
 		// best regex matching - best 매칭된 Uri 에 따른 Role
 		// List 조회, DB 차원의 정규식 지원이 있는 경우 사용 (ex. hsqldb
@@ -361,7 +363,7 @@ public class SecuredObjectDAO {
 		}
 
 		if (configList.size() > 0) {
-			attributes = new ConfigAttributeDefinition(configList);
+			attributes.addAll(configList);
 			ISecuredObjectService.LOGGER.debug("Request Uri : " + url + ", matched Uri : "
 					+ ((Map) resultList.get(0)).get("uri") + ", mapping Roles : " + attributes);
 		}
@@ -421,11 +423,11 @@ public class SecuredObjectDAO {
 			for (int i = 0; i < authorities.size(); i++) {
 				if (i == 0) {
 					userRoleList = ":userRole" + i;
-					paramMap.put("userRole" + i, authorities.get(i));
+					paramMap.put("userRole" + i, ((GrantedAuthority)authorities.get(i)).getAuthority());
 				}
 				else {
-					userRoleList += (", :userRole" + i);
-					paramMap.put("userRole" + i, authorities.get(i));
+					userRoleList += (" , :userRole" + i);
+					paramMap.put("userRole" + i, ((GrantedAuthority)authorities.get(i)).getAuthority());
 				}
 			}
 		}

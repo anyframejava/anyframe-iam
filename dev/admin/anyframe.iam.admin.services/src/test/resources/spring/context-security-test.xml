@@ -8,8 +8,8 @@
 
     
   	<!-- path matcher -->
-	<b:bean id="antUrlPathMatcher" class="org.springframework.security.util.AntUrlPathMatcher" />
-	<b:bean id="regexUrlPathMatcher" class="org.springframework.security.util.RegexUrlPathMatcher" />
+	<b:bean id="antUrlPathMatcher" class="org.springframework.security.web.util.AntUrlPathMatcher" />
+	<b:bean id="regexUrlPathMatcher" class="org.springframework.security.web.util.RegexUrlPathMatcher" />
 
 	
 </b:beans>

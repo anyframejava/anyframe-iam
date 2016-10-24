@@ -21,7 +21,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -40,6 +42,7 @@ import anyframe.common.Page;
 import anyframe.common.exception.BaseException;
 import anyframe.iam.admin.domain.IamResourceResult;
 import anyframe.iam.admin.domain.SecuredResources;
+import anyframe.iam.admin.domain.TempSecuredResources;
 import anyframe.iam.admin.securedresources.service.SecuredResourcesService;
 import anyframe.iam.admin.securedresourcesroles.service.SecuredResourcesRolesService;
 import anyframe.iam.admin.vo.ResourceSearchVO;
@@ -93,7 +96,7 @@ public class SecuredResourcesServiceTest {
 		SecuredResources domain = new SecuredResources();
 		domain.setResourceName("aaaa");
 		domain.setResourcePattern("com.sds.emp.code.service.codeService.findCodeName");
-		domain.setResourceType("method");
+		domain.setResourceType("Method");
 		domain.setDescription("......");
 		domain.setSystemName("SAMPLE");
 
@@ -104,7 +107,7 @@ public class SecuredResourcesServiceTest {
 		SecuredResources domain = new SecuredResources();
 		domain.setResourceName("aaaa");
 		domain.setResourcePattern("com.sds.emp.code.service.codeService.findCodeName");
-		domain.setResourceType("url");
+		domain.setResourceType("URL");
 		domain.setDescription("......");
 		domain.setSystemName("SAMPLE");
 
@@ -117,19 +120,19 @@ public class SecuredResourcesServiceTest {
 		SecuredResources pointCutDomain = new SecuredResources();
 		pointCutDomain.setResourceName("aaaa");
 		pointCutDomain.setResourcePattern("com.sds.emp.code.service.codeService.findCodeName");
-		pointCutDomain.setResourceType("pointcut");
+		pointCutDomain.setResourceType("PointCut");
 		pointCutDomain.setDescription("......");
 		pointCutDomain.setSystemName("SAMPLE");
 		SecuredResources methodDomain = new SecuredResources();
 		methodDomain.setResourceName("aaaa");
 		methodDomain.setResourcePattern("com.sds.emp.code.service.codeService.findCodeName");
-		methodDomain.setResourceType("method");
+		methodDomain.setResourceType("Method");
 		methodDomain.setDescription("......");
 		methodDomain.setSystemName("SAMPLE");
 		SecuredResources urlDomain = new SecuredResources();
 		urlDomain.setResourceName("aaaa");
 		urlDomain.setResourcePattern("com.sds.emp.code.service.codeService.findCodeName");
-		urlDomain.setResourceType("url");
+		urlDomain.setResourceType("URL");
 		urlDomain.setDescription("......");
 		urlDomain.setSystemName("SAMPLE");
 		String[] resourceIds = new String[3];
@@ -256,8 +259,8 @@ public class SecuredResourcesServiceTest {
 
 		// check
 		assertEquals(resourceIds[0], ((Map) iter.next()).get("resourceId"));
-		assertEquals(resourceIds[1], ((Map) iter.next()).get("resourceId"));
 		assertEquals(resourceIds[2], ((Map) iter.next()).get("resourceId"));
+		assertEquals(resourceIds[1], ((Map) iter.next()).get("resourceId"));
 	}
 
 	@Test
@@ -279,8 +282,8 @@ public class SecuredResourcesServiceTest {
 
 		// check
 		assertEquals(resourceIds[0], ((SecuredResources) iter.next()).getResourceId());
-		assertEquals(resourceIds[1], ((SecuredResources) iter.next()).getResourceId());
 		assertEquals(resourceIds[2], ((SecuredResources) iter.next()).getResourceId());
+		assertEquals(resourceIds[1], ((SecuredResources) iter.next()).getResourceId());
 	}
 
 	@Test
@@ -337,5 +340,62 @@ public class SecuredResourcesServiceTest {
 				assertNotNull(e);
 			}
 		}
+	}
+	
+	
+	@Test
+	public void testMakeAllTempRolesList() throws Exception{
+		List<TempSecuredResources> resultList = securedResourcesService.makeAllTempResourcesList();
+		assertNotNull(resultList);
+		assertTrue(resultList.size() > 0);
+	}
+	
+//	@Test
+//	public void testRemoveAllSecuredResources() throws Exception{
+//		securedResourcesService.removeAllSecuredResources();
+//		
+//		ResourceSearchVO searchVO = new ResourceSearchVO();
+//		Page resultPage = securedResourcesService.getList(searchVO);
+//		assertTrue(resultPage.getSize() == 0);
+//	}
+	
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testSaveList() throws Exception{
+//		securedResourcesService.removeAllSecuredResources();
+		
+		TempSecuredResources sr1 = new TempSecuredResources();
+		sr1.setResourceId("tempresource1");
+		sr1.setResourceName("tempresource1");
+		sr1.setResourcePattern("tempresource1");
+		sr1.setResourceType("url");
+		sr1.setCreateDate("20100909");
+		sr1.setSortOrder("99");
+		sr1.setSystemName("sample1");
+		sr1.setRoleId("ROLE_ADMIN");
+		
+		TempSecuredResources sr2 = new TempSecuredResources();
+		sr2.setResourceId("tempresource2");
+		sr2.setResourceName("tempresource2");
+		sr2.setResourcePattern("tempresource2");
+		sr2.setResourceType("method");
+		sr2.setCreateDate("20100909");
+		sr2.setSortOrder("99");
+		sr2.setSystemName("sample1");
+		sr2.setRoleId("ROLE_USER,ROLE_ADMIN");
+		
+		List resourceList = new ArrayList();
+		resourceList.add(sr1);
+		resourceList.add(sr2);
+		
+		securedResourcesService.save(resourceList);
+		
+		ResourceSearchVO searchVO = new ResourceSearchVO();
+		
+		Page resultPage = securedResourcesService.getList(searchVO);
+
+		assertNotNull(resultPage);
+		assertTrue(resultPage.getSize() > 0);
+		
 	}
 }

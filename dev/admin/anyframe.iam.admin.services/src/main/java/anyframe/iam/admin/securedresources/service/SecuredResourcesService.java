@@ -16,9 +16,12 @@
 
 package anyframe.iam.admin.securedresources.service;
 
+import java.util.List;
+
 import anyframe.common.Page;
 import anyframe.core.generic.service.GenericService;
 import anyframe.iam.admin.domain.SecuredResources;
+import anyframe.iam.admin.domain.TempSecuredResources;
 import anyframe.iam.admin.vo.ResourceSearchVO;
 
 /**
@@ -87,4 +90,11 @@ public interface SecuredResourcesService extends GenericService<SecuredResources
 	 * @throws Exception fail to save the row
 	 */
 	SecuredResources save(SecuredResources securedResources) throws Exception;
+	
+	List<TempSecuredResources> makeAllTempResourcesList() throws Exception;
+	
+	void removeAllSecuredResources() throws Exception;
+	
+	@SuppressWarnings("unchecked")
+	List save(List tempResourceList) throws Exception;
 }

@@ -28,4 +28,5 @@ import anyframe.iam.admin.domain.GroupsUsersId;
  */
 public interface GroupsUsersDao extends IamGenericDao<GroupsUsers, GroupsUsersId> {
 	void remove(String groupId) throws Exception;
+	void removeAllGroupsUsers() throws Exception;
 }

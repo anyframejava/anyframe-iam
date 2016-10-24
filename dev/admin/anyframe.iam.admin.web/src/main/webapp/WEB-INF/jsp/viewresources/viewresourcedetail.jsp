@@ -1,4 +1,4 @@
-<%@ taglib uri='http://www.sds.samsung.com/tags' prefix='anyframe'%>
+<%@ taglib uri='http://www.anyframejava.org/tags' prefix='anyframe'%>
 <%@ include file="/common/taglibs.jsp"%>
 <%@ page language="java" pageEncoding="UTF-8"
 	contentType="text/html;charset=utf-8"%>
@@ -144,7 +144,8 @@ body {
 		</tr>
 
 		<tr>
-			<td class="tdHead">System Name</td>
+			<td class="tdHead"><anyframe:message
+				code="viewresource.ui.label.viewtype" /></td>
 			<td bgcolor="#D6D6D6" width="1"></td>
 			<td class="tdin">
 			<select name="systemName" disabled="disabled" class="ct_input_g">

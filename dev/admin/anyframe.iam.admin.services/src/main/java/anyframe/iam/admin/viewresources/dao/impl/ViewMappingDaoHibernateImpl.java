@@ -86,4 +86,9 @@ public class ViewMappingDaoHibernateImpl extends IamGenericDaoHibernate<ViewReso
 
 		return new ViewResourcesMapping();
 	}
+	
+	public void removeAllViewResourceMapping() throws Exception{
+		Query query = this.getSessionFactory().getCurrentSession().getNamedQuery("removeAllViewResourceMapping");
+		query.executeUpdate();
+	}
 }

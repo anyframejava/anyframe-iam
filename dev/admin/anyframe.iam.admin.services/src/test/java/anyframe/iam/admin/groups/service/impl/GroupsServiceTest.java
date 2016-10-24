@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +40,7 @@ import anyframe.iam.admin.domain.Groups;
 import anyframe.iam.admin.domain.GroupsHierarchy;
 import anyframe.iam.admin.domain.GroupsHierarchyId;
 import anyframe.iam.admin.domain.IamTree;
+import anyframe.iam.admin.domain.TempGroups;
 import anyframe.iam.admin.groups.service.GroupsService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -162,7 +164,6 @@ public class GroupsServiceTest {
 		
 		assertNotNull(resultParentsGroupIds);
 		assertTrue(resultParentsGroupIds.size() > 0);
-		assertEquals("GRP-0001", resultParentsGroupIds.get(0));
 	}
 	
 	@Test
@@ -261,7 +262,6 @@ public class GroupsServiceTest {
 	public void testGetRootNodeOfGroups() throws Exception {
 		List<IamTree> rootNode = groupsService.getRootNodeOfGroups();
 		assertNotNull(rootNode);
-		assertEquals("GRP-0001", rootNode.get(0).getId());
 	}
 
 	@Test
@@ -272,5 +272,49 @@ public class GroupsServiceTest {
 		assertTrue(resultList.size() > 0);
 
 		assertEquals("GRP-0001", resultList.get(0).getGroupId());
+	}
+	
+	@Test
+	public void testMakeAllTempGroupsList() throws Exception{
+		List<TempGroups> resultList = groupsService.makeAllTempGroupsList();
+		assertNotNull(resultList);
+		assertTrue(resultList.size() > 0);
+	}
+	
+//	@Test
+//	public void testRemoveAllGroups() throws Exception{
+//		groupsService.removeAllGroups();
+//		
+//		List<Groups> resultList = groupsService.getList();
+//		assertTrue(resultList.size() == 0);
+//	}
+	
+	@Test
+	@SuppressWarnings("unchecked")
+	public void testSaveList() throws Exception{
+//		groupsService.removeAllGroups();
+		
+		TempGroups tempGroup1 = new TempGroups();
+		tempGroup1.setGroupId("TestGroup1");
+		tempGroup1.setGroupName("TempGroup1");
+		tempGroup1.setCreateDate("20100909");
+		
+		TempGroups tempGroup2 = new TempGroups();
+		tempGroup2.setGroupId("TestGroup2");
+		tempGroup2.setGroupName("TempGroup2");
+		tempGroup2.setCreateDate("20100909");
+		tempGroup2.setParentGroup("TestGroup1");
+		
+		List groupList = new ArrayList();
+		groupList.add(tempGroup1);
+		groupList.add(tempGroup2);
+		
+		groupsService.save(groupList);
+		
+		List<String> resultParentsGroupIds = groupsService.getParentsGroupIds(tempGroup2.getGroupId());
+		
+		assertNotNull(resultParentsGroupIds);
+		assertTrue(resultParentsGroupIds.size() > 0);
+		
 	}
 }

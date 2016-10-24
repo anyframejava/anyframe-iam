@@ -21,6 +21,7 @@ import java.util.List;
 import anyframe.core.generic.service.GenericService;
 import anyframe.iam.admin.domain.IamTree;
 import anyframe.iam.admin.domain.Roles;
+import anyframe.iam.admin.domain.TempRoles;
 
 /**
  * An interface that provides services about Roles table
@@ -68,6 +69,8 @@ public interface RolesService extends GenericService<Roles, String> {
 	 */
 	void remove(String currentNode) throws Exception;
 
+	void removeAllRoles() throws Exception;
+	
 	/**
 	 * find all Roles domains
 	 * @return List<Roles> List of Roles domain objects
@@ -82,6 +85,13 @@ public interface RolesService extends GenericService<Roles, String> {
 	 * @throws Exception fail to update the row
 	 */
 	Roles save(Roles roles) throws Exception;
+	
+	Roles saveWithoutHierarchy(Roles roles) throws Exception;
+	
+	Roles saveTempRolesToRoles(TempRoles tempRoles) throws Exception;
+	
+	@SuppressWarnings("unchecked")
+	List save(List tempRoleList) throws Exception;
 	
 	/**
 	 * find list of Role name that matches the given keyword
@@ -107,5 +117,6 @@ public interface RolesService extends GenericService<Roles, String> {
 	 */
 	List<String> getParentsRoleIds(String roleId) throws Exception;
 	
+	List<TempRoles> makeAllTempRolesList() throws Exception;
 	
 }

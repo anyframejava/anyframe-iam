@@ -16,7 +16,7 @@
 			value="anyframe.iam.core.assist.IResourceGatherAssistService" />
 		<property name="httpInvokerRequestExecutor">		
 			<bean
-				class="org.springframework.security.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor" />
+				class="org.springframework.security.remoting.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor" />
 		</property>
 	</bean>
 	<bean id="gatherServiceClient2"
@@ -29,7 +29,7 @@
 			value="anyframe.iam.core.assist.IResourceGatherAssistService" />
 		<property name="httpInvokerRequestExecutor">		
 			<bean
-				class="org.springframework.security.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor" />
+				class="org.springframework.security.remoting.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor" />
 		</property>
 	</bean>
 	
@@ -44,7 +44,7 @@
 			value="anyframe.iam.core.reload.IResourceReloadService" />
 		<property name="httpInvokerRequestExecutor">
 			<bean
-				class="org.springframework.security.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor" />
+				class="org.springframework.security.remoting.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor" />
 		</property>
 	</bean>
 	<bean id="resourceReloadServiceClient2"
@@ -58,7 +58,7 @@
 			value="anyframe.iam.core.reload.IResourceReloadService" />
 		<property name="httpInvokerRequestExecutor">
 			<bean
-				class="org.springframework.security.context.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor" />
+				class="org.springframework.security.remoting.httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor" />
 		</property>
 	</bean>
 

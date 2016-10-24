@@ -35,14 +35,6 @@ public interface CandidateSecuredResourcesService extends GenericService<Candida
 	 */
 	String getPackagesList(String keyword) throws Exception;
 	
-	/**
-	 * find list of package names that matches the given keyword and system name
-	 * in candidateSecuredResource table
-	 * @param keyword search keyword
-	 * @param systemName system Name
-	 * @return list of package names
-	 * @throws Exception fail to find list
-	 */
 	String getPackagesList(String keyword, String systemName) throws Exception;
 
 	/**
@@ -55,14 +47,6 @@ public interface CandidateSecuredResourcesService extends GenericService<Candida
 	 */
 	String getClassesList(String keyword, String packages) throws Exception;
 	
-	/**
-	 * find list of class names that matches the given keyword, package name and system Name
-	 * @param keyword search keyword
-	 * @param packages package name
-	 * @param systemName system name
-	 * @return list of class names
-	 * @throws Exception fail to find list
-	 */
 	String getClassesList(String keyword, String packages, String systemName) throws Exception;
 
 	/**
@@ -76,15 +60,6 @@ public interface CandidateSecuredResourcesService extends GenericService<Candida
 	 */
 	String getMethodList(String keyword, String packages, String classes) throws Exception;
 	
-	/**
-	 * find list of method names that matches the given keyword, the package
-	 * name and the class name in candidateSecuredResource table
-	 * @param keyword search keyword
-	 * @param packages package name
-	 * @param classes class name
-	 * @return list of method names
-	 * @throws Exception fail to find list
-	 */
 	String getMethodList(String keyword, String packages, String classes, String systemName) throws Exception;
 
 	/**
@@ -96,14 +71,6 @@ public interface CandidateSecuredResourcesService extends GenericService<Candida
 	 */
 	String getRequestMappingList(String keyword) throws Exception;
 	
-	/**
-	 * find list of URLs that matches the given keyword and systemName
-	 * in candidateSecuredResources table
-	 * @param keyword search keyword
-	 * @param systemName system name
-	 * @return list of URLs
-	 * @throws Exception fail to find list
-	 */
 	String getRequestMappingList(String keyword, String systemName) throws Exception;
 
 	/**
@@ -116,15 +83,6 @@ public interface CandidateSecuredResourcesService extends GenericService<Candida
 	 */
 	String getParameterList(String keyword, String requestMapping) throws Exception;
 	
-	/**
-	 * find list of parameter names that matches the given keyword, requestMapping and systemName
-	 * in candidateSecuredResources table
-	 * @param keyword search keyword
-	 * @param requestMapping URL name
-	 * @param systemName system name
-	 * @return list of parameter names
-	 * @throws Exception fail to find list
-	 */
 	String getParameterList(String keyword, String requestMapping, String systemName) throws Exception;
 
 	/**
@@ -136,14 +94,6 @@ public interface CandidateSecuredResourcesService extends GenericService<Candida
 	 */
 	String getPointCutList(String keyword) throws Exception;
 	
-	/**
-	 * find list of pointCut that matches the given keyword and system name
-	 * in candidateSecuredResources table 
-	 * @param keyword search keyword
-	 * @param systemName system name
-	 * @return list of pointCut
-	 * @throws Exception fail to find list
-	 */
 	String getPointCutList(String keyword, String systemName) throws Exception;
 
 	/**
@@ -163,11 +113,5 @@ public interface CandidateSecuredResourcesService extends GenericService<Candida
 	 */
 	String findMethodParam() throws Exception;
 	
-	/**
-	 * find bean id that contains "param" field at candidate_resource_type with the given system name
-	 * @param systemName system name
-	 * @return String bean id
-	 * @throws Exception fail to find bean id
-	 */
 	String findMethodParam(String systemName) throws Exception;
 }

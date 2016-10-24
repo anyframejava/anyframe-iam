@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2008. 9. 1 ???? 1:00:43 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+	<!-- reference schema attribute when hbm2ddl tool create table. so, remove schema definition. (schema=DEFULAT)-->
+	
+	<sql-query name="makeAllTempUsersList">
+		<return class="anyframe.iam.admin.domain.TempUsers"/>
+		<![CDATA[	
+			SELECT		A.USER_ID||NVL(C.ROLE_ID, '') compKey,
+				 		A.USER_ID 		userId, 
+						A.USER_NAME 	userName, 
+						A.PASSWORD		password,
+						A.ENABLED		enabled,
+						A.CREATE_DATE	createDate,
+						A.MODIFY_DATE	modifyDate,
+						B.GROUP_ID		groupId,
+						C.ROLE_ID		roleId
+			FROM		USERS		A
+			LEFT JOIN	GROUPS_USERS		B
+			ON			A.USER_ID = B.USER_ID
+			LEFT OUTER JOIN	AUTHORITIES			C
+			ON			A.USER_ID = C.SUBJECT_ID
+			AND	C.TYPE = 'U'
+		]]>
+	</sql-query>
+	
+	<sql-query name="removeAllUsers">
+		<![CDATA[
+			DELETE FROM Users
+		]]>
+	</sql-query>
+	
+</hibernate-mapping>

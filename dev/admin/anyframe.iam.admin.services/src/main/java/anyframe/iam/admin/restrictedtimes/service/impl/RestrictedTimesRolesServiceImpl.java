@@ -43,6 +43,10 @@ public class RestrictedTimesRolesServiceImpl extends GenericServiceImpl<Restrict
 	public List findRoleListByTime(String timeId) throws Exception {
 		return restrictedTimesRolesDao.findRoleListByTime(timeId);
 	}
+	
+	public RestrictedTimesRoles save(RestrictedTimesRoles restrictedTimesRoles) throws Exception{
+		return restrictedTimesRolesDao.save(restrictedTimesRoles);
+	}
 
 	public void saveTimeRoles(List<RestrictedTimesRoles> list) throws Exception {
 		String timeId = ((RestrictedTimesRoles) list.get(0)).getId().getTimeId();
@@ -63,5 +67,9 @@ public class RestrictedTimesRolesServiceImpl extends GenericServiceImpl<Restrict
 
 	public void removeTimesRolesByTime(String timeId) throws Exception {
 		restrictedTimesRolesDao.removeTimesRolesByTime(timeId);
+	}
+	
+	public void removeAllRestrictedTimesRoles() throws Exception{
+		restrictedTimesRolesDao.removeAllRestrictedTimesRoles();
 	}
 }

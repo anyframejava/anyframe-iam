@@ -122,8 +122,48 @@
         <property name="dynamicHibernateService" ref="dynamicHibernateService" /> 
 	</bean>
 	<!-- ViewMappingDao-END -->
+	     
+     <!-- DataUploadDao-START -->
+     <bean id="dataUploadDao" class="anyframe.iam.admin.dataupload.dao.impl.DataUploadDaoHibernateImpl">
+     	<property name="sessionFactory" ref="sessionFactory"/>
+     	<property name="propertiesService" ref="propertiesService" />
+     	<property name="dynamicHibernateService" ref="dynamicHibernateService" />
+     </bean>
+     <!-- DataUploadDao-END -->
+     
+     <!-- GroupsHierarchyDao-START -->
+     <bean id="groupsHierarchyDao" class="anyframe.iam.admin.groupshierarchy.dao.impl.GroupsHierarchyDaoHibernateImpl">
+     	<property name="sessionFactory" ref="sessionFactory"/>
+     	<property name="propertiesService" ref="propertiesService" />
+     	<property name="dynamicHibernateService" ref="dynamicHibernateService" />
+     </bean>
+     <!-- GroupsHierarchyDao-END -->
+
+     <!-- RolesHierarchyDao-START -->
+     <bean id="rolesHierarchyDao" class="anyframe.iam.admin.roleshierarchy.dao.impl.RolesHierarchyDaoHibernateImpl">
+     	<property name="sessionFactory" ref="sessionFactory"/>
+     	<property name="propertiesService" ref="propertiesService" />
+     	<property name="dynamicHibernateService" ref="dynamicHibernateService" />
+     </bean>
+     <!-- RolessHierarchyDao-END -->
+	
+     <!-- ViewHierarchyDao-START -->
+     <bean id="viewHierarchyDao" class="anyframe.iam.admin.viewhierarchy.dao.impl.ViewHierarchyDaoHibernateImpl">
+     	<property name="sessionFactory" ref="sessionFactory"/>
+     	<property name="propertiesService" ref="propertiesService" />
+     	<property name="dynamicHibernateService" ref="dynamicHibernateService" />
+     </bean>
+     <!-- ViewHierarchyDao-END -->
+
+
 
     <!-- Add new DAOs here -->
+
+
+
+
+
+
     
     <!--AssistService-START-->
     <bean id="assistService" class="anyframe.iam.admin.assist.service.impl.AssistServiceImpl">
@@ -141,6 +181,9 @@
     <bean id="groupsService" class="anyframe.iam.admin.groups.service.impl.GroupsServiceImpl">
         <constructor-arg ref="groupsDao"/>
         <property name="groupsUsersDao" ref="groupsUsersDao"/>
+        <property name="groupsHierarchyService" ref="groupsHierarchyService"/>
+        <property name="groupsUsersService" ref="groupsUsersService"/>
+        <property name="authoritiesService" ref="authoritiesService"/>
     </bean>
     <!--GroupsService-END-->
 
@@ -154,12 +197,19 @@
     <bean id="rolesService" class="anyframe.iam.admin.roles.service.impl.RolesServiceImpl">
         <constructor-arg ref="rolesDao"/>
         <property name="securedResourcesRolesDao" ref="securedResourcesRolesDao"/>
+        <property name="rolesHierarchyService" ref="rolesHierarchyService"/>
+        <property name="authoritiesService" ref="authoritiesService"/>
+        <property name="restrictedTimesRolesService" ref="restrictedTimesRolesService"/>
+        <property name="timesResourcesExclusionService" ref="timesResourcesExclusionService"/>
     </bean>
     <!--RolesService-END-->
 
     <!--SecuredResourcesService-START-->
     <bean id="securedResourcesService" class="anyframe.iam.admin.securedresources.service.impl.SecuredResourcesServiceImpl">
         <constructor-arg ref="securedResourcesDao"/>
+        <property name="securedResourcesRolesService" ref="securedResourcesRolesService"/>
+        <property name="restrictedTimesResourcesService" ref="restrictedTimesResourcesService"/>
+        <property name="timesResourcesExclusionService" ref="timesResourcesExclusionService"/>
         <property name="idGenerationServiceResourccesMethod" ref="idGenerationServiceResourccesMethod"/>
         <property name="idGenerationServiceResourccesURL" ref="idGenerationServiceResourccesURL"/>
         <property name="idGenerationServiceResourccesPointCut" ref="idGenerationServiceResourccesPointCut"/>
@@ -190,6 +240,9 @@
     <!--RestrictedTimesService-START-->
     <bean id="restrictedTimesService" class="anyframe.iam.admin.restrictedtimes.service.impl.RestrictedTimesServiceImpl">
         <constructor-arg ref="restrictedTimesDao"/>
+        <property name="restrictedTimesRolesService" ref="restrictedTimesRolesService"/>
+        <property name="restrictedTimesResourcesService" ref="restrictedTimesResourcesService"/>
+        <property name="timesResourcesExclusionService" ref="timesResourcesExclusionService"/>
         <property name="idGenerationServiceRestrictedTimes" ref="idGenerationServiceRestrictedTimes"/>
     </bean>
     <!--RestrictedTimesService-END-->
@@ -215,6 +268,8 @@
      <!-- ViewResourcesService-START -->
      <bean id="viewResourcesService" class="anyframe.iam.admin.viewresources.service.impl.ViewResourcesServiceImpl">
      	<constructor-arg ref="viewResourcesDao" />
+     	<property name="viewHierarchyService" ref="viewHierarchyService"/>
+     	<property name="viewMappingService" ref="viewMappingService"/>
      </bean>
      <!-- ViewMappingService-END -->
      
@@ -223,6 +278,38 @@
      	<constructor-arg ref="viewMappingDao" />
      </bean>
      <!-- ViewMappingService-END -->
+          
+     <!-- DataUploadService-START -->
+     <bean id="dataUploadService" class="anyframe.iam.admin.dataupload.service.impl.DataUploadServiceImpl">
+     	<constructor-arg ref="dataUploadDao"></constructor-arg>
+     	<property name="propertiesService" ref="propertiesService"/>
+     	<property name="idGenerationServiceSnapshot" ref="idGenerationServiceSnapshot"/>
+     	<property name="groupsService" ref="groupsService"/>
+     	<property name="rolesService" ref="rolesService"/>
+     	<property name="usersService" ref="usersService"/>
+     	<property name="securedResourcesService" ref="securedResourcesService"/>
+     	<property name="restrictedTimesService" ref="restrictedTimesService"/>
+     	<property name="viewResourcesService" ref="viewResourcesService"/>
+     </bean>
+     <!-- DataUploadService-END -->
+     
+     <!-- GroupsHierarchyService-START -->
+     <bean id="groupsHierarchyService" class="anyframe.iam.admin.groupshierarchy.service.impl.GroupsHierarchyServiceImpl">
+     	<constructor-arg ref="groupsHierarchyDao"></constructor-arg>
+     </bean>
+     <!-- GroupsHierarchyService-END -->
+          
+     <!-- RolesHierarchyService-START -->
+     <bean id="rolesHierarchyService" class="anyframe.iam.admin.roleshierarchy.service.impl.RolesHierarchyServiceImpl">
+     	<constructor-arg ref="rolesHierarchyDao"></constructor-arg>
+     </bean>
+     <!-- RolesHierarchyService-END -->
+     
+     <!-- ViewHierarchyService-START -->
+     <bean id="viewHierarchyService" class="anyframe.iam.admin.viewhierarchy.service.impl.ViewHierarchyServiceImpl">
+     	<constructor-arg ref="viewHierarchyDao"></constructor-arg>
+     </bean>
+     <!-- ViewHierarchyService-END -->
      
     <!-- Add new Services here -->
 

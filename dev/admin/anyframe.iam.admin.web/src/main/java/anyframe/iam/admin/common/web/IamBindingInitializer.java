@@ -47,13 +47,14 @@ public class IamBindingInitializer implements WebBindingInitializer {
 				// Exclude nested Set Object properties
 				config.setJsonPropertyFilter(new PropertyFilter() {
 					public boolean apply(Object source, String name, Object value) {
-						if (value != null && PersistentSet.class.isAssignableFrom(value.getClass())) {
+						if (value != null && value.getClass().getSimpleName().equals("BeanPropertyBindingResult")) 
 							return true;
-
-						}
+						if (value != null && PersistentSet.class.isAssignableFrom(value.getClass()))
+							return true;
 						return false;
 					}
 				});
+				
 				return config;
 			}
 		});

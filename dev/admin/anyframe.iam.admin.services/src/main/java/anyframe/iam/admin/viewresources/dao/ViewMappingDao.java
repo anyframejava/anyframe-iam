@@ -58,4 +58,6 @@ public interface ViewMappingDao extends IamGenericDao<ViewResourcesMapping, View
 	 * @throws Exception fail to delete data
 	 */
 	ViewResourcesMapping delete(String viewResourceId) throws Exception;
+	
+	void removeAllViewResourceMapping() throws Exception;
 }

@@ -27,6 +27,7 @@ import anyframe.common.Page;
 import anyframe.common.util.StringUtil;
 import anyframe.iam.admin.common.IamGenericDaoHibernate;
 import anyframe.iam.admin.domain.IamTree;
+import anyframe.iam.admin.domain.TempViewResources;
 import anyframe.iam.admin.domain.ViewResource;
 import anyframe.iam.admin.viewresources.dao.ViewResourcesDao;
 import anyframe.iam.admin.vo.ViewResourceSearchVO;
@@ -157,5 +158,18 @@ public class ViewResourcesDaoHibernateImpl extends IamGenericDaoHibernate<ViewRe
 			return "";
 		
 		return list.get(0).getViewResourceId();
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<TempViewResources> makeAllTempViewList() throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("makeAllTempViewList");
+
+		return query.list();
+	}
+	
+	public void removeAllViewResources() throws Exception{
+		Query query = this.getSessionFactory().getCurrentSession().getNamedQuery("removeAllViewResources");
+		query.executeUpdate();
 	}
 }

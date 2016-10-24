@@ -66,4 +66,8 @@ public interface ViewMappingService extends GenericService<ViewResourcesMapping,
 	 * @throws Exception fail to delete data
 	 */
 	ViewResourcesMapping save(ViewResourcesMapping[] viewResourcesMapping) throws Exception;
+	
+	ViewResourcesMapping save(ViewResourcesMapping viewResourcesMapping) throws Exception;
+	
+	void removeAllViewResourceMapping() throws Exception;
 }

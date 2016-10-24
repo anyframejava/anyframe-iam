@@ -21,6 +21,7 @@ import java.util.List;
 import anyframe.iam.admin.common.IamGenericDao;
 import anyframe.iam.admin.domain.Groups;
 import anyframe.iam.admin.domain.IamTree;
+import anyframe.iam.admin.domain.TempGroups;
 
 /**
  * An interface that provides a data management interface to the Groups table.
@@ -83,4 +84,9 @@ public interface GroupsDao extends IamGenericDao<Groups, String> {
 	 * @throws Exception fail to find group ID
 	 */
 	String getGroupIdByGroupName(String groupName) throws Exception;
+	
+	List<TempGroups> makeAllTempGroupsList() throws Exception;
+	
+	void removeAllGroups() throws Exception;
+	
 }

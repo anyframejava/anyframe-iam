@@ -13,4 +13,10 @@
 		]]>
 	</query>
 	
+	<sql-query name="removeAllViewResourceMapping">
+		<![CDATA[
+			DELETE FROM VIEW_RESOURCES_MAPPING
+		]]>
+	</sql-query>
+	
 </hibernate-mapping>

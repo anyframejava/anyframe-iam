@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" %>
-<%@ taglib uri='http://www.sds.samsung.com/tags' prefix='anyframe' %>
+<%@ taglib uri='http://www.anyframejava.org/tags' prefix='anyframe' %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <html>
@@ -91,6 +91,13 @@ body {
   <tr id="sub5-3" style="display:">
     <td height="25" width="141" background="<c:url value='/images/left/bg_mainnav.gif'/>" class="mainNav" style="padding:7px 2px 4px 20px"><a href="<c:url value='/admin/assist/assistlist.do'/>" target="rightFrame" ><anyframe:message code="layout.leftmenu.resourcegathering" /></a></td>
   </tr>
+  <tr id="sub5-4" style="display:">
+    <td height="1" width="250" background="<c:url value='/images/left/bg_line.gif'/>"></td>
+  </tr>
+  <tr id="sub5-5" style="display:">
+    <td height="25" width="141" background="<c:url value='/images/left/bg_mainnav.gif'/>" class="mainNav" style="padding:7px 2px 4px 20px"><a href="<c:url value='/dataupload/dataupload.do'/>" target="rightFrame" >Data Upload</a></td>
+  </tr>
+
 </table>
 <div class="banner" align="center"></div>
 </body>

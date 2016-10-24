@@ -26,5 +26,5 @@ import anyframe.iam.admin.domain.GroupsUsersId;
  * @author jongpil.park
  */
 public interface GroupsUsersService extends GenericService<GroupsUsers, GroupsUsersId> {
-
+	void removeAllGroupsUsers() throws Exception;
 }

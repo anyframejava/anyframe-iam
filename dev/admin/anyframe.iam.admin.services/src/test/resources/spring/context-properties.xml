@@ -9,10 +9,12 @@
 	
 	<bean name="propertiesService" class="anyframe.core.properties.impl.PropertiesServiceImpl">
 		<config:configuration>
+		<fileName>classpath:/spring/systemname.properties</fileName>
 	      <properties>
 	         <element key="PAGE_SIZE" value="10"/>
 	         <element key="PAGE_UNIT" value="10"/>
 	      </properties>				
+	      
 		</config:configuration>					
 	</bean>
 </beans>

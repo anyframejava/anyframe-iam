@@ -16,9 +16,12 @@
 
 package anyframe.iam.admin.restrictedtimes.service;
 
+import java.util.List;
+
 import anyframe.common.Page;
 import anyframe.core.generic.service.GenericService;
 import anyframe.iam.admin.domain.RestrictedTimes;
+import anyframe.iam.admin.domain.TempRestrictedTimes;
 import anyframe.iam.admin.vo.RestrictedTimesSearchVO;
 
 /**
@@ -59,4 +62,13 @@ public interface RestrictedTimesService extends GenericService<RestrictedTimes, 
 	 * @throws Exception fail to save the row
 	 */
 	RestrictedTimes save(RestrictedTimes restrictedTimes) throws Exception;
+	
+	RestrictedTimes saveTempRestrictedTimesToRestrictedTimes(TempRestrictedTimes tempRestrictedTimes) throws Exception;
+	
+	@SuppressWarnings("unchecked")
+	List save(List tempRestrictedTimes) throws Exception;
+	
+	List<TempRestrictedTimes> makeAllTempRestrictedTimesList() throws Exception;
+	
+	void removeAllRestrictedTimes() throws Exception;
 }

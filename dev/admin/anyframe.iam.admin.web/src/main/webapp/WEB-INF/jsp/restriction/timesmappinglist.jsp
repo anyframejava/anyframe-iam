@@ -1,4 +1,4 @@
-<%@ taglib uri='http://www.sds.samsung.com/tags' prefix='anyframe' %>
+<%@ taglib uri='http://www.anyframejava.org/tags' prefix='anyframe' %>
 <%@ include file="/common/taglibs.jsp"%> 
 <%@ page language="java" pageEncoding="UTF-8" contentType="text/html;charset=utf-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -93,7 +93,7 @@ body {
 						<td></td>
 					</tr>
 					<tr>
-					  <td style="padding-left:10px;padding-top:10px"><iframe src="<c:url value='/restriction/timerole/list.do?' />" width="800" height="495" frameborder="0" scrolling="no" name="frame01" id="frame01"></iframe></td>
+					  <td style="padding-left:10px;padding-top:10px"><iframe src="<c:url value='/restriction/timerole/list.do?' />" width="800" height="440" frameborder="0" scrolling="no" name="frame01" id="frame01"></iframe></td>
 					</tr>
 				</table>
 			</form>

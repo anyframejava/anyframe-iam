@@ -27,6 +27,7 @@ import anyframe.common.util.StringUtil;
 import anyframe.iam.admin.common.IamGenericDaoHibernate;
 import anyframe.iam.admin.domain.IamResourceResult;
 import anyframe.iam.admin.domain.SecuredResources;
+import anyframe.iam.admin.domain.TempSecuredResources;
 import anyframe.iam.admin.securedresources.dao.SecuredResourcesDao;
 import anyframe.iam.admin.vo.ResourceSearchVO;
 
@@ -212,4 +213,20 @@ public class SecuredResourcesDaoHibernateImpl extends IamGenericDaoHibernate<Sec
 		Page resultPage = new Page(resultList, pageIndex, totalSize, pageUnit, pageSize);
 		return resultPage;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<TempSecuredResources> makeAllTempResourcesList() throws Exception {
+		
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("makeAllTempResourcesList");
+
+		return query.list();
+	}
+	
+	public void removeAllSecuredResources() throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeAllSecuredResources");
+		query.executeUpdate();	
+	}
+	
+	
 }

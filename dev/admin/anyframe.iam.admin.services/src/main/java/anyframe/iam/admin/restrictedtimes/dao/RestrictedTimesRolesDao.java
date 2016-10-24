@@ -55,4 +55,6 @@ public interface RestrictedTimesRolesDao extends IamGenericDao<RestrictedTimesRo
 	 * @throws Exception fail to remove data
 	 */
 	void removeTimesRolesByTime(String timeId) throws Exception;
+	
+	void removeAllRestrictedTimesRoles() throws Exception;
 }

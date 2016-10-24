@@ -2,115 +2,100 @@
 <b:beans xmlns="http://www.springframework.org/schema/security"
 	xmlns:b="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.4.xsd
-                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
-	<b:bean id="securedObjectService"
-		class="anyframe.iam.core.securedobject.impl.SecuredObjectServiceImpl"
+	<b:bean id="securedObjectService" class="anyframe.iam.core.securedobject.impl.SecuredObjectServiceImpl"
 		depends-on="sampleSecuritySchemaInitializer">
 		<b:property name="securedObjectDAO" ref="securedObjectDAO" />
 	</b:bean>
 
-	<b:bean id="securedObjectDAO"
-		class="anyframe.iam.core.securedobject.impl.SecuredObjectDAO">
+	<b:bean id="securedObjectDAO" class="anyframe.iam.core.securedobject.impl.SecuredObjectDAO">
 		<b:property name="dataSource" ref="dataSource" />
 	</b:bean>
 
-	<b:bean id="roleHierarchy"
-		class="org.springframework.security.userdetails.hierarchicalroles.RoleHierarchyImpl">
+	<b:bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
 		<b:property name="hierarchy" ref="hierarchyStrings" />
 	</b:bean>
 
-	<b:bean id="hierarchyStrings"
-		class="anyframe.iam.core.userdetails.hierarchicalroles.HierarchyStringsFactoryBean"
+	<b:bean id="hierarchyStrings" class="anyframe.iam.core.userdetails.hierarchicalroles.HierarchyStringsFactoryBean"
 		init-method="init">
 		<b:property name="securedObjectService" ref="securedObjectService" />
 	</b:bean>
 
-	<b:bean id="restrictedTimesAccessDecisionManager" class="org.springframework.security.vote.AffirmativeBased">
+	<b:bean id="restrictedTimesAccessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
 		<b:property name="allowIfAllAbstainDecisions" value="false" />
 		<b:property name="decisionVoters">
 			<b:list>
 				<b:bean
-					class="org.springframework.security.vote.AnyframeRoleHierarchyRestrictedVoter">
+					class="org.springframework.security.access.vote.AnyframeRoleHierarchyRestrictedVoter">
 					<b:property name="rolePrefix" value="" />
 					<b:property name="roleHierarchy" ref="roleHierarchy" />
 				</b:bean>
-				<b:bean class="org.springframework.security.vote.AuthenticatedVoter" />
+				<b:bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
 			</b:list>
 		</b:property>
 	</b:bean>
 
-	<b:bean id="restrictedTimesFilterSecurityInterceptor"
-		class="anyframe.iam.core.intercept.web.RestrictedTimesFilterSecurityInterceptor">
+	<b:bean id="restrictedTimesFilterSecurityInterceptor" class="anyframe.iam.core.intercept.web.RestrictedTimesFilterSecurityInterceptor">
 		<!-- <custom-filter before="FILTER_SECURITY_INTERCEPTOR" /> -->
-		<custom-filter after="NTLM_FILTER"/>
 		<b:property name="authenticationManager" ref="authenticationManager" />
 		<b:property name="accessDecisionManager" ref="restrictedTimesAccessDecisionManager" />
-		<b:property name="objectDefinitionSource" ref="restrictedTimesObjectDefinitionSource" />
+		<b:property name="securityMetadataSource" ref="restrictedTimesSecurityMetadataSource" />
 	</b:bean>
 
-	<b:bean id="restrictedTimesObjectDefinitionSource"
-		class="anyframe.iam.core.intercept.web.ReloadableRestrictedTimesFilterInvocationDefinitionSource">
+	<b:bean id="restrictedTimesSecurityMetadataSource" class="anyframe.iam.core.intercept.web.ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource">
 		<b:property name="urlMatcher" ref="regexUrlPathMatcher" />
 		<b:property name="securedObjectService" ref="securedObjectService" />
 	</b:bean>
 
-
-	<b:bean id="userDetailsServiceWrapper"
-		class="org.springframework.security.userdetails.hierarchicalroles.UserDetailsServiceWrapper">
+	<b:bean id="userDetailsServiceWrapper" class="org.springframework.security.access.hierarchicalroles.UserDetailsServiceWrapper">
 		<b:property name="roleHierarchy" ref="roleHierarchy" />
 		<b:property name="userDetailsService" ref="jdbcUserService" />
 	</b:bean>
 
-	<b:bean id="accessDecisionManager" class="org.springframework.security.vote.AffirmativeBased">
+	<b:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
 		<b:property name="allowIfAllAbstainDecisions" value="false" />
 		<b:property name="decisionVoters">
 			<b:list>
-				<b:bean class="org.springframework.security.vote.RoleVoter">
+				<b:bean class="org.springframework.security.access.vote.RoleVoter">
 					<b:property name="rolePrefix" value="" />
 				</b:bean>
-				<b:bean class="org.springframework.security.vote.AuthenticatedVoter" />
+				<b:bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
 			</b:list>
 		</b:property>
 	</b:bean>
 
-	<b:bean id="filterSecurityInterceptor"
-		class="org.springframework.security.intercept.web.FilterSecurityInterceptor">
-		<custom-filter before="FILTER_SECURITY_INTERCEPTOR" />
+	<b:bean id="filterSecurityInterceptor" class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
 		<b:property name="authenticationManager" ref="authenticationManager" />
 		<b:property name="accessDecisionManager" ref="accessDecisionManager" />
-		<b:property name="objectDefinitionSource" ref="databaseObjectDefinitionSource" />
+		<b:property name="securityMetadataSource" ref="databaseSecurityMetadataSource" />
 	</b:bean>
 
-	<b:bean id="databaseObjectDefinitionSource"
-		class="org.springframework.security.intercept.web.AnyframeReloadableDefaultFilterInvocationDefinitionSource">
+	<b:bean id="databaseSecurityMetadataSource" class="org.springframework.security.web.access.intercept.AnyframeReloadableDefaultFilterInvocationSecurityMetadataSource">
 		<b:constructor-arg ref="regexUrlPathMatcher" />
 		<b:constructor-arg ref="requestMap" />
 		<b:property name="securedObjectService" ref="securedObjectService" />
 	</b:bean>
 
-	<b:bean id="regexUrlPathMatcher"
-		class="org.springframework.security.util.RegexUrlPathMatcher" />
+	<b:bean id="regexUrlPathMatcher" class="org.springframework.security.web.util.RegexUrlPathMatcher" />
 
-	<b:bean id="requestMap" class="anyframe.iam.core.intercept.ResourcesMapFactoryBean"
-		init-method="init">
+	<b:bean id="requestMap" class="anyframe.iam.core.intercept.ResourcesMapFactoryBean" init-method="init">
 		<b:property name="securedObjectService" ref="securedObjectService" />
 		<b:property name="resourceType" value="url" />
 	</b:bean>
 
-	<http access-denied-page="/sample/common/accessDenied.jsp"
-		path-type="regex" lowercase-comparisons="false">
+	<http access-denied-page="/sample/common/accessDenied.jsp" path-type="regex" lowercase-comparisons="false">
 		<intercept-url pattern="\A/sample/images/.*\Z" filters="none" />
 		<intercept-url pattern="\A/sample/common/.*\Z" filters="none" />
 		<intercept-url pattern="\A/sample/css/.*\Z" filters="none" />
-		<intercept-url pattern="\A/sample/javascript/.*\Z"
-			filters="none" />
+		<intercept-url pattern="\A/sample/javascript/.*\Z" filters="none" />
 		<intercept-url pattern="\A/sample/layouts/.*\Z" filters="none" />
-		<intercept-url pattern="\A/sample/upload_files/.*\Z"
-			filters="none" />
+		<intercept-url pattern="\A/sample/upload_files/.*\Z" filters="none" />
 
+		<custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="filterSecurityInterceptor"/>
+		<custom-filter after="EXCEPTION_TRANSLATION_FILTER" ref="restrictedTimesFilterSecurityInterceptor"/>
 
 		<!-- move to DB - SECURED_RESOURCES, SECURED_RESOURCES_ROLE -->
 
@@ -131,10 +116,12 @@
 		-->
 	</http>
 
-	<authentication-manager alias="authenticationManager" />
-
-	<authentication-provider user-service-ref="userDetailsServiceWrapper" />
-
+	<authentication-manager alias="authenticationManager"> 
+		<authentication-provider user-service-ref="userDetailsServiceWrapper">
+			<!-- password-encoder hash="md5" / -->
+		</authentication-provider>
+	</authentication-manager>
+	
 	<!--
 		<jdbc-user-service id="jdbcUserService" data-source-ref="dataSource"
 		users-by-username-query="SELECT USER_ID,PASSWORD,ENABLED FROM USERS
@@ -142,13 +129,10 @@
 		USER_ID,ROLE_ID FROM AUTHORITIES WHERE USER_ID = ?" />
 	-->
 
-	<b:bean id="jdbcUserService"
-		class="anyframe.iam.core.userdetails.jdbc.ExtJdbcUserDetailsManager">
+	<b:bean id="jdbcUserService" class="anyframe.iam.core.userdetails.jdbc.ExtJdbcUserDetailsManager">
 		<!-- USER_ID, PASSWORD, ENABLED 는 항상 1,2,3 번째 순서로 나타나야 함! -->
-		<b:property name="usersByUsernameQuery"
-			value="SELECT USER_ID, PASSWORD, ENABLED, USER_NAME, SSN, SL_YN, BIRTH_DAY, AGE, CELL_PHONE, ADDR, EMAIL, EMAIL_YN, IMAGE_FILE, REG_DATE FROM USERS WHERE USER_ID = ?" />
-		<b:property name="authoritiesByUsernameQuery"
-			value="SELECT USER_ID,ROLE_ID FROM AUTHORITIES WHERE USER_ID = ?" />
+		<b:property name="usersByUsernameQuery" value="SELECT USER_ID, PASSWORD, ENABLED, USER_NAME, SSN, SL_YN, BIRTH_DAY, AGE, CELL_PHONE, ADDR, EMAIL, EMAIL_YN, IMAGE_FILE, REG_DATE FROM USERS WHERE USER_ID = ?" />
+		<b:property name="authoritiesByUsernameQuery" value="SELECT USER_ID,ROLE_ID FROM AUTHORITIES WHERE USER_ID = ?" />
 		<b:property name="dataSource" ref="dataSource" />
 		<!--
 			아래 mapClass를 지정하지 않으면 ExtUsersByUsernameMapping 에 의해 default 로 위 쿼리에
@@ -176,47 +160,40 @@
 		<b:property name="resourceType" value="method" />
 	</b:bean>
 
-	<b:bean id="methodDefinitionSources"
-		class="org.springframework.security.intercept.method.MapBasedMethodDefinitionSource">
+	<b:bean id="methodSecurityMetadataSources" class="org.springframework.security.access.method.MapBasedMethodSecurityMetadataSource">
 		<b:constructor-arg ref="methodMap" />
 	</b:bean>
 
-	<b:bean id="_delegatingMethodDefinitionSource"
-		class="org.springframework.security.intercept.method.DelegatingMethodDefinitionSource">
-		<b:property name="methodDefinitionSources">
+	<b:bean id="_delegatingMethodSecurityMetadataSource" class="org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource">
+		<b:property name="methodSecurityMetadataSources">
 			<b:list>
-				<b:ref bean="methodDefinitionSources" />
-				<b:bean
-					class="org.springframework.security.annotation.SecuredMethodDefinitionSource" />
-				<b:bean
-					class="org.springframework.security.annotation.Jsr250MethodDefinitionSource" />
+				<b:ref bean="methodSecurityMetadataSources" />
+                <b:bean class="org.springframework.security.access.annotation.SecuredAnnotationSecurityMetadataSource" />
+                <b:bean class="org.springframework.security.access.annotation.Jsr250MethodSecurityMetadataSource" />
 			</b:list>
 		</b:property>
 	</b:bean>
 
-	<b:bean id="_methodDefinitionSourceAdvisor"
-		class="org.springframework.security.intercept.method.aopalliance.MethodDefinitionSourceAdvisor">
+	<b:bean id="_methodSecurityMetadataSourceAdvisor" class="org.springframework.security.access.intercept.aopalliance.MethodSecurityMetadataSourceAdvisor">
 		<b:constructor-arg value="_methodSecurityInterceptor" />
-		<b:constructor-arg ref="_delegatingMethodDefinitionSource" />
+		<b:constructor-arg ref="_delegatingMethodSecurityMetadataSource" />
+		<b:constructor-arg value="_delegatingMethodSecurityMetadataSource" />
 	</b:bean>
 
-	<b:bean id="_methodSecurityInterceptor"
-		class="org.springframework.security.intercept.method.aopalliance.MethodSecurityInterceptor">
+	<b:bean id="_methodSecurityInterceptor"	class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
 		<b:property name="validateConfigAttributes" value="false" />
 		<b:property name="authenticationManager" ref="authenticationManager" />
 		<b:property name="accessDecisionManager" ref="accessDecisionManager" />
-		<b:property name="objectDefinitionSource" ref="_delegatingMethodDefinitionSource" />
+		<b:property name="securityMetadataSource" ref="_delegatingMethodSecurityMetadataSource" />
 	</b:bean>
 
-	<b:bean id="pointcutMap" class="anyframe.iam.core.intercept.ResourcesMapFactoryBean"
-		init-method="init">
+	<b:bean id="pointcutMap" class="anyframe.iam.core.intercept.ResourcesMapFactoryBean" init-method="init">
 		<b:property name="securedObjectService" ref="securedObjectService" />
 		<b:property name="resourceType" value="pointcut" />
 	</b:bean>
 
-	<b:bean id="_protectPointcutPostProcessor"
-		class="org.springframework.security.intercept.method.ProtectPointcutPostProcessor">
-		<b:constructor-arg ref="methodDefinitionSources" />
+	<b:bean id="_protectPointcutPostProcessor" class="org.springframework.security.config.method.ProtectPointcutPostProcessor">
+		<b:constructor-arg ref="methodSecurityMetadataSources" />
 		<b:property name="pointcutMap" ref="pointcutMap" />
 	</b:bean>
 

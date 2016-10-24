@@ -103,6 +103,8 @@ public class AnnotationAssistController {
 
 			if (!result)
 				break;
+			
+			model.addAttribute("msg", result);
 		}
 
 		return "jsonView";

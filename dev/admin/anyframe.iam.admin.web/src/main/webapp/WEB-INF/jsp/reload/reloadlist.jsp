@@ -1,4 +1,4 @@
-<%@ taglib uri='http://www.sds.samsung.com/tags' prefix='anyframe' %>
+<%@ taglib uri='http://www.anyframejava.org/tags' prefix='anyframe' %>
 <%@ include file="/common/taglibs.jsp"%>
 <%@ page language="java" pageEncoding="UTF-8"
 	contentType="text/html;charset=utf-8"%>
@@ -44,7 +44,7 @@ jQuery(document).ready( function() {
 			width : 250
 		} ],
 		width : 787,
-		height : 300,
+		height : 150,
 		pager : jQuery('#pager'),
 		forceFit:true,
 		multiselect : true,
@@ -169,7 +169,7 @@ body {
 	<tr>
 		<td style="padding-left:10px">
 			<form action="<c:url value="/admin/reload/resourceReload.do"/>" method="post" id="reloadResource" name="reloadResource">
-				<div id="documentation" class="demo" style="overflow:auto; height:460px;width:800px;">
+				<div id="documentation" class="demo" style="overflow:auto; height:300px;width:800px;">
 					<table width="793" border="0" cellpadding="0" cellspacing="0">
 						<tr height="30">
 							<td width="400">
@@ -212,40 +212,6 @@ body {
 			</form>
 		</td>
   	</tr>
-  
-	<tr>
-		<td width="10">&nbsp;</td>
-	    <td colspan="1" valign="top">
-			<div id="transfer" style="visibility:hidden;">
-			<table width="802" height="100%" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-					<td valign="top" style="padding-top:15px">
-						<table width="517" border="0" align="center" cellpadding="0" cellspacing="0">
-							<tr>
-								<td id="message" style="padding-left:89px" class="blue_h2">Please Wait! </td>
-							</tr>
-							<tr>
-								<td height="15" background="<c:url value='/images/box_top.gif'/>">&nbsp;</td>
-							</tr>
-							<tr>
-								<td align="center" background="<c:url value='/images/box_bg.gif'/>" class="boxpadding">
-									<table width="100%" border="0" cellspacing="0" cellpadding="0">
-										<tr>
-											<td align="center"><img src="<c:url value='/images/transport.gif'/>" width="428" height="72"></td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-							<tr>
-								<td height="31" background="<c:url value='/images/box_bttm.gif'/>">&nbsp;</td>
-							</tr>
-					  </table>
-					</td>
-				</tr>
-			</table>
-			</div>
-		</td>
-  	</tr>
 	<tr valign="top">
 		<td height="50%" colspan="2" valign="top" >
 			<table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#E9ECF1">
@@ -256,5 +222,41 @@ body {
 		</td>
 	</tr>
 </table>
+
+<div id="transfer" style="visibility:hidden;">
+	<table>
+		<tr>
+			<td width="10">&nbsp;</td>
+		    <td colspan="1" valign="top">
+				<table width="802" height="100%" border="0" cellpadding="0" cellspacing="0">
+					<tr>
+						<td valign="top" style="padding-top:15px">
+							<table width="517" border="0" align="center" cellpadding="0" cellspacing="0">
+								<tr>
+									<td id="message" style="padding-left:89px" class="blue_h2">Please Wait! </td>
+								</tr>
+								<tr>
+									<td height="15" background="<c:url value='/images/box_top.gif'/>">&nbsp;</td>
+								</tr>
+								<tr>
+									<td align="center" background="<c:url value='/images/box_bg.gif'/>" class="boxpadding">
+										<table width="100%" border="0" cellspacing="0" cellpadding="0">
+											<tr>
+												<td align="center"><img src="<c:url value='/images/transport.gif'/>" width="428" height="72"></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td height="31" background="<c:url value='/images/box_bttm.gif'/>">&nbsp;</td>
+								</tr>
+						  </table>
+						</td>
+					</tr>
+				</table>
+			</td>
+	  	</tr>
+	</table>
+</div>
 </body>
 </html>

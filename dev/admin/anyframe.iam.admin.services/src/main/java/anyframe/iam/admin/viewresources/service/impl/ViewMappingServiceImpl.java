@@ -50,6 +50,10 @@ public class ViewMappingServiceImpl extends GenericServiceImpl<ViewResourcesMapp
 	public List get(String viewResourceId) throws Exception {
 		return viewMappingDao.get(viewResourceId);
 	}
+	
+	public ViewResourcesMapping save(ViewResourcesMapping viewResourcesMapping) throws Exception{
+		return viewMappingDao.save(viewResourcesMapping);
+	}
 
 	public ViewResourcesMapping save(ViewResourcesMapping[] viewResourcesMapping) throws Exception {
 		if (viewResourcesMapping != null) {
@@ -61,5 +65,9 @@ public class ViewMappingServiceImpl extends GenericServiceImpl<ViewResourcesMapp
 		}
 
 		return new ViewResourcesMapping();
+	}
+	
+	public void removeAllViewResourceMapping() throws Exception{
+		viewMappingDao.removeAllViewResourceMapping();
 	}
 }

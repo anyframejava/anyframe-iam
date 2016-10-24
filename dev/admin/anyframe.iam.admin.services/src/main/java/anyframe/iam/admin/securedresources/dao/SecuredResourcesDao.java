@@ -16,9 +16,12 @@
 
 package anyframe.iam.admin.securedresources.dao;
 
+import java.util.List;
+
 import anyframe.common.Page;
 import anyframe.iam.admin.common.IamGenericDao;
 import anyframe.iam.admin.domain.SecuredResources;
+import anyframe.iam.admin.domain.TempSecuredResources;
 import anyframe.iam.admin.vo.ResourceSearchVO;
 
 /**
@@ -64,4 +67,8 @@ public interface SecuredResourcesDao extends IamGenericDao<SecuredResources, Str
 	 * @throws Exception fail to find list
 	 */
 	Page getListwithLevel(ResourceSearchVO resourceSearchVO) throws Exception;
+	
+	List<TempSecuredResources> makeAllTempResourcesList() throws Exception;
+	
+	void removeAllSecuredResources() throws Exception;
 }

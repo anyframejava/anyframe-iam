@@ -227,20 +227,23 @@ public class AnnotationResourcesController {
 	 * @throws Exception fail to update data
 	 */
 	@RequestMapping("/resources/update.do")
-	public String update(@ModelAttribute("resources") SecuredResources sr, BindingResult bindingResult,
+	public String update(@RequestParam(value="skipvalidation", required = false) String skipValidation,
+			@ModelAttribute("resources") SecuredResources sr, BindingResult bindingResult,
 			HttpSession session,
 			SessionStatus status) throws Exception {
-		beanValidator.validate(sr, bindingResult);
-
-		boolean isMatched = candidateSecuredResourcesService
-				.checkMatched(sr.getResourcePattern(), sr.getResourceType());
-		if (!isMatched) {
-			bindingResult.rejectValue("resourcePattern", "errors.resourcepattern", new Object[] { sr
-					.getResourcePattern() }, "check resource pattern.");
-		}
-
-		if (bindingResult.hasErrors()) {
-			return "/resources/resourcedetail";
+		
+		if(!("Y").equals(skipValidation)){
+			beanValidator.validate(sr, bindingResult);
+			boolean isMatched = candidateSecuredResourcesService
+					.checkMatched(sr.getResourcePattern(), sr.getResourceType());
+			if (!isMatched) {
+				bindingResult.rejectValue("resourcePattern", "errors.resourcepattern", new Object[] { sr
+						.getResourcePattern() }, "check resource pattern.");
+			}
+	
+			if (bindingResult.hasErrors()) {
+				return "/resources/resourcedetail";
+			}
 		}
 		String[] systemName = new String[1];
 		systemName[0] = (String) session.getAttribute("systemName");

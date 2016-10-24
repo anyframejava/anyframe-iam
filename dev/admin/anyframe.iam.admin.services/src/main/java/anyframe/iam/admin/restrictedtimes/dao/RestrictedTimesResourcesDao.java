@@ -65,4 +65,6 @@ public interface RestrictedTimesResourcesDao extends
 	 * @throws Exception fail to find resources
 	 */
 	Page findUnmappedResourceListByTime(RestrictedTimesSearchVO resourceSearchVO) throws Exception;
+	
+	void removeAllRestrictedTimesResources() throws Exception;
 }

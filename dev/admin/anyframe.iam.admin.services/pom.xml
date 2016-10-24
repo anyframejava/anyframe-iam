@@ -12,36 +12,23 @@
 	<groupId>anyframe</groupId>
 	<artifactId>anyframe.iam.admin.services</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0.3.RC2</version>
+	<version>1.1.0</version>
 	<name>anyframe.iam.admin.services</name>
 	<url>http://maven.apache.org</url>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring</artifactId>
-			<version>2.5.6</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>2.5.6</version>
-		</dependency>
-
 		<!-- junit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.4</version>
+			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
-		
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.15</version>
 		</dependency>
-
 		<dependency>
 			<groupId>javax.annotation</groupId>
 			<artifactId>jsr250-api</artifactId>
@@ -53,50 +40,21 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>aspectj</groupId>
-			<artifactId>aspectjrt</artifactId>
-			<version>1.6.4</version>
-		</dependency>
-		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 			<version>1.6.5</version>
 		</dependency>
-
 		<!-- IAM core and Spring Security -->
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.iam.core</artifactId>
-			<version>1.0.3.RC2</version>
-			<scope>test</scope>
+			<version>1.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core</artifactId>
-			<version>2.0.4</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework</groupId>
-					<artifactId>spring-support</artifactId>
-				</exclusion>
-			</exclusions>
+			<artifactId>spring-security-web</artifactId>
+			<version>3.0.2.RELEASE</version>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-acl</artifactId>
-			<version>2.0.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-core-tiger</artifactId>
-			<version>2.0.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-taglibs</artifactId>
-			<version>2.0.4</version>
-		</dependency>
-
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
@@ -125,17 +83,21 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.5.3</version>
 		</dependency>
-
 		<!-- Anyframe -->
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.generic</artifactId>
-			<version>4.1.0</version>
+			<version>4.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>anyframe</groupId>
 			<artifactId>anyframe.hibernate</artifactId>
-			<version>4.1.0</version>
+			<version>4.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>anyframe</groupId>
+			<artifactId>anyframe.idgen</artifactId>
+			<version>4.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.transaction</groupId>
@@ -143,9 +105,9 @@
 			<version>1.1</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>jpa</artifactId>
-			<version>1.0</version>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<version>1.0.0.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
@@ -153,16 +115,16 @@
 			<version>1.6.2</version>
 		</dependency>
 		<dependency>
-			<groupId>anyframe</groupId>
-			<artifactId>anyframe.idgen</artifactId>
-			<version>4.1.0</version>
-		</dependency>
-		<dependency>
 			<groupId>net.sf</groupId>
 			<artifactId>log4jdbc3</artifactId>
 			<version>1.2alpha2</version>
-		</dependency>	
-
+		</dependency>
+		<!-- jxl -->
+		<dependency>
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<version>2.6.10</version>
+		</dependency>
 	</dependencies>
 
 	<build>

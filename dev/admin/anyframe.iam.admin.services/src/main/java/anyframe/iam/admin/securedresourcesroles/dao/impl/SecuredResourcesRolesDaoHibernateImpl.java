@@ -37,4 +37,9 @@ public class SecuredResourcesRolesDaoHibernateImpl extends
 		query.setParameter("roleId", roleId);
 		query.executeUpdate();
 	}
+	
+	public void removeAllSecuredResourcesRoles() throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeAllSecuredResourcesRoles");
+		query.executeUpdate();
+	}
 }

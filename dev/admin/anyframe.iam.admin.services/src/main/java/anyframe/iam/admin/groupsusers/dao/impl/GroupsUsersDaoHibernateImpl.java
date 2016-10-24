@@ -37,4 +37,9 @@ public class GroupsUsersDaoHibernateImpl extends IamGenericDaoHibernate<GroupsUs
 		query.setParameter("groupId", groupId);
 		query.executeUpdate();
 	}
+	
+	public void removeAllGroupsUsers() throws Exception{
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeAllGroupsUsers");
+		query.executeUpdate();	
+	}
 }

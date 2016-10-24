@@ -1,4 +1,4 @@
-<%@ taglib uri='http://www.sds.samsung.com/tags' prefix='anyframe' %>
+<%@ taglib uri='http://www.anyframejava.org/tags' prefix='anyframe' %>
 <%@ include file="/common/taglibs.jsp"%>
 <%@ page language="java" contentType="text/html;charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="validator" uri="http://www.springmodules.org/tags/commons-validator" %>
@@ -272,19 +272,6 @@ body {
 									</form:option>
 								</form:select>
         						<form:errors path="timeType" />
-								</td>
-							</tr>
-  							<tr><td height="1" colspan="4" bgcolor="#D6D6D6"></td></tr>
-							<tr>
-								<td class="tdHead">System Name</td>
-								<td bgcolor="#D6D6D6" width="2"></td>
-								<td colspan="2" class="tdin">
-								
-								<select name="systemName" disabled="disabled" class="ct_input_g">
-									<c:forEach var="item" items="${systemNames }">
-										<option value="${item }">${item }</option>
-									</c:forEach>
-								</select>
 								</td>
 							</tr>
   							<tr><td height="1" colspan="4" bgcolor="#D6D6D6"></td></tr>

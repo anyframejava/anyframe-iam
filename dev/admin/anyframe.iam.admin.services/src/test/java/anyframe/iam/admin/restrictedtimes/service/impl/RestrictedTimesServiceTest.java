@@ -21,7 +21,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -37,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import anyframe.common.Page;
 import anyframe.common.exception.BaseException;
 import anyframe.iam.admin.domain.RestrictedTimes;
+import anyframe.iam.admin.domain.TempRestrictedTimes;
 import anyframe.iam.admin.restrictedtimes.service.RestrictedTimesService;
 import anyframe.iam.admin.vo.RestrictedTimesSearchVO;
 
@@ -231,5 +234,58 @@ public class RestrictedTimesServiceTest {
 
 		result = (RestrictedTimes) iter.next();
 		check(result, domain2);
+	}
+	
+	@Test
+	public void testMakeAllTempRestrictedTimesList() throws Exception{
+		List<TempRestrictedTimes> resultList = restrictedTimesService.makeAllTempRestrictedTimesList();
+		assertNotNull(resultList);
+		assertTrue(resultList.size() > 0);
+	}
+	
+//	@Test
+//	public void testRemoveAllRestrictedTimes() throws Exception{
+//		restrictedTimesService.removeAllRestrictedTimes();
+//		RestrictedTimesSearchVO searchVO = new RestrictedTimesSearchVO();
+//		Page resultPage = restrictedTimesService.getList(searchVO);
+//		assertTrue(resultPage.getSize() == 0);
+//	}
+	
+	@Test
+	public void testSaveList() throws Exception{
+		restrictedTimesService.removeAllRestrictedTimes();
+		
+		TempRestrictedTimes tempTime1 = new TempRestrictedTimes();
+		tempTime1.setTimeId("tempTime1");
+		tempTime1.setTimeType("crush");
+		tempTime1.setDescription("tempTime1");
+		tempTime1.setStartTime("000000");
+		tempTime1.setEndTime("235959");
+		tempTime1.setSystemName("sample");
+		tempTime1.setResourceId("web-000001");
+		tempTime1.setRoleId("ROLE_USER");
+		tempTime1.setTimesExclusionRoles("ROLE_ADMIN");
+
+		TempRestrictedTimes tempTime2 = new TempRestrictedTimes();
+		tempTime2.setTimeId("tempTime2");
+		tempTime2.setTimeType("crush");
+		tempTime2.setDescription("tempTime2");
+		tempTime2.setStartTime("000000");
+		tempTime2.setEndTime("235959");
+		tempTime2.setSystemName("sample");
+		tempTime2.setResourceId("web-000002");
+		tempTime2.setRoleId("IS_AUTHENTICATED_FULLY");
+		tempTime2.setTimesExclusionRoles("ROLE_USER");
+		
+		List timeList = new ArrayList();
+		timeList.add(tempTime1);
+		timeList.add(tempTime2);
+		
+		restrictedTimesService.save(timeList);
+		
+		RestrictedTimesSearchVO searchVO = new RestrictedTimesSearchVO();
+		Page resultPage = restrictedTimesService.getList(searchVO);
+		assertNotNull(resultPage);
+		assertTrue(resultPage.getSize() > 0);
 	}
 }

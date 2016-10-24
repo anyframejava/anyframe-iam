@@ -25,7 +25,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.MessageSource;
-import org.springframework.security.ConfigAttributeDefinition;
+import org.springframework.security.access.ConfigAttribute;
 
 import anyframe.common.exception.BaseException;
 import anyframe.iam.core.securedobject.ISecuredObjectService;
@@ -136,7 +136,7 @@ public class SecuredObjectServiceImpl implements ISecuredObjectService, Applicat
 		}
 	}
 
-	public ConfigAttributeDefinition getMatchedRequestMapping(String url) throws BaseException {
+	public List<ConfigAttribute> getMatchedRequestMapping(String url) throws BaseException {
 		try {
 			return securedObjectDAO.getRegexMatchedRequestMapping(url);
 		}

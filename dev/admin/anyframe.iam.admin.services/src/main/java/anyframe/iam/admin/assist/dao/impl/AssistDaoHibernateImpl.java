@@ -29,10 +29,10 @@ public class AssistDaoHibernateImpl extends IamGenericDaoHibernate<CandidateSecu
 		super(CandidateSecuredResources.class);
 	}
 	
-//	public int removeAll() throws Exception {
-//		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeCandidateSecuredResources");
-//		return query.executeUpdate();
-//	}
+	public int removeAll() throws Exception {
+		Query query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeCandidateSecuredResources");
+		return query.executeUpdate();
+	}
 	
 	public int removeAll(String systemName) throws Exception {
 		systemName = StringUtil.null2str(systemName);

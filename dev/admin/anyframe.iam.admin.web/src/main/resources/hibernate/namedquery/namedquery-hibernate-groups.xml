@@ -54,4 +54,27 @@
 			WHERE	PARENT_GROUP = :parentGroup
 		]]>
 	</sql-query>
+		
+	<sql-query name="makeAllTempGroupsList">
+		<return class="anyframe.iam.admin.domain.TempGroups"/>
+		<![CDATA[	
+			SELECT 	A.GROUP_ID 		groupId, 
+					A.GROUP_NAME 	groupName, 
+					A.CREATE_DATE	createDate,
+					A.MODIFY_DATE	modifyDate,
+					B.PARENT_GROUP 	parentGroup
+			FROM	GROUPS				A
+			LEFT JOIN	GROUPS_HIERARCHY	B
+			ON	A.GROUP_ID = B.CHILD_GROUP
+		]]>
+	</sql-query>
+	
+		
+	<sql-query name="removeAllGroups">
+		<![CDATA[
+			DELETE FROM Groups
+		]]>
+	</sql-query>
+	
+	
 </hibernate-mapping>

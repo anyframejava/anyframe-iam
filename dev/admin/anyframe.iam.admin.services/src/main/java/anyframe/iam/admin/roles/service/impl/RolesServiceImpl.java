@@ -23,20 +23,28 @@ import java.util.List;
 import java.util.Set;
 
 import anyframe.core.generic.service.impl.GenericServiceImpl;
+import anyframe.iam.admin.authorities.service.AuthoritiesService;
 import anyframe.iam.admin.common.IAMException;
 import anyframe.iam.admin.domain.IamTree;
 import anyframe.iam.admin.domain.Roles;
 import anyframe.iam.admin.domain.RolesHierarchy;
 import anyframe.iam.admin.domain.RolesHierarchyId;
+import anyframe.iam.admin.domain.TempRoles;
+import anyframe.iam.admin.restrictedtimes.service.RestrictedTimesRolesService;
+import anyframe.iam.admin.restrictedtimes.service.TimesResourcesExclusionService;
 import anyframe.iam.admin.roles.dao.RolesDao;
 import anyframe.iam.admin.roles.service.RolesService;
+import anyframe.iam.admin.roleshierarchy.service.RolesHierarchyService;
 import anyframe.iam.admin.securedresourcesroles.dao.SecuredResourcesRolesDao;
 
 public class RolesServiceImpl extends GenericServiceImpl<Roles, String> implements RolesService {
 	private RolesDao rolesDao;
-
 	private SecuredResourcesRolesDao securedResourcesRolesDao;
-	
+	private RolesHierarchyService rolesHierarchyService;
+	private AuthoritiesService authoritiesService;
+	private RestrictedTimesRolesService restrictedTimesRolesService;
+	private TimesResourcesExclusionService timesResourcesExclusionService;
+
 	private static List<String> roleIds = new ArrayList<String>();
 
 	public RolesServiceImpl(RolesDao rolesDao) {
@@ -46,6 +54,24 @@ public class RolesServiceImpl extends GenericServiceImpl<Roles, String> implemen
 
 	public void setSecuredResourcesRolesDao(SecuredResourcesRolesDao securedResourcesRolesDao) {
 		this.securedResourcesRolesDao = securedResourcesRolesDao;
+	}
+
+	public void setRolesHierarchyService(RolesHierarchyService rolesHierarchyService) {
+		this.rolesHierarchyService = rolesHierarchyService;
+	}
+
+	public void setAuthoritiesService(AuthoritiesService authoritiesService) {
+		this.authoritiesService = authoritiesService;
+	}
+
+	public void setRestrictedTimesRolesService(
+			RestrictedTimesRolesService restrictedTimesRolesService) {
+		this.restrictedTimesRolesService = restrictedTimesRolesService;
+	}
+
+	public void setTimesResourcesExclusionService(
+			TimesResourcesExclusionService timesResourcesExclusionService) {
+		this.timesResourcesExclusionService = timesResourcesExclusionService;
 	}
 
 	public List<IamTree> getRoleTree(String parentNode) throws Exception {
@@ -92,6 +118,53 @@ public class RolesServiceImpl extends GenericServiceImpl<Roles, String> implemen
 		
 		return rolesDao.save(roles);
 	}
+	
+	public Roles saveWithoutHierarchy(Roles roles) throws Exception{
+		return rolesDao.save(roles);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List save(List tempRoleList) throws Exception{
+		List resultList = new ArrayList();
+		
+		for(int i = 0 ; i < tempRoleList.size() ; i++){
+			TempRoles tempRoles = (TempRoles) tempRoleList.get(i);
+			Roles roles = saveTempRolesToRoles(tempRoles);
+			resultList.add(roles);
+		}
+		
+		for(int i = 0 ; i < tempRoleList.size(); i++){
+			TempRoles tempRole = (TempRoles) tempRoleList.get(i);
+			String parentRole = tempRole.getParentRoles();
+			
+			if(!"".equals(parentRole) && parentRole != null){
+				RolesHierarchy rolesHierarchy = new RolesHierarchy();
+				RolesHierarchyId id = new RolesHierarchyId();
+				
+				id.setChildRole(parentRole);
+				id.setParentRole(tempRole.getRoleId());
+				
+				rolesHierarchy.setId(id);
+				rolesHierarchy.setCreateDate(tempRole.getCreateDate());
+				
+				rolesHierarchyService.save(rolesHierarchy);
+			}
+		}
+		
+		return resultList;
+	}
+	
+	public Roles saveTempRolesToRoles(TempRoles tempRoles) throws Exception{
+		Roles roles = new Roles();
+		
+		roles.setRoleId(tempRoles.getRoleId());
+		roles.setRoleName(tempRoles.getRoleName());
+		roles.setDescription(tempRoles.getDescription());
+		roles.setCreateDate(tempRoles.getCreateDate());
+		roles.setModifyDate(tempRoles.getModifyDate());
+		
+		return saveWithoutHierarchy(roles);
+	}
 
 	public void remove(String currentNode) throws Exception {
 		if (currentNode != null) {
@@ -111,6 +184,17 @@ public class RolesServiceImpl extends GenericServiceImpl<Roles, String> implemen
 		else {
 			throw new IAMException("No selected node");
 		}
+	}
+	
+	public void removeAllRoles() throws Exception{
+		
+		securedResourcesRolesDao.removeAllSecuredResourcesRoles();
+		rolesHierarchyService.removeAllRolesHierarchy();
+		authoritiesService.removeAllAuthorities();
+		restrictedTimesRolesService.removeAllRestrictedTimesRoles();
+		timesResourcesExclusionService.removeAllTimesResourcesExclusion();
+		
+		rolesDao.removeAllRoles();
 	}
 
 	public List<Roles> getList() throws Exception {
@@ -145,4 +229,7 @@ public class RolesServiceImpl extends GenericServiceImpl<Roles, String> implemen
 		return roleIds;
 	}	
 	
+	public List<TempRoles> makeAllTempRolesList() throws Exception{
+		return this.rolesDao.makeAllTempRolesList();
+	}
 }

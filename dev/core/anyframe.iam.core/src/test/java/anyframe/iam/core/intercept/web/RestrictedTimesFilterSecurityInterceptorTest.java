@@ -44,13 +44,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.security.AccessDeniedException;
-import org.springframework.security.Authentication;
-import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.context.SecurityContextImpl;
-import org.springframework.security.intercept.web.FilterInvocation;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
-import org.springframework.security.providers.dao.DaoAuthenticationProvider;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.web.FilterInvocation;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -73,8 +73,8 @@ public class RestrictedTimesFilterSecurityInterceptorTest {
 	@Resource(name = "restrictedTimesFilterSecurityInterceptor")
 	RestrictedTimesFilterSecurityInterceptor restrictedTimesFilterSecurityInterceptor;
 
-	@Resource(name = "restrictedTimesObjectDefinitionSource")
-	ReloadableRestrictedTimesFilterInvocationDefinitionSource restrictedTimesObjectDefinitionSource;
+	@Resource(name = "restrictedTimesSecurityMetadataSource")
+	ReloadableRestrictedTimesFilterInvocationSecurityMetadataSource restrictedTimesSecurityMetadataSource;
 
 	@Resource
 	private DaoAuthenticationProvider provider;
@@ -104,6 +104,7 @@ public class RestrictedTimesFilterSecurityInterceptorTest {
 
 		// ROLE_ADMIN
 		setAuthenticatedUser("test", "test123");
+
 		try {
 			restrictedTimesFilterSecurityInterceptor.invoke(createFilterInvocation());
 			assertTrue(true);
@@ -114,6 +115,7 @@ public class RestrictedTimesFilterSecurityInterceptorTest {
 
 		// ROLE_USER
 		setAuthenticatedUser("bbnydory", "bbnydory0");
+		
 		try {
 			restrictedTimesFilterSecurityInterceptor.invoke(createFilterInvocation());
 			fail("ROLE_USER 는 장애/실행시간 제한 데이터로 설정하였음.");
@@ -213,7 +215,7 @@ public class RestrictedTimesFilterSecurityInterceptorTest {
 
 		// restricted time role 맵핑 삭제 후 접근 가능 테스트
 		changeTestData("delete from restricted_times_roles");
-		restrictedTimesObjectDefinitionSource.reloadRestrictedTimes();
+		restrictedTimesSecurityMetadataSource.reloadRestrictedTimes();
 
 		// RetrictedTimes Roles/Resources 에 대해 DB 기반으로 등록한 초기 데이터 참고
 		// - web-000003(\A/.*\Z) 에 대해 제한 resource 로 등록되었음. - exclusion Role -
@@ -248,7 +250,7 @@ public class RestrictedTimesFilterSecurityInterceptorTest {
 
 		// restricted time role 맵핑 삭제 후 접근 가능 테스트
 		changeTestData("delete from restricted_times_roles");
-		restrictedTimesObjectDefinitionSource.reloadRestrictedTimes();
+		restrictedTimesSecurityMetadataSource.reloadRestrictedTimes();
 
 		// ROLE_USER
 		setAuthenticatedUser("bbnydory", "bbnydory0");
@@ -272,7 +274,7 @@ public class RestrictedTimesFilterSecurityInterceptorTest {
 
 		// restricted time role 에 ROLE_RESTRICTED 추가 후 접근 가능 테스트
 		changeTestData("insert into restricted_times_roles(time_id, role_id) values ('time-00001', 'ROLE_RESTRICTED')");
-		restrictedTimesObjectDefinitionSource.reloadRestrictedTimes();
+		restrictedTimesSecurityMetadataSource.reloadRestrictedTimes();
 
 		// ROLE_USER
 		setAuthenticatedUser("bbnydory", "bbnydory0");
@@ -302,7 +304,7 @@ public class RestrictedTimesFilterSecurityInterceptorTest {
 		// daily filtered 데이터(time-00003 은 항상 오늘 데이터로 추가했음) 임시 추가 - ROLE_ADMIN
 		// 까지 제한
 		changeTestData("insert into restricted_times_roles(time_id, role_id) values ('time-00003', 'ROLE_ADMIN');");
-		restrictedTimesObjectDefinitionSource.reloadRestrictedTimes();
+		restrictedTimesSecurityMetadataSource.reloadRestrictedTimes();
 
 		// ROLE_USER
 		setAuthenticatedUser("bbnydory", "bbnydory0");
@@ -327,7 +329,7 @@ public class RestrictedTimesFilterSecurityInterceptorTest {
 	}
 
 	// 참고 -
-	// https://fisheye.springsource.org/browse/spring-security/tags/spring-security-2.0.5.RELEASE/core/src/test/java/org/springframework/security/intercept/web/DefaultFilterInvocationDefinitionSourceTests.java?r=HEAD
+	// https://fisheye.springsource.org/browse/spring-security/tags/spring-security-2.0.5.RELEASE/core/src/test/java/org/springframework/security/intercept/web/DefaultFilterInvocationSecurityMetadataSourceTests.java?r=HEAD
 	private FilterInvocation createFilterInvocation(String path, String method) {
 		MockHttpServletRequest request = new MockHttpServletRequest();
 		request.setRequestURI(null);

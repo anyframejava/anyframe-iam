@@ -30,7 +30,8 @@ import anyframe.iam.admin.domain.AuthoritiesId;
 import anyframe.iam.admin.vo.AuthoritySearchVO;
 
 @Repository("authoritiesDao")
-public class AuthoritiesDaoHibernateImpl extends IamGenericDaoHibernate<Authorities, AuthoritiesId> implements
+public class AuthoritiesDaoHibernateImpl extends
+		IamGenericDaoHibernate<Authorities, AuthoritiesId> implements
 		AuthoritiesDao {
 
 	public AuthoritiesDaoHibernateImpl() {
@@ -45,9 +46,12 @@ public class AuthoritiesDaoHibernateImpl extends IamGenericDaoHibernate<Authorit
 		int pageUnit = this.getPropertiesService().getInt("PAGE_UNIT");
 		String sidx = StringUtil.null2str(authoritySearchVO.getSidx());
 		String sord = StringUtil.null2str(authoritySearchVO.getSord());
-		String searchCondition = StringUtil.null2str(authoritySearchVO.getSearchCondition());
-		String searchKeyword = StringUtil.null2str(authoritySearchVO.getSearchKeyword());
-		String isNumeric = StringUtil.isNumeric(searchKeyword) ? "true" : "false";
+		String searchCondition = StringUtil.null2str(authoritySearchVO
+				.getSearchCondition());
+		String searchKeyword = StringUtil.null2str(authoritySearchVO
+				.getSearchKeyword());
+		String isNumeric = StringUtil.isNumeric(searchKeyword) ? "true"
+				: "false";
 		String roleId = StringUtil.null2str(authoritySearchVO.getRoleId());
 
 		Object[] args = new Object[7];
@@ -60,14 +64,18 @@ public class AuthoritiesDaoHibernateImpl extends IamGenericDaoHibernate<Authorit
 		args[6] = "sord=" + sord;
 
 		@SuppressWarnings("unchecked")
-		List resultList = this.getDynamicHibernateService().findList("findAuthoritiesList", args, pageIndex, pageSize);
-		Long totalSize = (Long) this.getDynamicHibernateService().find("countAuthoritiesList", args);
+		List resultList = this.getDynamicHibernateService().findList(
+				"findAuthoritiesList", args, pageIndex, pageSize);
+		Long totalSize = (Long) this.getDynamicHibernateService().find(
+				"countAuthoritiesList", args);
 
-		Page resultPage = new Page(resultList, pageIndex, totalSize.intValue(), pageUnit, pageSize);
+		Page resultPage = new Page(resultList, pageIndex, totalSize.intValue(),
+				pageUnit, pageSize);
 		return resultPage;
 	}
 
-	public Page getExistList(AuthoritySearchVO authoritySearchVO) throws Exception {
+	public Page getExistList(AuthoritySearchVO authoritySearchVO)
+			throws Exception {
 		int pageIndex = authoritySearchVO.getPage();
 		int pageSize = authoritySearchVO.getRows();
 		if (pageSize <= 0)
@@ -75,8 +83,10 @@ public class AuthoritiesDaoHibernateImpl extends IamGenericDaoHibernate<Authorit
 		int pageUnit = this.getPropertiesService().getInt("PAGE_UNIT");
 		String sidx = StringUtil.null2str(authoritySearchVO.getSidx());
 		String sord = StringUtil.null2str(authoritySearchVO.getSord());
-		String searchCondition = StringUtil.null2str(authoritySearchVO.getSearchCondition());
-		String searchKeyword = StringUtil.null2str(authoritySearchVO.getSearchKeyword());
+		String searchCondition = StringUtil.null2str(authoritySearchVO
+				.getSearchCondition());
+		String searchKeyword = StringUtil.null2str(authoritySearchVO
+				.getSearchKeyword());
 		String roleId = StringUtil.null2str(authoritySearchVO.getRoleId());
 
 		Object[] args = new Object[6];
@@ -88,36 +98,42 @@ public class AuthoritiesDaoHibernateImpl extends IamGenericDaoHibernate<Authorit
 		args[5] = "roleId=" + roleId;
 
 		@SuppressWarnings("unchecked")
-		List resultList = this.getDynamicHibernateService().findList("findExistAuthoritiesList", args, pageIndex,
-				pageSize);
-		Long totalSize = (Long) this.getDynamicHibernateService().find("countExistAuthoritiesList", args);
+		List resultList = this.getDynamicHibernateService().findList(
+				"findExistAuthoritiesList", args, pageIndex, pageSize);
+		Long totalSize = (Long) this.getDynamicHibernateService().find(
+				"countExistAuthoritiesList", args);
 
-		Page resultPage = new Page(resultList, pageIndex, totalSize.intValue(), pageUnit, pageSize);
+		Page resultPage = new Page(resultList, pageIndex, totalSize.intValue(),
+				pageUnit, pageSize);
 		return resultPage;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List getGroupList(AuthoritySearchVO authoritySearchVO) throws Exception {
+	public List getGroupList(AuthoritySearchVO authoritySearchVO)
+			throws Exception {
 		String type = StringUtil.null2str(authoritySearchVO.getType());
 		String roleId = StringUtil.null2str(authoritySearchVO.getRoleId());
 		Object[] args = new Object[2];
 		args[0] = "type=" + type;
 		args[1] = "roleId=" + roleId;
 
-		List resultList = this.getDynamicHibernateService().findList("findAuthorityGroupList", args);
+		List resultList = this.getDynamicHibernateService().findList(
+				"findAuthorityGroupList", args);
 
 		return resultList;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List getGroupIdList(AuthoritySearchVO authoritySearchVO) throws Exception {
+	public List getGroupIdList(AuthoritySearchVO authoritySearchVO)
+			throws Exception {
 		String type = StringUtil.null2str(authoritySearchVO.getType());
 		String roleId = StringUtil.null2str(authoritySearchVO.getRoleId());
 		Object[] args = new Object[2];
 		args[0] = "type=" + type;
 		args[1] = "roleId=" + roleId;
 
-		List resultList = this.getDynamicHibernateService().findList("findGroupIdList", args);
+		List resultList = this.getDynamicHibernateService().findList(
+				"findGroupIdList", args);
 
 		return resultList;
 	}
@@ -125,15 +141,18 @@ public class AuthoritiesDaoHibernateImpl extends IamGenericDaoHibernate<Authorit
 	public void remove(String id, String type) throws Exception {
 		Query query = null;
 
-		if (type.equals("SUBJECT")) {
-			query = (Query) this.getSessionFactory().getCurrentSession().getNamedQuery("removeAuthoritiesBySubjectId");
-			query.setParameter("subjectId", id);
-			query.executeUpdate();
-		}
+		query = (Query) this.getSessionFactory().getCurrentSession()
+				.getNamedQuery("removeAuthoritiesBySubjectId");
+		query.setParameter("subjectId", id);
+		query.executeUpdate();
 
-		else {
-			throw new Exception();
-		}
+	}
+
+	public void removeAllAuthorities() throws Exception {
+
+		Query query = (Query) this.getSessionFactory().getCurrentSession()
+				.getNamedQuery("removeAllAuthorities");
+		query.executeUpdate();
 	}
 
 }

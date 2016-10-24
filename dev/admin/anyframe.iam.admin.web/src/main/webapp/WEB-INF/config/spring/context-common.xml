@@ -10,7 +10,7 @@
 	<context:property-placeholder
 		location="classpath:jdbc.properties" />
 		
-	<util:properties id="jdbcProperties" location="classpath:spring/jdbc.properties" />
+	<util:properties id="jdbcProperties" location="classpath:jdbc.properties" />
 
 	<bean class="org.springframework.context.support.ResourceBundleMessageSource"
 		id="messageSource">
