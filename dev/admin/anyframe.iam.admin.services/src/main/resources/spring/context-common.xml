@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+	<context:property-placeholder
+		location="classpath*:spring/jdbc.properties" />
+		
+	<util:properties id="jdbcProperties" location="classpath:spring/jdbc.properties" />
+
+	<bean class="org.springframework.context.support.ResourceBundleMessageSource"
+		id="messageSource">
+		<property name="basenames">
+			<list>
+				<value>message/message-generation</value>
+				<value>message/message-security</value>
+				<value>message/message-resource</value>
+				<value>message/message-viewresources</value>
+				<value>message/message-role</value>
+				<value>message/message-user</value>
+				<value>message/message-group</value>
+				<value>message/message-validator</value>
+				<value>message/message-restrictedtimes</value>
+				<value>message/message-resourcereload</value>
+				<value>anyframe/core/properties/messages/properties</value>
+				<value>anyframe/core/idgen/messages/idgeneration</value>
+				<value>anyframe/core/query/messages/query</value>
+				<value>anyframe/web/springmvc/messages/springmvc</value>
+				<value>anyframe/iam/core/messages/security</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="configurableCallBack" scope="prototype"
+		class="anyframe.common.config.ConfigurableCallback" />
+</beans>

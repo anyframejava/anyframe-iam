@@ -1,0 +1,587 @@
+
+<chapter id="anyframeiamadmin_usage">
+  <title>Overview of How to Use IAM Admin</title>
+
+  <para>IAM Admin is generally structured with following five menus.</para>
+
+  <itemizedlist>
+    <listitem>
+      <para><link linkend="anyframeiamadmin_usage_user_management">User
+      Management</link> : User and usergroup management menu</para>
+    </listitem>
+
+    <listitem>
+      <para><link linkend="anyframeiamadmin_usage_roles_management">Roles
+      Management</link> : ROLE management menu. Resources or user, usergroup
+      can be registered to a role.</para>
+    </listitem>
+
+    <listitem>
+      <para><link
+      linkend="anyframeiamadmin_usage_resource_management">Resource
+      Management</link> : Resource management menu. Register new resources or
+      delete or can set screen control function.</para>
+    </listitem>
+
+    <listitem>
+      <para><link
+      linkend="anyframeiamadmin_usage_restriction_management">Restriction
+      Management</link> : Menu to manage limits by time. Time limitation for
+      user, role and resource can be managed.</para>
+    </listitem>
+
+    <listitem>
+      <para><link linkend="anyframeiamadmin_usage_system_management">System
+      Management</link> : Enterprise application management menu. Provides
+      functions of reload and resource information gathering to apply changes
+      from IAM Admin.</para>
+    </listitem>
+  </itemizedlist>
+
+  <section id="anyframeiamadmin_usage_user_management">
+    <title>User Management</title>
+
+    <para>User Management menu provides overall management menu for users and
+    groups. Click on User List category displays a screen similar to
+    the following. <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="../image/anyframeiam_en/iam_useage_usermanagement_01_en.jpg" />
+        </imageobject>
+      </mediaobject></para>
+
+    <para>The menus on left of the screen shows the user group hierarchy
+    structure. Use top button to use fold or unfold functions. And create,
+    modify and delete group functions are available by right click on the
+    tree UI. Click on the group allows to check or modify detail information on
+    the group menu of tab menu on the right.</para>
+
+    <para>User list can be checked from Users tab. When a specific group was
+    selected from the left group menu, the users belonging to the group are
+    displayed. <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="../image/anyframeiam_en/iam_useage_usermanagement_02_en.jpg" />
+        </imageobject>
+      </mediaobject></para>
+
+    <para>Double clicking on an user from the user list moves to user detail
+    page. <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="../image/anyframeiam_en/iam_useage_usermanagement_03_en.jpg" />
+        </imageobject>
+      </mediaobject></para>
+
+    <para>User information can be modified from the detail page. A specific
+    role to an user can be registered or deleted from bottom ROLE LIST screen.
+    Register or delete a role can be done from <link
+    linkend="anyframeiamadmin_usage_roles_management">Roles
+    Management.</link></para>
+  </section>
+
+  <section id="anyframeiamadmin_usage_roles_management">
+    <title>Roles Management</title>
+
+    <para>Roles Management menu manages roles to be registered to an user or
+    resource. Click on the Role List menu displays the tree menu
+    showing hierarchy structure similar as user group menu. <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="../image/anyframeiam/iam_useage_rolesmanagement_01.jpg" />
+        </imageobject>
+      </mediaobject></para>
+
+    <para>Roles Management menu has 4 tab menus of Role, Resource List, User
+    Group and Users. Each menu is a screen displaying the registered
+    resources, groups or users when a specific role was selected from the role
+    tree on the left.</para>
+
+    <para>Resource List page displays the list of resources allocated to the
+    role selected from the left. One cautious thing for allocating a resource
+    to a role is role hierarchy structure. When a resource is allocated to a
+    sub-role, higher role potentially includes the resources of sub-role. So,
+    the higher role has the access authorization for sub-role resources
+    without registering the resources separately.</para>
+
+    <para>You can select to display only the resources allocated to current
+    role or all resources allocated to sub-role on the select box on top of
+    resource list screen. (This menu is allowed only to the user using Oracle
+    DB) The following screen is the searched result of all resources
+    allocated to sub-role. <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="../image/anyframeiam/iam_useage_rolesmanagement_02.jpg" />
+        </imageobject>
+      </mediaobject></para>
+
+    <para>Next menu is User Group tab menu. Selecting the User Group tab menu
+    displays the following screen. This screen performs function of allocating
+    specific roles to all users belonging to the group to improve trouble of
+    registering roles to users individually. The groups in left Multi-select
+    box are the list of groups allocated with roles selected from left role
+    menu. <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="../image/anyframeiam_en/iam_useage_rolesmanagement_03_en.jpg" />
+        </imageobject>
+      </mediaobject> <warning>
+        <title>Advice</title>
+
+        <para>Be careful as both of the role and user group have hierarchy
+        relation and can cause confusion. As described in role menu, access to
+        resources registered to sub-role is allowed to higher role user. But
+        don't forget that user group does not operate identically. The higher
+        group does not necessarily has access authority of sub-group in user
+        group menu. The role for the resources must be allocated in order for
+        higher group to have access authority. Make sure to not to use with confusion this function
+        with hierarchy structure of role menu.</para>
+      </warning></para>
+
+    <para>Click on Users tab menu displays the following 2 lists. Left menu is
+    the user list having no allocated roles and the right menu is the user
+    list allocated with selected roles. <mediaobject>
+        <imageobject>
+          <imagedata align="center"
+                     fileref="../image/anyframeiam_en/iam_useage_rolesmanagement_04_en.jpg" />
+        </imageobject>
+      </mediaobject></para>
+
+    <para>This menu registers individual user roles, which operates separately
+    with previously described role-group allocation. For example, when ROLE_A
+    is allocated to the GROUP_A where a specific user USER_A belongs to and a
+    different ROLE_B is allocated to the USER_A, the USER_A has access
+    authority for resources of both ROLE_A and ROLE_B. So, when allocating a
+    role to an user or user group, be careful for overlapping resource
+    allocation.</para>
+  </section>
+
+  <section id="anyframeiamadmin_usage_resource_management">
+    <title>Resource Management</title>
+
+    <para>Resource Management menu provides a menu to control access to
+    controlling resources. Resource Management menu has 3 detail menus of
+    Resource List, View List and View Mapping.</para>
+
+    <sect2 id="anyframeiam_usage_resource_management_sec001">
+      <title>Resource List</title>
+
+      <para>Let's take a look at Resource List menu first. List of currently
+      registered resources can be checked from Resource List menu. URL, Method
+      and PointCut are the 3 types of resource types and registered with each
+      special pattern form. URL resource can be registered as regular expression and
+      POINT CUT can be registered by using the pattern supported from AspectJ. Method type
+      resource is not supporting a specific pattern at the moment. Using the
+      patterns other than regular expression, Method resource pattern application and
+      others are planned to be reviewed on upcoming version.</para>
+
+      <para>Below screen is the resource list displayed when the Resource List
+      is selected. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam_en/iam_useage_resourcemanagement_01_en.jpg" />
+          </imageobject>
+        </mediaobject></para>
+
+      <para>Detail screen for the resource can be checked by double clicking
+      the specific resource. The detail page can enter below resource name, pattern,
+      detail, priority and others. The priority here means the prior matching
+      comparison order between overlapping registered resource patterns.
+      Meaning that matching with higher priority resource first and giving
+      authority. <para>For example, granting priority of 5 to product/*.do,
+      URL resource type, and 11 to product/add.do, 12 to product/getProduct.do
+      and 13 to product/updateProduct.do resources. The user is planning to
+      grant CRUD (create, read, update, delete) authority of the product to
+      administrator and grant create, read and update authority, but no
+      delete authority to general users. So, the user allocated product/*.do
+      resource to ROLE_ADMIN and product/add.do, product/getProduct.do and
+      product/updateProduct.do resources to ROLE_USER. But when resources were
+      allocated as this can cause the following issues. First, the user
+      allocated as administrator will be able to use all CRUD functions
+      without limits. But, when a general user calls product/getProduct.do URL
+      resource, the product/getProduct.do resource will be compared by
+      matching with resource patterns with priority as the base. So, the
+      product/*.do pattern with higher priority will be matching priorily to
+      compare product/*.do resource allocated ROLE_ADMIN authority and the
+      authority of current user. In the result, the general user access to
+      product/getProduct.do request will be denied as the user does not have
+      ROLE_ADMIN authority,</para> <para>The followings must be complied in
+      order to not to have errors as above. <warning>
+          <title>Advice</title>
+
+          <para>
+            <itemizedlist>
+              <listitem>
+                <para>Give priority to general resources (ex. *.do) as low as
+                possible (register with larger number).</para>
+              </listitem>
+
+              <listitem>
+                <para>Setting priority higher to frequently referred resources
+                will improve performance.</para>
+              </listitem>
+
+              <listitem>
+                <para>For the resources unnecessary to be registered as
+                secured resources, register the corresponding pattern in
+                intercept-url of http namespace tag in Spring Security's
+                default set up file as filters="none".</para>
+              </listitem>
+            </itemizedlist>
+          </para>
+        </warning></para> <para>The following figure is the detail information
+      screen by double clicking a specific resource. You can see that auto
+      complete function is being used when registering resource patterns.
+      <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam/iam_useage_resourcemanagement_02.jpg" />
+          </imageobject>
+        </mediaobject></para> The user basically needs to write resource
+      pattern fields. Auto complete function is supported on resource pattern
+      entry for convenience and prevent mistakes. When the pattern was
+      registered with auto complete function, using regular type and others to
+      register similar name resources in a bundle is not allowed. In such
+      case, clicking the direct entry check box of detail resource pattern
+      field will allow the user to register resource directly. In this case,
+      it is recommended to not to use this method unless the user is a expert
+      on pattern regular expression type as there is a possibility of application
+      malfunction by user mistakes.</para>
+
+      <para>Below figure is a screen you can see when you are entering URL
+      type resource patterns. URL pattern is composed with URL Request addess
+      on the left and parameters on the right. You can use parameters
+      selectively as they are not mandatory. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam/iam_useage_resourcemanagement_03.jpg" />
+          </imageobject>
+        </mediaobject></para>
+
+      <para>Below 3 figures are screens when entering Method type resource
+      patterns. Method pattern has total of 3 input field and they are
+      package, class and method entry fields from left. As the <link
+      linkend="anyframeiamadmin_usage_system_management">System
+      Management</link> menu's <link
+      linkend="anyframeiam_usage_system_management_sec002">Resource
+      Gathering</link> gathers and saves enterprise application resources, the
+      patterns can be entered easily by using auto complete function on
+      entering patterns. Writing orders of package information, class and
+      method from the left expresses 3 entries combines form in below detail
+      resource pattern category. The combined information is the pattern form
+      to be saved finally. <para>Enter package first. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam/iam_useage_resourcemanagement_04.jpg" />
+          </imageobject>
+        </mediaobject></para> <para>Enter class next. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam/iam_useage_resourcemanagement_05.jpg" />
+          </imageobject>
+        </mediaobject></para> <para>And enter method for last. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam/iam_useage_resourcemanagement_06.jpg" />
+          </imageobject>
+        </mediaobject></para> If you cannot remember resource name, enter a
+      space and all resource lists will be displayed. Enter resource patterns
+      with this result will be much easier.</para>
+
+      <para>Lastly, let's take a look at entering the POINTCUT type resources.
+      POINTCUT pattern has only one input field and when the user uses auto
+      complete function to write entry field, the below detail resource
+      pattern field completes it to AspectJ support pattern type. If you are
+      an expert on AspectJ supported PointCut type pattern, you can click the
+      Self Input check box and enter detail resource pattern field directly to
+      register numerous patterns as a bundle. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam/iam_useage_resourcemanagement_07.jpg" />
+          </imageobject>
+        </mediaobject> <para>
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+                         fileref="../image/anyframeiam/iam_useage_resourcemanagement_08.jpg" />
+            </imageobject>
+          </mediaobject>
+        </para></para>
+    </sect2>
+
+    <sect2 id="anyframeiam_usage_resource_management_sec002">
+      <title>View List</title>
+
+      <para>View List menu offers functions to register and modify/delete View
+      Resource for screen control according to the authorization. To control
+      the screen according to authority, use iam:access tag as the
+      followings on the page to surround the contents to control.
+      <programlisting language="xml">
+<![CDATA[<iam:access hasPermission="${iam:getPermissionMask(\"CREATE\")}" viewResourceId="listCategory">
+	<td><input type="button" name="addCategory" onClick="javascript:fncAddCategoryView();"></td>
+</iam:access>]]></programlisting>
+The screen to register, modify and delete
+      the resources corresponding with viewResourceId in the tag is the View
+      List menu.</para>
+
+      <para>Below screen is an example of View List page. Double clicking on a
+      specific View resource allows to move to detail sccreen. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam_en/iam_useage_resourcemanagement_09_en.jpg" />
+          </imageobject>
+        </mediaobject></para>
+
+      <para>Next is a View resource detail information page. The user needs to
+      enter View Resource ID directly and must pass overlap verification in
+      order to save successfully. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam_en/iam_useage_resourcemanagement_10_en.jpg" />
+          </imageobject>
+        </mediaobject></para>
+    </sect2>
+
+    <sect2 id="anyframeiam_usage_resource_management_sec003">
+      <title>View Mapping</title>
+
+      <para>View Mapping menu manages the View resources entered by the user
+      and allocations between user, group and role. Basically, as only the
+      user with the Permission assigned within iam:access by administrator has
+      the authority for tag contents, easy UI is offered to easily manage the
+      Permission from View Mapping screen.</para>
+
+      <para>Selecting the View Mapping menu will display the list of
+      users with Permissions to View resources. Reference Type category is
+      the category showing whether the Permission is allocated to an
+      individual user or group or a role. Note that Permission allocated
+      to a user has higher priority than user and user gruop than a role. For
+      example, let's assume the View resource authority for modification of
+      Update Category was given to 'ROLE_ADMIN' role and 'STAFF' group. SATFF
+      group is allocated with 'ROLE_STAFF', lower hierarchy of 'ROLE_ADMIN'.
+      So, the users allocated to 'ROLE_STAFF' other than STAFF group has no
+      authorities for View resource with Update Category ID, but only the
+      STAFF group has authority for the resource. Likewise, even when
+      resources are not allocated to the group, the authority for View
+      resource can be given to an individual user. As this regulation is
+      defined to set exception cases among all the users in a group, it is
+      recommended to create a new role and allocate authority to the role for
+      situation of necessary to give similar authorities to various users in a
+      group.</para>
+
+      <para>Below figure is an exmaple screen of allocation list displayed on
+      View Mapping menu selection. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam/iam_useage_resourcemanagement_11.jpg" />
+          </imageobject>
+        </mediaobject></para>
+
+      <para>The following figure is an example screen of allocating roles,
+      groups and users to View resources. Enter the View resource ID to be
+      managed on top of the screen and use Add Role, Add Group and
+      Add User buttons to give authority to the subject. Default setting
+      for Permission list is READ, WRITE, CREATE, DELETE, ADMINISTRATION,
+      LIST, PRINT and others as shown on below figure and the user can modify
+      with set up file. See the following <link
+      linkend="anyframeiamcore_customerconfiguration">Link</link> for user
+      setting change. <link
+      linkend="anyframeiamcore_customerconfiguration">IAM Core
+      Configuration</link> <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam_en/iam_useage_resourcemanagement_12_en.jpg" />
+			</imageobject>
+        </mediaobject></para>
+    </sect2>
+  </section>
+
+  <section id="anyframeiamadmin_usage_restriction_management">
+    <title>Restriction Management</title>
+
+    <para>Restriction Management offers various menus to manage the resources
+    depending by time. Restricted Times List and Times Mapping menus are the
+    detail menus.</para>
+
+    <sect2 id="anyframeiam_usage_restriction_management_sec001">
+      <title>Restricted Times List</title>
+
+      <para>Let's take a look at Restricted Times List screen first. Below
+      figure is an example screen displayed by clicking Restricted Times List
+      menu. This screen can register/modify/delete the date and time of
+      resources desired for limitation. Detail categories are Time Type,
+      start/end time, start/end date, description and others. Time Type has 5
+      categories of improve, daily, weekend, holiday and crash. These mean
+      system improvement, everyday, weekends, holidays and error occurrences
+      respectively. Pay attention when the weekend of Time Type was selected.
+      When set as weekly, users can assume that time control setting can be
+      possible for every weekends between start and end time, but <emphasis
+      role="bold">IT DOES NOT.</emphasis> The Time Type category is just a
+      field saving time resources as a text form for easier classification and
+      user must set the start date and end date personally. So, when the
+      user has set the start date to 091001 (Oct. 1, 2009) and end date to
+      091031 (Oct. 31, 2009) to control authorization for every weekends of
+      October, actual is that the authorization will be controlled for whole
+      October unlike the user's expectation. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam_en/iam_useage_restrictionmanagement_01_en.jpg" />
+          </imageobject>
+        </mediaobject></para>
+
+      <para>Double clicking on a specific time from Time List screen will move
+      to detail screen. Modification to the time resource from detail screen
+      is allowed. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam_en/iam_useage_restrictionmanagement_02_en.jpg" />
+          </imageobject>
+        </mediaobject></para>
+    </sect2>
+
+    <sect2 id="anyframeiam_usage_restriction_management_sec002">
+      <title>Times Mapping</title>
+
+      <para>Next screen is Times Mapping menu. The Times Mapping screen has
+      total of 3 tab menus of Time-Role, Time-Resource and
+      Time-Exclusion.</para>
+
+      <para>First, let's take a look at Time-Role menu. The Time-Role menu
+      restricts users with specific roles for a specific time by allocating
+      roles to time resources created from previous Restricted Times List
+      screen. Click on Time-Role menu to see below screen. Below list screen
+      lists the user configured time and allocated roles one by one. Double
+      click on a specific allocation to move to detail screen. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam_en/iam_useage_restrictionmanagement_03_en.jpg" />
+          </imageobject>
+        </mediaobject></para>
+
+      <para>Below screen is a detail information page showing allocation
+      information between time-00001 and ROLE_MANAGER. First, enter the
+      desired time restrict ID by finding from Time ID field and double click
+      on the restriction desired role from below ROLES LIST will display the
+      role list on the right. One thing to be careful here is, if the user has
+      set time restriction for a specific role, the roles under the role also
+      has time restriction. For example, when time was restricted from 000000
+      to 235959 to ROLE_MANAGER role as below figure for error handling
+      purpose, the users belonging to ROLE_USER and
+      ISAUTHENTICATED_ANONYMOUSLY roles are also restricted from 000000 to
+      235959. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam_en/iam_useage_restrictionmanagement_07_en.jpg" />
+          </imageobject>
+        </mediaobject></para>
+
+      <para>Next, let's take a look at Time-Resource menu. The Time-Resource
+      menu is to control access authority to a specific resource for a
+      specific time. The list of resources allocated for a specific time can
+      be seen. Double click on a specific Time ID displays the detail screen
+      page to check resource lilsts allocated to the time and descriptions.
+      Below figure is a detail description page of Time-Resource list. To set
+      resource restriction by time, select the desired time's Time ID from top
+      Time ID field first and click below Add Resource button to check the
+      displaying pop-up. Click the desired resource from the pop-up window and
+      Add button displays the resource being allocated on detail screen page.
+      <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam_en/iam_useage_restrictionmanagement_04_en.jpg" />
+          </imageobject>
+        </mediaobject></para>
+
+      <para>The menu to look at for last is Time-Exclusion. This menu can set
+      exceptional cases for access restriction depending on time configured
+      from Time-Resource menu. In other words, applying exception case by
+      opening the system exceptionally to a user with administrator authority
+      after blocking access to entire system for error recovery. Click on
+      Time-Exclusion menu displays the list as below figure. Double click on a
+      specific category to move to a detail list page. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam_en/iam_useage_restrictionmanagement_05_en.jpg" />
+          </imageobject>
+        </mediaobject></para>
+
+      <para>Below figure is the detail screen page of Time-Exclusion. To give
+      exclude condition for time restriction, use the search button on the
+      right of top Resource ID field first to check if there is an allocation
+      assigned between Time and Resource. Click the search button displays the
+      existing Time-Resource allocation list, from this, click the resource
+      desired for exclusion. And the following detail categories are completed
+      automatically then open below Role Tree and double click on the role
+      desired for exclusion displays the corresponding role as a list on the
+      right. One thing to be careful here is, the existing roles higher than
+      the role set as exclusion by user also gets access restriction
+      cancelled. For example, when the ROLE_MANAGER role user is set as
+      exclusion from web-000013 resource restriction as below figure, the
+      users belonging to ROLE_ADMIN, the higher users of ROLE_MANAGER, also
+      get restriction cancellations for web-000013 resource. So, keep in mind
+      that the higher roles user of the roles set as exclusion also get
+      restriction cancellation when setting exclusions. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam_en/iam_useage_restrictionmanagement_06_en.jpg" />
+          </imageobject>
+        </mediaobject></para>
+    </sect2>
+  </section>
+
+  <section id="anyframeiamadmin_usage_system_management">
+    <title>System Management</title>
+
+    <para>System Management menu offers simple control functions for business
+    application. System Management menu has 2 sub-menus of Resource Reload and
+    Resource Gathering.</para>
+
+    <sect2 id="anyframeiam_usage_system_management_sec001">
+      <title>Resource Reload</title>
+
+      <para>Resource Reload menu offers the functions to apply the settings
+      from 4 previously explained menus. Basically, to apply the changes, the
+      business application server must restart, but using this function allows
+      applying the settings without restarting the server. Click on Resource
+      Reload menu displays the following figure screen. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam/iam_useage_systemmanagement_01.jpg" />
+          </imageobject>
+        </mediaobject></para>
+
+      <para>Select the target application server and choose to reload the
+      information for user/role/resource or reload information of time
+      management menu from Select Box, then clicking the below Reload button
+      will display completion message after a moment of loading.</para>
+
+      <para>This action must be performed when the target application server
+      is in operation. Or the following error messages will display.
+      <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam_en/iam_useage_systemmanagement_02_en.jpg" />
+          </imageobject>
+        </mediaobject></para>
+    </sect2>
+
+    <sect2 id="anyframeiam_usage_system_management_sec002">
+      <title>Resource Gathering</title>
+
+      <para>Resource Gathering menu offers functions to gather information of
+      target application. Using this function gathers target application bean
+      setting and Request URL address and others and save temporarily. Saved
+      information provides convenience to users to register resources more
+      easily through auto complete function when registering resources from
+      Resource Managment menu. Click on Resource Gathering menu displays the
+      screen as below figure. Select the application server desired for
+      resource gathering and click on Reload button will display completion
+      message after a moment of loading. <mediaobject>
+          <imageobject>
+            <imagedata align="center"
+                       fileref="../image/anyframeiam/iam_useage_systemmanagement_03.jpg" />
+          </imageobject>
+        </mediaobject></para>
+    </sect2>
+  </section>
+</chapter>

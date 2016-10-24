@@ -1,0 +1,444 @@
+/********************************************************************************/
+/*	 eMarketPlace Cascading Style Sheet																				*/
+/*       2006. 12. 22 																												*/
+/********************************************************************************/
+
+html,body {
+min-height: 100%;
+}
+  
+body { margin-top:0; margin-left:2; margin-right:0; margin-bottom:0; }
+td { font-size: 9pt; color: #58595B; font-style: normal; font-weight: normal; font-family:"돋움";}
+
+A:link    {font-size: 11px; COLOR: #333333; text-decoration: none; font-family: "돋움"; selector-dummy:expression(this.hideFocus=true); -moz-outline-style: none;}
+a:visited {font-size: 11px; color: #333333; text-decoration: none; font-family: "돋움"; selector-dummy:expression(this.hideFocus=true); -moz-outline-style: none;}
+a:active  {font-size: 11px; color: #333333; text-decoration: none; font-family: "돋움"; selector-dummy:expression(this.hideFocus=true); -moz-outline-style: none;}
+a:hover   {font-size: 11px; color: #000000; text-decoration: none; font-family: "돋움"; selector-dummy:expression(this.hideFocus=true); -moz-outline-style: none;}
+a:clicked {font-size: 11px; color: #000000; text-decoration: none; font-family: "돋움"; selector-dummy:expression(this.hideFocus=true); -moz-outline-style: none;}
+
+/* Title */
+
+
+.title  {
+    font-size: 11px;
+	font-family:"verdana","돋움";
+	font-weight:bold;
+	color: #4F8AC4;
+	width: 562px;
+	height: 14px;
+	padding-left: 21px;
+	padding-top: 2px;
+	margin-top:13px;
+	background: #FFFFFF url(../images/content/ttl_head1.gif) no-repeat left center;
+	border-bottom: 1px solid #D5D4CA;
+	border-top: 1px solid #D5D4CA;
+	
+}
+
+.errortitle  {
+    font-size: 11px;
+	font-family:"verdana","돋움";
+	font-weight:bold;
+	color: #4F8AC4;
+	width: 562px;
+	height: 24px;
+	padding-left: 28px;
+	padding-bottom: 2px;
+	margin-top:13px;
+	background: #F3F3F3 url(../images/content/ttl_head2.gif) no-repeat left center;
+	
+}
+.checkidtitle  {
+    font-size: 11px;
+	font-family:"verdana","돋움";
+	font-weight:bold;
+	color: #ffffff;
+	width: 285px;
+	height: 44px;
+	padding-left: 38px;
+	padding-bottom: 3px;
+	margin-top:0px;
+	background: #F3F3F3 url(../images/content/ttl_checkid.gif) no-repeat left center;
+	
+}
+
+.checkGrouptitle  {
+    font-size: 11px;
+	font-family:"verdana","돋움";
+	font-weight:bold;
+	color: #ffffff;
+	width: 285px;
+	height: 44px;
+	padding-left: 38px;
+	padding-bottom: 3px;
+	margin-top:0px;
+	background: #F3F3F3 url(../images/content/ttl_checkgroup.gif) no-repeat left center;
+	
+}
+
+.checkResource  {
+    font-size: 11px;
+	font-family:"verdana","돋움";
+	font-weight:bold;
+	color: #ffffff;
+	width: 285px;
+	height: 44px;
+	padding-left: 38px;
+	padding-bottom: 3px;
+	margin-top:0px;
+	background: #F3F3F3 url(../images/content/ttl_checkresource.gif) no-repeat left center;
+	
+}
+
+.ct_input_g    {
+    font-family:"돋움";
+    font-size:1.0em;
+    border:1px solid #9CACC5; color:#777777; 
+	background-color:#fffff3px 2px 0px 2px  ;
+	}
+
+.ct_txt_g    {
+    font-size:11px;
+	color:#000000; 
+    background-color:#eeeeee; font-family:"verdana"; padding-left:15px;
+	width: 123px; height: 30px
+	}
+
+
+/* layout login */
+#wrapper {
+	width: 600px;
+	height: 370px;
+	text-align: center;
+	border:1px solid #CECECE;
+	background-color: #FFFFFF center top;
+
+}
+
+
+#main_img { 
+	width: 600px;
+	height: 282px;
+	background: url(../images/login2.gif) no-repeat left top;
+	}
+	
+#foot {
+    width: 600px;
+	height: 30px;
+	/*background: url(../images/foot_index.gif) no-repeat left center;*/
+	
+ 	}
+
+#footSub {
+    width: 780px;
+	height: 40px;
+	background: url(../images/foot_sub.gif) no-repeat left center;
+	
+ 	}
+	
+/* text color */
+
+   .blkbold {
+    font-size: 11px;
+	font-family:"돋움";
+	color: #333333;
+	font-weight:bold;
+	}
+ 
+ 
+ .boldBtn {
+	font-size: 12px;
+	font-family:"돋움";
+	color: #393939;
+	font-weight:bold;
+	text-indent: 0px;
+	height:10px;
+ 	}
+	
+.boldBtn  A:link    {
+	font-size: 12px;
+	font-family:"돋움";
+	color: #393939;
+	font-weight:bold;
+	text-indent: 0px;
+	height:10px;
+	padding: 0px 0 0px 0;
+
+    }
+	
+.boldBtn  A:hover    {
+	font-size: 12px;
+	font-family:"돋움";
+	color: #000000;
+	font-weight:bold;
+	text-indent: 0px;
+	height:10px;
+
+    }
+.boldBtn  A:visited    {
+	font-size: 12px;
+	font-family:"돋움";
+	color: #000000;
+	font-weight:bold;
+	text-indent: 0px;
+	height:10px;
+
+    } 
+	
+	.smallBtn {
+	font-size: 11px;
+	font-family:"돋움";
+	color: #333333;
+	font-weight:normal;
+	text-indent: 0px;
+ 	}
+   a.smallBtn {
+	font-size: 11px;
+	font-family:"돋움";
+	color: #333333;
+	font-weight:normal;
+	text-indent: 0px;
+ 	}
+   
+   .whiteBtn { 
+	font-size: 11px;
+	font-family:"돋움";
+	color: #ffffff;
+	font-weight:bold;
+	text-indent: 0px;
+ 	}
+	
+   .blue_h2 { 
+	font-size: 14px;
+	font-family:"돋움";
+	color: #4477A0;
+	font-weight:bold;
+ 	}
+
+   .blue_h3 { 
+	font-size: 12px;
+	font-family:"돋움"
+	line-height: 12px;
+	color: #3869B4;
+	height: 12px;
+	font-weight:normal;
+	text-indent: 0px;
+ 	}
+   .blue_h3 a:visited { color: #3869B4 ; text-decoration: none;} 
+	
+   .sky_h3 { 
+	font-size: 12px;
+	font-family:"돋움"
+	line-height: 12px;
+	color: #3299CF;
+	height: 12px;
+	font-weight:bold;
+	text-indent: 0px;
+ 	}
+	
+   .pink_h3 { 
+	font-size: 11px;
+	font-family:"verdana";
+	line-height: 10px;
+	color: #FF6E86;
+	height: 30px;
+	font-weight:normal;
+	text-indent: 0px;
+ 	}
+	.pink_h3 a:visited { color: #FF6E86 ; text-decoration: none;} 
+	
+/*layout top */
+
+#frame_top {
+	width: 100%
+	height: 79px;
+	text-align: center;
+	border:1px solid #CECECE;
+	background: url(../images/bg_topframe.gif) repeat left top;
+}
+
+
+/* message Page */
+
+#error { 
+	width: 517px;
+	height: 78px;
+	background: url(../images/bg_error.gif) no-repeat left top;
+	}
+	
+
+#message { 
+	width: 517px;
+	height: 78px;
+	background: url(../images/bg_error.gif) no-repeat left top;
+	}
+
+/* jquery ui css */
+#button_link {font-size: 11px; font-weight:bold; padding: 4px 9px 2px 20px;text-decoration: none;position: relative;}
+#button_link span.ui-icon {font-size: 11px; font-weight:bold; margin: 0 5px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
+#button_links {font-size: 11px; font-weight:normal; height:20px; padding:0px 8px 0px 20px;text-decoration: none;position: relative;}
+#button_links span.ui-icon {font-size: 11px; font-weight:normal; margin: 10px 0px 0 0;position: absolute;left: .2em;top: 50%;margin-top: -8px;}
+ul#icons {margin: 0; padding: 0;}
+ul#icons li {margin: 0; position: relative; padding: 0px 9px 2px 20px; cursor: hand; float: left;  list-style: none;}
+ul#icons span.ui-icon {float: left; margin: 0 0px;}
+
+
+/***** LAYOUT *******/
+
+/* Button */
+
+a.searchBtn {
+    display:block; 
+    background: transparent url(../images/btn/btn_search.gif) no-repeat 0px 0px;
+	width: 21px;
+	height: 19px;
+	text-indent:-9999px;
+}
+
+/*  tree menu */
+
+#menuopen {
+    width: 23px;
+	height: 27px;
+}
+
+#menuopen a { display:block; width:23px; height:27px; text-indent:-9999px;}
+a.openBtn {background: transparent url(../images/tree/btn_open_tree.gif) no-repeat 0px 0px;}
+a.openBtn:hover {background: transparent url(../images/tree/btn_open_tree.gif) no-repeat 0px -52px;}
+
+#menuclose {
+    width: 23px;
+	height: 27px;
+}
+
+#menuclose a { display:block; width:23px; height:27px; text-indent:-9999px; }
+a.closeBtn {background: transparent url(../images/tree/btn_close_tree.gif) no-repeat 0px 0px;}
+a.closeBtn:hover {background: transparent url(../images/tree/btn_close_tree.gif) no-repeat 0px -52px;}
+
+/* shift Btn */
+#shiftBtn {
+    padding: 5px 5px 5px 5px;
+    width: 21px;
+	height: 39px;
+}
+
+#shiftBtn  a { display:block; width:21px; height:39px; text-indent:-9999px;}
+a.outBtn {background: transparent url(../images/btn_shift01.gif) no-repeat;}
+a.inBtn {background: transparent url(../images/btn_shift02.gif) no-repeat;}
+
+/* Select Drop */
+.dropb {
+BORDER-RIGHT: #c0c0c0 2px solid; BORDER-TOP: #c0c0c0 2px solid; FONT: 12px 돋움,VT100, Arial, Helvetica; BORDER-LEFT: #c0c0c0 2px solid; WIDTH: 115px; COLOR: #505050; BORDER-BOTTOM: #c0c0c0 2px solid
+}
+
+
+/* Tab NAVIGATION2 */
+.selected {
+	background-position:0 0px;
+	color: #000000;
+	font-weight: bold;
+}
+
+.selectedTab {
+	background: url(../images/content/tab_menu1.gif) no-repeat 5px;
+	background-position:0 0px;
+	color: #000000;
+	font-weight: bold;
+}
+
+#groupTab a:hover {
+	text-decoration: none;
+	color: #000000;
+	font-weight: bold;
+}
+
+#usersTab a:hover {
+	text-decoration: none;
+	color: #000000;
+	font-weight: bold;
+}
+
+#roleInfoTab a:hover {
+	text-decoration: none;
+	color: #000000;
+	font-weight: bold;
+}
+
+#resourceListTab a:hover {
+	text-decoration: none;
+	color: #000000;
+	font-weight: bold;
+}
+
+#userGroupTab a:hover {
+	text-decoration: none;
+	color: #000000;
+	font-weight: bold;
+}
+
+#timeRoleTab a:hover {
+	text-decoration: none;
+	color: #000000;
+	font-weight: bold;
+}
+
+#timeResourceTab a:hover {
+	text-decoration: none;
+	color: #000000;
+	font-weight: bold;
+}
+
+#timeExclusionTab a:hover {
+	text-decoration: none;
+	color: #000000;
+	font-weight: bold;
+}
+
+
+/* Table */
+
+.tdHead  {
+    font-size: 12px;
+	font-family:"돋움";
+	font-weight:normal;
+	color: #6C6C6C;
+	height:25px;
+	padding-left: 15px;
+	background: #ECF5F6;
+}
+.tdHeadGrey {
+    font-size: 12px;
+	font-family:"돋움";
+	font-weight:normal;
+	color: #6C6C6C;
+	height:25px;
+	padding-left: 15px;
+	background: #F3F3F3;
+}
+
+.tdin  {
+    font-size: 12px;
+	font-family:"돋움";
+	font-weight:normal;
+	color: #6C6C6C;
+	padding-left: 10px;
+	background: #FFFFFF;
+}
+
+.tdBtnRight {
+    padding-left: 4px;
+}
+
+.tdpadding {
+    padding-left: 3px;
+}
+
+.tablemargin {
+    margin :10px;
+}
+.boxpadding  {
+    padding: 8px 20px 8px 20px;
+}
+
+/* Login error
+----------------------------------*/

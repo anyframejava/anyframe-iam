@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
+<dynamic-hibernate>
+	<query name="findViewResourceList">
+		<![CDATA[
+		FROM ViewResource viewResource 
+		#if($keywordNum != "")
+			WHERE
+			#if($condition == "viewResourceId")
+				viewResource.viewResourceId like :keywordStr 
+			#elseif($condition == "category")
+				viewResource.category like :keywordStr
+			#elseif($condition == "viewName")
+				viewResource.viewName like :keywordStr
+			#elseif($condition == "viewInfo")
+				viewResource.viewInfo like :keyworkStr
+			#end		
+		#end
+		#if($sidx == "category")
+			order by	viewResource.category
+		#elseif($sidx == "viewName")
+			order by	viewResource.viewName
+		#elseif($sidx == "viewInfo")
+			order by	viewResource.viewInfo
+		#else
+			order by	viewResource.viewResourceId
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end
+				
+		]]>
+	</query>
+
+	<query name="countViewResourceList">
+		<![CDATA[
+		SELECT count(*) 
+		FROM ViewResource viewResource 
+		#if($keywordNum != "")
+			WHERE
+			#if($condition == "viewResourceId")
+				viewResource.viewResourceId like :keywordStr 
+			#elseif($condition == "category")
+				viewResource.category like :keywordStr
+			#elseif($condition == "viewName")
+				viewResource.viewName like :keywordStr
+			#elseif($condition == "viewInfo")
+				viewResource.viewInfo like :keyworkStr
+			#end		
+		#end		
+		]]>
+	</query>	
+	
+	<query name="findViewMappingList">
+		<![CDATA[
+		SELECT new Map( 
+			CONCAT(viewResource.viewResourceId, viewResourcesMapping.id.refId) as compKey,
+			viewResource.viewResourceId as viewResourceId, 
+			viewResource.viewName as viewName, 
+			viewResource.category as category, 
+			viewResourcesMapping.id.refId as refId, 
+			viewResourcesMapping.permissions as permissions, 
+			viewResourcesMapping.refType as refType)
+		FROM ViewResource viewResource, ViewResourcesMapping viewResourcesMapping
+		WHERE
+			viewResource.viewResourceId = viewResourcesMapping.id.viewResourceId
+		#if($keywordNum != "")
+			#if($condition == "viewResourceId")
+				AND viewResource.viewResourceId like :keywordStr
+			#elseif($condition == "viewName")
+				AND viewResource.viewName like :keywordStr
+			#elseif($condition == "category")
+				AND viewResource.category like :keywordStr
+			#elseif($condition == "refId")
+				AND viewResourcesMapping.id.refId like :keywordStr
+			#elseif($condition == "permissions")
+				AND viewResourcesMapping.permissions like :keywordStr
+			#end
+		#end		
+		#if($type == "USER" || $type == "ROLE")
+			AND viewResourcesMapping.refType like :type
+		#end
+		#if($sidx == "category")
+			order by	viewResource.category
+		#elseif($sidx == "viewName")
+			order by	viewResource.viewName
+		#elseif($sidx == "refId")
+			order by	viewResourcesMapping.id.refId
+		#elseif($sidx == "refType")
+			order by	viewResourcesMapping.refType
+		#elseif($sidx == "permissions")
+			order by	viewResourcesMapping.permissions
+		#else
+			order by	viewResource.viewResourceId
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end
+		]]>
+	</query>
+	
+	<query name="countViewMappingList">
+		<![CDATA[
+		SELECT count(*)
+				FROM ViewResource viewResource, ViewResourcesMapping viewResourcesMapping
+		WHERE
+			viewResource.viewResourceId = viewResourcesMapping.id.viewResourceId
+		#if($keywordNum != "")
+			#if($condition == "viewResourceId")
+				AND viewResource.viewResourceId like :keywordStr
+			#elseif($condition == "viewName")
+				AND viewResource.viewName like :keywordStr
+			#elseif($condition == "category")
+				AND viewResource.category like :keywordStr
+			#elseif($condition == "refId")
+				AND viewResourcesMapping.id.viewResourceId like :keywordStr
+			#end
+		#end		
+		#if($type == "USER" || $type == "ROLE")
+			AND viewResourcesMapping.refType like :type
+		#end
+		]]>
+	</query>
+</dynamic-hibernate>

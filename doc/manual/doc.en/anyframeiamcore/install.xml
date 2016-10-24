@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="anyframeiamcore_install">
+  <title>IAM Core Install</title>
+
+  <para>IAM Core must be installed on the system to use Anyframe IAM. This
+  document describes how to install IAM Core on the system.</para>
+
+  <itemizedlist>
+    <para>IAM Core installing procedures are the followings.</para>
+
+    <listitem>
+      <para>jar and xml file deployment</para>
+    </listitem>
+
+    <listitem>
+      <para>Configuration</para>
+    </listitem>
+  </itemizedlist>
+
+  <section id="anyframeiamcore_corelibraryinstall">
+    <title>jar and xml file deployment Configuration</title>
+
+    <itemizedlist>
+      <para>Following files are needed to install IAM Core.</para>
+
+      <listitem>
+        <para>anyframe.iam.core-1.0.0.jar</para>
+      </listitem>
+
+      <listitem>
+        <para>anyframe.common-4.0.0.jar</para>
+      </listitem>
+
+      <listitem>
+        <para>spring-security-acl-2.0.4.jar</para>
+      </listitem>
+
+      <listitem>
+        <para>spring-security-core-2.0.4.jar</para>
+      </listitem>
+
+      <listitem>
+        <para>spring-security-core-tiger-2.0.4.jar</para>
+      </listitem>
+
+      <listitem>
+        <para>spring-security-taglibs-2.0.4.jar</para>
+      </listitem>
+
+      <listitem>
+        <para>applicationContext-spring_security-2.0.4.xml</para>
+      </listitem>
+
+      <listitem>
+        <para>spring-security-servlet.xml</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section id="anyframeiamcore_customerconfiguration">
+    <title>IAM Core Configuration</title>
+
+    <sect2 id="anyframeiamcore_customerconfiguration_sec001">
+      <title>web.xml</title>
+
+      <para>Make all the web requests to be sent to DelegatingFilterProxy of
+      Spring Security. Add the followings to web.xml setting.</para>
+
+      <programlisting language="xml">
+<![CDATA[<filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>
+
+<filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>]]>
+      </programlisting>
+    </sect2>
+
+    <sect2 id="anyframeiamcore_customerconfiguration_sec002">
+      <title>Spring Bean</title>
+
+      <para>Secured Resource Mapping, Role Hierarchy Structure, User
+      Authorization and Access Control Permission can be configured.</para>
+
+      <para>
+        <emphasis role="bold">Secured Resource Mapping</emphasis>
+      </para>
+
+      <itemizedlist>
+        <para>Basic queries for secured resource mapping are offered as the
+        followings and each query can be modified to suit the system with
+        securedObjectDAO bean property setting. must be matching with field
+        alias on modification.</para>
+
+        <listitem>
+          <para>url type secured resource / Role mapping (sqlRolesAndUrl)
+          <programlisting>
+<![CDATA[SELECT a.resource_pattern url, b.role_id authority
+FROM secured_resources a, secured_resources_roles b
+WHERE a.resource_id = b.resource_id
+    AND a.resource_type = 'url'
+ORDER BY a.sort_order, a.resource_id]]>
+          </programlisting></para>
+        </listitem>
+
+        <listitem>
+          <para>method type secured resource / Role mapping
+          (sqlRolesAndMethod) 
+          <programlisting>
+<![CDATA[SELECT a.resource_pattern method, b.role_id authority
+FROM secured_resources a, secured_resources_roles b
+WHERE a.resource_id = b.resource_id
+    AND a.resource_type = 'method'
+ORDER BY a.sort_order, a.resource_id]]>
+          </programlisting>
+          </para>
+        </listitem>
+
+        <listitem>
+          <para>pointcut type secured resource / Role mapping
+          (sqlRolesAndPointcut) 
+          <programlisting> 
+<![CDATA[		
+SELECT a.resource_pattern pointcut, b.role_id authority
+FROM secured_resources a, secured_resources_roles b
+WHERE a.resource_id = b.resource_id
+    AND a.resource_type = 'pointcut'
+ORDER BY a.sort_order, a.resource_id]]>
+          </programlisting></para>
+        </listitem>
+
+        <!--				
+				<listitem>request best matching url 보호자원 / Role 매핑(sqlRegexMatchedRequestMapping) - 필요 없을거 같음
+					<programlisting>
+					<![CDATA[		
+SELECT a.resource_pattern uri, b.role_id authority
+FROM secured_resources a, secured_resources_roles b
+WHERE a.resource_id = b.resource_id
+    AND a.resource_id =
+        ( SELECT resource_id FROM
+            ( SELECT resource_id, ROW_NUMBER() OVER (ORDER BY sort_order) resource_order FROM secured_resources c
+            WHERE REGEXP_LIKE ( :url, c.resource_pattern )
+                AND c.resource_type = 'url'
+            ORDER BY c.sort_order )
+        WHERE resource_order = 1 )
+					]]>
+					</programlisting>
+				</listitem>
+
+				<listitem>Role Hierarchy(sqlHierarchicalRoles)
+					<programlisting>
+					<![CDATA[		
+SELECT a.child_role child, a.parent_role parent
+FROM roles_hierarchy a LEFT JOIN roles_hierarchy b on (a.child_role = b.parent_role)
+					]]>
+					</programlisting>
+				</listitem>
+				
+				<listitem>실행시간 권한제어 restricted times roles 매핑(sqlRestrictedTimesRoles) - 필요 없을거 같음
+					<programlisting>
+					<![CDATA[		
+SELECT time_type, a.time_id as time_id, start_date, start_time, end_date, end_time, role_id
+FROM restricted_times a, restricted_times_roles b
+WHERE a.time_id = b.time_id
+ORDER BY time_type, start_date, start_time, end_date, end_time
+					]]>
+					</programlisting>
+				</listitem>
+				<listitem>실행시간 권한제어 restricted times resources 매핑(sqlRestrictedTimesResources) - 필요 없을거 같음
+					<programlisting>
+					<![CDATA[		
+SELECT time_type, a.time_id as time_id, start_date, start_time, end_date, end_time, b.resource_id as resource_id, resource_pattern, role_id as exclusion_role_id
+FROM restricted_times a,
+    restricted_times_resources b left outer join times_resources_exclusion c
+    on (b.time_id = c.time_id and b.resource_id = c.resource_id)
+    , secured_resources d
+WHERE a.time_id = b.time_id
+    AND b.resource_id = d.resource_id
+    AND d.resource_type = 'url'
+ORDER BY d.sort_order, time_type, start_date, start_time, end_date, end_time
+					]]>
+					</programlisting>				
+				</listitem>
+				<listitem>조건(ROLE 리스트, 사용자 아이디)에 따른 view resource 매핑(sqlViewResourceMapping) - 필요 없을거 같음
+					<programlisting>
+					<![CDATA[		
+SELECT view_resource_id, ref_type, ref_id, mask, permissions
+FROM view_resources_mapping
+WHERE view_resource_id = :viewResourceId
+AND (
+            ( ref_id IN ( {{userRoleList}} ) AND ref_type = 'ROLE' )
+        OR ( ref_id = :userId AND ref_type = 'USER' )
+        OR ( ref_id = :groupId AND ref_type = 'GROUP' )
+    )
+ORDER BY CASE ref_type WHEN 'USER' THEN 1 WHEN 'GROUP' THEN 2 WHEN 'ROLE' THEN 3 ELSE 10 END, ref_id
+					]]>
+					</programlisting>
+				</listitem>
+-->
+      </itemizedlist>
+
+      <para>url type secured resource / Role mapping (sqlRolesAndUrl) setup
+      example</para>
+
+      <programlisting language="xml">
+<![CDATA[<b:bean id="securedObjectDAO" class="anyframe.iam.core.securedobject.impl.SecuredObjectDAO">
+    <b:property name="dataSource" ref="dataSource" />
+    <b:property name="sqlRolesAndUrl">
+        <b:value>
+        SELECT a.resource_pattern url, b.role_id authority
+        FROM secured_resources a, secured_resources_roles b
+        WHERE a.resource_id = b.resource_id
+            AND a.resource_type = 'url'
+        ORDER BY a.sort_order, a.resource_id
+        </b:value>
+    </b:property>
+</b:bean>]]>
+      </programlisting>
+
+      <para>
+        <emphasis role="bold">Role Hierarchy</emphasis>
+      </para>
+
+      <itemizedlist>
+        <para>Basic query about Role hierarchy is given as following 
+        and it can be modified to target application by setting securedObjectDAO bean property.
+        Modify must be
+        matching with field alias on modification.</para>
+
+        <listitem>
+          <para>Role Hierarchy(sqlHierarchicalRoles) 
+          <programlisting>
+ <![CDATA[SELECT a.child_role child, a.parent_role parent
+FROM roles_hierarchy a LEFT JOIN roles_hierarchy b on (a.child_role = b.parent_role)]]>
+          </programlisting></para>
+        </listitem>
+      </itemizedlist>
+
+      <para>
+        <emphasis role="bold">User Authorization</emphasis>
+      </para>
+
+      <para>Basic setup related with user authorization are offered and able
+      to suit to target system. Field alias and order must be kept on
+      modification. <emphasis role="bold"> USER_ID, PASSWORD and ENABLED
+      information based on basic handling of Spring Security must be shown as
+      initial 3 inquiry fields.</emphasis></para>
+
+      <programlisting language="xml">
+<![CDATA[<b:bean id="jdbcUserService"
+    class="anyframe.iam.core.userdetails.jdbc.ExtJdbcUserDetailsManager" >
+    <!-- USER_ID, PASSWORD, ENABLED should be placed in ordered 1, 2, 3 -->
+    <b:property name="usersByUsernameQuery" 
+    	value=
+    	"SELECT USER_ID, PASSWORD, 
+	    	CASE WHEN ENABLED = 'Y' THEN 1 ELSE 0 END 
+	    	ENABLED, USER_NAME, CREATE_DATE, MODIFY_DATE 
+	    FROM USERS WHERE USER_ID = ?"/>
+    <b:property name="authoritiesByUsernameQuery">
+        <b:value>
+        SELECT USER_ID,ROLE_ID,GROUP_ID,SUBJECT_ID,TYPE
+        FROM AUTHORITIES C, (
+            SELECT A.USER_ID,B.GROUP_ID
+                FROM USERS A LEFT OUTER JOIN GROUPS_USERS B ON ( A.USER_ID = B.USER_ID )
+            WHERE A.USER_ID = ? ) D
+        WHERE ( C.SUBJECT_ID = D.USER_ID
+                OR C.SUBJECT_ID = D.GROUP_ID )
+        </b:value>
+    </b:property>
+    <b:property name="dataSource" ref="dataSource"/>
+</b:bean>]]>
+      </programlisting>
+
+      <para>User informaton by usersByUsernameQuery query is handled with
+      Map.</para>
+
+      <para>
+        <emphasis role="bold">Access Control Permission</emphasis>
+      </para>
+
+      <itemizedlist>
+        <para>Access Control Permission are offered as the followings.
+        Authorities necessary for target system can be applied
+        selectively.</para>
+
+        <listitem>
+          <para>Basic Authority: READ, WRITE, CREATE, DELETE,
+          ADMINISTRATION</para>
+        </listitem>
+
+        <listitem>
+          <para>Additional Authority: LIST, PRINT, REPORT, POPUP, DOWNLOAD,
+          UPLOAD, HELP</para>
+        </listitem>
+
+        <listitem>
+          <para>Other Reservation Authority: FNC0, FNC1, FNC2, FNC3, FNC4,
+          FNC5, FNC6, FNC7, FNC8, FNC9</para>
+        </listitem>
+      </itemizedlist>
+
+      <para>Setup Example (READ, WRITE, CREATE, DELETE, LIST)</para>
+
+      <programlisting language="xml">
+<![CDATA[<b:bean id="viewResourceAccessService"
+    class="anyframe.iam.core.acl.impl.ViewResourceAccessServiceImpl">
+    <b:property name="securedObjectService" ref="securedObjectService" />
+    <b:property name="registeredPermissions">
+        <b:list>
+            <b:ref local="anyframe.iam.core.acl.ExtBasePermission.READ" />
+            <b:ref local="anyframe.iam.core.acl.ExtBasePermission.WRITE" />
+            <b:ref local="anyframe.iam.core.acl.ExtBasePermission.CREATE" />
+            <b:ref local="anyframe.iam.core.acl.ExtBasePermission.DELETE" />
+            <b:ref local="anyframe.iam.core.acl.ExtBasePermission.LIST" />
+        </b:list>
+    </b:property>
+</b:bean>
+		
+<b:bean id="anyframe.iam.core.acl.ExtBasePermission.READ"
+    class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+    <b:property name="staticField"
+        value="anyframe.iam.core.acl.ExtBasePermission.READ" />
+</b:bean>
+<b:bean id="anyframe.iam.core.acl.ExtBasePermission.WRITE"
+    class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+    <b:property name="staticField"
+        value="anyframe.iam.core.acl.ExtBasePermission.WRITE" />
+</b:bean>
+<b:bean id="anyframe.iam.core.acl.ExtBasePermission.CREATE"
+    class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+    <b:property name="staticField"
+        value="anyframe.iam.core.acl.ExtBasePermission.CREATE" />
+</b:bean>
+<b:bean id="anyframe.iam.core.acl.ExtBasePermission.DELETE"
+    class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+    <b:property name="staticField"
+        value="anyframe.iam.core.acl.ExtBasePermission.DELETE" />
+</b:bean>
+<b:bean id="anyframe.iam.core.acl.ExtBasePermission.LIST"
+    class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+    <b:property name="staticField"
+    value="anyframe.iam.core.acl.ExtBasePermission.LIST" />
+</b:bean>]]>
+      </programlisting>
+    </sect2>
+
+    <sect2 id="anyframeiamcore_customerconfiguration_sec003">
+      <title>action-servlet</title>
+
+      <para>Possess set up information for Resource information gathering of
+      target system, Request Map / Restricted Time Reload. Used without
+      modification unless for special occations.</para>
+    </sect2>
+
+	<!--
+    <sect2 id="anyframeiamcore_customerconfiguration_sec004">
+      <title>Transaction</title>
+
+      <para>Used on gathering Resource information of target system. Add the
+      followings to existing transaction setting (Ex:
+      applicationContext-transaction.xml)</para>
+
+      <programlisting language="xml">
+<![CDATA[
+<aop:config>
+    <aop:pointcut id="requiredIAM" 
+    expression="execution(* anyframe.iam.core.assist.impl.ResourceCreationAssistServiceImpl.*(..))"/>
+    <aop:advisor advice-ref="txAdvice" order="2" pointcut-ref="requiredIAM" />
+</aop:config>
+]]>
+      </programlisting>
+    </sect2>
+    -->
+  </section>
+</chapter>

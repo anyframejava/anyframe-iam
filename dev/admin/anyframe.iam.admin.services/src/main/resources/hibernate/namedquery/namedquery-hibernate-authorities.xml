@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2008. 9. 1 ???? 1:00:43 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+	<!-- reference schema attribute when hbm2ddl tool create table. so, remove schema definition. (schema=DEFULAT)-->
+
+	<query name="removeAuthoritiesByRoleId">
+		<![CDATA[
+			DELETE Authorities authorities WHERE authorities.id.roleId = :roleId
+		]]>
+	</query>
+	
+	<query name="removeAuthoritiesBySubjectId">
+		<![CDATA[
+			DELETE Authorities authorities WHERE authorities.id.subjectId = :subjectId
+		]]>
+	</query>
+	
+</hibernate-mapping>

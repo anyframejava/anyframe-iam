@@ -1,0 +1,46 @@
+
+<chapter id="anyframeiamadmin_configuration">
+  <title>Configuration</title>
+
+  <para>IAM Admin requires some environment settings to interwork with the
+  application to be managed. This chapter describes IAM Admin environment
+  settings.</para>
+
+  <section id="anyframeiamadmin_mvcconfiguration">
+    <title>remote-invoker-servlet.xml</title>
+
+    <para>Add settings for Resource information gathering and authorization
+    Reload of subject system.</para>
+
+    <para>Set the serverUrl Property setup values of gatherServiceClient,
+    resourceReloadServiceClient bean as the url of
+    subject system.</para>
+
+    <programlisting language="xml">
+    <![CDATA[
+<bean id="gatherServiceClient"
+    class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">				
+    <property name="serviceUrl"
+        value="http://localhost:8080/anyframe-sample-web/assist/resourceGatherAssist.do" />
+    <property name="serviceInterface"
+        value="anyframe.iam.core.assist.IResourceGatherAssistService" />
+    <property name="httpInvokerRequestExecutor">		
+        <bean class="org.springframework.security.context.
+        			httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor" />
+    </property>
+</bean>
+
+<bean id="resourceReloadServiceClient"
+    class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+    <property name="serviceUrl"
+        value="https://localhost:8080/anyframe-sample-web/reload/resourceReload.do" />
+    <property name="serviceInterface"
+        value="anyframe.iam.core.reload.IResourceReloadService" />
+    <property name="httpInvokerRequestExecutor">
+        <bean class="org.springframework.security.context.
+      		  httpinvoker.AuthenticationSimpleHttpInvokerRequestExecutor" />
+    </property>
+</bean>]]>
+</programlisting>
+  </section>
+</chapter>

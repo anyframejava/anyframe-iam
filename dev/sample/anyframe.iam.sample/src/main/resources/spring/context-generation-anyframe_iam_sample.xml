@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <!--UsersDao-START-->
+    <bean id="usersDao" class="anyframe.iam.sample.users.dao.impl.UsersDaoQueryImpl">
+        <property name="propertiesService" ref="propertiesService" />
+        <property name="queryService" ref="queryService" />     
+    </bean>    
+    <!--UsersDao-END-->
+
+    <!--CategoryDao-START-->
+    <bean id="categoryDao" class="anyframe.iam.sample.category.dao.impl.CategoryDaoQueryImpl">
+        <property name="propertiesService" ref="propertiesService" />
+        <property name="queryService" ref="queryService" />     
+    </bean>    
+    <!--CategoryDao-END-->
+
+    <!--ProductDao-START-->
+    <bean id="productDao" class="anyframe.iam.sample.product.dao.impl.ProductDaoQueryImpl">
+        <property name="propertiesService" ref="propertiesService" />
+        <property name="queryService" ref="queryService" />     
+    </bean>    
+    <!--ProductDao-END-->
+
+    <!-- Add new DAOs here -->
+
+
+
+
+    <!--UsersService-START-->
+    <bean id="usersService" class="anyframe.iam.sample.users.service.impl.UsersServiceImpl">
+        <constructor-arg ref="usersDao"/>
+    </bean>
+    <!--UsersService-END-->
+
+    <!--CategoryService-START-->
+    <bean id="categoryService" class="anyframe.iam.sample.category.service.impl.CategoryServiceImpl">
+        <constructor-arg ref="categoryDao"/>
+    </bean>
+    <!--CategoryService-END-->
+
+    <!--ProductService-START-->
+    <bean id="productService" class="anyframe.iam.sample.product.service.impl.ProductServiceImpl">
+        <constructor-arg ref="productDao"/>
+    </bean>
+    <!--ProductService-END-->
+
+    <!-- Add new Services here -->
+
+
+
+
+</beans>

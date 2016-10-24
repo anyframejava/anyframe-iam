@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
+<dynamic-hibernate>
+	<query name="findPackagesNameList">
+		<![CDATA[
+			SELECT distinct new Map(candidateSecuredResources.packages as packages)
+			FROM CandidateSecuredResources candidateSecuredResources
+			WHERE 	LOWER(candidateSecuredResources.packages) like :keyword
+			AND		candidateSecuredResources.candidateResourceType = 'method'
+			ORDER BY candidateSecuredResources.packages
+		]]>
+	</query>
+	
+	<query name="findClassesNameList">
+		<![CDATA[
+			SELECT distinct new Map(candidateSecuredResources.classes as classes)
+			FROM CandidateSecuredResources candidateSecuredResources
+			WHERE	LOWER(candidateSecuredResources.classes) like :keyword
+			AND  	LOWER(candidateSecuredResources.packages) like :packages
+			AND		candidateSecuredResources.candidateResourceType = 'method'
+			ORDER BY candidateSecuredResources.classes
+		]]>
+	</query>
+	
+	<query name="findMethodNameList">
+		<![CDATA[
+			SELECT distinct new Map(candidateSecuredResources.method as method)
+			FROM CandidateSecuredResources candidateSecuredResources
+			WHERE 	LOWER(candidateSecuredResources.method) like :keyword
+			AND 	LOWER(candidateSecuredResources.packages) like :packages
+			AND 	LOWER(candidateSecuredResources.classes) like :classes
+			AND		candidateSecuredResources.candidateResourceType = 'method'
+			ORDER BY candidateSecuredResources.method
+		]]>
+	</query>
+	
+	<query name="findRequestMappingNameList">
+		<![CDATA[
+			SELECT distinct new Map(candidateSecuredResources.requestMapping as requestMapping)
+			FROM CandidateSecuredResources candidateSecuredResources
+			WHERE LOWER(candidateSecuredResources.requestMapping) like :keyword
+			ORDER BY candidateSecuredResources.requestMapping
+		]]>
+	</query>
+	
+	<query name="findParameterNameList">
+		<![CDATA[
+			SELECT distinct new Map(candidateSecuredResources.parameter as parameter)
+			FROM CandidateSecuredResources candidateSecuredResources
+			WHERE 	LOWER(candidateSecuredResources.parameter) like :keyword
+			AND 	LOWER(candidateSecuredResources.requestMapping) like :requestMapping
+			ORDER BY candidateSecuredResources.parameter
+		]]>
+	</query>
+	
+	<query name="findPointCutNameList">
+		<![CDATA[
+			SELECT distinct new Map(candidateSecuredResources.pointCut as pointCut)
+			FROM CandidateSecuredResources candidateSecuredResources
+			WHERE 	LOWER(candidateSecuredResources.pointCut) like :keyword
+			ORDER BY candidateSecuredResources.pointCut
+		]]>
+	</query>
+</dynamic-hibernate>

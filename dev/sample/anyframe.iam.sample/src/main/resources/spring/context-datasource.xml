@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+ 
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <!--jdbc configuration here -->
+        <!--jdbc configuration-START-->
+        <property name="driverClassName" value="org.hsqldb.jdbcDriver"/>        
+        <property name="url" value="jdbc:hsqldb:hsql://localhost/sampledb"/> 
+        <property name="username" value="sa"/>
+        <property name="password" value=""/>
+        <!--jdbc configuration-END-->
+        <property name="defaultAutoCommit" value="true"/>        
+        <!-- SQL logging using driver spy-START
+        <property name="driverClassName" value="net.sf.log4jdbc.DriverSpy"/>
+        <property name="url" value="jdbc:log4jdbc:hsqldb:hsql://localhost/sampledb"/> 
+             SQL logging using driver spy-END-->
+    </bean>
+        
+</beans>
