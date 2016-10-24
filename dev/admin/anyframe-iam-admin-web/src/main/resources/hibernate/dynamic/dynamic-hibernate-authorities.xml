@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
+<dynamic-hibernate>
+	<query name="findAuthoritiesList">
+		<![CDATA[
+		SELECT	distinct new Map(users.userId as userId, users.userName as userName, groups.groupName as groupName )
+		FROM	Users users
+		left join	users.groupsUserses	groupsUsers
+		left join	groupsUsers.groups	groups
+		WHERE
+			users.userId NOT IN
+			(
+				SELECT authorities.id.subjectId
+				FROM Authorities authorities
+				WHERE authorities.type = 'U'
+				#if($roleId != "")				
+					AND authorities.id.roleId = :roleId
+				#end	
+			)
+		#if ($keywordNum != "")
+			AND
+			#if ($condition == "All" || $condition == "")
+			(
+				users.userId like :keywordStr or  users.userName like :keywordStr
+			)
+			#elseif($condition == "userId" || $condition == "userName")
+				users.{{condition}} like :keywordStr			
+			#end
+		#end
+		#if($sidx == "userId" || $sidx == "")
+			order by 	users.userId 
+		#elseif($sidx == "userName")
+			order by 	users.userName 
+		#elseif($sidx == "groupName")
+			order by 	groups.groupName 
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#elseif($sord == "asc")
+			ASC
+		#end
+		]]>
+	</query>
+
+	<query name="countAuthoritiesList">
+		<![CDATA[
+		SELECT count(*) 
+		FROM	Users users
+		left join	users.groupsUserses	groupsUsers
+		left join	groupsUsers.groups	groups
+		WHERE
+			users.userId NOT IN
+			(
+				SELECT authorities.id.subjectId
+				FROM Authorities authorities
+				WHERE authorities.type = 'U'
+				#if($roleId != "")				
+					AND authorities.id.roleId = :roleId
+				#end	
+			)
+			#if ($keywordNum != "")
+				AND
+				#if ($condition == "All" || $condition == "")
+				(
+					users.userId like :keywordStr or  users.userName like :keywordStr
+				)
+				#elseif($condition == "userId" || $condition == "userName")
+					users.{{condition}} like :keywordStr			
+				#end
+			#end	
+		]]>
+	</query>
+	
+	<query name="findExistAuthoritiesList">
+		<![CDATA[
+		SELECT	distinct new Map(users.userId as userId, users.userName as userName, groups.groupName as groupName )
+		FROM	Users users
+		left join	users.groupsUserses	groupsUsers
+		left join	groupsUsers.groups	groups
+		WHERE
+			users.userId IN
+			(
+				SELECT authorities.id.subjectId
+				FROM Authorities authorities
+				WHERE authorities.type = 'U'
+				and authorities.id.roleId = :roleId
+			)
+		#if ($keywordNum != "")
+			AND
+			#if ($condition == "All" || $condition == "")
+			(
+				users.userId like :keywordStr or  users.userName like :keywordStr
+			)
+			#elseif($condition == "userId" || $condition == "userName")
+				users.{{condition}} like :keywordStr			
+			#end
+		#end
+		#if($sidx == "userId" || $sidx == "")
+			ORDER BY 	users.userId 
+		#elseif($sidx == "userName")
+			ORDER BY 	users.userName 
+		#elseif($sidx == "groupName")
+			ORDER BY 	groups.groupName 
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#elseif($sord == "asc")
+			ASC
+		#end		
+		]]>
+	</query>
+	
+	<query name="countExistAuthoritiesList">
+		<![CDATA[
+		SELECT count(*) 
+		FROM	Users users
+		left join	users.groupsUserses	groupsUsers
+		left join	groupsUsers.groups	groups
+		WHERE
+			users.userId IN
+			(
+				SELECT authorities.id.subjectId
+				FROM Authorities authorities
+				WHERE authorities.type = 'U'
+				and authorities.id.roleId = :roleId
+			)
+		#if ($keywordNum != "")
+			AND
+			#if ($condition == "All" || $condition == "")
+			(
+				users.userId like :keywordStr or  users.userName like :keywordStr
+			)
+			#elseif($condition == "userId" || $condition == "userName")
+				users.{{condition}} like :keywordStr			
+			#end
+		#end
+		]]>
+	</query>
+	
+	<query name="findAuthorityGroupList">
+		<![CDATA[
+		SELECT new Map(groups.groupName as groupName, groups.groupId as groupId)
+		FROM Groups groups
+		WHERE groups.groupId in(
+			SELECT authorities.id.subjectId
+			FROM Authorities authorities
+			WHERE authorities.type = 'G'
+			AND authorities.id.roleId = :roleId
+		)
+		]]>
+	</query>
+	
+	<query name="findGroupIdList">
+		<![CDATA[
+		SELECT groups.groupId as groupId
+		FROM Groups groups
+		WHERE groups.groupId in(
+			SELECT authorities.id.subjectId
+			FROM Authorities authorities
+			WHERE authorities.type = 'G'
+			AND authorities.id.roleId = :roleId
+		)
+		]]>
+	</query>
+</dynamic-hibernate>
+
+
+

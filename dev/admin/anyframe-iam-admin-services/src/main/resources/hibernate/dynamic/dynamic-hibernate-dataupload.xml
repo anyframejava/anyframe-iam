@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
+<dynamic-hibernate>
+	<query name="findDataUploadList">
+		<![CDATA[
+		FROM	DataUpload dataUpload 
+		#if ($keywordNum != "")
+			WHERE
+				dataUpload.{{condition}} like :keywordStr			
+		#end
+		#if($sidx == "fileId" || $sidx == "")
+			ORDER BY 	dataUpload.fileId 
+		#elseif($sidx == "fileName")
+			ORDER BY 	dataUpload.fileName 
+		#elseif($sidx == "createDate")
+			ORDER BY	dataUpload.createDate
+		#elseif($sidx == "workDate")
+			ORDER BY	dataUpload.workDate
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#elseif($sord == "asc")
+			ASC
+		#end	
+		]]>
+	</query>
+
+	<query name="countDataUploadList">
+		<![CDATA[
+		SELECT	count(*) 	
+		FROM	DataUpload dataUpload 
+		#if ($keywordNum != "")
+			WHERE
+				dataUpload.{{condition}} like :keywordStr			
+		#end
+		]]>
+	</query>
+	
+</dynamic-hibernate>
+
+
+

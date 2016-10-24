@@ -1,0 +1,70 @@
+/********************************************************************/
+/*										*/
+/*  SamsnugSDS Design Part    */
+/*      								*/
+/********************************************************************/
+
+/***************************BODY*********************************/
+
+
+IMG {  border-style: none}
+
+BODY {
+scrollbar-3dlight-color: #ffffff;
+scrollbar-highlight-color: #ffffff;
+scrollbar-face-color: #DEE7EB;
+scrollbar-arrow-color: #6F9BAA;
+scrollbar-track-color: #F7F7F7;
+scrollbar-darkshadow-color: #ffffff;
+scrollbar-shadow-color: #B8C4C5;}
+
+
+
+BODY, TABLE, TR, TD, SELECT,INPUT,DIV,SPAN,FORM,TEXTAREA
+{ font-family: Verdana; font-size: 12px; color: #333333; }
+
+/* NAVIGATION */
+div.navitop {
+    margin: 0;
+	padding: 0;
+	width:164px;
+	height:40px;
+	background:url(../images/left/menu_topbg.gif)  no-repeat left center;
+}
+
+
+div.banner {
+	width:154px;
+	height:54px;
+	margin: 10px 4px 10px 4px;
+	/*background:url(../images/left/banner_01.gif)  no-repeat ;*/
+}
+
+.mainNav  { font-size: 11px; color: #666666; font-style: normal; font-weight: normal; font-family:"돋움";}
+
+A:link    {font-size: 11px; COLOR: #666666; text-decoration: none; font-family: "돋움"; selector-dummy:expression(this.hideFocus=true); -moz-outline-style: none;}
+a:visited {font-size: 11px; color: #666666; text-decoration: none; font-family: "돋움"; selector-dummy:expression(this.hideFocus=true); -moz-outline-style: none;}
+a:active  {font-size: 11px; color: #666666; text-decoration: none; font-family: "돋움"; selector-dummy:expression(this.hideFocus=true); -moz-outline-style: none;}
+a:hover   {font-size: 11px; color: #000000; text-decoration: none; font-family: "돋움"; selector-dummy:expression(this.hideFocus=true); -moz-outline-style: none;}
+a:clicked {font-size: 11px; color: #000000; text-decoration: none; font-family: "돋움"; selector-dummy:expression(this.hideFocus=true); -moz-outline-style: none;}
+
+/* special formatting for main link */
+
+.mainMenu {
+    font-size: 11px; 
+	font-family: "돋움"; 
+    font-weight: bold;
+	color:#535558;
+	letter-spacing:-1 ;
+	margin:0;
+	cursor:hand;
+}
+
+/* IE Fixes */
+
+
+/* force hover on entire width of  link */
+* html #mainNav a {
+	height: 1px;
+}
+

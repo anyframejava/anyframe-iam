@@ -1,0 +1,23 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans     
+                        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!--  Message Resources -->
+	<bean id="messageSource" 
+		class="org.springframework.context.support.ResourceBundleMessageSource">	
+		<property name="basenames">
+			<list>
+				<value>message/message-generation</value>					
+				<value>message/message-productmgmt</value>
+				<value>org/anyframe/util/properties/message/properties</value>
+				<value>org/anyframe/idgen/message/idgen</value>
+				<value>org/anyframe/query/message/query</value>
+				<value>org/anyframe/generic/message/generic</value>
+				<value>org/anyframe/message/springmvc</value>
+				<value>org/anyframe/iam/core/messages/security</value>
+			</list>
+		</property>
+	</bean>
+
+</beans>

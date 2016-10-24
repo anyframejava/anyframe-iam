@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<b:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:b="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.0.xsd
+                        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<b:bean id="viewResourceAccessService"
+		class="org.anyframe.iam.core.acl.impl.ViewResourceAccessServiceImpl">
+		<b:property name="securedObjectService" ref="securedObjectService" />
+		<b:property name="registeredPermissions">
+			<b:list>
+				<b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.READ" />
+				<b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.WRITE" />
+				<b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.CREATE" />
+				<b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.DELETE" />
+				<b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.ADMINISTRATION" />
+				<b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.LIST" />
+				<b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.PRINT" />
+				<b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.REPORT" />
+				<b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.POPUP" />
+				<b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.DOWNLOAD" />
+				<b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.UPLOAD" />
+				<b:ref local="org.anyframe.iam.core.acl.ExtBasePermission.HELP" />
+			</b:list>
+		</b:property>
+	</b:bean>
+
+	<b:bean id="securedObjectService"
+		class="org.anyframe.iam.core.securedobject.impl.SecuredObjectServiceImpl"
+		depends-on="sampleSecuritySchemaInitializer">
+		<b:property name="securedObjectDAO" ref="securedObjectDAO" />
+	</b:bean>
+
+	<b:bean id="securedObjectDAO"
+		class="org.anyframe.iam.core.securedobject.impl.SecuredObjectDAO">
+		<b:property name="dataSource" ref="dataSource" />
+	</b:bean>
+
+	<b:bean id="roleHierarchy"
+		class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+		<b:property name="hierarchy" ref="hierarchyStrings" />
+	</b:bean>
+
+	<b:bean id="hierarchyStrings"
+		class="org.anyframe.iam.core.userdetails.hierarchicalroles.HierarchyStringsFactoryBean"
+		init-method="init">
+		<b:property name="securedObjectService" ref="securedObjectService" />
+	</b:bean>
+
+	<b:bean id="userDetailsServiceWrapper"
+		class="org.springframework.security.access.hierarchicalroles.UserDetailsServiceWrapper">
+		<b:property name="roleHierarchy" ref="roleHierarchy" />
+		<b:property name="userDetailsService" ref="jdbcUserService" />
+	</b:bean>
+
+	<b:bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+		<b:property name="allowIfAllAbstainDecisions" value="false" />
+		<b:property name="decisionVoters">
+			<b:list>
+				<b:bean class="org.springframework.security.access.vote.RoleVoter">
+					<b:property name="rolePrefix" value="" />
+				</b:bean>
+				<b:bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+			</b:list>
+		</b:property>
+	</b:bean>
+
+	<b:bean id="filterSecurityInterceptor"
+		class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+		<b:property name="authenticationManager" ref="authenticationManager" />
+		<b:property name="accessDecisionManager" ref="accessDecisionManager" />
+		<b:property name="securityMetadataSource" ref="databaseSecurityMetadataSource" />
+	</b:bean>
+
+	<b:bean id="databaseSecurityMetadataSource"
+		class="org.springframework.security.web.access.intercept.AnyframeReloadableDefaultFilterInvocationSecurityMetadataSource">
+		<b:constructor-arg ref="regexUrlPathMatcher" />
+		<b:constructor-arg ref="requestMap" />
+		<b:property name="securedObjectService" ref="securedObjectService" />
+	</b:bean>
+
+	<b:bean id="regexUrlPathMatcher"
+		class="org.springframework.security.web.util.RegexUrlPathMatcher" />
+
+	<b:bean id="requestMap" class="org.anyframe.iam.core.intercept.ResourcesMapFactoryBean"
+		init-method="init">
+		<b:property name="securedObjectService" ref="securedObjectService" />
+		<b:property name="resourceType" value="url" />
+	</b:bean>
+
+	<http access-denied-page="/sample/common/accessDenied.jsp"
+		path-type="regex" lowercase-comparisons="false">
+		<intercept-url pattern="\A/sample/images/.*\Z" filters="none" />
+		<intercept-url pattern="\A/sample/common/.*\Z" filters="none" />
+		<intercept-url pattern="\A/sample/css/.*\Z" filters="none" />
+		<intercept-url pattern="\A/sample/javascript/.*\Z"
+			filters="none" />
+		<intercept-url pattern="\A/sample/layouts/.*\Z" filters="none" />
+		<intercept-url pattern="\A/sample/upload_files/.*\Z"
+			filters="none" />
+
+		<custom-filter before="FILTER_SECURITY_INTERCEPTOR" ref="filterSecurityInterceptor"/>
+
+		<!-- move to DB - SECURED_RESOURCES, SECURED_RESOURCES_ROLE -->
+
+		<form-login login-page="/sample/system/login.jsp"
+			login-processing-url="/j_spring_security_check"
+			authentication-failure-url="/sample/system/login.jsp?login_error=1"
+			default-target-url="/index.do?flag=L" />
+		<anonymous />
+
+		<!--http-basic / -->
+		<!--remember-me / -->
+		<logout logout-success-url="/sample/system/login.jsp" />
+		<!--
+			if you wish to use Concurrent Session Control - see also listener
+			configuration of web.xml - HttpSessionEventPublisher
+			<concurrent-session-control max-sessions="1"
+			exception-if-maximum-exceeded="true"/>
+		-->
+	</http>
+
+	<authentication-manager alias="authenticationManager"> 
+		<authentication-provider user-service-ref="userDetailsServiceWrapper">
+			<!-- password-encoder hash="md5" / -->
+		</authentication-provider>
+	</authentication-manager>
+	
+	<b:bean id="jdbcUserService"
+		class="org.anyframe.iam.core.userdetails.jdbc.ExtJdbcUserDetailsManager">
+		<!-- usersByUsernameQuery 에서 사용자에 대한 group 을 함께 조회할 때 해당 property 명을 설정 -->
+		<!-- <b:property name="userGroupPropertyName" value="GROUP_ID"/> -->
+		<b:property name="userGroupPropertyName" value="groupId"/>
+		<!-- USER_ID, PASSWORD, ENABLED 는 항상 1,2,3 번째 순서로 나타나야 함! -->
+		<b:property name="usersByUsernameQuery"
+			value="SELECT A.USER_ID AS USER_ID, PASSWORD, ENABLED, B.GROUP_ID AS GROUP_ID, USER_NAME, SSN, SL_YN, BIRTH_DAY, AGE, CELL_PHONE, ADDR, EMAIL, EMAIL_YN, IMAGE_FILE, REG_DATE FROM USERS A LEFT OUTER JOIN GROUPS_USERS B ON ( A.USER_ID = B.USER_ID ) WHERE A.USER_ID = ?" />
+		<b:property name="authoritiesByUsernameQuery"
+			value="SELECT USER_ID,ROLE_ID FROM AUTHORITIES WHERE USER_ID = ?" />
+		<b:property name="dataSource" ref="dataSource" />
+		<!--
+			아래 mapClass를 지정하지 않으면 ExtUsersByUsernameMapping 에 의해 default 로 위 쿼리에
+			의한 사용자 정보는 Map 으로 처리됨
+		-->
+		<b:property name="mapClass"	value="org.anyframe.iam.core.acl.GroupAddedCustomUserMapping"/>
+
+	</b:bean>
+
+	<global-method-security secured-annotations="enabled" />
+
+	<!-- 현재 Application 에서 사용하는 Permission 정의 -->
+	<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.READ"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<b:property name="staticField"
+			value="org.anyframe.iam.core.acl.ExtBasePermission.READ" />
+	</b:bean>
+	<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.WRITE"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<b:property name="staticField"
+			value="org.anyframe.iam.core.acl.ExtBasePermission.WRITE" />
+	</b:bean>
+	<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.CREATE"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<b:property name="staticField"
+			value="org.anyframe.iam.core.acl.ExtBasePermission.CREATE" />
+	</b:bean>
+	<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.DELETE"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<b:property name="staticField"
+			value="org.anyframe.iam.core.acl.ExtBasePermission.DELETE" />
+	</b:bean>
+	<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.ADMINISTRATION"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<b:property name="staticField"
+			value="org.anyframe.iam.core.acl.ExtBasePermission.ADMINISTRATION" />
+	</b:bean>
+	<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.LIST"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<b:property name="staticField"
+			value="org.anyframe.iam.core.acl.ExtBasePermission.LIST" />
+	</b:bean>
+	<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.PRINT"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<b:property name="staticField"
+			value="org.anyframe.iam.core.acl.ExtBasePermission.PRINT" />
+	</b:bean>
+	<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.REPORT"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<b:property name="staticField"
+			value="org.anyframe.iam.core.acl.ExtBasePermission.REPORT" />
+	</b:bean>
+	<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.POPUP"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<b:property name="staticField"
+			value="org.anyframe.iam.core.acl.ExtBasePermission.POPUP" />
+	</b:bean>
+	<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.DOWNLOAD"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<b:property name="staticField"
+			value="org.anyframe.iam.core.acl.ExtBasePermission.DOWNLOAD" />
+	</b:bean>
+	<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.UPLOAD"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<b:property name="staticField"
+			value="org.anyframe.iam.core.acl.ExtBasePermission.UPLOAD" />
+	</b:bean>
+	<b:bean id="org.anyframe.iam.core.acl.ExtBasePermission.HELP"
+		class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+		<b:property name="staticField"
+			value="org.anyframe.iam.core.acl.ExtBasePermission.HELP" />
+	</b:bean>
+
+</b:beans>

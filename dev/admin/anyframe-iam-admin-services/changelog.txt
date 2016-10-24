@@ -1,0 +1,135 @@
+﻿Anyframe IAM CHANGELOG
+==========================
+http://www.anyframejava.org
+
+Changes in version 1.1.3 (2011-7)
+-----------------------------------------
+* 패키지 구조 변경
+ - 기존의 anyframe.iam.- 으로 작성되던 패키지 구조를 org.anyframe.iam.- 으로 변경
+
+* 참조 라이브러리 변경
+ - 기존의 anyframe.xxx 파일들의 버전이 변경됨에 따라 org.anyframe.xxx.1.0.0.jar 파일로 버전 변경
+
+* 해결된 이슈 목록
+  [IAM-157] Excel Import 시 ids 테이블 연동
+  [IAM-161] View Resource ID Generation 방식 변경
+  [IAM-164] IAM Core Reload 기능 버그 개선
+  [IAM-165] Resource Gathering 시 예외 조건 추가
+  [IAM-166] Group에 Role을 할당 했을 경우, Excel File Snapshot 기능시 Role 정보 누락
+
+Changes in version 1.1.0 (2010-10)
+-----------------------------------------
+* 소스 코드 및 테스트 코드 변경
+  - Spring Security 3.0.2.RELEASE 적용
+    . anyframe-iam-core, anyframe-iam-admin.services, anyframe-iam-admin.web  프로젝트 변경
+  - Anyframe 4.5.1 적용
+    . anyframe-iam-core, anyframe-iam-admin.services, anyframe-iam-admin.web 프로젝트 변경
+  - Spring 3.0.3.RELEASE 적용
+    . anyframe-iam-core, anyframe-iam-admin.services, anyframe-iam-admin.web 프로젝트 변경
+  - jquery 1.4.2 적용
+    . anyframe-iam-admin.web      : jquery 버전 업그레이드에 따른 구조 변경
+
+* 참조 라이브러리 변경
+  - 기존의 anyframe.xxx-4.1.0.jar 파일을 anyframe.xxx-4.5.1.jar 파일로 버전 업그레이드
+  - 기존의 spring-xxx-2.5.6.jar 파일을 spring-xxx-3.0.3.RELEASE.jar 파일로 버전 업그레이드
+  - 기존의 spring-security-xxx-2.0.4.jar 파일을 spring-security-xxx-3.0.2.RELEASE.jar 파일로 버전 업그레이드
+  - 기존의 spring-security-xxx-2.0.4.jar 파일을 spring-security-xxx-3.0.2.RELEASE.jar 파일로 버전 업그레이드
+  - 기존의 hibernate-xxx-3.3.1.GA.jar 파일을 hibernate-xxx-3.5.3-FINAL.jar 파일로 버전 업그레이드
+  - 기존의 jnuit-4.4.jar 파일을 jnut-4.7.jar 파일로 버전 업그레이드
+  - jquery 1.3.2 을 jquery 1.4.2 로 버전 업그레이드
+
+* 추가된 기능
+  - 복수 시스템 통합관리 기능
+  - 엑셀 Import / Export 기능
+  - Annotation Controller 리소스 수집 기능
+  - nested 객체에 대한 서버측 validation 체크 기능 추가
+  - Flex / MiPlatform UI 리소스 제어 기능
+  - View Resource 트리 구조 추가
+  - jQuery 업그레이드
+
+* 해결된 이슈 목록
+  [IAM-150] - 복수 시스템 통합관리 기능 개발
+  [IAM-148] - 엑셀 Import / Export 기능 구축
+  [IAM-138] - Annotation Controller 리소스 수집 기능
+  [IAM-141] - Flex 기반의 UI 리소스 제어 기능 개선
+  [IAM-139] - Flex 기반의 UI 리소스 제어 기능 구현
+  [IAM-143] - MiPlatform 기반의 UI 리소스 제어 기능 구현
+  [IAM-135] - View Resource 기능 트리 구조로 개선
+  [IAM-142] - View Resource 샘플 화면 추가
+  [IAM-136] - View Resource 속성 추가
+  [IAM-145] - jQuery Grid 의 reload 구조 개선
+  [IAM-130] - jQuery 신버전 테스트 및 통합
+  [IAM-146] - jQuery 업그레이드이후 UI 편차 발생내역 개선
+  [IAM-152] - jsTree 와 IE 7.0 과의 호환성 확인
+  [IAM-154] - Spring Security 3.0 업그레이드
+  [IAM-153] - iew Resource 및 System Name 추가 관련 메뉴얼 수정
+
+Changes in version 1.0.2 (2010-03)
+-----------------------------------------
+* 해결된 이슈 목록 
+  [IAM-110] - Role Tree 탭 이동 관련 버그 수정 
+  [IAM-111] - Group Tree 탭 이동 관련 버그 수정 
+  [IAM-112] - Tree component 상에서 특정 NODE를 삭제 오류 
+  [IAM-113] - ID 중복 검사시 오류 
+  [IAM-114] - User List에서 User 삭제시 오류 
+  [IAM-115] - View Resource Mapping 화면 오류 
+  [IAM-116] - IE환경, pop up 창에서 opener 함수 사용시 오류 
+
+Changes in version 1.0.1 (2010-02)
+-----------------------------------------
+* 소스 코드 및 테스트 코드 변경
+  - Anyframe 4.1.0 적용
+    . anyframe-iam-core, anyframe-iam-admin.services, anyframe-iam-admin.web 프로젝트 변경
+
+* 참조 라이브러리 변경
+  - 기존의 anyframe.xxx-4.0.0.jar 파일을 anyframe.xxx-4.1.0.jar 파일로 버전 업그레이드
+
+* 추가된 기능
+  - Anyframe 4.1.0 릴리즈 버전 적용
+  - Resource Gathering 시 paramResolver 값을 읽어오는 기능 추가
+  - paramResolver를 사용하는 경우 url 패턴 등록 시 paramResolver 값을 자동으로 세팅 해주는 기능 추가
+  - nested 객체에 대한 서버측 validation 체크 기능 추가
+
+* 해결된 이슈 목록
+  [IAM-103] - Resource Gathering 시 paramResolver 값을 읽어오는 기능 추가
+  [IAM-104] - Anyframe 4.1.0 릴리즈 버전 적용
+  [IAM-105] - nested 객체에 대한 서버측 validation 적용 추가
+  [IAM-106] - url 패턴 등록 기능 개선
+
+Changes in version 1.0.0 (2010-01)
+-----------------------------------------
+* IAM 1.0.0은 Java EE 기반의 엔터프라이즈 어플리케이션을 위한 보안 솔루션(사용자 인증 및 권한관리)을 제공하는 Identify & Access Management Framework 이다.
+* jQuery Plugin(jqGrid, jsTree) 버전이 업그레이드 되었다.
+* Anyframe IAM 프로젝의 모든 소스 코드는 Maven Project 기반으로 패키징되었다.
+* 배포 구조가 Maven 기반으로 단순화 되었다.
+* [참고] 더이상 Anyframe IAM RC Version(RC1)에 대해서 관리하지 않는다.
+
+* 소스 코드 및 테스트 코드 변경
+  - joda-time-1.1.jar 적용
+    . anyframe-iam-core 프로젝트 변경
+  - jqGrid 3.6.1 적용
+    . anyframe-iam-admin-web : jqGrid 변경에 따른 library 참조 구조 변경
+  - jsTree 0.9.9 적용
+    . anyframe-iam-admin-services : IAM Tree Domain 객체 변경, Domain 객체 변경에 따른 Service, Dao 변경
+    . anyframe-iam-admin-web      : jsTree 버전 업그레이드에 따른 Syntax 변경
+   
+* 참조 라이브러리 변경
+  - 기존의 jqGrid 3.5 버전을 jqGrid 3.6.1 버전으로 업그레이드
+  - 기존의 jsTree 0.9.8 버전을 jsTree 0.9.9 버전으로 업그레이드
+  - 기존의 java.text.SimpleDateFormat 에서 joda-time-1.1.jar 파일로 변경
+  
+* 추가된 기능
+  - Tree UI 상태 유지 및 Refresh, 상세화면 동기화
+  - Tree 검색 기능 추가
+  - Tree HotKey 기능 추가(F2, Delete)
+  
+* 해결된 이슈 목록
+  [IAM-96] - Resouce Gathering 기능 개선
+  [IAM-94] - Maven 기반 WAR 배포(services + web)
+  [IAM-92] - jsTree 버전 업그레이드
+  [IAM-91] - jqGrid 버전 업그레이드
+  [IAM-83] - Profiling 및 결과 리뷰 / 개선
+  [IAM-82] - Tree 검색 기능 추가
+  [IAM-80] - IAM Core Javadoc 영문화
+  [IAM-79] - 매뉴얼 보완
+  [IAM-37] - Tree UI 상태 유지 및 Refresh, 상세화면 동기화

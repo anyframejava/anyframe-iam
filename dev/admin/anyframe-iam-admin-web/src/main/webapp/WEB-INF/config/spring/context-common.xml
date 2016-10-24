@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<context:property-placeholder
+		location="classpath:context.properties" />
+
+	<util:properties id="contextProperties" location="classpath:context.properties"/>
+
+	<bean class="org.springframework.context.support.ResourceBundleMessageSource"
+		id="messageSource">
+		<property name="basenames">
+			<list>
+				<value>message/message-generation</value>
+				<value>message/message-menu</value>
+				<value>message/message-security</value>
+				<value>message/message-resource</value>
+				<value>message/message-viewresources</value>
+				<value>message/message-role</value>
+				<value>message/message-user</value>
+				<value>message/message-group</value>
+				<value>message/message-validator</value>
+				<value>message/message-restrictedtimes</value>
+				<value>message/message-resourcereload</value>
+				<value>org/anyframe/util/properties/message/properties</value>
+				<value>org/anyframe/idgen/message/idgen</value>
+				<value>org/anyframe/query/message/query</value>
+				<value>org/anyframe/message/springmvc</value>
+				<value>anyframe/iam/core/messages/security</value>
+			</list>
+		</property>
+	</bean>
+</beans>

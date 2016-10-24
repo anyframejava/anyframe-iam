@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2008. 9. 1 ???? 1:00:43 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+	<!-- reference schema attribute when hbm2ddl tool create table. so, remove schema definition. (schema=DEFULAT)-->
+	
+	<sql-query name="getGroupTreeData">
+		<return alias="groups" class="org.anyframe.iam.admin.domain.IamTree"/>
+		<![CDATA[	
+			SELECT	A.ID,
+					A.TITLE,
+					CASE WHEN  B.CHILD_GROUP is null THEN 'closed' ELSE B.CHILD_GROUP END STATE
+					FROM (
+						SELECT	A.CHILD_GROUP	ID,
+								B.GROUP_NAME	TITLE
+								FROM	GROUPS_HIERARCHY	A
+								JOIN	GROUPS				B
+									ON	A.CHILD_GROUP	= B.GROUP_ID
+						WHERE	A.PARENT_GROUP	= :parentNode
+					)	A
+				LEFT JOIN
+					(
+						SELECT	A.CHILD_GROUP
+								FROM	GROUPS_HIERARCHY	A
+							LEFT JOIN	GROUPS_HIERARCHY	B
+									ON	A.CHILD_GROUP	= B.PARENT_GROUP
+						WHERE	B.CHILD_GROUP IS NULL
+					)	B
+						ON	A.ID	= B.CHILD_GROUP
+			ORDER	BY	A.ID
+		]]>
+	</sql-query>
+	
+	<sql-query name="getRootNodeOfGroups">
+		<return alias="groups" class="org.anyframe.iam.admin.domain.IamTree"/>
+		<![CDATA[	
+			SELECT	B.GROUP_ID		ID,
+					B.GROUP_NAME	TITLE,
+					'closed'		STATE
+					FROM	GROUPS_HIERARCHY	A
+					JOIN	GROUPS				B
+						ON	A.PARENT_GROUP	= B.GROUP_ID
+			WHERE	A.PARENT_GROUP NOT IN (	SELECT	DISTINCT CHILD_GROUP
+													FROM	GROUPS_HIERARCHY
+										)
+		]]>
+	</sql-query>
+	
+	<sql-query name="countGroupsList">
+		<![CDATA[
+			SELECT	CHILD_GROUP	
+					FROM GROUPS_HIERARCHY
+			WHERE	PARENT_GROUP = :parentGroup
+		]]>
+	</sql-query>
+		
+	<sql-query name="makeAllTempGroupsList">
+		<return class="org.anyframe.iam.admin.domain.TempGroups"/>
+		<![CDATA[	
+			SELECT 	A.GROUP_ID||NVL(C.ROLE_ID, '') compKey,
+					A.GROUP_ID		groupId, 
+					A.GROUP_NAME 	groupName, 
+					A.CREATE_DATE	createDate,
+					A.MODIFY_DATE	modifyDate,
+					B.PARENT_GROUP 	parentGroup,
+					C.ROLE_ID		roleId
+			FROM	GROUPS					A
+			LEFT JOIN	GROUPS_HIERARCHY	B
+			ON	A.GROUP_ID = B.CHILD_GROUP
+			LEFT JOIN 	AUTHORITIES			C
+			ON	A.GROUP_ID = C.SUBJECT_ID
+			AND C.TYPE = 'G'
+		]]>
+	</sql-query>
+	
+		
+	<sql-query name="removeAllGroups">
+		<![CDATA[
+			DELETE FROM Groups
+		]]>
+	</sql-query>
+	
+	
+</hibernate-mapping>

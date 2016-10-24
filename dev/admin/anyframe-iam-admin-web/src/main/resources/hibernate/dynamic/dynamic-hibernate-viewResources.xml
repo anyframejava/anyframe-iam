@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dynamic-hibernate PUBLIC "-//ANYFRAME//DTD DYNAMIC-HIBERNATE//EN"
+"http://www.anyframejava.org/dtd/anyframe-dynamic-hibernate-mapping-4.0.dtd">
+<dynamic-hibernate>
+	<query name="findViewResourceList">
+		<![CDATA[
+		SELECT new Map( 
+			viewResource.viewResourceId as viewResourceId, 
+			viewResource.viewName as viewName, 
+			viewResource.category as category, 
+			viewResource.viewInfo as viewInfo, 
+			viewResource.description as description, 
+			viewResource.viewType as viewType, 
+			viewResource.visible as visible,
+			viewResource.systemName as systemName
+		)
+		FROM ViewResource viewResource, ViewHierarchy viewHierarchy
+		WHERE
+			viewHierarchy.id.parentView = viewResource.viewResourceId
+		#if($parentViewResourceId != "")
+			AND 
+				viewHierarchy.id.childView = :parentViewResourceId
+		#end
+		#if($keywordNum != "")
+			AND 
+			#if($condition == "viewResourceId")
+				viewResource.viewResourceId like :keywordStr 
+			#elseif($condition == "category")
+				viewResource.category like :keywordStr
+			#elseif($condition == "viewName")
+				viewResource.viewName like :keywordStr
+			#elseif($condition == "viewInfo")
+				viewResource.viewInfo like :keyworkStr
+			#end		
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND viewResource.systemName = :systemName
+		#end
+		#if($sidx == "category")
+			order by	viewResource.category
+		#elseif($sidx == "viewName")
+			order by	viewResource.viewName
+		#elseif($sidx == "viewInfo")
+			order by	viewResource.viewInfo
+		#elseif($sidx == "systemName")
+			order by 	viewResource.systemName
+		#else
+			order by	viewResource.viewResourceId
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end
+				
+		]]>
+	</query>
+
+	<query name="countViewResourceList">
+		<![CDATA[
+		SELECT count(*) 
+		FROM ViewResource viewResource, ViewHierarchy viewHierarchy
+		WHERE
+			viewHierarchy.id.parentView = viewResource.viewResourceId
+		#if($parentViewResourceId != "")
+			AND 
+				viewHierarchy.id.childView = :parentViewResourceId
+		#end
+		#if($keywordNum != "")
+			AND 
+			#if($condition == "viewResourceId")
+				viewResource.viewResourceId like :keywordStr 
+			#elseif($condition == "category")
+				viewResource.category like :keywordStr
+			#elseif($condition == "viewName")
+				viewResource.viewName like :keywordStr
+			#elseif($condition == "viewInfo")
+				viewResource.viewInfo like :keyworkStr
+			#end		
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND	viewResource.systemName = :systemName
+		#end
+		]]>
+	</query>	
+	
+	<query name="findViewMappingList">
+		<![CDATA[
+		SELECT new Map( 
+			CONCAT(viewResource.viewResourceId, viewResourcesMapping.id.refId) as compKey,
+			viewResource.viewResourceId as viewResourceId, 
+			viewResource.viewName as viewName, 
+			viewResource.category as category, 
+			viewResource.viewType as viewType, 
+			viewResource.visible as visible,
+			viewResource.systemName as systemName,
+			viewResourcesMapping.id.refId as refId, 
+			viewResourcesMapping.permissions as permissions, 
+			viewResourcesMapping.refType as refType)
+		FROM ViewResource viewResource, ViewResourcesMapping viewResourcesMapping
+		WHERE
+			viewResource.viewResourceId = viewResourcesMapping.id.viewResourceId 
+		#if($parentViewResourceId != "")
+			AND	viewResourcesMapping.id.viewResourceId = :parentViewResourceId
+		#end 
+		#if($keywordNum != "")
+			#if($condition == "viewResourceId")
+				AND viewResource.viewResourceId like :keywordStr
+			#elseif($condition == "viewName")
+				AND viewResource.viewName like :keywordStr
+			#elseif($condition == "category")
+				AND viewResource.category like :keywordStr
+			#elseif($condition == "refId")
+				AND viewResourcesMapping.id.refId like :keywordStr
+			#elseif($condition == "permissions")
+				AND viewResourcesMapping.permissions like :keywordStr
+			#end
+		#end		
+		#if($type == "USER" || $type == "ROLE")
+			AND viewResourcesMapping.refType like :type
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND viewResource.systemName = :systemName
+		#end
+		#if($sidx == "category")
+			order by	viewResource.category
+		#elseif($sidx == "viewName")
+			order by	viewResource.viewName
+		#elseif($sidx == "refId")
+			order by	viewResourcesMapping.id.refId
+		#elseif($sidx == "refType")
+			order by	viewResourcesMapping.refType
+		#elseif($sidx == "permissions")
+			order by	viewResourcesMapping.permissions
+		#elseif($sidx == "systemName")
+			order by 	viewResource.systemName
+		#else
+			order by	viewResource.viewResourceId
+		#end
+		#if($sord == "desc" || $sord == "")
+			DESC
+		#else
+			ASC
+		#end
+		]]>
+	</query>
+	
+	<query name="countViewMappingList">
+		<![CDATA[
+		SELECT count(*)
+				FROM ViewResource viewResource, ViewResourcesMapping viewResourcesMapping
+		WHERE
+			viewResource.viewResourceId = viewResourcesMapping.id.viewResourceId 
+		#if($parentViewResourceId != "")
+			AND	viewResourcesMapping.id.viewResourceId = :parentViewResourceId
+		#end 
+		#if($keywordNum != "")
+			#if($condition == "viewResourceId")
+				AND viewResource.viewResourceId like :keywordStr
+			#elseif($condition == "viewName")
+				AND viewResource.viewName like :keywordStr
+			#elseif($condition == "category")
+				AND viewResource.category like :keywordStr
+			#elseif($condition == "refId")
+				AND viewResourcesMapping.id.viewResourceId like :keywordStr
+			#end
+		#end		
+		#if($type == "USER" || $type == "ROLE")
+			AND viewResourcesMapping.refType like :type
+		#end
+		#if($systemName != "ALL" && $systemName != "")
+			AND viewResource.systemName = :systemName
+		#end
+		]]>
+	</query>
+	
+	<query name="findViewNameList">
+		<![CDATA[
+			SELECT distinct new Map(viewResource.viewName as viewName)
+			FROM ViewResource viewResource
+			WHERE LOWER(viewResource.viewName) like :keyword
+			#if($systemName != "" && $systemName != "ALL")
+				AND viewResource.systemName = :systemName
+			#end
+			ORDER BY viewResource.viewName
+		]]>
+	</query>
+	
+	<query name="findViewIdByViewName">
+		<![CDATA[
+			FROM ViewResource viewResource
+			WHERE LOWER(viewResource.viewName) = :viewName
+		]]>
+	</query>
+	
+	<query name="isExistName">
+		<![CDATA[
+			FROM ViewResource viewResource
+			WHERE viewResource.viewName = :viewName 
+		]]>
+	</query>
+</dynamic-hibernate>
